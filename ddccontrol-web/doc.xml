@@ -7,13 +7,23 @@
   <config param="cvsid" value="$Id$"/>
 
   <head>
-    <title>Documentation</title>
+    <title>DDCcontrol documentation</title>
     <summary></summary>
     <keywords>DDCcontrol, Documentation</keywords>
   </head>
 
 <para>By clicking on the right link in the left menu, you can see development's,
-or current release's online documentation.</para>
+or current release online documentation.</para>
+<section><title>Printable documents</title>
+<para>You can also download the documentation as PDF files:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+<ulink url="ddccontrol-0.1.pdf">Version 0.1</ulink>
+</para>
+</listitem>
+</itemizedlist>
+</section>
 <section><title>Archives</title>
 <para>No archives yet.</para>
 </section>

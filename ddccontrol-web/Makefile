@@ -38,3 +38,9 @@ website.database.xml:  autolayout.xml Makefile
 
 update:
 	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/; cvs update -d"
+
+spell:
+	aspell --mode=sgml check website.xml
+	aspell --mode=sgml check doc.xml
+	aspell --mode=sgml check download.xml
+	aspell --mode=sgml check layout.xml

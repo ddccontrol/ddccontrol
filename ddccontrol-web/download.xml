@@ -7,7 +7,7 @@
   <config param="cvsid" value="$Id$"/>
 
   <head>
-    <title>Download</title>
+    <title>DDCcontrol download page</title>
     <summary></summary>
     <keywords>DDCcontrol, Download</keywords>
   </head>
