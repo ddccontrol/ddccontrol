@@ -1,3 +1,8 @@
+2005-03-19 19:23  nboichat
+
+	* configure, configure.ac, doc/main.xml: Fix GTK+ check: we at
+	  least need version 2.4 (because of GtkComboBox).
+
 2005-03-18 11:20  nboichat
 
 	* configure, configure.ac, doc/main.xml: Add documentation.
