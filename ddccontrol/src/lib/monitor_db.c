@@ -39,7 +39,8 @@
 		return value; \
 	}
 
-int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command) {
+int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command)
+{
 	xmlNodePtr value, cur;
 	xmlChar *options_valueid, *options_valuename, *mon_valueid;
 	int options_value;
@@ -51,7 +52,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	memset(current_value, 0, sizeof(struct value_db));
 	
 	value = options_control->xmlChildrenNode;
-	while (value != NULL) {
+	while (value != NULL)
+	{
 		if (!xmlStrcmp(value->name, (const xmlChar *) "value")) {
 			options_valueid   = xmlGetProp(value, "id");
 			DDCCI_RETURN_IF(options_valueid == NULL, -1, "Can't find id property.", value);
@@ -78,7 +80,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 			
 			cur = mon_control->xmlChildrenNode;
-			while (1) {
+			while (1)
+			{
 				if (cur == NULL) {
 					/* Control not found, free strings */
 					xmlFree(options_valueid);
@@ -131,7 +134,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 
 
 /* recursionlevel: Protection against looping includes */
-struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel) {
+struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel)
+{
 	struct monitor_db* mon_db;
 	xmlDocPtr options_doc, mon_doc;
 	xmlNodePtr cur, controls;
@@ -240,7 +244,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	
 	/* List groups (options.xml) */
 	group = xmlDocGetRootElement(options_doc)->xmlChildrenNode;
-	while (group != NULL) {
+	while (group != NULL)
+	{
 		options_groupname = NULL;
 		if (!xmlStrcmp(group->name, (const xmlChar *) "group")) {
 			options_groupname = xmlGetProp(group, "name");
@@ -252,7 +257,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			
 			control = group->xmlChildrenNode;
 			/* List controls in group (options.xml) */
-			while (control != NULL) {
+			while (control != NULL)
+			{
 				if (!xmlStrcmp(control->name, (const xmlChar *) "control")) {
 					options_ctrlid   = xmlGetProp(control, "id");
 					DDCCI_RETURN_IF(options_ctrlid == NULL, NULL, "Can't find id property.", control);
@@ -272,7 +278,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 					
 					/* Find the related control in monitor specifications */
 					cur = controls->xmlChildrenNode;
-					while (1) {
+					while (1)
+					{
 						if (cur == NULL) {
 							/* Control not found, free strings */
 							xmlFree(options_ctrlid);
@@ -385,10 +392,12 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	return mon_db;
 }
 
-struct monitor_db* ddcci_create_db(const char* pnpname) {
+struct monitor_db* ddcci_create_db(const char* pnpname)
+{
 	return ddcci_create_db_protected(pnpname, 0);
 }
 
-void ddcci_free_db(struct monitor_db* mon_db) {
+void ddcci_free_db(struct monitor_db* mon_db)
+{
 	/* TODO: implement... */
 }

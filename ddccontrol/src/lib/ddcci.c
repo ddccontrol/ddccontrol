@@ -483,13 +483,19 @@ int ddcci_save(struct monitor* mon)
   - -1 if DDC/CI is not available
   - -3 if file can't be closed 
 */
-int ddcci_close(struct monitor* mon) 
+int ddcci_close(struct monitor* mon)
 {
-	/* TODO: Read database to know if we should use Samsung mode */
-	
-	if (strncmp(mon->pnpid, "SAM", 3) == 0) {
-		if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
-			return -1;
+	if (mon->db) {
+		if (mon->db->init == samsung) {
+			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
+				return -1;
+			}
+		}
+	} else { /* Alternate way of init mode detecting for unsupported monitors */
+		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
+			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
+				return -1;
+			}
 		}
 	}
 	
