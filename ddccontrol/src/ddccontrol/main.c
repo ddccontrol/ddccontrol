@@ -49,29 +49,29 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 		{
 			if ((result > 0) || force)
 			{
-				if (monitor) {
-					group = monitor->group_list;
-					while ((group != NULL) && (controlname == NULL)) {
-						control = group->control_list;
-						while ((control != NULL) && (controlname == NULL)) {
-							valued = control->value_list;
-							
-							while ((valued != NULL) && (valuename == NULL)) {
-								if (valued->value == value) {
-									valuename = valued->name;
-									break;
-								}
-								valued = valued->next;
-							}
-							
-							if (control->address == ctrl) {
+				if (monitor) 
+				{
+					/* loop through groups */
+					for (group = monitor->group_list; (group != NULL) && 
+							(controlname == NULL); group = group->next) 
+					{
+						/* loop through controls inside group */
+						for (control = group->control_list; (control != NULL); control = control->next) 
+						{
+							/* check for control id */
+							if (control->address == ctrl) 
+							{
 								controlname = control->name;
+								/* look for the value */
+								for (valued = control->value_list; (valued != NULL); valued = valued->next) {
+									if (valued->value == value) {
+										valuename = valued->name;
+										break;
+									}
+								}
 								break;
 							}
-							
-							control = control->next;
 						}
-						group = group->next;
 					}
 				}
 				if (controlname == NULL) {
