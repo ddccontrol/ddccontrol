@@ -1,3 +1,7 @@
+2004-09-25 08:08  nboichat
+
+	* .cvsignore, config.guess, config.sub: Add missing files.
+
 2004-09-15 22:41  nboichat
 
 	* db/monitor/SAM00E2.xml: Update Samsung 173P DVI profile.
