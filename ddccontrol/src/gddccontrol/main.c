@@ -44,7 +44,9 @@ GtkWidget* notebook = NULL;
 
 GtkWidget *combo_box;
 
-GtkWidget *moninfo;
+GtkWidget *messagelabel = NULL;
+
+GtkWidget* close_button = NULL;
 
 struct monitorlist* monlist;
 
@@ -69,6 +71,8 @@ static void destroy( GtkWidget *widget,
 
 static void combo_change(GtkWidget *widget, gpointer data)
 {
+	gtk_widget_set_sensitive(widget, FALSE);
+	
 	int id = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 	
 	if (id == -1) { 
@@ -95,13 +99,15 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			snprintf(buffer, 256, "%s: %s", current->filename, current->name);
 			notebook = createNotebook(current);
 			gtk_widget_show(notebook);
-			gtk_label_set_text(GTK_LABEL(moninfo), buffer);
+			//gtk_label_set_text(GTK_LABEL(moninfo), buffer);
 			break;
 		}
 		i++;
 	}
 	
-	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	
+	gtk_widget_set_sensitive(widget, TRUE);
 }
 
 #ifdef HAVE_XINERAMA
@@ -151,6 +157,28 @@ static gboolean window_changed(GtkWidget *widget,
 	return FALSE;
 }
 #endif
+
+void setStatus(char* message)
+{
+	if (!message[0]) {
+		gtk_widget_hide(messagelabel);
+		if (notebook) {
+			gtk_widget_show(notebook);
+		}
+		gtk_widget_set_sensitive(close_button, TRUE);
+		return;
+	}
+	
+	gtk_widget_set_sensitive(close_button, FALSE);
+	gtk_label_set_text(GTK_LABEL(messagelabel), message);
+	gtk_widget_show(messagelabel);
+	if (notebook) {
+		gtk_widget_hide(notebook);
+	}
+	
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
+}
 
 int main( int   argc, char *argv[] )
 { 
@@ -207,6 +235,24 @@ int main( int   argc, char *argv[] )
 	
 	gtk_container_set_border_width (GTK_CONTAINER (window), 4);
 	
+	table = gtk_table_new(3, 1, FALSE);
+	gtk_widget_show (table);
+	
+	GtkWidget* align = gtk_alignment_new(1,1,0,0);
+	close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
+
+	gtk_container_add(GTK_CONTAINER(align),close_button);
+	gtk_widget_show (close_button);
+	gtk_widget_show (align);
+	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	
+	gtk_container_add (GTK_CONTAINER (window), table);
+	
+	messagelabel = gtk_label_new ("");
+	gtk_label_set_line_wrap(GTK_LABEL(messagelabel), TRUE);
+	gtk_table_attach(GTK_TABLE(table), messagelabel, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	
 	gtk_widget_show (window);
 	
 	#ifdef HAVE_XINERAMA
@@ -231,7 +277,12 @@ int main( int   argc, char *argv[] )
 	}
 	#endif
 	
+	setStatus(_(
+	"Probing for available monitors..."
+		   ));
+	
 	monlist = ddcci_probe();
+	
 	struct monitorlist* current;
 	
 	combo_box = gtk_combo_box_new_text();
@@ -245,39 +296,26 @@ int main( int   argc, char *argv[] )
 		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
 	}
 	
-	gtk_widget_show (combo_box);
-	
 	g_signal_connect (G_OBJECT (combo_box), "changed", G_CALLBACK (combo_change), NULL);
-	
-	table = gtk_table_new(4, 1, FALSE);
-	gtk_widget_show (table);
 	
 	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, 0, 5, 5);
 	
-	moninfo = gtk_label_new (_(
-		"No monitor supporting DDC/CI available."
-		"Please check all the needed kernel modules are loaded (i2c-dev, and your framebuffer driver)."
-	));
+/*	moninfo = gtk_label_new ();
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
 	
-	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);*/
 	
-	gtk_container_add (GTK_CONTAINER (window), table);
-	
-	if (monlist != NULL) {
+	if (monlist) {
+		gtk_widget_show (combo_box);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
 	}
-
-	GtkWidget* align = gtk_alignment_new(1,1,0,0);
-	GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
-
-    
-	gtk_container_add(GTK_CONTAINER(align),close_button);
-	gtk_widget_show (close_button);
-	gtk_widget_show (align);
-	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 3, 4, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
-
+	else {
+		setStatus(_(
+			"No monitor supporting DDC/CI available.\n\n"
+			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+			   ));
+	}
+	
 //	gtk_widget_show (moninfo);
 	
 	gtk_main();

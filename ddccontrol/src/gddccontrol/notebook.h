@@ -29,4 +29,7 @@
 GtkWidget* createNotebook(struct monitorlist* monitor);
 void deleteNotebook();
 
+/* Defined in main.c, set status message. */
+void setStatus(char* message);
+
 #endif

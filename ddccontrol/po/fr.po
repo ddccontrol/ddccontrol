@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-03-26 12:31+0100\n"
-"PO-Revision-Date: 2005-03-26 12:37+0100\n"
+"POT-Creation-Date: 2005-04-01 20:21+0200\n"
+"PO-Revision-Date: 2005-04-01 13:15+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgstr "'%s' ne semble pas être un nom de contrôle valide\n"
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' ne semble pas être une valeur valide\n"
 
-#: src/ddccontrol/main.c:202 src/gddccontrol/main.c:181
+#: src/ddccontrol/main.c:202 src/gddccontrol/main.c:209
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Impossible d'initialiser la librairie ddcci.\n"
@@ -241,48 +241,56 @@ msgstr ""
 "\n"
 "Sauvegarde des paramètres...\n"
 
-#: src/gddccontrol/main.c:139
+#: src/gddccontrol/main.c:145
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr "Moniteur changé (%d %d).\n"
 
-#: src/gddccontrol/main.c:186
+#: src/gddccontrol/main.c:214
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr ""
 "Impossible d'initialiser la librairie ddcci, voir la console pour plus de "
 "détails.\n"
 
-#: src/gddccontrol/main.c:193
+#: src/gddccontrol/main.c:221
 msgid "Monitor settings"
 msgstr "Paramètres du moniteur"
 
-#: src/gddccontrol/main.c:215
+#: src/gddccontrol/main.c:261
 #, c-format
 msgid "Xinerama supported and active\n"
 msgstr "Xinerama supporté et actif\n"
 
-#: src/gddccontrol/main.c:220
+#: src/gddccontrol/main.c:266
 #, c-format
 msgid "Display %d: %d, %d, %d, %d, %d\n"
 msgstr "Ecran %d: %d, %d, %d, %d, %d\n"
 
-#: src/gddccontrol/main.c:226
+#: src/gddccontrol/main.c:272
 #, c-format
 msgid "Xinerama supported but inactive.\n"
 msgstr "Xinerama supporté mais inactif\n"
 
-#: src/gddccontrol/main.c:230
+#: src/gddccontrol/main.c:276
 #, c-format
 msgid "Xinerama not supported\n"
 msgstr "Xinerama pas supporté\n"
 
-#: src/gddccontrol/main.c:258
+#: src/gddccontrol/main.c:281
+msgid "Probing for available monitors..."
+msgstr "Recherche des moniteurs disponibles..."
+
+#: src/gddccontrol/main.c:314
 msgid ""
-"No monitor supporting DDC/CI available.Please check all the needed kernel "
-"modules are loaded (i2c-dev, and your framebuffer driver)."
+"No monitor supporting DDC/CI available.\n"
+"\n"
+"If your graphics card need it, please check all the required kernel modules "
+"are loaded (i2c-dev, and your framebuffer driver)."
 msgstr ""
-"Pas de moniteur supportant le DDC/CI accessible. Vérifiez que les modules du "
-"noyau sont chargés (i2c-dev, et votre driver de \"framebuffer\")."
+"Pas de moniteur supportant le DDC/CI accessible.\n"
+"\n"
+"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de "
+"\"framebuffer\"), si votre carte graphique en a besoin."
 
 #: src/gddccontrol/notebook.c:76
 msgid "Error while getting value"
@@ -303,9 +311,33 @@ msgstr ""
 msgid "Section"
 msgstr "Section"
 
-#: src/gddccontrol/notebook.c:416
+#: src/gddccontrol/notebook.c:406
+msgid ""
+"The current monitor is in the database but does not supports DDC/CI.\n"
+"\n"
+"This often occurs when you connect the VGA/DVI cable on the wrong input of "
+"monitors supporting DDC/CI only on one of its two inputs."
+msgstr ""
+"Le moniteur actuel est dans la base de données mais ne supporte pas le "
+"protocole DDC/CI.\n"
+"\n"
+"Cela arrive souvent lorsqu'on connecte le câble VGA/DVI sur la mauvaise "
+"prise d'un moniteur ne supportant le protocole DDC/CI que sur une des "
+"entrées."
+
+#: src/gddccontrol/notebook.c:413
+#, c-format
+msgid "Opening the monitor device (%s)..."
+msgstr "Ouverture du périphérique du moniteur (%s)..."
+
+#: src/gddccontrol/notebook.c:429
 msgid "Please click on a parameter on the left to change it."
 msgstr "Cliquez sur un paramètre à gauche pour le changer."
+
+#: src/gddccontrol/notebook.c:448 src/gddccontrol/notebook.c:457
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "Lecture des valeurs des contrôles (%d%%)..."
 
 #: src/lib/ddcci.c:90
 #, c-format

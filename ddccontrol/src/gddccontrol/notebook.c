@@ -34,7 +34,7 @@
 
 #define RETRYS 3 // number of read retrys
 
-struct monitor mon;
+struct monitor* mon = NULL;
 
 enum
 {
@@ -61,7 +61,7 @@ void get_default_and_max(struct control_db *control,unsigned short *currentDefau
 	{
 		for(retry = RETRYS; retry; retry--)
 		{
-			if (ddcci_readctrl(&mon, control->address, currentDefault, currentMaximum) >= 0)
+			if (ddcci_readctrl(mon, control->address, currentDefault, currentMaximum) >= 0)
 			{
 				break;
 			}
@@ -135,7 +135,7 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	if (control)
 	{
 		unsigned short nval = (unsigned short)round(val*(double)Maximum);
-		ddcci_writectrl(&mon, control->address, nval);
+		ddcci_writectrl(mon, control->address, nval);
 		
 		gtk_range_set_value(GTK_RANGE(widget), (double)100.0*nval/(double)Maximum);
 		//gtk_widget_set_sensitive(restorevalue, TRUE);
@@ -158,7 +158,7 @@ static void group_callback(GtkWidget *widget, gpointer data)
 		
 		if (control)
 		{
-			ddcci_writectrl(&mon, control->address, val);
+			ddcci_writectrl(mon, control->address, val);
 			
 			//			gtk_widget_set_sensitive(restorevalue, TRUE);
 			modified = 1;
@@ -183,7 +183,7 @@ static void command_callback(GtkWidget *widget, gpointer data)
 	
 	if (control)
 	{
-		ddcci_writectrl(&mon, control->address, val);
+		ddcci_writectrl(mon, control->address, val);
 		
 		modified = 1;
 	}
@@ -197,7 +197,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 	{
 		switch (currentControl->type) {
 			case value:
-				ddcci_writectrl(&mon, currentControl->address, currentDefault);
+				ddcci_writectrl(mon, currentControl->address, currentDefault);
 				gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*currentDefault/(double)currentMaximum);
 				gtk_widget_set_sensitive(restorevalue, FALSE);
 				break;
@@ -222,7 +222,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 						   group = group->next;
 					   }
 					   
-					   ddcci_writectrl(&mon, currentControl->address, currentDefault);
+					   ddcci_writectrl(mon, currentControl->address, currentDefault);
 				   }
 				   break;
 		}
@@ -365,10 +365,10 @@ GtkWidget* createTree(GtkWidget *notebook)
 	struct group_db* group;
 	struct subgroup_db* subgroup;
 	
-	if (mon.db)
+	if (mon->db)
 	{
 		int id = 1;
-		for (group = mon.db->group_list; group != NULL; group = group->next)
+		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_tree_store_append(store,&top_iter,NULL);
 			gtk_tree_store_set(store,&top_iter,TITLE_COL,group->name,ID_COL,0,WIDGET_COL,notebook,-1);
@@ -399,9 +399,22 @@ GtkWidget* createTree(GtkWidget *notebook)
 GtkWidget* createNotebook(struct monitorlist* monitor)
 {
 	modified = 0;
-	all_controls = 0;
+	all_controls = NULL;
 	
-	ddcci_open(&mon, monitor->filename);
+	if (!monitor->supported) {
+		setStatus(_(
+			"The current monitor is in the database but does not supports "
+			"DDC/CI.\n\nThis often occurs when you connect the VGA/DVI cable "
+			"on the wrong input of monitors supporting DDC/CI only on one of "
+			"its two inputs."));
+		return NULL;
+	}
+	
+	setStatus(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
+	
+	mon = malloc(sizeof(struct monitor));
+	
+	ddcci_open(mon, monitor->filename);
 	
 	GtkWidget *notebook = gtk_notebook_new();
 	
@@ -419,19 +432,30 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	GtkWidget *label = gtk_label_new("zero");
 	
 	gtk_widget_show(valuelabel);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), none,label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), none, label);
 	gtk_widget_show(none);
 	/////////////////////////////
 	
-	if (mon.db)
+	if (mon->db)
 	{
-		for (group = mon.db->group_list; group != NULL; group = group->next)
+		int count = 0, current = 0;
+		for (group = mon->db->group_list; group != NULL; group = group->next)
+		{
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+				count++;
+		}
+		
+		setStatus(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
 			//	gtk_notebook_set_show_border(GTK_NOTEBOOK(notebook),0);
 			
-			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
 				createPage(notebook, subgroup);
+				current++;
+				setStatus(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+			}
 		}
 	}
 	
@@ -442,6 +466,8 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (table);
 	
+	setStatus("");
+	
 	return table;
 }
 
@@ -450,9 +476,12 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	
 void deleteNotebook()
 {
-	if (modified)
-		ddcci_save(&mon);
+	if (mon) {
+		if (modified)
+			ddcci_save(mon);
 	
-	ddcci_close(&mon);
-	g_slist_free(all_controls);
+		ddcci_close(mon);
+		free(mon);
+		g_slist_free(all_controls);
+	}
 }
