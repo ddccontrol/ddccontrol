@@ -4,8 +4,7 @@
 <webpage id="download">
 
   <config param="desc" value="DDCcontrol download page"/>
-  <config param="rcsdate" value="$Id$"/>
-  <!---<config param="footer" value="about.html" altval="About..."/>-->
+  <config param="cvsid" value="$Id$"/>
 
   <head>
     <title>Download</title>
