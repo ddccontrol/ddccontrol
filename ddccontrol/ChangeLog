@@ -1,3 +1,25 @@
+2005-03-29 22:31  nboichat
+
+	* Makefile.in, configure, configure.ac, doc/Makefile.in,
+	  src/Makefile.in, src/ddccontrol/Makefile.am,
+	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.am,
+	  src/ddcpci/Makefile.in, src/gddccontrol/Makefile.in,
+	  src/lib/Makefile.am, src/lib/Makefile.in: Build ddcpci statically
+	  for security reasons.
+
+2005-03-29 22:04  nboichat
+
+	* Makefile.am, Makefile.in, configure, configure.ac,
+	  doc/Makefile.am, doc/Makefile.in, src/Makefile.in,
+	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
+	  src/lib/Makefile.in: Install documentation even if it can't be
+	  built.
+
+2005-03-29 08:57  nboichat
+
+	* doc/: Makefile.am, Makefile.in: Add style-fo.xsl to dist.
+
 2005-03-28 23:02  nboichat
 
 	* doc/: .cvsignore, Makefile.am, Makefile.in, main.xml,
