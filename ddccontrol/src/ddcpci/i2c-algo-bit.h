@@ -37,6 +37,14 @@
 #endif
 #include <linux/i2c-dev.h>
 
+// Old headers (2.4) doesn't define some constants
+#ifndef I2C_M_NO_RD_ACK
+#define I2C_M_NO_RD_ACK 0x0800
+#endif
+#ifndef I2C_M_IGNORE_NAK
+#define I2C_M_IGNORE_NAK 0x1000
+#endif
+
 /* --- Defines for bit-adapters ---------------------------------------	*/
 /*
  * This struct contains the hw-dependent functions of bit-style adapters to 
