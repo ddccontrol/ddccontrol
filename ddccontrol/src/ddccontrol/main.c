@@ -32,11 +32,27 @@
 
 #define RETRYS 3 /* number of retrys */
 
-void usage(char *name)
+static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
+{
+	unsigned short value, maximum;
+	int retry, result;
+
+	for (retry = RETRYS; retry; retry--) {
+		if ((result = ddcci_readctrl(mon, ctrl, &value, &maximum)) >= 0) 
+		{
+			if ((result > 0) || force) {
+				fprintf(stdout, "Control 0x%02x: %c/%d/%d\n", ctrl, 
+					(result > 0) ? '+' : '-',  value, maximum);
+			}
+			break;
+		}
+	}
+}
+
+static void usage(char *name)
 {
 	fprintf(stderr,"Usage:\n");
-	fprintf(stderr,"%s [-v] [-c] [-f] [-a] dev\n", name);
-	fprintf(stderr,"%s [-v] [-c] [-f] [-s] [-r ctrl] [-w value] dev\n", name);
+	fprintf(stderr,"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] dev\n", name);
 	fprintf(stderr,"\tdev: device, e.g. /dev/i2c-0\n");
 	fprintf(stderr,"\t-c : query capability\n");
 	fprintf(stderr,"\t-d : query ctrls 0 - 255\n");
@@ -53,7 +69,6 @@ int main(int argc, char **argv)
 	
 	/* filedescriptor and name of device */
 	struct monitor mon;
-	struct control_ret ctrl_ret;
 	char *fn;
 	
 	/* what to do */
@@ -63,7 +78,7 @@ int main(int argc, char **argv)
 	int caps = 0;
 	int save = 0;
 	int force = 0;
-	verbosity = 1;
+	int verbosity = 0;
 	
 	fprintf(stdout, "ddccontrol version " VERSION "\n");
 	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n");
@@ -78,24 +93,20 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 			exit(1);
 			break;
-/*		case 'a':
-				if ((addr = strtol(optarg, NULL, 0)) < 0 || (addr > 127)){
-				fprintf(stderr,"'%s' does not seem to be a valid i2c address\n", optarg);
-				exit(1);
-				}
-			break;*/
 		case 'r':
-				if ((ctrl = strtol(optarg, NULL, 0)) < 0 || (ctrl > 255)){
+			if ((ctrl = strtol(optarg, NULL, 0)) < 0 || (ctrl > 255))
+			{
 				fprintf(stderr,"'%s' does not seem to be a valid register name\n", optarg);
 				exit(1);
-				}
+			}
 			break;
 		case 'w':
-			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535)){
+			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535))
+			{
 				fprintf(stderr,"'%s' does not seem to be a valid value.\n", optarg);
 				exit(1);
-				}
-				break;
+			}
+			break;
 		case 'c':
 				caps++;
 			break;
@@ -122,52 +133,61 @@ int main(int argc, char **argv)
 	
 	fn = argv[optind];
 	
+	ddcci_verbosity(verbosity);
+	
+	fprintf(stdout, "Reading EDID and initializing DDC/CI at bus %s...\n", fn);
+	
 	if ((ret = ddcci_open(&mon, fn)) < 0) {
 		fprintf(stderr, "\nDDC/CI at %s is unusable (%d).\n", fn, ret);
 	} else {
+		fprintf(stdout, "\nEDID readings:\n");
+		fprintf(stdout, "\tPlug and Play ID: %s [%s]\n", 
+			mon.pnpid, mon.db ? mon.db->name : NULL);
+		fprintf(stdout, "\tInput type: %s\n", mon.digital ? "Digital" : "Analog");
+
 		if (caps) {
 			unsigned char buf[1024];
 			
+			fprintf(stdout, "\nCapabilities:\n");
+			
 			for (retry = RETRYS; retry; retry--) {
 				if (ddcci_caps(&mon, buf, 1024) >= 0) {
-					//printf("CAPS: %s\n", buf);
+					fprintf(stdout, "%s\n", buf);
 					break;
 				}
 			}
+			
+			if (retry == 0) {
+				fprintf(stderr, "Capabilities read fail.\n");
+			}
 		}
+		
 		if (ctrl >= 0) {
 			if (value >= 0) {
-				fprintf(stdout, "\nWriting 0x%02x, 0x%02x(%d)\n",
+				fprintf(stdout, "\nWriting 0x%02x, 0x%02x(%d)...\n",
 					ctrl, value, value);
 				ddcci_writectrl(&mon, ctrl, value);
 			} else {
-				fprintf(stdout, "\nReading 0x%02x\n", ctrl);
+				fprintf(stdout, "\nReading 0x%02x...\n", ctrl);
 			}
 			
-			for (retry = RETRYS; retry; retry--) {
-				if (ddcci_readctrl(&mon, ctrl, 1, &ctrl_ret) >= 0) {
-					break;
-				}
-			}
+			dumpctrl(&mon, ctrl, 1);
 		}
-		else if (dump) {
+		
+		if (dump) {
 			fprintf(stdout, "\nControls (valid/current/max):\n");
 			
 			for (i = 0; i < 256; i++) {
-				for (retry = RETRYS; retry; retry--) {
-					if (ddcci_readctrl(&mon, i, force, &ctrl_ret) >= 0) {
-						break;
-					}
-				}
+				dumpctrl(&mon, i, force);
 			}
 		}
-		else if (ctrl == -1) {
+		else if (ctrl == -1 && caps == 0) 
+		{
 			struct monitor_db* monitor = mon.db;
 			struct group_db* group;
 			struct control_db* control;
 			struct value_db* valued;
 			
-			verbosity--;
 			if (monitor) {		
 				printf("\n= %s\n", monitor->name);
 				
@@ -184,15 +204,19 @@ int main(int argc, char **argv)
 						if (valued) {
 							printf("\t  Possible values:\n");
 						}
+						
 						while (valued != NULL) {
-							printf("\t\t> id=%s - name=%s, value=%#x\n", valued->id, valued->name, valued->value);
+							printf("\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
 							valued = valued->next;
 						}
 						
 						for (retry = RETRYS; retry; retry--) {
-							if (ddcci_readctrl(&mon, control->address, force, &ctrl_ret) >= 0) {
-								printf("\t  supported=%c, value=%#x, maximum=%#x\n", 
-									ctrl_ret.supported ? '+' : '-', ctrl_ret.value, ctrl_ret.maximum);
+							int result;
+							unsigned short value, maximum;
+							
+							if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
+								printf("\t  %ssupported, value=%d, maximum=%d\n", 
+									(result > 0) ? "" : "not ", value, maximum);
 								break;
 							}
 						}
@@ -204,7 +228,10 @@ int main(int argc, char **argv)
 			}
 			verbosity++;
 		}
+		
 		if (save) {
+			fprintf(stdout, "\nSaving settings...\n");
+	
 			ddcci_save(&mon);
 		}
 	}

@@ -62,10 +62,15 @@
 #define MAGIC_XOR 0x50	/* initial xor for received frame */
 
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
-int verbosity = 0;
+static int verbosity = 0;
+
+void ddcci_verbosity(int _verbosity)
+{
+	verbosity = _verbosity;
+}
 
 /* debugging */
-void dumphex(FILE *f, unsigned char *buf, unsigned char len)
+static void dumphex(FILE *f, unsigned char *buf, unsigned char len)
 {
 	int i, j;
 	
@@ -93,7 +98,7 @@ void dumphex(FILE *f, unsigned char *buf, unsigned char len)
 
 /* write len bytes (stored in buf) to i2c address addr */
 /* return 0 on success, -1 on failure */
-int i2c_write(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
+static int i2c_write(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
 {
 	int i;
 	struct i2c_rdwr_ioctl_data msg_rdwr;
@@ -121,7 +126,7 @@ int i2c_write(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
 
 /* read at most len bytes from i2c address addr, to buf */
 /* return -1 on failure */
-int i2c_read(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
+static int i2c_read(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
 {
 	struct i2c_rdwr_ioctl_data msg_rdwr;
 	struct i2c_msg             i2cmsg;
@@ -146,7 +151,7 @@ int i2c_read(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
 }
 
 /* stalls execution, allowing write transaction to complete */
-void ddcci_delay(struct monitor* mon, int iswrite)
+static void ddcci_delay(struct monitor* mon, int iswrite)
 {
 	struct timeval now;
 	
@@ -174,7 +179,7 @@ void ddcci_delay(struct monitor* mon, int iswrite)
 
 /* write len bytes (stored in buf) to ddc/ci at address addr */
 /* return 0 on success, -1 on failure */
-int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char len)
+static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char len)
 {
 	int i = 0;
 	unsigned char _buf[MAX_BYTES + 3];
@@ -204,7 +209,7 @@ int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char len)
 }
 
 /* read ddc/ci formatted frame from ddc/ci at address addr, to buf */
-int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len)
+static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len)
 {
 	unsigned char _buf[MAX_BYTES];
 	unsigned char xor = MAGIC_XOR;
@@ -277,7 +282,7 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 }
 
 /* read register ctrl raw data of ddc/ci at address addr */
-int ddcci_raw_readctrl(struct monitor* mon, 
+static int ddcci_raw_readctrl(struct monitor* mon, 
 	unsigned char ctrl, unsigned char *buf, unsigned char len)
 {
 	unsigned char _buf[2];
@@ -293,38 +298,32 @@ int ddcci_raw_readctrl(struct monitor* mon,
 	return ddcci_read(mon, buf, len);
 }
 
-int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, int force, struct control_ret* ctrl_ret)
+int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
+	unsigned short *value, unsigned short *maximum)
 {
 	unsigned char buf[8];
 
 	int len = ddcci_raw_readctrl(mon, ctrl, buf, sizeof(buf));
 	
-	ctrl_ret->supported = 0;
-	ctrl_ret->value     = 0;
-	ctrl_ret->maximum   = 0;
-	
-	if (len == sizeof(buf) && buf[0] == DDCCI_REPLY_READ &&
-		buf[2] == ctrl && (force || !buf[1])) /* buf[1] is validity (0 - valid, 1 - invalid) */
+	if (len == sizeof(buf) && buf[0] == DDCCI_REPLY_READ &&	buf[2] == ctrl) 
 	{	
-		ctrl_ret->supported = !buf[1];
-		ctrl_ret->value   = buf[6] * 256 + buf[7];
-		ctrl_ret->maximum = buf[4] * 256 + buf[5];
-		
-		if (verbosity > 0) {
-			fprintf(stdout, "Control 0x%02x: %c/%d/%d\n", ctrl, 
-				ctrl_ret->supported ? '+' : '-',  ctrl_ret->value, ctrl_ret->maximum);
-			if (verbosity > 1) {
-				fprintf(stderr, "Raw: ");
-				dumphex(stderr, buf, sizeof(buf));
-			}
+		if (value) {
+			*value = buf[6] * 256 + buf[7];
 		}
+		
+		if (maximum) {
+			*maximum = buf[4] * 256 + buf[5];
+		}
+		
+		return !buf[1];
+		
 	}
 	
-	return len;
+	return -1;
 }
 
 /* read capabilities raw data of ddc/ci at address addr starting at offset to buf */
-int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf, unsigned char len)
+static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf, unsigned char len)
 {
 	unsigned char _buf[3];
 
@@ -340,17 +339,12 @@ int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf,
 	return ddcci_read(mon, buf, len);
 }
 
-int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen) {
-	if (verbosity) {
-		fprintf(stdout, "\nCapabilities:\n");
-	}
-	
+int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen) 
+{
 	int bufferpos = 0;
-	unsigned char buf[35];	/* 19 bytes chunk */
+	unsigned char buf[35];	/* 35 bytes chunk */
 	int offset = 0;
 	int len, i;
-	
-	buf[bufferpos] = 0;
 	
 	do {
 		len = ddcci_raw_caps(mon, offset, buf, sizeof(buf));
@@ -366,22 +360,16 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen) 
 
 		for (i = 3; i < len; i++) {
 			buffer[bufferpos++] = buf[i];
-			if (verbosity) {
-				fprintf(stdout, i > 2 && buf[i] >= 0x20 && buf[i] < 127 ? "%c" : "0x%02x ", buf[i]);
-			}
 			if (bufferpos >= buflen) {
 				fprintf(stderr, "Buffer too small to contain caps.\n");
 				return -1;
 			}
 		}
-		buffer[bufferpos] = 0;
 
 		offset += len - 3;
 	} while (len > 3);
-	
-	if (verbosity) {
-		fprintf(stdout, "\n");
-	}
+
+	buffer[bufferpos] = 0;
 	
 	return bufferpos;
 }
@@ -396,30 +384,31 @@ int ddcci_command(struct monitor* mon, unsigned char cmd)
 	return ddcci_write(mon, _buf, sizeof(_buf));
 }
 
-int ddcci_read_edid(struct monitor* mon, int addr) {
+int ddcci_read_edid(struct monitor* mon, int addr) 
+{
 	unsigned char buf[128];
 	buf[0] = 0;	/* eeprom offset */
 	
-	if (verbosity) {
-		printf("\nReading EDID : 0x%02x\n", addr);
-	}
 	if (i2c_write(mon->fd, addr, buf, 1) > 0 &&
-		i2c_read(mon->fd, addr, buf, sizeof(buf)) > 0) {
+	    i2c_read(mon->fd, addr, buf, sizeof(buf)) > 0) 
+	{
 		if (verbosity) {
 			dumphex(stdout, buf, sizeof(buf));
 		}
 		
-		snprintf(mon->pnpid, 8, "%c%c%c%02X%02X", 
-				((buf[8] >> 2) & 31) + 'A' - 1, 
-				((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
-				(buf[9] & 31) + 'A' - 1, 
-				buf[11], buf[10]);
-		mon->digital = (buf[20] & 0x80);
-		
-		if (verbosity) {
-			printf("\tPlug and Play ID: %s\n", mon->pnpid);
-			printf("\tInput type: %s\n", mon->digital ? "Digital" : "Analog");
+		if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
+		    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
+		{
+			fprintf(stderr, "Corrupted EDID at 0x%02x.\n", addr);
+			return -1;
 		}
+		
+		snprintf(mon->pnpid, 8, "%c%c%c%02X%02X", 
+			((buf[8] >> 2) & 31) + 'A' - 1, 
+			((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
+			(buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
+		
+		mon->digital = (buf[20] & 0x80);
 		
 		return 0;
 	} 
@@ -435,11 +424,8 @@ int ddcci_read_edid(struct monitor* mon, int addr) {
   - -2 if EDID is not available
   - -3 if file can't be opened 
 */
-int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid) {
-	if (verbosity) {
-		fprintf(stdout, "\nUsing ddc/ci : 0x%02x@%s\n", addr, filename);
-	}
-
+static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid) 
+{
 	if ((mon->fd = open(filename, O_RDWR)) < 0) {
 		perror(filename);
 		fprintf(stderr, "Be sure you've modprobed i2c-dev and correct framebuffer device.\n");
@@ -482,14 +468,13 @@ int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, in
 	return 0;
 }
 
-int ddcci_open(struct monitor* mon, const char* filename) {
+int ddcci_open(struct monitor* mon, const char* filename) 
+{
 	return ddcci_open_with_addr(mon, filename, DEFAULT_DDCCI_ADDR, DEFAULT_EDID_ADDR);
 }
 
-int ddcci_save(struct monitor* mon) {
-	if (verbosity) {
-		fprintf(stdout, "\nSaving settings...\n");
-	}
+int ddcci_save(struct monitor* mon) 
+{
 	return ddcci_command(mon, DDCCI_COMMAND_SAVE);
 }
 
@@ -498,7 +483,8 @@ int ddcci_save(struct monitor* mon) {
   - -1 if DDC/CI is not available
   - -3 if file can't be closed 
 */
-int ddcci_close(struct monitor* mon) {
+int ddcci_close(struct monitor* mon) 
+{
 	/* TODO: Read database to know if we should use Samsung mode */
 	
 	if (strncmp(mon->pnpid, "SAM", 3) == 0) {

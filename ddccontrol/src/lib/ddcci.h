@@ -35,23 +35,19 @@ struct monitor {
 	struct monitor_db* db;
 };
 
-/* Struct used to return control parameters read */
-struct control_ret {
-	unsigned char supported;
-	unsigned short value;
-	unsigned short maximum;
-};
-
 int ddcci_open(struct monitor* mon, const char* filename);
 int ddcci_save(struct monitor* mon);
 int ddcci_close(struct monitor* mon);
 
 int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value);
-int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, int force, struct control_ret* ctrl_ret);
+
+/* return values: < 0 - failure, 0 - contron not supported, > 0 - supported */
+int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
+	unsigned short *value, unsigned short *maximum);
 
 int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen);
 
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
-extern int verbosity;
+void ddcci_verbosity(int verbosity);
 
 #endif //DDCCI_H
