@@ -1,3 +1,7 @@
+2004-09-09 22:20  nboichat
+
+	* db/options.xml: Fixed XML format problem.
+
 2004-09-09 21:09  nboichat
 
 	* db/options.xml: Add subgroups in options.xml.
