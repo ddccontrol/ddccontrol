@@ -4,7 +4,10 @@
 		<control id="brightness" type="value" name="Brightness" address="0x10"/>
 		<control id="contrast" type="value" name="Contrast" address="0x12"/>
 		<control id="colorpreset" type="list" name="Color Preset" address="0x14">
-			<!-- To be completed -->
+			<!-- SAM00BA@0xe0 -->
+			<value id="normal" name="Normal"/>
+			<value id="warm" name="Warm"/>
+			<value id="cool" name="Cool"/>
 		</control>
 		<control id="red" type="value" name="Red maximum level" address="0x16"/>
 		<control id="green" type="value" name="Green maximum level" address="0x18"/>
@@ -30,9 +33,10 @@
 		<control id="vpos" type="value" name="Vertical Position" address="0x30"/>
 		<control id="vsize" type="value" name="Vertical Size" address="0x32"/>
 		<control id="autosize" type="list" name="Auto Size Center" address="0x5A">
-			<value id="text" name="Enable" value="0x00"/>
-			<value id="internet" name="Disable" value="0x01"/>
+			<value id="enable" name="Enable" value="0x00"/>
+			<value id="disable" name="Disable" value="0x01"/>
 		</control>
+		<control id="auto" type="command" name="Automatically adjust Size and Position" address="0x1e"/>
 	</group>
 	<group name="Geometry">
 		<control id="hpincushion" type="value" name="Horizontal Pincushion" address="0x24"/>
@@ -56,6 +60,8 @@
 		<control id="bdistortionbalance" type="value" name="Bottom Corner Distortion Balance" address="0x4C"/>
 	</group>
 	<group name="Screen purity">
+		<control id="coarse" type="value" name="Image Lock Coarse" address="0x0e"/>
+		<control id="fine" type="value" name="Image Lock Fine" address="0x3e"/>
 		<control id="hmoire" type="value" name="Horizontal Moire" address="0x54"/>
 		<control id="vmoire" type="value" name="Vertical Moire" address="0x56"/>
 		<control id="landing" type="value" name="Landing Adjust (RGB alignment)" address="0x5C"/>
@@ -73,6 +79,7 @@
 		<control id="degauss" type="command" name="Degauss" address="0x00"/>
 		<control id="secdegauss" type="command" name="Secondary Degauss" address="0x02"/>
 		<control id="defaults" type="command" name="Restore Factory Defaults" address="0x04"/>
+		<control id="defaultluma" type="command" name="Restore Brightness and Contrast" address="0x05"/>
 		<control id="defaultgeom" type="command" name="Restore Factory Default Geometry" address="0x06"/>
 		<control id="defaultcolor" type="command" name="Restore Factory Default Color" address="0x08"/>
 		<control id="defaultposition" type="command" name="Restore Factory Default Position" address="0x0A"/>
@@ -80,15 +87,36 @@
 		<control id="inputlevel" type="list" name="Input level Select" address="0x5E">
 			<!-- To be completed -->
 		</control>
-		<control id="inputsource" type="list" name="Input source Select" address="0x60">
-		<!-- To be completed -->
+		<control id="inputsource" type="list" name="Input Source Select" address="0x60">
+			<value id="analog" name="Analog"/>
+			<value id="digital" name="Digital"/>
 		</control>
 		<control id="osd" type="list" name="On Screen Display" address="0x66"> <!--- USB specifies address 0xCA -->
 			<value id="disable" value="0x00" name="Disable"/>
 			<value id="enable" value="0x01" name="Enable"/>
 		</control>
 		<control id="language" type="list" name="Language select" address="0x68">
-			<!-- To be completed -->
+			<value id="english" name="English"/>
+			<value id="french" name="Francais"/>
+			<value id="deutsch" name="Deutsch"/>
+			<value id="italian" name="Italiano"/>
+			<value id="russian" name="Russian"/>
+			<value id="spanish" name="Espanol"/>
+			<value id="svenska" name="Svenska"/>
 		</control>
+		<control id="settings" type="command" name="Settings" address="0xb0">
+			<value id="store" value="1" name="Save Current Settings"/>
+			<value id="restorefactory" value="2" name="Restore Factory Settings"/>
+		</control>
+		<!-- SAM00BA -->
+		<control id="dpms" type="list" name="DPMS Control" address="0xd6">
+			<value id="on" name="On"/>
+			<value id="standby" name="Standby"/>
+		</control>
+		<control id="power" type="list" name="Power control" address="0xe1">
+			<value id="off" name="Off"/>
+			<value id="on" name="On"/>
+		</control>
+		
 	</group>
 </options>
