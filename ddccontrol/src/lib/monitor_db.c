@@ -317,6 +317,14 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 									if (ddcci_get_value_list(control, cur, current_control, 1) < 0) {
 										return NULL;
 									}
+									if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
+										struct value_db *current_value = malloc(sizeof(struct value_db));
+										current_value->id = xmlCharStrdup("default");
+										current_value->name = xmlCharStrdup("default");
+										current_value->value = 0x01;
+										current_value->next = NULL;
+										current_control->value_list = current_value;
+									}
 								}
 								else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
 									current_control->type = list;

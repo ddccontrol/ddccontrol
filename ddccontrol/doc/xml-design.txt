@@ -18,6 +18,9 @@ a value (for example brightness), and those with type set to "command"
 are controls that do something when the value is set to something >0
 (for example degauss), "list" indicates a list of possible value.
 
+If you don't define any value entry in a command control, the default
+value 0x01 will be used.
+
 The "address" parameter in control and "value" in value are optional.
 These are default values used if not redefined in the monitor configuration
 file.
@@ -28,6 +31,8 @@ File format:
 <options>
   <group name="%groupname%">
     <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
+	  <!-- Command using the default 0x01 address -->
+    <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>
     <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
       <value id="%value_id%" value="%hex_value%"/>
     </control>
@@ -44,10 +49,10 @@ monitor/%monitor_id%.xml
 ------------------------
 
 List of controls related to this monitor.
-Controls IDs are defined in options.xml, if it is a list or a command, 
-supported values must be defined. "Address" parameter for controls,
-and "value", are optional if they are defined in the general options
-file.
+Controls IDs are defined in options.xml, if it is a list or a command
+with a non-default value, supported values must be defined. "Address" 
+parameter for controls, and "value", are optional if they are defined 
+in the general options file.
 
 The init parameter in monitor define the type of the initialisation:
 DDC/CI standard ("standard"), or Samsung ("samsung"). 
@@ -61,11 +66,16 @@ File format:
 <?xml version="1.0"?>
 <monitor name="%full_monitor_name%" init="[standard|samsung]">
   <controls>
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/> <!--- value -->
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"> <!--- command -->
+    <!--- value -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command using a default 0x01 value-->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
       <value id="activate" value="%hex_value%"/>
     </control>
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"> <!--- list -->
+    <!--- list -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
       <value id="%value_id%" value="%hex_value%"/>
       <value...>
     </control>
