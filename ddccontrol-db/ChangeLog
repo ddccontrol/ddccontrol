@@ -1,3 +1,16 @@
+2004-09-14 18:19  nboichat
+
+	* db/monitor/: SAM00D3.xml, SAM00E2.xml: Add Samsung 173P DVI
+	  entry.
+
+2004-09-14 09:17  nboichat
+
+	* db/monitor/SAM00D3.xml: Add Samsung 173P database entry.
+
+2004-09-13 22:27  nboichat
+
+	* .cvsignore: Add files to .cvsignore.
+
 2004-09-13 22:25  nboichat
 
 	* ABOUT-NLS, Makefile.am, Makefile.in, aclocal.m4, configure,
