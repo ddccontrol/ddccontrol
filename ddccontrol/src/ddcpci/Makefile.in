@@ -110,6 +110,8 @@ LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBXML2_CFLAGS = @LIBXML2_CFLAGS@
+LIBXML2_LDFLAGS = @LIBXML2_LDFLAGS@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
@@ -185,6 +187,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 INCLUDES = -I../lib  -DLOCALEDIR=\"$(localedir)\"
+ddcpci_LDFLAGS = -Wl,-z,now
 ddcpci_SOURCES = main.c nvidia.c i2c-algo-bit.c intel855.c ddcpci.h i2c-algo-bit.h
 all: all-am
 

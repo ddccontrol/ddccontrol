@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool], [0.1],
+AC_INIT([DDC/CI control tool], [0.1.1],
         [Nicolas Boichat <nicolas@boichat.ch>],
         [ddccontrol])
 AM_CONFIG_HEADER(src/config.h)
@@ -51,6 +51,8 @@ fi
 
 AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.])
 
+CFLAGS="$CFLAGS -Wall  -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
+
 # libxml2 check
 
 AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
@@ -58,8 +60,11 @@ if test "x$XML2_CONFIG" = "xno" ; then
    AC_MSG_ERROR([xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.], [1])
 fi
 
-CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
-LDFLAGS="$LDFLAGS `xml2-config --libs`"
+LIBXML2_LDFLAGS="`xml2-config --libs`"
+LIBXML2_CFLAGS="`xml2-config --cflags`"
+
+AC_SUBST([LIBXML2_LDFLAGS])
+AC_SUBST([LIBXML2_CFLAGS])
 
 # Direct PCI memory access check
 support_ddcpci=yes
@@ -98,8 +103,8 @@ if test x$support_gnome = xyes; then
 
    echo -n "checking for gtk+>=2.4... "
    if pkg-config --atleast-version=2.4 gtk+-2.0 ; then
-      GNOME_LDFLAGS="`pkg-config --libs gtk+-2.0`"
-      GNOME_CFLAGS="$CFLAGS `pkg-config --cflags gtk+-2.0`"
+      GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0`"
+      GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
       
@@ -131,7 +136,6 @@ AC_ARG_ENABLE(doc,
 AM_CONDITIONAL(BUILD_DOC, test x$support_doc = xyes)
  
 if test x$support_doc = xyes; then
-   HAVE_XSLTPROC=
    # Docbook tests
    # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
    # Copyright © 2003 John Levon

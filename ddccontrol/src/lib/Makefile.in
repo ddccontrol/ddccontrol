@@ -107,6 +107,8 @@ LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBXML2_CFLAGS = @LIBXML2_CFLAGS@
+LIBXML2_LDFLAGS = @LIBXML2_LDFLAGS@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
@@ -187,6 +189,7 @@ noinst_LIBRARIES = libddcci.a
 libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
    ddcpci-ipc.h i2c-dev.h
 
+AM_CFLAGS = $(LIBXML2_CFLAGS)
 all: all-am
 
 .SUFFIXES:
