@@ -113,7 +113,7 @@ static void open_card(struct i2c_bus* bus) {
 	}
 	
 	if (msgsnd(msqid, &aopen, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-		perror("==>Error while sending open message");
+		perror(_("==>Error while sending open message"));
 	}
 }
 
@@ -136,13 +136,13 @@ static void data(struct query* mquery, int len) {
 		if (ret < 0) {
 			adata.status = -1;
 			if (msgsnd(msqid, &adata, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-				perror("==>Error while sending data answer message");
+				perror(_("==>Error while sending data answer message"));
 			}
 		}
 		else {
 			adata.status = 0;
 			if (msgsnd(msqid, &adata, ANSWER_SIZE + mquery->len, IPC_NOWAIT) < 0) {
-				perror("==>Error while sending data answer message");
+				perror(_("==>Error while sending data answer message"));
 			}
 		}
 	}
@@ -159,7 +159,7 @@ static void data(struct query* mquery, int len) {
 		adata.mtype = 2;
 		adata.status = (ret < 0) ? -1 : ret;
 		if (msgsnd(msqid, &adata, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-			perror("==>Error while sending data answer message");
+			perror(_("==>Error while sending data answer message"));
 		}
 	}
 }
@@ -207,7 +207,7 @@ static void list()
 								alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
 						}
 						if (msgsnd(msqid, &alist, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-							perror("==>Error while sending list message");
+							perror(_("==>Error while sending list message"));
 						}
 					}
 					cards_close[i](thecard);
@@ -221,7 +221,7 @@ static void list()
 	alist.status = 0;
 	alist.last = 1;
 	if (msgsnd(msqid, &alist, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-		perror("==>Error while sending list message");
+		perror(_("==>Error while sending list message"));
 	}
 	if (verbosity == 2) {
 		printf("==>EOL\n");
@@ -239,25 +239,25 @@ int main(int argc, char **argv)
 	char* endptr;
 	
 	if (argc != 3) {
-		fprintf(stderr, "Invalid arguments.\n");
+		fprintf(stderr, _("Invalid arguments.\n"));
 		exit(1);
 	}
 	
 	verbosity = strtol(argv[1], &endptr, 0);
 	if (*endptr != 0) {
-		fprintf(stderr, "==>Can't read verbosity.\n");
+		fprintf(stderr, _("==>Can't read verbosity.\n"));
 		exit(1);
 	}
 	
 	key_t key = strtol(argv[2], &endptr, 0);
 	
 	if (*endptr != 0) {
-		fprintf(stderr, "==>Can't read key.\n");
+		fprintf(stderr, _("==>Can't read key.\n"));
 		exit(1);
 	}
 	
 	if ((msqid = msgget(key, 0666)) < 0) {
-		fprintf(stderr, "==>Can't open key %u\n", key);
+		fprintf(stderr, _("==>Can't open key %u\n"), key);
 		perror("msgget");
 		exit(1);
 	}
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
 				usleep(10000);
 				continue;
 			}
-			perror("==>Error while receiving query");
+			perror(_("==>Error while receiving query"));
 			break;
 		}
 		
@@ -298,7 +298,7 @@ int main(int argc, char **argv)
 			cont = 0;
 			break;
 		default:
-			fprintf(stderr, "==>Invalid query...\n");
+			fprintf(stderr, _("==>Invalid query...\n"));
 			break;
 		}
 	}

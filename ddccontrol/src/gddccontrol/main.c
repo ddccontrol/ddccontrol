@@ -136,7 +136,7 @@ static gboolean window_changed(GtkWidget *widget,
 			   ) {
 				if (xineramacurrent != i) {
 					int k = gtk_combo_box_get_active(GTK_COMBO_BOX(combo_box));
-					printf("Monitor changed (%d %d).\n", i, k);
+					printf(_("Monitor changed (%d %d).\n"), i, k);
 					k = (k == 0) ? 1 : 0;
 					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
 					xineramacurrent = i;
@@ -201,22 +201,22 @@ int main( int   argc, char *argv[] )
 	#ifdef HAVE_XINERAMA
 	if (XineramaQueryExtension(GDK_DISPLAY(), &event_base, &error_base)) {
 		if (XineramaIsActive(GDK_DISPLAY())) {
-			printf("Xinerama supported and active\n");
+			printf(_("Xinerama supported and active\n"));
 			
 			xineramainfo = XineramaQueryScreens(GDK_DISPLAY(), &xineramanumber);
 			int i;
 			for (i = 0; i < xineramanumber; i++) {
-				printf("Display %d: %d, %d, %d, %d, %d\n", i, 
+				printf(_("Display %d: %d, %d, %d, %d, %d\n"), i, 
 					xineramainfo[i].screen_number, xineramainfo[i].x_org, xineramainfo[i].y_org, 
 					xineramainfo[i].width, xineramainfo[i].height);
 			}
 		}
 		else {
-			printf("Xinerama supported but inactive.\n");
+			printf(_("Xinerama supported but inactive.\n"));
 		}
 	}
 	else {
-		printf("Xinerama not supported\n");
+		printf(_("Xinerama not supported\n"));
 	}
 	#endif
 	
@@ -257,12 +257,12 @@ int main( int   argc, char *argv[] )
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
 	}
 
-    GtkWidget* align = gtk_alignment_new(1,1,0,0);
-    GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-    g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
+	GtkWidget* align = gtk_alignment_new(1,1,0,0);
+	GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 
     
-    gtk_container_add(GTK_ALIGNMENT(align),close_button);
+	gtk_container_add(GTK_CONTAINER(align),close_button);
 	gtk_widget_show (close_button);
 	gtk_widget_show (align);
 	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 3, 4, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);

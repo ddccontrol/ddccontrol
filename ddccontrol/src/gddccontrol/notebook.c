@@ -56,7 +56,7 @@ GSList *all_controls;
 	
 void get_default_and_max(struct control_db *control,unsigned short *currentDefault, unsigned short *currentMaximum)
 {
-	int retry;
+	int retry = 1;
 	if (control->type != command)
 	{
 		for(retry = RETRYS; retry; retry--)
@@ -86,8 +86,8 @@ void refresh_control(gpointer data,gpointer user_data)
 	struct control_db *control;
 	control = (struct control_db*)g_object_get_data(G_OBJECT(data),"ddcc_control");
 	
-	unsigned short Default = (unsigned short) g_object_get_data(G_OBJECT(data),"ddcc_default");
-	unsigned short Maximum = (unsigned short) g_object_get_data(G_OBJECT(data),"ddcc_max");
+	unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(data),"ddcc_default");
+	unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(data),"ddcc_max");
 	
 	switch(control->type)
 	{
@@ -120,8 +120,8 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	
 	double val = gtk_range_get_value(GTK_RANGE(widget))/100.0;
 	
-	unsigned short Default = (unsigned short) g_object_get_data(G_OBJECT(widget),"ddcc_default");
-	unsigned short Maximum = (unsigned short) g_object_get_data(G_OBJECT(widget),"ddcc_max");
+	//unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddcc_default");
+	unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddcc_max");
 
 #if 0
 	printf("Would change %#x to %#x (%f, %f, %#x)\n",
@@ -266,8 +266,8 @@ void createControl(GtkWidget *parent,struct control_db *control)
 				gtk_scale_set_digits(GTK_SCALE(widget), 1);
 				g_signal_connect_after(G_OBJECT(widget), "value-changed", G_CALLBACK(range_callback), NULL);
 				g_object_set_data(G_OBJECT(widget), "ddcc_control", control);
-				g_object_set_data(G_OBJECT(widget), "ddcc_default", currentDefault);
-				g_object_set_data(G_OBJECT(widget), "ddcc_max", currentMaximum);
+				g_object_set_data(G_OBJECT(widget), "ddcc_default", (gpointer)(long)currentDefault);
+				g_object_set_data(G_OBJECT(widget), "ddcc_max", (gpointer)(long)currentMaximum);
 				
 				gtk_range_set_increments(GTK_RANGE(widget),
 						100.0/(double)currentMaximum,
@@ -311,10 +311,12 @@ void createControl(GtkWidget *parent,struct control_db *control)
 				
 				break;
 			}
+		default:
+			return;
 	}    
 	all_controls = g_slist_append(all_controls,widget);
 	g_object_set_data(G_OBJECT(widget), "ddcc_control", control);
-	g_print("%i - %i\n",all_controls,g_slist_length(all_controls));
+	/*g_print("%i - %i\n",all_controls,g_slist_length(all_controls));*/
 	gtk_widget_show(widget);
 	gtk_container_add(GTK_CONTAINER(parent),widget);
 }

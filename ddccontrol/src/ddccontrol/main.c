@@ -213,10 +213,10 @@ int main(int argc, char **argv)
 		current = monlist;
 		while (current != NULL)
 		{
-			printf(_(" - Device : %s\n"), current->filename);
-			printf(_("   DDC/CI supported : %s\n"), current->supported ? _("Yes") : _("No"));
-			printf(_("   Monitor Name : %s\n"), current->name);
-			printf(_("   Input type : %s\n"), current->digital ? _("Digital") : _("Analog"));
+			printf(_(" - Device: %s\n"), current->filename);
+			printf(_("   DDC/CI supported: %s\n"), current->supported ? _("Yes") : _("No"));
+			printf(_("   Monitor Name: %s\n"), current->name);
+			printf(_("   Input type: %s\n"), current->digital ? _("Digital") : _("Analog"));
 			
 			if ((!fn) && (current->supported))
 			{

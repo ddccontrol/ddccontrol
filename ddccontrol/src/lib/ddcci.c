@@ -605,7 +605,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	}
 #ifdef HAVE_DDCPCI
 	else if (strncmp(filename, "pci:", 4) == 0) {
-		printf("Device : %s\n", filename);
+		printf(_("Device: %s\n"), filename);
 		
 		struct query qopen;
 		qopen.mtype = 1;

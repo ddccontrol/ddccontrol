@@ -4,6 +4,7 @@ XHTML_STYLESHEET=style.xsl
 
 htmldir = $(prefix)/share/doc/@PACKAGE@
 dist_html_DATA = html/*
+EXTRA_DIST = main.xml gpl.xml style.xsl
 
 html/*: main.xml gpl.xml style.xsl
 	rm -rf html.old
@@ -14,6 +15,10 @@ html/*: main.xml gpl.xml style.xsl
 publish: all
 	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
 	scp -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/latest
+
+publish-release: all
+	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf @VERSION@"
+	scp -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/@VERSION@
 
 spell:
 	aspell --mode=sgml check main.xml

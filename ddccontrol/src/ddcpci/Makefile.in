@@ -179,8 +179,8 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-INCLUDES = -I../lib
-ddcpci_SOURCES = main.c nvidia.c i2c-algo-bit.c intel855.c
+INCLUDES = -I../lib  -DLOCALEDIR=\"$(localedir)\"
+ddcpci_SOURCES = main.c nvidia.c i2c-algo-bit.c intel855.c ddcpci.h i2c-algo-bit.h
 all: all-am
 
 .SUFFIXES:

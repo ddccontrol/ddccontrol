@@ -525,12 +525,12 @@ nVidia cards.</para>
 <title>Thanks</title>
 <para>
 Thanks to <personname><firstname>Oleg</firstname><othername>I.</othername>
-<surname>Vdovikin</surname></personname>, for his work which served
+<surname>Vdovikin</surname></personname>, for his work which was used
 as a basis for ddccontrol, and for his help when designing the XML database.
 </para>
 <para>
 Thanks to <personname><firstname>Christian</firstname><surname>Schilling</surname>
-</personname>, for his nice work on the Gnome GUI.
+</personname>, for his nice additions to the Gnome GUI.
 </para>
 <para>
 Thanks to <personname><firstname>William</firstname>

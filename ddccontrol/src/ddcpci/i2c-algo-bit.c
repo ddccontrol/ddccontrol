@@ -33,6 +33,11 @@
 
 #include "i2c-algo-bit.h"
 
+#include <libintl.h>
+#define _(String) gettext (String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+
 /* ----- global defines ----------------------------------------------- */
 #define DEB(x) if (i2c_debug>=1) x;
 #define DEB2(x) if (i2c_debug>=2) x;
@@ -386,7 +391,7 @@ inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 			*temp = inval;
 			rdcount++;
 		} else {   /* read timed out */
-			printf("i2c-algo-bit.o: readbytes: i2c_inb timed out.\n");
+			printf(_("i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"));
 			break;
 		}
 
@@ -405,7 +410,7 @@ inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 		}
 		if (sclhi(adap)<0) {	/* timeout */
 			sdahi(adap);
-			printf("i2c-algo-bit.o: readbytes: Timeout at ack\n");
+			printf(_("i2c-algo-bit.o: readbytes: Timeout at ack\n"));
 			return -1;
 		};
 		scllo(adap);

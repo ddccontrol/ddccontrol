@@ -1,6 +1,18 @@
 # List of source files containing translatable strings.
 src/ddccontrol/main.c
-src/gddccontrol/notebook.c
-src/lib/monitor_db.c
 src/gddccontrol/main.c
+src/gddccontrol/notebook.c
 src/lib/ddcci.c
+src/lib/monitor_db.c
+src/ddcpci/main.c
+src/ddcpci/i2c-algo-bit.c
+src/ddcpci/nvidia.c
+src/ddcpci/intel855.c
+src/gddccontrol/notebook.h
+src/lib/ddcci.h
+src/lib/monitor_db.h
+src/lib/i2c-dev.h
+src/lib/ddcpci-ipc.h
+src/config.h
+src/ddcpci/i2c-algo-bit.h
+src/ddcpci/ddcpci.h
