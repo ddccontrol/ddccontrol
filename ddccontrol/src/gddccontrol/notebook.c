@@ -108,6 +108,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 			ddcci_writectrl(&mon, currentControl->address, currentDefault);
 			gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*currentDefault/(double)currentMaximum);
 			gtk_widget_set_sensitive(restorevalue, FALSE);
+			break;
 		case command:
 			g_critical(_("restore_callback should not be called for command controls.\n"));
 			break;

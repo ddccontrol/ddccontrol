@@ -1,5 +1,7 @@
 Nicolas:
  - Work on Gnome tool
+ - Add translations in ddcpci
+ - Support for multi-screen (Xinerama)
  
 General:
  - See what to do with engineering VCP.
