@@ -1,3 +1,8 @@
+2005-02-03 22:25  nboichat
+
+	* src/gddccontrol/notebook.c: Free all_controls when deleting the
+	  notebook.
+
 2005-02-03 22:14  nboichat
 
 	* src/gddccontrol/notebook.c: Fix bug in gddccontrol when switching
