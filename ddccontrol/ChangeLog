@@ -1,3 +1,22 @@
+2004-12-10 15:16  nboichat
+
+	* src/lib/ddcpci-ipc.h: Fix for pci-utils >=2.1.99.
+
+2004-12-08 17:01  nboichat
+
+	* aclocal.m4, configure, configure.ac: Configure fix for some
+	  kernel headers.
+
+2004-11-21 15:45  nboichat
+
+	* src/ddcpci/nvidia.c: Some changes to nvidia PCI access (needs to
+	  be tested).
+
+2004-11-07 10:58  nboichat
+
+	* src/ddcpci/i2c-algo-bit.h: Define some constants when using old
+	  kernel headers (2.4).
+
 2004-11-07 09:03  nboichat
 
 	* src/ddcpci/nvidia.c: Add original copyright to nvidia.c.
