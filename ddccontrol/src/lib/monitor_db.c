@@ -69,8 +69,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			
 			tmp = xmlGetProp(value, "value");
 			if (tmp != NULL) {
-				options_value = strtol(tmp, &endptr, 16);
-				DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert hex value to int (%s).", value);
+				options_value = strtol(tmp, &endptr, 0);
+				DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert value to int (%s).", value);
 				xmlFree(tmp);
 			}
 			else {
@@ -98,8 +98,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						tmp = xmlGetProp(cur, "value");
 						
 						if (tmp != NULL) {
-							current_value->value = strtol(tmp, &endptr, 16);
-							DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert hex value to int.", cur);
+							current_value->value = strtol(tmp, &endptr, 0);
+							DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert value to int.", cur);
 							xmlFree(tmp);
 						}
 						else {
@@ -267,8 +267,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 					
 					tmp = xmlGetProp(control, "address");
 					if (tmp != NULL) {
-						options_address = strtol(tmp, &endptr, 16);
-						DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert hex address to int (%s).", control);
+						options_address = strtol(tmp, &endptr, 0);
+						DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert address to int (%s).", control);
 						xmlFree(tmp);
 					}
 					else {
@@ -295,8 +295,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 								
 								tmp = xmlGetProp(cur, "address");
 								if (tmp != NULL) {
-									current_control->address = strtol(tmp, &endptr, 16);
-									DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert hex address to int.", cur);
+									current_control->address = strtol(tmp, &endptr, 0);
+									DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert address to int.", cur);
 									xmlFree(tmp);
 								}
 								else {
