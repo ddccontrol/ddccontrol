@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 			printf(" - Device : %s\n", current->filename);
 			printf("   DDC/CI supported : %s\n", current->supported ? "Yes" : "No");
 			printf("   Monitor Name : %s\n", current->name);
-			printf("   Input type : %s\n", mon.digital ? "Digital" : "Analog");
+			printf("   Input type : %s\n", current->digital ? "Digital" : "Analog");
 			
 			if ((!fn) && (current->supported))
 			{
