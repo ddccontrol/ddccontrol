@@ -29,13 +29,7 @@
 #define I2C_ALGO_BIT_H
 
 #include "config.h"
-
-#if HAVE_BUGGY_I2C_DEV
-#define __user
-#define s32 int
-#include <linux/i2c.h>
-#endif
-#include <linux/i2c-dev.h>
+#include "lib/i2c-dev.h"
 
 // Old headers (2.4) doesn't define some constants
 #ifndef I2C_M_NO_RD_ACK

@@ -17,7 +17,6 @@ AC_LANG([C])
 
 AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
-# AC_CHECK_HEADERS([linux/i2c-dev.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
 
 support_i2c_dev=no
 AC_MSG_CHECKING([if linux/i2c-dev.h works alone])
@@ -32,22 +31,21 @@ AC_MSG_RESULT(no)
 )
 
 if test "x$support_i2c_dev" = "xno" ; then
-  AC_MSG_CHECKING([if linux/i2c-dev.h works with some tweaks])
+  AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+  AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
   AC_COMPILE_IFELSE([
-  [#define __user]
-  [#define s32 int]
-  [#include <linux/i2c.h>]
-  [#include <linux/i2c-dev.h>]
+  [#define HAVE_BUGGY_I2C_DEV 1]
+  [#include "src/lib/i2c-dev.h"]
   [const int a = I2C_RDWR + I2C_M_RD;]
   [struct i2c_msg i2cmsg;]
   ],
-  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [if linux/i2c-dev.h is buggy on your system, but could be workarounded])
+  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
   support_i2c_dev=yes
   AC_MSG_RESULT(yes),
   AC_MSG_RESULT(no)
   )
   if test "x$support_i2c_dev" = "xno" ; then
-   AC_MSG_ERROR([Unable to use linux/i2c-dev.h on your system, this header may be more buggy than usual, or inexistant, try to (re-)install kernel headers.], [1])
+   AC_MSG_ERROR([Unable to use neither linux/i2c-dev.h nor src/lib/i2c-dev.h on your system, kernel headers may be more buggy than usual, or inexistant, try to (re-)install kernel headers.], [1])
   fi
 fi
 

@@ -27,11 +27,7 @@
 #include <sys/ioctl.h>
 #include <string.h>
 
-#if HAVE_BUGGY_I2C_DEV
-#define __user
-#include <linux/i2c.h>
-#endif
-#include <linux/i2c-dev.h>
+#include "i2c-dev.h"
 #include <unistd.h>
 #include <dirent.h>
 #include <stdlib.h>

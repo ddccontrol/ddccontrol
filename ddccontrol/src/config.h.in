@@ -4,7 +4,8 @@
    language is requested. */
 #undef ENABLE_NLS
 
-/* if linux/i2c-dev.h is buggy on your system, but could be workarounded */
+/* if linux/i2c-dev.h is buggy on your system, so defaults constants and
+   structures must be used */
 #undef HAVE_BUGGY_I2C_DEV
 
 /* Define if the GNU dcgettext() function is already present or preinstalled.
@@ -34,6 +35,9 @@
 
 /* Define to 1 if you have the `pci' library (-lpci). */
 #undef HAVE_LIBPCI
+
+/* Define to 1 if you have the <linux/types.h> header file. */
+#undef HAVE_LINUX_TYPES_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
