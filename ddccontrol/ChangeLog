@@ -1,3 +1,12 @@
+2005-03-28 23:02  nboichat
+
+	* doc/: .cvsignore, Makefile.am, Makefile.in, main.xml,
+	  style-fo.xsl, style.xsl: Documentation update, add pdf target.
+
+2005-03-26 15:13  nboichat
+
+	* doc/main.xml: Documentation update.
+
 2005-03-26 11:47  nboichat
 
 	* doc/main.xml, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
