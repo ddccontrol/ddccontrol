@@ -1,3 +1,7 @@
+2004-09-04 14:50  nboichat
+
+	* db/: options.xml, monitor/MEL4513.xml: Modify some control ids.
+
 2004-09-03 00:34  nboichat
 
 	* commit.sh: Add automatic ChangeLog generation script.
