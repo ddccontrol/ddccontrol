@@ -1,3 +1,8 @@
+2004-09-03 00:34  nboichat
+
+	* db/: options.xml, monitor/MEL4513.xml: Add support for Mitsubishi
+	  Diamond Pro 2060u
+
 2004-09-02 17:38  nboichat
 
 	* db/: options.xml, monitor/SAM00BA.xml, monitor/SAM1234.xml: New
@@ -5,7 +10,7 @@
 
 2004-08-31 19:13  nboichat
 
-	* .cvsignore, ChangeLog: Update ChangeLog
+	* .cvsignore: Update ChangeLog
 
 2004-08-31 19:12  nboichat
 
@@ -21,20 +26,20 @@
 2004-08-31 18:55  nboichat
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
-	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, ChangeLog,
-	  NEWS, README, configure, autom4te.cache/requests,
-	  autom4te.cache/output.0, autom4te.cache/traces.0,
-	  autom4te.cache/output.1, autom4te.cache/traces.1, db/Makefile.am,
-	  db/Makefile.in, db/options.xml, db/monitor/MEL4511.xml,
-	  db/monitor/MEL4513.xml, db/monitor/SAM1234.xml: Initial import
+	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  db/monitor/SAM1234.xml: Initial import
 
 2004-08-31 18:55  nboichat
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
-	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, ChangeLog,
-	  NEWS, README, configure, autom4te.cache/requests,
-	  autom4te.cache/output.0, autom4te.cache/traces.0,
-	  autom4te.cache/output.1, autom4te.cache/traces.1, db/Makefile.am,
-	  db/Makefile.in, db/options.xml, db/monitor/MEL4511.xml,
-	  db/monitor/MEL4513.xml, db/monitor/SAM1234.xml: Initial revision
+	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  db/monitor/SAM1234.xml: Initial revision
 
