@@ -1,36 +1,21 @@
 <?xml version="1.0"?>
 <monitor name="Samsung SyncMaster 173T" init="standard">
 	<controls>
-		<!-- 0x04 -->
-		<control id="defaults"/>
-		<!-- 0x05 -->
+		<control id="defaults" address="0x04"/>
 		<control id="defaultluma" address="0x05"/>
-		<!-- 0x06 -->
-		<control id="defaultgeom"/>
-		<!-- 0x08 -->
-		<control id="defaultcolor"/>
-		<!-- 0x0e -->
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
 		<control id="coarse" address="0x0e"/>
-		<!-- 0x10 -->
-		<control id="brightness"/>
-		<!-- 0x12 -->
-		<control id="contrast"/>
-		<!-- 0x16 -->
-		<control id="red"/>
-		<!-- 0x18 -->
-		<control id="green"/>
-		<!-- 0x1a -->
-		<control id="blue"/>
-		<!-- 0x1e -->
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1a"/>
 		<control id="auto" address="0x1e"/>
-		<!-- 0x20 -->
-		<control id="hpos"/>
-		<!-- 0x30 -->
-		<control id="vpos"/>
-		<!-- 0x3e -->
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
 		<control id="fine" address="0x3e"/>
-		<!-- 0x60 -->
-		<control id="inputsource" type="list">
+		<control id="inputsource" type="list" address="0x60">
 			<value id="analog" value="1"/>
 			<value id="digital" value="3"/>
 		</control>
@@ -38,7 +23,6 @@
 		<!-- 0x6c Service: Red Video Black Level -->
 		<!-- 0x6e Service: Green Video Black Level -->
 		<!-- 0x70 Service: Blue Video Black Level -->
-		<!-- 0xb0 -->
 		<control id="settings" type="command" address="0xb0">
 			<value id="store" value="1"/>
 			<value id="restorefactory" value="2"/>
@@ -47,12 +31,10 @@
 		<!-- 0xc6: +/1/1	[???] -->
 		<!-- 0xc8: +/5/16	[???] -->
 		<!-- 0xc9: +/1/0	[???] -->
-		<!-- 0xca -->
 		<control id="osd" type="list" address="0xca">
 			<value id="disable" value="1"/>
 			<value id="enable" value="2"/>
 		</control>
-		<!-- 0xcc -->
 		<control id="language" type="list" address="0xcc">
 			<value id="english" value="2"/>
 			<value id="french" value="3"/>
@@ -62,12 +44,10 @@
 			<value id="spanish" value="10"/>
 			<value id="svenska" value="11"/>
 		</control>
-		<!-- 0xd6 -->
 		<control id="dpms" type="list" address="0xd6">
 			<value id="on" value="1"/>
 			<value id="standby" value="4"/>
 		</control>
-		<!-- 0xdc -->
 		<control id="magicbright" type="list" address="0xdc">
 			<value id="text" value="1"/>
 			<value id="internet" value="2"/>
@@ -75,13 +55,11 @@
 			<value id="custom" value="4"/>
 		</control>
 		<!-- 0xdf: +/512/0	[VCP Version] -->
-		<!-- 0xe0 -->
 		<control id="colorpreset" type="list" address="0xe0">
 			<value id="normal" value="0"/>
 			<value id="warm" value="1"/>
 			<value id="cool" value="2"/>
 		</control>
-		<!-- 0xe1 -->
 		<control id="power" type="list" address="0xe1">
 			<value id="off" value="0"/>
 			<value id="on" value="1"/>
