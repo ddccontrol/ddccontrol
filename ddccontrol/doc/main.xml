@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://docbook.org/xml/4.3/docbookx.dtd" []>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://docbook.org/xml/4.3/docbookx.dtd" [
+<!ENTITY gpl SYSTEM "gpl.xml">
+]>
  
 <book>
  
@@ -26,10 +29,14 @@ $Id$
 
 <sect1 id="ddccontrol">
 <title>About DDCcontrol</title>
-<para>DDCcontrol is a tool used to control monitor parameters, like brightness and contrast,
-without using the OSD (On Screen Display) and the buttons in front of the monitor.</para>
-<para>There is two version of this tool, a command line version, and a user-friendly
-Gnome GUI.</para>
+<para>DDCcontrol is a tool used to control monitor parameters, like brightness 
+and contrast, without using the OSD (On Screen Display) and the buttons in front
+of the monitor.</para>
+<para>All the software provided by monitor manufacturers (NEC/Mitsubishi NaviSet
+and Samsung MagicTune) are closed-source and only runs on Windows.
+DDCcontrol is open-source and runs on Linux.</para>
+<para>There is two version of this tool, a command line version, and a 
+user-friendly Gnome GUI.</para>
 </sect1>
  
 <sect1 id="ddcci">
@@ -65,23 +72,27 @@ using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
 </itemizedlist>
 <note>
 <para>
-You don't need pci-utils if you don't use direct PCI memory access, and you don't need gtk+ if you don't plan to use the Gnome GUI.
-Usually, this is not the case, so you will need these packages.
+You don't need pci-utils if you don't use direct PCI memory access, and you 
+don't need gtk+ if you don't plan to use the Gnome GUI. Usually, this is not the
+case, so you will need these packages.
 </para>
 </note>
 </sect1>
 
 <sect1 id="download">
 <title>Download the sources</title>
-<para>Go to the <ulink url="http://sourceforge.net/project/showfiles.php?group_id=117933">download section</ulink>
-of ddccontrol project's page and download the latest
-ddccontrol and ddccontrol-db source tarballs.</para>
-<para>Then unpack these two archives with these commands:</para>
+<para>Go to the
+<ulink url="http://sourceforge.net/project/showfiles.php?group_id=117933">
+download section</ulink> of ddccontrol project's page and download the latest
+<filename>ddccontrol</filename> and <filename>ddccontrol-db</filename>
+source tarballs.</para>
+<para>Then unpack these two archives with:</para>
 <screen format="linespecific">
 # tar xvfz ddccontrol-0.1.tar.gz
 # tar xvfz ddccontrol-db-0.1.tar.gz
 </screen>
-<para>You should now have two directories, ddccontrol and ddccontrol-db.</para>
+<para>You should now have two directories, <filename>ddccontrol</filename> and
+<filename>ddccontrol-db</filename>.</para>
 </sect1>
  
 <sect1 id="compile">
@@ -94,43 +105,196 @@ ddccontrol and ddccontrol-db source tarballs.</para>
 Password: <userinput>&lt;root password&gt;</userinput>
 # make install
 </screen>
-<para>You need to do this in ddccontrol <emphasis>and</emphasis> ddccontrol-db directories.</para>
-<para>If you set the --prefix parameter when configuring the first package, you must set it to the
-same value when configuring the second.</para>
+<para>You need to do this in <filename>ddccontrol</filename>
+<emphasis>and</emphasis> <filename>ddccontrol-db</filename> directories.</para>
+<para>If you set the <option>--prefix</option> parameter when configuring one
+package, you must set it to the same value when configuring the other.</para>
 </sect1>
 
 <sect1 id="kerneli2c">
-<title>Configure /dev/i2c-* devices</title>
-<note>/dev/i2c-* devices are only working with kernel 2.6 or greater.</note>
-<para>If your graphics card is supported by /dev/i2c-* devices (see (***list***)), you must load the i2c-dev module by typing, as root:</para>
+<title>Configure <filename>/dev/i2c-*</filename> devices</title>
+<note><filename>/dev/i2c-*</filename> devices are only working with kernel 2.6
+or greater.</note>
+<para>If your graphics card is supported by <filename>/dev/i2c-*</filename> 
+devices (see <xref linkend="supportedgc"/>), you must load the <filename>i2c-dev</filename>
+module by typing, as root:</para>
 <screen format="linespecific">
 # modprobe i2c-dev
 </screen>
-<para>You must also load your graphics card framebuffer driver (for card-specific instructions see in (***list***)).</para>
-<para>If you want to load these modules automatically when Linux starts, see your distrubution's documentation.</para>
-<para>To allow standard (non-root) users to use ddccontrol, you must change the permissions on /dev/i2c-*. This is done by typing, as root:</para>
+<para>You must also load your graphics card framebuffer driver (for
+card-specific instructions see <xref linkend="supportedgc"/>).</para>
+<para>If you want to load these modules automatically when Linux starts, see 
+your distribution's documentation.</para>
+<para>To allow standard (non-root) users to use DDCcontrol, you must change the
+permissions on <filename>/dev/i2c-*</filename>. This is done by typing, as 
+root:</para>
 <screen format="linespecific">
 # chmod a+rw /dev/i2c-*
 </screen>
 <sect2>
 <title>Kernel configuration options</title>
-<para>If i2c-dev or your graphics card's framebuffer modules are not available with your kernel, 
-you can build your own kernel with the following options turned on (with recommend to build them
-as modules):</para>
+<para>If <filename>i2c-dev</filename> or your graphics card's framebuffer
+modules are not available with your kernel, you can build your own kernel with
+the following options turned on (with recommend to build them as modules):
+</para>
 <itemizedlist mark='bullet'>
 <listitem>
-Devices drivers-&gt;I2C support-&gt;I2C support.
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>I2C support</guimenuitem>
+</menuchoice>.
 </listitem>
 <listitem>
-Devices drivers-&gt;I2C support-&gt;I2C device interface.
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>I2C support</guimenuitem>
+  <guimenuitem>I2C device interface</guimenuitem>
+</menuchoice>.
 </listitem>
 <listitem>
-Devices drivers-&gt;Graphics support-&gt;Framebuffer support.
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+</menuchoice>.
 </listitem>
 <listitem>
-and a specific driver for your graphic card (see (***list***)).
+and a specific driver for your graphic card (see <xref linkend="supportedgc"/>).
 </listitem>
 </itemizedlist>
+</sect2>
+</sect1>
+</chapter>
+
+<chapter id="usage">
+<title>Usage</title>
+<sect1>
+<title>Gnome GUI</title>
+<para>If GTK+&gt;=2.4 is installed on your computer, the configure process will
+detect it, and build the GTK+ application.</para>
+<para>The Gnome GUI is designed to be user-friendly, so it should be easy to
+use it. To launch this GUI, simply type:</para>
+<screen format="linespecific">
+# gddccontrol
+</screen>
+</sect1>
+<sect1>
+<title>Command line tool</title>
+<para>The command line tool is useful for debugging purpose, and to create
+automatic scripts.</para>
+<note>
+<para>We won't present everything you can do with ddccontrol, if you want more
+information, type:</para>
+<screen format="linespecific">
+# ddccontrol -h
+</screen>
+</note>
+<sect2>
+<title>Usage example</title>
+<para>On this, we will first list all available controls and change the brightness
+parameter.</para>
+<sect3>
+<title>List available controls</title>
+<para>To list available controls, type:</para>
+<screen format="linespecific">
+# ddccontrol -p
+</screen>
+<para>It will probe for available monitors, take the first available and list
+controls for this monitor. This should give you an output like below (this example uses
+a Samsung Syncmaster 173P and an nVidia GeForce FX 5700):</para>
+<screen format="linespecific">
+ddccontrol version 0.1
+Copyright 2004 Oleg I. Vdovikin (oleg-at-cs.msu.su)
+Copyright 2004 Nicolas Boichat (nicolas-at-boichat.ch)
+This program comes with ABSOLUTELY NO WARRANTY.
+You may redistribute copies of this program under the terms of the GNU General Public License.
+
+Device : pci:01:00.0-0
+Error while reading write message answer: Bad message
+Reading EDID 0x50 failed.
+Device : pci:01:00.0-1
+Device : pci:01:00.0-2
+Detected monitors :
+ - Device : pci:01:00.0-1
+   DDC/CI supported : Yes
+   Monitor Name : Samsung SyncMaster 173P (DVI)
+   Input type : Digital
+  (Automatically selected)
+ - Device : pci:01:00.0-2
+   DDC/CI supported : Yes
+   Monitor Name : NEC Multisync 2080UX+
+   Input type : Analog
+Reading EDID and initializing DDC/CI at bus pci:01:00.0-1...
+Device : pci:01:00.0-1
+
+EDID readings:
+   Plug and Play ID: SAM00E2 [Samsung SyncMaster 173P (DVI)]
+   Input type: Digital
+
+= Samsung SyncMaster 173P (DVI)
+&gt; Color settings
+   &gt; Brightness and Contrast
+      <emphasis>&gt; id=brightness, name=Brightness, address=0x10, delay=-1ms, type=0
+        supported, value=55, maximum=100</emphasis>
+      &gt; id=contrast, name=Contrast, address=0x12, delay=-1ms, type=0
+        supported, value=60, maximum=100
+      &gt; id=magicbright, name=Magic Bright Mode, address=0xdc, delay=-1ms, type=2
+        Possible values:
+         &gt; id=text - name=Text, value=1
+         &gt; id=internet - name=Internet, value=2
+         &gt; id=entertain - name=Entertain, value=3
+         &gt; id=custom - name=Custom, value=4
+        supported, value=4, maximum=4
+&gt; Others
+   &gt; Restore defaults
+      &gt; id=defaults, name=Restore Factory Defaults, address=0x4, delay=-1ms, type=1
+        Possible values:
+         &gt; id=default - name=Restore Factory Defaults, value=1
+        supported, value=0, maximum=1
+      &gt; id=defaultluma, name=Restore Brightness and Contrast, address=0x5, delay=-1ms, type=1
+        Possible values:
+         &gt; id=default - name=Restore Brightness and Contrast, value=1
+        supported, value=0, maximum=1
+      &gt; id=settings, name=Settings, address=0xb0, delay=-1ms, type=1
+        Possible values:
+         &gt; id=store - name=Save Current Settings, value=1
+         &gt; id=restorefactory - name=Restore Factory Settings, value=2
+        supported, value=0, maximum=2
+   &gt; Input settings
+      &gt; id=inputsource, name=Input Source Select, address=0x60, delay=-1ms, type=2
+        Possible values:
+         &gt; id=analog - name=Analog, value=1
+         &gt; id=digital - name=Digital, value=3
+        supported, value=3, maximum=3
+   &gt; Power control
+      &gt; id=dpms, name=DPMS Control, address=0xd6, delay=-1ms, type=2
+        Possible values:
+         &gt; id=on - name=On, value=1
+         &gt; id=standby - name=Standby, value=4
+        supported, value=1, maximum=4
+</screen>
+</sect3>
+<sect3>
+<title>Change the brightness</title>
+<para>The lines concerning brightness in the available controls list are:</para>
+<screen format="linespecific">
+      &gt; id=brightness, name=Brightness, <emphasis>address=0x10</emphasis>, delay=-1ms, type=0
+        supported, <emphasis>value=55</emphasis>, <emphasis>maximum=100</emphasis>
+</screen>
+<para>The important elements are address (here:
+<computeroutput>0x10</computeroutput>), current value
+(<computeroutput>55</computeroutput>) and maximum value
+(<computeroutput>100</computeroutput>).</para>
+<para>To change the brightness value to 70%, type:</para>
+<screen format="linespecific">
+ddccontrol -p -r <userinput>0x10</userinput> -w <userinput>70</userinput>
+</screen>
+The last lines of the output should be:
+<screen format="linespecific">
+Writing 0x10, 0x46(70)...
+Control 0x10: +/70/100 [Brightness]
+</screen>
+</sect3>
 </sect2>
 </sect1>
 </chapter>
@@ -142,7 +306,7 @@ and a specific driver for your graphic card (see (***list***)).
 <title>Mitsubishi</title>
 <itemizedlist mark='bullet'>
 <listitem>
-Diamond Pro 2060u (VGA1 input only (***verify***))
+Diamond Pro 2060u (VGA input B only)
 </listitem>
 </itemizedlist>
 </sect3>
@@ -175,27 +339,42 @@ SyncMaster 193P (VGA and DVI inputs)
 <appendix id="supportedgc">
 <title>Supported graphics cards</title>
 <note>
-<para>To control a monitor, DDCcontrol must access to the I2C bus of the graphics card.
-They are two methods to do so: the first one uses /dev/i2c-* devices provided by
-kernel drivers (abbreviated by dev in tables), the second one reads and writes directly on the 
-card PCI memory (abbreviated by PCI in tables).</para>
+<para>To control a monitor, DDCcontrol must access to the I2C bus of the
+graphics card. They are two methods to do so: the first one uses
+<filename>/dev/i2c-*</filename> devices provided by kernel drivers (abbreviated
+by dev in tables), the second one reads and writes directly on the card PCI
+memory (abbreviated by PCI in tables).</para>
 <para>Depending on your hardware, one method or the other works, or even both.</para>
 </note>
 <sect1>
 <title>ATI</title>
 <sect2>
 <title>Radeon series</title>
-<para>ATI Radeon cards only work with /dev/i2c-* devices. To use them, you must load the radeonfb module by typing, as root:</para>
+<para>ATI Radeon cards only work with <filename>/dev/i2c-*</filename> devices.
+To use them, you must load the <filename>radeonfb</filename> module by typing,
+as root:</para>
 <screen format="linespecific">
 # modprobe radeonfb
 </screen>
-<para>The kernel configuration options needed to enable Radeon framebuffer and I2C support are:</para>
+<para>The kernel configuration options needed to enable Radeon framebuffer and
+I2C support are:</para>
 <itemizedlist mark='bullet'>
 <listitem>
-Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;ATI Radeon display support
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>ATI Radeon display support</guimenuitem>
+</menuchoice>.
 </listitem>
 <listitem>
-Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;ATI Radeon display support-&gt;DDC/I2C for ATI Radeon support
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>ATI Radeon display support</guimenuitem>
+  <guimenuitem>DDC/I2C for ATI Radeon support</guimenuitem>
+</menuchoice>.
 </listitem>
 </itemizedlist>
 </sect2>
@@ -257,30 +436,49 @@ Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;ATI Radeon disp
 <title>nVidia</title>
 <sect2>
 <title>Direct PCI memory access support</title>
-<para>Almost every nVidia cards works with direct PCI memory access, and it is compatible with the nVidia proprietary drivers.</para>
-<para>To use it, you have nothing special to do, everything is done by DDCcontrol.</para>
+<para>Almost every nVidia cards works with direct PCI memory access, and it is 
+compatible with the nVidia proprietary drivers.</para>
+<para>To use it, you have nothing special to do, everything is done by 
+DDCcontrol.</para>
 </sect2>
 <sect2>
-<title>/dev/i2c-* devices support</title>
-<note>To use /dev/i2c-* devices with nVidia cards, you must have a rather recent kernel (at least version 2.6.9).</note>
-<para>Most nVidia cards, starting with TNT, but excluding the most recent GeForce FX serie, work with /dev/i2c-* devices. 
-To use them, you must load the rivafb module by typing, as root:</para>
+<title><filename>/dev/i2c-*</filename> devices support</title>
+<note>To use <filename>/dev/i2c-*</filename> devices with nVidia cards, you must
+have a rather recent kernel (at least version 2.6.9).</note>
+<para>Most nVidia cards, starting with TNT, but excluding the most recent
+GeForce FX series, work with <filename>/dev/i2c-*</filename> devices. To use
+them, you must load the <filename>rivafb</filename> module by typing, as
+root:</para>
 <screen format="linespecific">
 # modprobe rivafb
 </screen>
-<para>The kernel configuration options needed to enable nVidia framebuffer and I2C support are:</para>
+<para>The kernel configuration options needed to enable nVidia framebuffer and
+I2C support are:</para>
 <itemizedlist mark='bullet'>
 <listitem>
-Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;nVidia Riva support
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>nVidia Riva support</guimenuitem>
+</menuchoice>.
 </listitem>
 <listitem>
-Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;nVidia Riva support-&gt;Enable DDC Support
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>nVidia Riva support</guimenuitem>
+  <guimenuitem>Enable DDC Support</guimenuitem>
+</menuchoice>.
 </listitem>
 </itemizedlist>
 <warning>
-<para>The rivafb kernel module is <emphasis>not</emphasis> compatible with the binary nVidia X drivers,
-which are the only drivers for nVidia cards to provide 3D acceleration.</para>
-<para>This is why we recommend that you use direct PCI memory access with nVidia cards.</para>
+<para>The <filename>rivafb</filename> kernel module is <emphasis>not</emphasis>
+compatible with the binary nVidia X drivers, which are the only drivers for
+nVidia cards to provide 3D acceleration.</para>
+<para>This is why we recommend that you use direct PCI memory access with 
+nVidia cards.</para>
 </warning>
 </sect2>
 <sect3>
@@ -323,119 +521,189 @@ which are the only drivers for nVidia cards to provide 3D acceleration.</para>
 </sect1>
 </appendix>
 
+<appendix>
+<title>Thanks</title>
+<para>
+Thanks to <personname><firstname>Oleg</firstname><othername>I.</othername>
+<surname>Vdovikin</surname></personname>, for his work which served
+as a basis for ddccontrol, and for his help when designing the XML database.
+</para>
+<para>
+Thanks to <personname><firstname>Christian</firstname><surname>Schilling</surname>
+</personname>, for his nice work on the Gnome GUI.
+</para>
+<para>
+Thanks to <personname><firstname>William</firstname>
+<surname>Hollingworth</surname></personname>, of NEC/Mitsubishi, for his
+constant help and support to this project.
+</para>
+<para>
+Thanks to all users that reported if DDCcontrol works on their hardware.
+</para>
+<para>
+Thanks to various people on mailing-lists (X.org, fbdevel...), for their help,
+in particular <personname><firstname>Jon</firstname><surname>Smirl</surname>
+</personname>, on the X.org list, who guided me in the direction of using the 
+kernel framebuffer driver.
+</para>
+</appendix>
+
 <appendix id="techdocs">
-<title>Documents for developpers</title>
+<title>Documents for developers</title>
 <sect1 id="xmlstruct">
 <title>Monitor database structure</title>
-<para>The monitor database is written in XML, it can be found in the db directory of ddccontrol-db package.</para>
+<para>The monitor database is written in XML, it can be found in the
+<filename>db</filename> directory of <filename>ddccontrol-db</filename>
+package.</para>
 <para>This directory contains the following files:
 <itemizedlist mark='bullet'>
 <listitem>
-<para>
+<filename>
 options.xml
-</para>
+</filename>
 </listitem>
 <listitem>
-<para>
-monitor/%monitor_id%.xml
-</para>
+<filename>
+monitor/<replaceable>%monitor_id%</replaceable>.xml
+</filename>
 </listitem>
 </itemizedlist>
 </para>
 <sect2 id="optionsxml">
 <title>Control list</title>
-<subtitle>XML file: options.xml</subtitle>
-<para>Controls (e.g. "brightness"...) are contained in groups
-(e.g. "color settings"). Groups and subgroups allow the GUI 
-to separate the options in different branches on the tree.</para>
+<subtitle>XML file: <filename>options.xml</filename></subtitle>
+<para><sgmltag class="element">control</sgmltag> elements (e.g.
+<sgmltag class="attvalue">brightness</sgmltag>) are contained in
+<sgmltag class="element">group</sgmltag> elements (e.g.
+<sgmltag class="attvalue">color settings</sgmltag>).
+<sgmltag class="element">group</sgmltag> and 
+<sgmltag class="element">subgroup</sgmltag> elements allow the GUI to separate
+the controls in different branches on the tree.</para>
 
-<para>Controls IDs are usually abbreviated Control Names.</para>
-
-<para>Control types:</para>
+<para><sgmltag class="element">control</sgmltag> attributes:
 <itemizedlist mark='bullet'>
 <listitem>
-<para>
-"value": The control accepts values in a continuous range (e.g. brightness)
-</para>
+<sgmltag class="attribute">id</sgmltag>: abbreviated control name.
 </listitem>
 <listitem>
-<para>
-"command": An action occurs when the value is set to something greater than 0 (e.g. degauss).
-</para>
-<para>If you don't define any value entry in a command control, the default
-value 0x01 will be used.</para>
+<sgmltag class="attribute">name</sgmltag>: full English control name.
 </listitem>
 <listitem>
-<para>
-"list": The control accepts a list of values (e.g. OSD language).
-</para>
+<sgmltag class="attribute">address</sgmltag>: DDC address (optional).
+</listitem>
+<listitem>
+<sgmltag class="attribute">type</sgmltag>: one of these values:
+<itemizedlist mark='opencircle'>
+<listitem>
+<sgmltag class="attvalue">value</sgmltag>: The control accepts values in a
+continuous range (e.g. brightness).
+</listitem>
+<listitem>
+<sgmltag class="attvalue">command</sgmltag>: An action occurs when the value is
+set to something greater than <sgmltag class="attvalue">0</sgmltag>
+(e.g. degauss). If you don't define any <sgmltag class="element">value</sgmltag>
+element in a command control, the default value
+<sgmltag class="attvalue">0x01</sgmltag> will be used.
+</listitem>
+<listitem>
+<sgmltag class="attvalue">list</sgmltag>: The control accepts a list of values
+(e.g. OSD language).
 </listitem>
 </itemizedlist>
-
-<para>The "address" parameter in control and "value" in value are optional.</para>
+</listitem>
+</itemizedlist></para>
+<para><sgmltag class="element">value</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">id</sgmltag>: abbreviated value name.
+</listitem>
+<listitem>
+<sgmltag class="attribute">name</sgmltag>: full English value name (it is not
+needed if there is only one value for command controls).
+</listitem>
+<listitem>
+<sgmltag class="attribute">value</sgmltag>: DDC control value (optional).
+</listitem>
+</itemizedlist></para>
 
 <para>File format:</para>
 <screen>
 <![CDATA[<?xml version="1.0"?>
-<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
-  <controls>
-    <!--- value -->
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
-    <!--- command using a default 0x01 value-->
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
-    <!--- command -->
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
-      <value id="activate" value="%hex_value%"/>
-    </control>
-    <!--- list -->
-    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
-      <value id="%value_id%" value="%hex_value%"/>
-      <value...>
-    </control>
-    <control...>
-  </controls>
-</monitor>
-]]></screen>
+<options>
+  <group name="%groupname%">
+    <subgroup name="%subgroupname%">
+      <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
+        <!-- Command using the default 0x01 address -->
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" value="%hex_value%"/>
+      </control>
+      <control id="%control_id%" type="list" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" name="%value_name%" value="%hex_value%"/>
+        <value...>
+      </control>
+      <control ...>
+    </subgroup>
+  </group>
+  <group ...>
+</options>]]></screen>
 </sect2>
 <sect2 id="monitorxml">
 <title>Monitor Profiles</title>
-<subtitle>XML files: monitor/%monitor_id%.xml</subtitle>
+<subtitle>XML files:
+<filename>monitor/<replaceable>%monitor_id%</replaceable>.xml</filename></subtitle>
 <para>List of controls supported by a monitor.</para>
-<para>Controls IDs are defined in options.xml, if it is a list or a command
-with a non-default value, supported values must be defined. "address" 
-parameter for controls, and "value", are optional if they are defined 
-in the general options file.</para>
+<para><sgmltag class="element">control</sgmltag>
+<sgmltag class="attribute">id</sgmltag> attributes are defined in
+<filename>options.xml</filename>. If <sgmltag class="element">control</sgmltag>
+<sgmltag class="attribute">type</sgmltag> is
+<sgmltag class="attvalue">list</sgmltag> or
+<sgmltag class="attvalue">command</sgmltag> without non-default value, supported
+values must be defined.</para>
+<para><sgmltag class="attribute">address</sgmltag> attribute for 
+<sgmltag class="element">control</sgmltag> elements and
+<sgmltag class="attribute">value</sgmltag> attribute for 
+<sgmltag class="element">value</sgmltag> elements are optional if they are
+defined in the general options file.</para>
 
-<para>The init parameter in monitor define the type of the initialisation:
-DDC/CI standard ("standard"), or Samsung ("samsung"). </para>
+<para>The <sgmltag class="attribute">init</sgmltag> attribute in
+<sgmltag class="element">monitor</sgmltag> element define the type of the
+initialization: DDC/CI standard (<sgmltag class="attvalue">standard</sgmltag>),
+or Samsung (<sgmltag class="attvalue">samsung</sgmltag>).</para>
 
-<para>The caps parameter is optional. It is compatible with ACCESS.bus
-specifications and is treated as following: </para>
+<para>The <sgmltag class="attribute">caps</sgmltag> attribute is optional. Its
+format is defined in ACCESS.bus specifications and is treated as
+following:</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
-If caps is not defined, caps are read from monitor.
+If <sgmltag class="attribute">caps</sgmltag> is not defined, caps are read from
+monitor.
 </para>
 </listitem>
 <listitem>
 <para>
-If this attribute exists and have a vcp string
-(e.g. caps="type(lcd) vcp(10 12)") then specified caps string are used.
+If this attribute exists and have a <sgmltag class="attvalue">vcp</sgmltag>
+string (e.g. <sgmltag class="attvalue">"type(lcd) vcp(10 12)"</sgmltag>) then the
+specified caps string is used.
 </para>
 </listitem>
 <listitem>
 <para> 
-If specified caps string does not contain vcp (e.g. caps="type(crt)"
-or caps=""), then all controls defined in the monitor profile are 
-supposed to be supported.
-</para>
+If this attribute exists but does not have a
+<sgmltag class="attvalue">vcp</sgmltag> (e.g.
+<sgmltag class="attvalue">"type(crt)"</sgmltag> or
+<sgmltag class="attvalue">""</sgmltag>), then all controls defined in the
+monitor profile are supposed to be supported.</para>
 </listitem>
 </itemizedlist>
 
 <para>
-You can set a parameter delay to set the time in milliseconds to wait
-after changing the value of this control. If you don't, a default value
-is used.</para>
+You can set a <sgmltag class="attribute">delay</sgmltag> attribute in
+<sgmltag class="element">control</sgmltag> elements to set the time in
+milliseconds to wait after changing the value of this control.
+If you don't, a default value is used.
+</para>
 
 <para>File format:</para>
 <screen>
@@ -459,7 +727,8 @@ is used.</para>
   </controls>
 </monitor>
 ]]></screen>
-<para>If a monitor supports exactly the same controls as another one, you can define it as shown:</para>
+<para>If a monitor supports exactly the same controls as another one, you can
+define it as shown:</para>
 <screen>
 <![CDATA[<?xml version="1.0"?>
 <monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>
@@ -467,4 +736,5 @@ is used.</para>
 </sect2>
 </sect1>
 </appendix>
+&gpl;
 </book>

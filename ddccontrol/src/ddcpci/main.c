@@ -93,9 +93,11 @@ static void open_card(struct i2c_bus* bus) {
 					if (bus->i2cbus < current_card->nbusses) {
 						current_algo = &current_card->i2c_busses[bus->i2cbus];
 						aopen.status = 0;
-						printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
-							dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
-							c, dev->irq, dev->base_addr[0], dev->size[0]);
+						if (verbosity == 2) {
+							printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
+								dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
+								c, dev->irq, dev->base_addr[0], dev->size[0]);
+						}
 						break;
 					}
 					else {

@@ -161,9 +161,9 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-XHTML_STYLESHEET = @DOCBOOK_ROOT@/chunk.xsl
+XHTML_STYLESHEET = style.xsl
 htmldir = $(prefix)/share/doc/@PACKAGE@
-dist_html_DATA = *.html
+dist_html_DATA = html/*
 all: all-am
 
 .SUFFIXES:
@@ -222,6 +222,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
+	$(mkdir_p) $(distdir)/html
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -334,11 +335,21 @@ uninstall-am: uninstall-dist_htmlDATA uninstall-info-am
 	uninstall-info-am
 
 
-*.html: main.xml
-	$(XSLTPROC) $(XSLTPROC_FLAGS) $(XHTML_STYLESHEET) $<
+html/*: main.xml gpl.xml style.xsl
+	rm -rf html.old
+	true `mv -f html html.old`
+	mkdir html
+	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
+
+publish: all
+	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
+	scp -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/latest
+
+spell:
+	aspell --mode=sgml check main.xml
 
 clean:
-	rm -f *.html
+	rm -rf html
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

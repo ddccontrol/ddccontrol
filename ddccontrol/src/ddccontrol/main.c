@@ -101,7 +101,7 @@ static void usage(char *name)
 	fprintf(stderr,_(
 		"Usage:\n"
 		"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
-		"\tdev: device, e.g. /dev/i2c-0\n"
+		"\tdev: device, e.g. dev:/dev/i2c-0\n"
 		"\t-p : probe I2C devices to find monitor busses.\n"
 		"\t-c : query capability\n"
 		"\t-d : query ctrls 0 - 255\n"
