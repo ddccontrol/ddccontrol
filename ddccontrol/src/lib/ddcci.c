@@ -18,19 +18,25 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include "config.h"
+
 #include <errno.h>
 #include <stdio.h>
 
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <string.h>
+
+#if HAVE_BUGGY_I2C_DEV
+#define __user
+#include <linux/i2c.h>
+#endif
 #include <linux/i2c-dev.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <stdlib.h>
 
 #include "ddcci.h"
-
-#include "config.h"
 
 /* ddc/ci defines */
 #define DEFAULT_DDCCI_ADDR	0x37	/* ddc/ci logic sits at 0x37 */

@@ -30,8 +30,6 @@
 
 #include <errno.h>
 
-#include "config.h"
-
 #include <pci/pci.h>
 
 #include "ddcpci.h"

@@ -28,6 +28,13 @@
 #ifndef I2C_ALGO_BIT_H
 #define I2C_ALGO_BIT_H
 
+#include "config.h"
+
+#if HAVE_BUGGY_I2C_DEV
+#define __user
+#define s32 int
+#include <linux/i2c.h>
+#endif
 #include <linux/i2c-dev.h>
 
 /* --- Defines for bit-adapters ---------------------------------------	*/

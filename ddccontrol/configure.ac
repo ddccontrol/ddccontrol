@@ -13,9 +13,37 @@ AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_INSTALL
 
+AC_LANG([C])
+
 AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
-AC_CHECK_HEADERS([linux/i2c-dev.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+# AC_CHECK_HEADERS([linux/i2c-dev.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+
+support_i2c_dev=no
+AC_MSG_CHECKING([if linux/i2c-dev.h works alone])
+AC_COMPILE_IFELSE([#include <linux/i2c-dev.h>],
+support_i2c_dev=yes
+AC_MSG_RESULT(yes),
+AC_MSG_RESULT(no)
+)
+
+if test "x$support_i2c_dev" = "xno" ; then
+  AC_MSG_CHECKING([if linux/i2c-dev.h works with some tweaks])
+  AC_COMPILE_IFELSE([
+  [#define __user]
+  [#define s32 int]
+  [#include <linux/i2c.h>]
+  [#include <linux/i2c-dev.h>]
+  ],
+  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [if linux/i2c-dev.h is buggy on your system, but could be workarounded])
+  support_i2c_dev=yes
+  AC_MSG_RESULT(yes),
+  AC_MSG_RESULT(no)
+  )
+  if test "x$support_i2c_dev" = "xno" ; then
+   AC_MSG_ERROR([Unable to use linux/i2c-dev.h on your system, this header may be more buggy than usual, or inexistant, try to (re-)install kernel headers.], [1])
+  fi
+fi
 
 AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.])
 
@@ -23,7 +51,7 @@ AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.
 
 AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
 if test "x$XML2_CONFIG" = "xno" ; then
-   AC_MSG_ERROR(xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.)
+   AC_MSG_ERROR([xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.], [1])
 fi
 
 CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""

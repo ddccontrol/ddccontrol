@@ -29,8 +29,6 @@
 #include <fcntl.h>
 #include <string.h>
 
-#include "config.h"
-
 #define RETRYS 3 /* number of retrys */
 
 static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
