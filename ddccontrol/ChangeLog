@@ -1,3 +1,13 @@
+2005-03-24 14:43  nboichat
+
+	* Makefile.in, THANKS, doc/.cvsignore, doc/Makefile.am,
+	  doc/Makefile.in, doc/gpl.xml, doc/main.xml, doc/style.xsl,
+	  src/ddccontrol/main.c, src/ddcpci/main.c: Documentation update.
+
+2005-03-22 23:28  nboichat
+
+	* doc/main.xml: Documentation update
+
 2005-03-20 14:46  nboichat
 
 	* Makefile.am, Makefile.in, configure, configure.ac,
