@@ -1,3 +1,12 @@
+2005-03-18 11:20  nboichat
+
+	* configure, configure.ac, doc/main.xml: Add documentation.
+
+2005-02-10 14:40  cs123
+
+	* src/gddccontrol/notebook.c: Retabbed; do not read Default and Max
+	  frequently anymore (performance issue)
+
 2005-02-03 22:25  nboichat
 
 	* src/gddccontrol/notebook.c: Free all_controls when deleting the
