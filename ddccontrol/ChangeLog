@@ -1,3 +1,8 @@
+2004-09-13 22:32  nboichat
+
+	* src/: ddccontrol/main.c, gddccontrol/main.c, lib/monitor_db.c:
+	  Add support for translating database.
+
 2004-09-13 15:47  nboichat
 
 	* .cvsignore, ABOUT-NLS, Makefile.am, Makefile.in, aclocal.m4,
