@@ -1,3 +1,19 @@
+2004-09-13 15:47  nboichat
+
+	* .cvsignore, ABOUT-NLS, Makefile.am, Makefile.in, aclocal.m4,
+	  configure, configure.ac, mkinstalldirs, po/.cvsignore,
+	  po/LINGUAS, po/Makefile.in.in, po/Makevars, po/POTFILES.in,
+	  po/Rules-quot, po/boldquot.sed, po/ddccontrol.pot,
+	  po/en@boldquot.header, po/en@quot.header, po/fr.gmo, po/fr.po,
+	  po/insert-header.sin, po/quot.sed, po/remove-potcdate.sin,
+	  src/Makefile.in, src/config.h.in, src/ddccontrol/Makefile.am,
+	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.am,
+	  src/gddccontrol/Makefile.in, src/gddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h: Add
+	  support for programs ouput translation, and french translation.
+
 2004-09-12 18:42  nboichat
 
 	* src/lib/: ddcci.c, ddcci.h, monitor_db.c: Added code to free
