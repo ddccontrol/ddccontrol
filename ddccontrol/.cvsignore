@@ -10,6 +10,4 @@ ddccontrol.kdevses
 Makefile
 config.log
 config.status
-config.guess
 config.rpath
-config.sub
