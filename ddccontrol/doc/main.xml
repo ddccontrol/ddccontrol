@@ -580,6 +580,18 @@ monitor/<replaceable>%monitor_id%</replaceable>.xml
 <sgmltag class="element">subgroup</sgmltag> elements allow the GUI to separate
 the controls in different branches on the tree.</para>
 
+<para><sgmltag class="element">options</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">date</sgmltag>: indicates the release date of the
+current database (YYYYMMDD format).
+</listitem>
+<listitem>
+<sgmltag class="attribute">dbversion</sgmltag>: indicates which version of
+database format is used (must be set to 1).
+</listitem>
+</itemizedlist></para>
+
 <para><sgmltag class="element">control</sgmltag> attributes:
 <itemizedlist mark='bullet'>
 <listitem>
@@ -629,7 +641,7 @@ needed if there is only one value for command controls).
 <para>File format:</para>
 <screen>
 <![CDATA[<?xml version="1.0"?>
-<options>
+<options date="%date%" dbversion="1">
   <group name="%groupname%">
     <subgroup name="%subgroupname%">
       <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>

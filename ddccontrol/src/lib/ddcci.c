@@ -84,8 +84,13 @@ void ddcci_verbosity(int _verbosity)
 
 static int msqid = -2;
 
-int ddcpci_init()
+int ddcci_init()
 {
+	if (!ddcci_init_db()) {
+		printf(_("Failed to initialize ddccontrol database...\n"));
+		return 0;
+	}
+	
 	if (msqid == -2) {
 		if (verbosity) {
 			printf("ddcpci initing...\n");
@@ -111,7 +116,7 @@ int ddcpci_init()
 	return (msqid >= 0);
 }
 
-void ddcpci_release()
+void ddcci_release()
 {
 	if (verbosity) {
 		printf("ddcpci being released...\n");
@@ -129,6 +134,7 @@ void ddcpci_release()
 		
 		msgctl(msqid, IPC_RMID, NULL);
 	}
+	ddcci_release_db();
 }
 
 /* Returns : 0 - OK, negative value - timed out or another error */

@@ -174,12 +174,23 @@ int main( int   argc, char *argv[] )
 	}
 	
 	ddcci_verbosity(verbosity);
-	ddcpci_init();
 	
 	gtk_init(&argc, &argv);
 	
+	if (!ddcci_init()) {
+		printf(_("Unable to initialize ddcci library.\n"));
+		GtkWidget* dialog = gtk_message_dialog_new (NULL,
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				_("Unable to initialize ddcci library, see console for more details.\n"));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+		return 1;
+	}
+	
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(window),_("Monitor settings"));
+	gtk_window_set_title(GTK_WINDOW(window),_("Monitor settings"));
 	
 	gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
 	
@@ -275,7 +286,7 @@ int main( int   argc, char *argv[] )
 	
 	ddcci_free_list(monlist);
 	
-	ddcpci_release();
+	ddcci_release();
 	
 	#ifdef HAVE_XINERAMA
 	XFree(xineramainfo);

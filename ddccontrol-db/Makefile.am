@@ -1,3 +1,4 @@
 SUBDIRS= db po
 
-EXTRA_DIST = config.rpath
+EXTRA_DIST = config.rpath xml2h.pl
+

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-03-25 20:59+0100\n"
+"POT-Creation-Date: 2005-03-26 12:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,145 +58,150 @@ msgstr ""
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:211
+#: src/ddccontrol/main.c:202 src/gddccontrol/main.c:181
+#, c-format
+msgid "Unable to initialize ddcci library.\n"
+msgstr ""
+
+#: src/ddccontrol/main.c:214
 #, c-format
 msgid "Detected monitors :\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:216
+#: src/ddccontrol/main.c:219
 #, c-format
 msgid " - Device: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:217
+#: src/ddccontrol/main.c:220
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:217
+#: src/ddccontrol/main.c:220
 msgid "Yes"
 msgstr ""
 
-#: src/ddccontrol/main.c:217
+#: src/ddccontrol/main.c:220
 msgid "No"
 msgstr ""
 
-#: src/ddccontrol/main.c:218
+#: src/ddccontrol/main.c:221
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:222
 #, c-format
 msgid "   Input type: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:219 src/ddccontrol/main.c:251
+#: src/ddccontrol/main.c:222 src/ddccontrol/main.c:254
 msgid "Digital"
 msgstr ""
 
-#: src/ddccontrol/main.c:219 src/ddccontrol/main.c:251
+#: src/ddccontrol/main.c:222 src/ddccontrol/main.c:254
 msgid "Analog"
 msgstr ""
 
-#: src/ddccontrol/main.c:223
+#: src/ddccontrol/main.c:226
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:232
+#: src/ddccontrol/main.c:235
 #, c-format
 msgid "No supported monitor detected.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:243
+#: src/ddccontrol/main.c:246
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:246
+#: src/ddccontrol/main.c:249
 #, c-format
 msgid ""
 "\n"
 "DDC/CI at %s is unusable (%d).\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:248
+#: src/ddccontrol/main.c:251
 #, c-format
 msgid ""
 "\n"
 "EDID readings:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:249
+#: src/ddccontrol/main.c:252
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:251
+#: src/ddccontrol/main.c:254
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:256
+#: src/ddccontrol/main.c:259
 #, c-format
 msgid ""
 "\n"
 "Capabilities:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:266
+#: src/ddccontrol/main.c:269
 #, c-format
 msgid "Capabilities read fail.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:272
+#: src/ddccontrol/main.c:275
 #, c-format
 msgid ""
 "\n"
 "Writing 0x%02x, 0x%02x(%d)...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:276
+#: src/ddccontrol/main.c:279
 #, c-format
 msgid ""
 "\n"
 "Reading 0x%02x...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:283
+#: src/ddccontrol/main.c:286
 #, c-format
 msgid ""
 "\n"
 "Controls (valid/current/max) [Description - Value name]:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:307
+#: src/ddccontrol/main.c:310
 #, c-format
 msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:312
+#: src/ddccontrol/main.c:315
 #, c-format
 msgid "\t\t  Possible values:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:316
+#: src/ddccontrol/main.c:319
 #, c-format
 msgid "\t\t\t> id=%s - name=%s, value=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:326
+#: src/ddccontrol/main.c:329
 #, c-format
 msgid "\t\t  supported, value=%d, maximum=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:327
+#: src/ddccontrol/main.c:330
 #, c-format
 msgid "\t\t  not supported, value=%d, maximum=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:338
+#: src/ddccontrol/main.c:341
 #, c-format
 msgid ""
 "\n"
@@ -208,31 +213,35 @@ msgstr ""
 msgid "Monitor changed (%d %d).\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:182
+#: src/gddccontrol/main.c:186
+msgid "Unable to initialize ddcci library, see console for more details.\n"
+msgstr ""
+
+#: src/gddccontrol/main.c:193
 msgid "Monitor settings"
-msgstr ""
-
-#: src/gddccontrol/main.c:204
-#, c-format
-msgid "Xinerama supported and active\n"
-msgstr ""
-
-#: src/gddccontrol/main.c:209
-#, c-format
-msgid "Display %d: %d, %d, %d, %d, %d\n"
 msgstr ""
 
 #: src/gddccontrol/main.c:215
 #, c-format
+msgid "Xinerama supported and active\n"
+msgstr ""
+
+#: src/gddccontrol/main.c:220
+#, c-format
+msgid "Display %d: %d, %d, %d, %d, %d\n"
+msgstr ""
+
+#: src/gddccontrol/main.c:226
+#, c-format
 msgid "Xinerama supported but inactive.\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:219
+#: src/gddccontrol/main.c:230
 #, c-format
 msgid "Xinerama not supported\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:247
+#: src/gddccontrol/main.c:258
 msgid ""
 "No monitor supporting DDC/CI available.Please check all the needed kernel "
 "modules are loaded (i2c-dev, and your framebuffer driver)."
@@ -258,111 +267,239 @@ msgstr ""
 msgid "Please click on a parameter on the left to change it."
 msgstr ""
 
-#: src/lib/ddcci.c:97
+#: src/lib/ddcci.c:90
+#, c-format
+msgid "Failed to initialize ddccontrol database...\n"
+msgstr ""
+
+#: src/lib/ddcci.c:102
 msgid "Error while initialisating the message queue"
 msgstr ""
 
-#: src/lib/ddcci.c:125 src/lib/ddcci.c:773
+#: src/lib/ddcci.c:130 src/lib/ddcci.c:779
 msgid "Error while sending list message"
 msgstr ""
 
-#: src/lib/ddcci.c:218 src/lib/ddcci.c:272
+#: src/lib/ddcci.c:224 src/lib/ddcci.c:278
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:234
+#: src/lib/ddcci.c:240
 msgid "Error while sending write message"
 msgstr ""
 
-#: src/lib/ddcci.c:241
+#: src/lib/ddcci.c:247
 msgid "Error while reading write message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:289
+#: src/lib/ddcci.c:295
 msgid "Error while sending read message"
 msgstr ""
 
-#: src/lib/ddcci.c:296
+#: src/lib/ddcci.c:302
 msgid "Error while reading read message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:386
+#: src/lib/ddcci.c:392
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:394
+#: src/lib/ddcci.c:400
 #, c-format
 msgid "Invalid response, magic is 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:400
+#: src/lib/ddcci.c:406
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr ""
 
-#: src/lib/ddcci.c:411
+#: src/lib/ddcci.c:417
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:521
+#: src/lib/ddcci.c:527
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:529
+#: src/lib/ddcci.c:535
 #, c-format
 msgid "Buffer too small to contain caps.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:569
+#: src/lib/ddcci.c:575
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:583
+#: src/lib/ddcci.c:589
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:601
+#: src/lib/ddcci.c:607
 #, c-format
 msgid "Be sure you've modprobed i2c-dev and correct framebuffer device.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:608
+#: src/lib/ddcci.c:614
 #, c-format
 msgid "Device: %s\n"
 msgstr ""
 
-#: src/lib/ddcci.c:621
+#: src/lib/ddcci.c:627
 msgid "Error while sending open message"
 msgstr ""
 
-#: src/lib/ddcci.c:629
+#: src/lib/ddcci.c:635
 msgid "Error while reading open message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:637
+#: src/lib/ddcci.c:643
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr ""
 
-#: src/lib/ddcci.c:731
+#: src/lib/ddcci.c:737
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:744
+#: src/lib/ddcci.c:750
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr ""
 
-#: src/lib/ddcci.c:799 src/lib/ddcci.c:829
+#: src/lib/ddcci.c:805 src/lib/ddcci.c:835
 #, c-format
 msgid "Found I2C device (%s)\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:108 src/lib/monitor_db.c:122
+msgid "Can't convert value to int, invalid CAPS."
+msgstr ""
+
+#: src/lib/monitor_db.c:165 src/lib/monitor_db.c:242
+msgid "Can't find id property."
+msgstr ""
+
+#: src/lib/monitor_db.c:173 src/lib/monitor_db.c:244 src/lib/monitor_db.c:384
+msgid "Can't find name property."
+msgstr ""
+
+#: src/lib/monitor_db.c:196
+msgid "Can't find value property."
+msgstr ""
+
+#: src/lib/monitor_db.c:198
+msgid "Can't convert value to int."
+msgstr ""
+
+#: src/lib/monitor_db.c:263
+msgid "Can't find address property."
+msgstr ""
+
+#: src/lib/monitor_db.c:265
+msgid "Can't convert address to int."
+msgstr ""
+
+#: src/lib/monitor_db.c:280
+msgid "Can't convert delay to int."
+msgstr ""
+
+#: src/lib/monitor_db.c:288
+msgid "Can't find type property."
+msgstr ""
+
+#: src/lib/monitor_db.c:313 src/lib/monitor_db.c:421
+msgid "Invalid type."
+msgstr ""
+
+#: src/lib/monitor_db.c:358
+#, c-format
+msgid "Database must be inited before reading a monitor file.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:365 src/lib/monitor_db.c:610
+#, c-format
+msgid "Document not parsed successfully.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:372
+#, c-format
+msgid "empty monitor/%s.xml\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:378
+#, c-format
+msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
+msgstr ""
+
+#: src/lib/monitor_db.c:392
+#, c-format
+msgid "Error, include recursion level > 15 (file: %s).\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:413
+msgid "Can't find init property."
+msgstr ""
+
+#: src/lib/monitor_db.c:437
+#, c-format
+msgid "document of the wrong type, can't find controls.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:491
+msgid "Error enumerating controls in group."
+msgstr ""
+
+#: src/lib/monitor_db.c:617
+#, c-format
+msgid "empty options.xml\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:623
+#, c-format
+msgid "options.xml of the wrong type, root node %s != options"
+msgstr ""
+
+#: src/lib/monitor_db.c:632
+#, c-format
+msgid "options.xml dbversion attribute missing, please update your database.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:638
+#, c-format
+msgid "options.xml date attribute missing, please update your database.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:644
+msgid "Can't convert version to int."
+msgstr ""
+
+#: src/lib/monitor_db.c:647
+#, c-format
+msgid ""
+"options.xml dbversion (%d) is greater than the supported version (%d).\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:648
+#, c-format
+msgid "Please update ddccontrol program.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:654
+#, c-format
+msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:655
+#, c-format
+msgid "Please update ddccontrol database.\n"
 msgstr ""
 
 #: src/ddcpci/main.c:116

@@ -217,14 +217,12 @@ msgstr "Ajustements automatiques"
 msgid "Auto Size Center"
 msgstr "Centrage et redimensionnement automatique"
 
-#: db/options.xml.h:43
-#: db/options.xml.h:105
+#: db/options.xml.h:43 db/options.xml.h:105
 #, c-format
 msgid "Enable"
 msgstr "Activer"
 
-#: db/options.xml.h:44
-#: db/options.xml.h:104
+#: db/options.xml.h:44 db/options.xml.h:104
 #, c-format
 msgid "Disable"
 msgstr "Désactiver"
@@ -504,8 +502,7 @@ msgstr "Volume des haut-parleurs"
 msgid "Audio Microphone Volume Adjust"
 msgstr "Volume du microphone"
 
-#: db/options.xml.h:99
-#: db/options.xml.h:100
+#: db/options.xml.h:99 db/options.xml.h:100
 #, c-format
 msgid "Degauss"
 msgstr "Démagnétiser"
@@ -600,8 +597,7 @@ msgstr "Analogique"
 msgid "Digital"
 msgstr "Digital"
 
-#: db/options.xml.h:121
-#: db/options.xml.h:125
+#: db/options.xml.h:121 db/options.xml.h:125
 #, c-format
 msgid "Power control"
 msgstr "Allumer/éteindre"
@@ -611,8 +607,7 @@ msgstr "Allumer/éteindre"
 msgid "DPMS Control"
 msgstr "Contrôle DPMS"
 
-#: db/options.xml.h:123
-#: db/options.xml.h:127
+#: db/options.xml.h:123 db/options.xml.h:127
 #, c-format
 msgid "On"
 msgstr "Allumé"
@@ -626,4 +621,3 @@ msgstr "En veille"
 #, c-format
 msgid "Off"
 msgstr "Éteint"
-
