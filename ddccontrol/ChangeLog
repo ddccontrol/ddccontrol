@@ -1,3 +1,7 @@
+2004-09-25 15:02  nboichat
+
+	* src/gddccontrol/notebook.c: Minor fixes for gddccontrol.
+
 2004-09-25 14:11  nboichat
 
 	* src/: gddccontrol/main.c, gddccontrol/notebook.c,
