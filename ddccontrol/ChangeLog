@@ -1,3 +1,11 @@
+2004-11-04 14:45  nboichat
+
+	* configure, configure.ac, src/config.h.in, src/ddccontrol/main.c,
+	  src/ddcpci/i2c-algo-bit.c, src/ddcpci/i2c-algo-bit.h,
+	  src/ddcpci/main.c, src/lib/ddcci.c: Add autoconf code to detect
+	  buggy linux/i2c-dev.h. Add code to workaround this problem if
+	  necessary.
+
 2004-10-23 16:43  nboichat
 
 	* src/: ddcpci/i2c-algo-bit.c, ddcpci/main.c, lib/ddcci.c,
