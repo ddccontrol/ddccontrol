@@ -32,75 +32,159 @@
 
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
-#define LINE_LENGTH 15 //Maximum line length in buttons
-
-#define RETRYS 3 /* number of retrys */
+#define RETRYS 3 // number of read retrys
 
 struct monitor mon;
-GtkWidget* valuelabel;
-GtkWidget* restorevalue;
-GtkWidget* currentbutton = NULL;
-GtkWidget* valuecontrol;
 
-GtkWidget* valuerange; // value
-GSList* valuegroup; // list
+enum
+{
+    TITLE_COL,
+    ID_COL,
+    WIDGET_COL,
+    N_COLS,
+};
 
-struct control_db* currentControl = NULL;
-unsigned short currentDefault = 1;
-unsigned short currentMaximum = 1;
+
+// Globals
+////////////////////
 
 int modified = 0;
+GSList *all_controls=0;
+
+// Helpers
+////////////////////
+
+void get_default_and_max(struct control_db *control,unsigned short *currentDefault, unsigned short *currentMaximum)
+{
+    int retry;
+    if (control->type != command)
+    {
+        for(retry = RETRYS; retry; retry--)
+        {
+            if (ddcci_readctrl(&mon, control->address, currentDefault, currentMaximum) >= 0)
+            {
+                break;
+            }
+        }
+    }
+    if(!retry)
+    {
+        GtkWidget* dialog = gtk_message_dialog_new (NULL,
+                GTK_DIALOG_DESTROY_WITH_PARENT,
+                GTK_MESSAGE_ERROR,
+                GTK_BUTTONS_CLOSE,
+                "%s: %s",_("Error while getting value"), control->name);
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+    }
+}
+
+
+
+void refresh_control(gpointer data,gpointer user_data)
+{
+    struct control_db *control;
+    control = (struct control_db*)g_object_get_data(G_OBJECT(data),"ddcc_control");
+   
+    
+    unsigned short currentDefault = 1;
+    unsigned short currentMaximum = 1;
+    get_default_and_max(control,&currentDefault,&currentMaximum);
+
+    switch(control->type)
+    {
+        case value:
+            gtk_range_set_increments(GTK_RANGE(data), 100.0/(double)currentMaximum, 10.0*100.0/(double)currentMaximum);
+            gtk_range_set_value(GTK_RANGE(data), (double)100.0*currentDefault/(double)currentMaximum);
+            break;
+        case command:
+            break;
+        case list:
+            break; // TODO
+            {
+                struct value_db* value;
+                for (value = control->value_list; value != NULL; value = value->next)
+                {
+                    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(data), (value->value == currentDefault));
+                }
+                break;
+            }
+    }
+}
+
+// Callbacks
+////////////////////
 
 static void range_callback(GtkWidget *widget, gpointer data)
 {
-	double val = gtk_range_get_value(GTK_RANGE(valuerange))/100.0;
-	
-	/*printf("Would change %#x to %#x (%f, %f, %#x)\n", currentControl->address, (unsigned char)round(val*(double)currentMaximum), val*(double)currentMaximum, val, currentMaximum);*/
-	
-	if (currentControl)
+    struct control_db *control;
+    control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddcc_control");
+
+	double val = gtk_range_get_value(GTK_RANGE(widget))/100.0;
+    
+    unsigned short currentDefault = 1;
+    unsigned short currentMaximum = 1;
+    get_default_and_max(control,&currentDefault,&currentMaximum);
+    
+ /*   printf("Would change %#x to %#x (%f, %f, %#x)\n", control->address, (unsigned char)round(val*(double)currentMaximum), val*(double)currentMaximum, val, currentMaximum);*/
+
+	if (control)
 	{
 		unsigned short nval = (unsigned short)round(val*(double)currentMaximum);
-		ddcci_writectrl(&mon, currentControl->address, nval);
+		ddcci_writectrl(&mon, control->address, nval);
 		
-		gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*nval/(double)currentMaximum);
-		gtk_widget_set_sensitive(restorevalue, TRUE);
+		gtk_range_set_value(GTK_RANGE(widget), (double)100.0*nval/(double)currentMaximum);
+		//gtk_widget_set_sensitive(restorevalue, TRUE);
 		modified = 1;
 	}
 }
 
 static void group_callback(GtkWidget *widget, gpointer data)
 {
+    struct value_db *value = (struct value_db*) data;
+    struct control_db *control;
+    control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddcc_control");
+
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		unsigned short val = ((struct value_db*)data)->value;
+		unsigned short val = value->value;
 		
 		/*printf("Would change %#x to %#x\n", currentControl->address, val);*/
 		
-		if (currentControl)
+		if (control)
 		{
-			ddcci_writectrl(&mon, currentControl->address, val);
+			ddcci_writectrl(&mon, control->address, val);
 			
-			gtk_widget_set_sensitive(restorevalue, TRUE);
+//			gtk_widget_set_sensitive(restorevalue, TRUE);
 			modified = 1;
 		}
 	}
+    g_slist_foreach(all_controls,refresh_control,0);
 }
 
 static void command_callback(GtkWidget *widget, gpointer data)
 {
-	unsigned short val = ((struct value_db*)data)->value;
+    struct value_db *value = (struct value_db*) data;
+    struct control_db *control;
+    control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddcc_control");
+
+	unsigned short val;
+    
+    val = value->value;
 	
 	/*printf("Would change %#x to %#x\n", currentControl->address, val);*/
 	
-	if (currentControl)
+	if (control)
 	{
-		ddcci_writectrl(&mon, currentControl->address, val);
+		ddcci_writectrl(&mon, control->address, val);
 		
 		modified = 1;
 	}
+    g_slist_foreach(all_controls,refresh_control,0);
 }
 
 static void restore_callback(GtkWidget *widget, gpointer data)
-{	
+{
+#if 0
 	if (currentControl)
 	{
 		switch (currentControl->type) {
@@ -135,235 +219,216 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 			break;
 		}
 	}
+#endif
 }
 
-static void buttons_callback(GtkWidget *widget, gpointer data)
+static void tree_selection_changed_callback(GtkTreeSelection *selection, gpointer data)
 {
-	if (currentbutton != NULL) {
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (currentbutton), 0);
-	}
-	
-	int retry = 1;
-	
-	struct control_db* control = (struct control_db*)data;
-	currentControl = NULL;
-	
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
-	{
-		currentbutton = widget;
-		gtk_label_set_text(GTK_LABEL(valuelabel), control->name);
-		if (control->type != command) { /* Don't read the current value if the control is a command */
-			for (retry = RETRYS; retry; retry--) {
-				if (ddcci_readctrl(&mon, control->address, &currentDefault, &currentMaximum) >= 0) {
-					break;
-				}
-			}
-		}
-		if (retry > 0)
-		{
-			/*printf("def: %d, max: %d\n", currentDefault, currentMaximum);
-			printf("incs: %f, val: %f\n", 1.0/(double)currentMaximum, (double)currentDefault/(double)currentMaximum);*/
-			
-			if (gtk_bin_get_child(GTK_BIN(valuecontrol))) {
-				gtk_container_remove(GTK_CONTAINER(valuecontrol), gtk_bin_get_child(GTK_BIN(valuecontrol)));
-			}
-			
-			switch (control->type) {
-			case value:
-				valuerange = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
-				gtk_scale_set_digits(GTK_SCALE(valuerange), 1);
-				g_signal_connect_after(G_OBJECT(valuerange), "value-changed", G_CALLBACK(range_callback), NULL);
-				gtk_range_set_increments(GTK_RANGE(valuerange), 100.0/(double)currentMaximum, 10.0*100.0/(double)currentMaximum);
-				gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*currentDefault/(double)currentMaximum);
-				gtk_widget_show(valuerange);
-				gtk_container_add(GTK_CONTAINER(valuecontrol), valuerange);
-				gtk_widget_show(restorevalue);
-				break;
-			case command: {
-					GtkWidget* vbox = gtk_vbox_new(TRUE, 0);
-					struct value_db* value;
-					for (value = control->value_list; value != NULL; value = value->next) {
-						GtkWidget* button = gtk_button_new_with_label(value->name);
-						g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(command_callback), value);
-						gtk_widget_show(button);
-						gtk_box_pack_start(GTK_BOX(vbox), button, TRUE, TRUE, 0);
-					}
-					gtk_widget_show(vbox);
-					gtk_container_add(GTK_CONTAINER(valuecontrol), vbox);
-					gtk_widget_hide(restorevalue);
-				}
-				break;
-			case list: {
-					GtkWidget* vbox = gtk_vbox_new(TRUE, 0);
-					struct value_db* value;
-					GSList* group = NULL;
-					valuegroup = NULL;
-					for (value = control->value_list; value != NULL; value = value->next) {
-						GtkWidget* radio = gtk_radio_button_new_with_label(group, value->name);
-						gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (value->value == currentDefault));
-						g_object_set_data(G_OBJECT(radio), "value_db", value);
-						g_signal_connect(G_OBJECT(radio), "toggled", G_CALLBACK(group_callback), value);
-						gtk_widget_show(radio);
-						gtk_box_pack_start(GTK_BOX(vbox), radio, TRUE, TRUE, 0);
-						group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio));
-					}
-					valuegroup = group;
-					gtk_widget_show(vbox);
-					gtk_container_add(GTK_CONTAINER(valuecontrol), vbox);
-					gtk_widget_show(restorevalue);
-				}
-				break;
-			}
-			
-			gtk_widget_show(valuecontrol);
-			gtk_widget_set_sensitive(restorevalue, FALSE);
-			currentControl = control;
-		}
-		else
-		{
-			char buf[256];
-			snprintf(buf, 256, _("%s\n\nError while getting value"), control->name);
-			gtk_label_set_text(GTK_LABEL(valuelabel), buf);
-			//fprintf(stderr, "Error while getting value\n");
-			gtk_widget_hide(restorevalue);
-			gtk_widget_hide(valuecontrol);
-		}
-	} 
-	else
-	{
-		currentbutton = NULL;
-		gtk_label_set_text(GTK_LABEL(valuelabel), _("Please click on a parameter to the left to change it."));
-		gtk_widget_hide(restorevalue);
-		gtk_widget_hide(valuecontrol);
-	}
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    gint  id;
+    GtkWidget *notebook;
+    
+    if (gtk_tree_selection_get_selected(selection, &model, &iter))
+    {
+        gtk_tree_model_get(model,&iter,ID_COL,&id,-1);
+        gtk_tree_model_get(model,&iter,WIDGET_COL,&notebook,-1);
+        
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),id);
+    }
 }
 
-/* 
- *  Word wrap text
- */
-char* wrapText(const char* const original, char* new)
+
+// Initializers
+////////////////////
+
+void createControl(GtkWidget *parent,struct control_db *control)
 {
-	int last = -1;
-	int linelen = 0;
-	int i = 0;
-	int len = strlen(original);
-	
-	for (; i < len; i++, linelen++)
-	{
-		new[i] = original[i];
-		if (original[i] == ' ') {
-			last = i;
-		}
-		
-		if ((linelen > LINE_LENGTH) && (last != -1)) {
-			new[last] = '\n';
-			linelen = i-last;
-			last = -1;
-		}
-	}
-	
-	new[i] = '\0';
-	
-	return new;
-}
+    unsigned short currentDefault = 1;
+    unsigned short currentMaximum = 1;
+    get_default_and_max(control,&currentDefault,&currentMaximum);
 
+    GtkWidget *widget;
+    
+    switch (control->type)
+    {
+        case value:
+            {
+                widget = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+                gtk_scale_set_digits(GTK_SCALE(widget), 1);
+                g_signal_connect_after(G_OBJECT(widget), "value-changed", G_CALLBACK(range_callback), NULL);
+                g_object_set_data(G_OBJECT(widget), "ddcc_control", control);
+                
+                gtk_range_set_increments(GTK_RANGE(widget), 100.0/(double)currentMaximum, 10.0*100.0/(double)currentMaximum);
+                gtk_range_set_value(GTK_RANGE(widget), (double)100.0*currentDefault/(double)currentMaximum);
+//              gtk_widget_show(restorevalue);
+            }
+            break;
+        case command:
+            {
+                widget = gtk_vbox_new(TRUE, 0);
+                struct value_db* value;
+                for (value = control->value_list; value != NULL; value = value->next)
+                {
+                    GtkWidget* button = gtk_button_new_with_label(value->name);
+                    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(command_callback),value);
+                    g_object_set_data(G_OBJECT(button),"ddcc_control",control);
+                    gtk_widget_show(button);
+                    gtk_box_pack_start(GTK_BOX(widget), button, FALSE, FALSE, 5);
+                }
+//              gtk_widget_hide(restorevalue);
+            }
+            break;
+        case list:
+            {
+                widget = gtk_vbox_new(TRUE, 0);
+                struct value_db* value;
+                GSList* group = NULL;
+                for (value = control->value_list; value != NULL; value = value->next)
+                {
+                    GtkWidget* radio = gtk_radio_button_new_with_label(group, value->name);
+                    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (value->value == currentDefault));
+                    g_signal_connect(G_OBJECT(radio), "toggled", G_CALLBACK(group_callback), value);
+                    g_object_set_data(G_OBJECT(radio), "ddcc_control", control);
+                    gtk_widget_show(radio);
+                    gtk_box_pack_start(GTK_BOX(widget), radio, TRUE, TRUE, 0);
+                    group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio));
+                }
+             //   gtk_widget_show(restorevalue);
+                
+                break;
+            }
+    }    
+    all_controls = g_slist_append(all_controls,widget);
+    g_object_set_data(G_OBJECT(widget), "ddcc_control", control);
+    g_print("%i - %i\n",all_controls,g_slist_length(all_controls));
+    gtk_widget_show(widget);
+    gtk_container_add(GTK_CONTAINER(parent),widget);
+}
+    
 void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 {
-	int x, y;
-	GtkWidget* table = gtk_table_new(1, 1, TRUE);
-	GtkWidget* button;
-	GtkWidget* label;
-	
-	x = 0;
-	y = 0;
-	
+    int i=0;
+	GtkWidget* vbox = gtk_vbox_new(FALSE,10);
+    GtkWidget* frame;
+
 	struct control_db* control;
-	
-	for (control = subgroup->control_list; control != NULL; control = control->next)
+    for (control = subgroup->control_list; control != NULL; control = control->next)
 	{
-		char* buffer = malloc(strlen(control->name)+1);
-		button = gtk_toggle_button_new();
-		label = gtk_label_new(wrapText(control->name, buffer));
-		free(buffer);
-		gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
-		gtk_widget_show (label);
-		gtk_container_add (GTK_CONTAINER (button), label);
-		
-		gtk_widget_show (button);
-		gtk_table_attach(GTK_TABLE(table), button, x, x+1, y, y+1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
-		g_signal_connect_after(G_OBJECT(button), "toggled", 
-			G_CALLBACK(buttons_callback), (gpointer)control);
-		x++;
-		if (x == 3) {
-			x = 0;
-			y++;
+        frame = gtk_frame_new(control->name);
+        gtk_container_set_border_width(GTK_CONTAINER(frame),5);
+        createControl(frame,control);
+        gtk_widget_show(frame);
+        gtk_box_pack_start(GTK_BOX(vbox),frame,0,0,0);
+        i++;
+    }
+
+	GtkWidget* label;
+	label = gtk_label_new(subgroup->name);
+	gtk_widget_show (label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, label);
+	gtk_widget_show (vbox);
+}
+
+
+GtkWidget* createTree(GtkWidget *notebook)
+{
+    GtkTreeStore *store = gtk_tree_store_new(N_COLS,G_TYPE_STRING,G_TYPE_INT,G_TYPE_POINTER);
+    
+    GtkWidget *tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+    g_object_unref(G_OBJECT(store));
+    
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("Section"),renderer,"text",TITLE_COL,NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
+
+    GtkTreeIter top_iter;
+    GtkTreeIter sub_iter;
+    
+    struct group_db* group;
+	struct subgroup_db* subgroup;
+
+    if (mon.db)
+	{
+        int id = 1;
+		for (group = mon.db->group_list; group != NULL; group = group->next)
+        {
+            gtk_tree_store_append(store,&top_iter,NULL);
+            gtk_tree_store_set(store,&top_iter,TITLE_COL,group->name,ID_COL,0,WIDGET_COL,notebook,-1);
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+            {
+                gtk_tree_store_append(store,&sub_iter,&top_iter);
+                gtk_tree_store_set(store,&sub_iter,TITLE_COL,subgroup->name,ID_COL,id,WIDGET_COL,notebook,-1);
+                id++;
+			}
 		}
 	}
-	
-	gtk_table_resize(GTK_TABLE(table), y+1, 3);
-	
-	label = gtk_label_new(subgroup->name);
-	
-	gtk_widget_show (label);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, label);
-	gtk_widget_show (table);
+
+    gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
+    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree),0);
+   // gtk_container_set_border_width(GTK_CONTAINER(tree),1);
+    
+    GtkTreeSelection *select;
+    
+    select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
+    gtk_tree_selection_set_mode (select, GTK_SELECTION_SINGLE);
+    g_signal_connect (G_OBJECT (select), "changed",
+            G_CALLBACK (tree_selection_changed_callback),
+            NULL);
+
+    return tree;
 }
 
 GtkWidget* createNotebook(struct monitorlist* monitor)
 {
-	currentbutton = NULL;
-	currentControl = NULL;
-	
 	ddcci_open(&mon, monitor->filename);
 	
-	GtkWidget* notebook = gtk_notebook_new();
-	GtkWidget* secnotebook;
-	GtkWidget* label;
+	GtkWidget *notebook = gtk_notebook_new();
 	
 	struct group_db* group;
 	struct subgroup_db* subgroup;
-	
+
+    GtkWidget *tree = createTree(notebook);
+
+//////////////////////////////	
+    GtkWidget* none = gtk_table_new(1, 1, TRUE);
+    
+	GtkWidget *valuelabel = gtk_label_new (_("Please click on a parameter on the left to change it."));
+	gtk_table_attach(GTK_TABLE(none), valuelabel, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
+    
+	GtkWidget *label = gtk_label_new("zero");
+    
+    gtk_widget_show(valuelabel);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), none,label);
+    gtk_widget_show(none);
+/////////////////////////////
+
 	if (mon.db)
 	{
-		for (group = mon.db->group_list; group != NULL; group = group->next) {
-			secnotebook = gtk_notebook_new();
+		for (group = mon.db->group_list; group != NULL; group = group->next)
+        {
+			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
+		//	gtk_notebook_set_show_border(GTK_NOTEBOOK(notebook),0);
 			
-			gtk_notebook_set_tab_pos(GTK_NOTEBOOK(secnotebook), GTK_POS_LEFT);
-			
-			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
-				createPage(secnotebook, subgroup);
-			}
-			
-			label = gtk_label_new(group->name);
-			
-			gtk_widget_show (label);
-			gtk_notebook_append_page (GTK_NOTEBOOK (notebook), secnotebook, label);
-			gtk_widget_show (secnotebook);
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+				createPage(notebook, subgroup);
 		}
 	}
 	
-	GtkWidget* right = gtk_table_new(3, 1, TRUE);
-	valuelabel = gtk_label_new (_("Please click on a parameter to the left to change it."));
-	gtk_table_attach(GTK_TABLE(right), valuelabel, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
-	gtk_widget_show(valuelabel);
-	
-	valuecontrol = gtk_alignment_new(0.5, 0.5, 1.0, 1.0);
-	gtk_table_attach(GTK_TABLE(right), valuecontrol, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
-	
-	restorevalue = gtk_button_new_with_label(_("Restore default value"));
-	gtk_table_attach(GTK_TABLE(right), restorevalue, 0, 1, 2, 3, GTK_EXPAND, GTK_EXPAND, 5, 5);
-	g_signal_connect_after(G_OBJECT(restorevalue), "clicked", G_CALLBACK(restore_callback), NULL);
-	gtk_widget_set_sensitive(restorevalue, FALSE);
-	
-	GtkWidget* table = gtk_table_new(1, 2, FALSE);
+	GtkWidget* table = gtk_table_new(2, 1, FALSE);
+	gtk_widget_show (tree);
+	gtk_table_attach(GTK_TABLE(table), tree, 0, 1, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (notebook);
-	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
-	gtk_widget_show (right);
-	gtk_table_attach(GTK_TABLE(table), right, 1, 2, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 3, 0);
+	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (table);
 	
 	return table;
 }
+
+// Cleanup
+////////////////////
 
 void deleteNotebook() {
 	if (modified) {

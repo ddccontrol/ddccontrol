@@ -179,8 +179,9 @@ int main( int   argc, char *argv[] )
 	gtk_init(&argc, &argv);
 	
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window),_("Monitor settings"));
 	
-	gtk_window_set_default_size(GTK_WINDOW(window), 500, 300);
+	gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
 	
 	g_signal_connect (G_OBJECT (window), "delete_event",
 				G_CALLBACK (delete_event), NULL);
@@ -193,7 +194,7 @@ int main( int   argc, char *argv[] )
 				G_CALLBACK (window_changed), NULL);
 	#endif
 	
-	gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (window), 4);
 	
 	gtk_widget_show (window);
 	
@@ -237,7 +238,7 @@ int main( int   argc, char *argv[] )
 	
 	g_signal_connect (G_OBJECT (combo_box), "changed", G_CALLBACK (combo_change), NULL);
 	
-	table = gtk_table_new(3, 1, FALSE);
+	table = gtk_table_new(4, 1, FALSE);
 	gtk_widget_show (table);
 	
 	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, 0, 5, 5);
@@ -255,8 +256,18 @@ int main( int   argc, char *argv[] )
 	if (monlist != NULL) {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
 	}
-	
-	gtk_widget_show (moninfo);
+
+    GtkWidget* align = gtk_alignment_new(1,1,0,0);
+    GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+    g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
+
+    
+    gtk_container_add(GTK_ALIGNMENT(align),close_button);
+	gtk_widget_show (close_button);
+	gtk_widget_show (align);
+	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 3, 4, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+
+//	gtk_widget_show (moninfo);
 	
 	gtk_main();
 	
