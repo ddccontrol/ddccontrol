@@ -29,9 +29,9 @@
 #include <pci/pci.h>
 
 struct i2c_bus {
-	word bus;
-	byte dev;
-	byte func;
+	int bus;
+	int dev;
+	int func;
 	int i2cbus;
 };
 
