@@ -1,3 +1,9 @@
+2004-09-12 18:17  nboichat
+
+	* src/gddccontrol/: main.c, notebook.c, notebook.h: gddccontrol:
+	  Save monitor settings on exit, retries if a control cannot be
+	  read.
+
 2004-09-10 09:53  nboichat
 
 	* doc/xml-design.txt, src/ddccontrol/main.c,
