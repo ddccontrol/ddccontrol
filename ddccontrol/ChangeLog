@@ -1,31 +1,37 @@
-2004-09-04 16:24  nboichat
+2004-09-04 21:26  vdovikin
+
+	* src/: ddccontrol/main.c, lib/ddcci.c, lib/ddcci.h: Updated ddcci
+	  interface; removed references to stdout; updated ddccontrol to
+	  use new iface
+
+2004-09-04 18:24  nboichat
 
 	* Makefile.in, TODO, aclocal.m4, configure, configure.ac,
 	  src/Makefile.in, src/ddccontrol/Makefile.in,
 	  src/gddccontrol/Makefile.in, src/lib/Makefile.in: Avoid automatic
 	  rebuilding of .in files.
 
-2004-09-04 14:59  nboichat
+2004-09-04 16:59  nboichat
 
 	* TODO, doc/xml-design.txt, src/lib/monitor_db.c: New XML design
 	  allowing empty value list for commands.
 
-2004-09-03 00:31  nboichat
+2004-09-03 02:31  nboichat
 
 	* commit.sh, src/lib/monitor_db.c: Small db fix.\nAdd automatic
 	  ChangeLog generation script.
 
-2004-09-02 17:34  nboichat
+2004-09-02 19:34  nboichat
 
 	* doc/xml-design.txt, src/ddccontrol/main.c, src/lib/monitor_db.c:
 	  New XML design.
 
-2004-08-31 22:35  nboichat
+2004-09-01 00:35  nboichat
 
 	* Makefile.am, Makefile.in, configure, configure.ac,
 	  src/lib/monitor_db.c: Add support for external database.
 
-2004-08-31 14:08  nboichat
+2004-08-31 16:08  nboichat
 
 	* Makefile.in, configure, configure.ac, doc/xml-design.txt,
 	  src/Makefile.in, src/ddccontrol/Makefile.in,
@@ -33,17 +39,17 @@
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add database support.
 
-2004-08-30 23:29  nboichat
+2004-08-31 01:29  nboichat
 
 	* src/gddccontrol/.deps/: main.Po, notebook.Po: remove .deps
 	  directory
 
-2004-08-30 23:26  nboichat
+2004-08-31 01:26  nboichat
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
 	  src/lib/.cvsignore: Add .cvsignore files.
 
-2004-08-30 23:19  nboichat
+2004-08-31 01:19  nboichat
 
 	* Makefile.am, NEWS, README, configure.ac, Makefile.in, THANKS,
 	  aclocal.m4, configure, install-sh, missing, INSTALL, COPYING,
@@ -57,7 +63,7 @@
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial import.
 
-2004-08-30 23:19  nboichat
+2004-08-31 01:19  nboichat
 
 	* Makefile.am, NEWS, README, configure.ac, Makefile.in, THANKS,
 	  aclocal.m4, configure, install-sh, missing, INSTALL, COPYING,
