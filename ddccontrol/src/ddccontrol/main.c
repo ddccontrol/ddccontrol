@@ -40,6 +40,7 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 
 	struct monitor_db* monitor = mon->db;
 	struct group_db* group;
+	struct subgroup_db* subgroup;
 	struct control_db* control;
 	struct value_db* valued;
 	xmlChar* controlname = NULL;
@@ -56,21 +57,25 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 					for (group = monitor->group_list; (group != NULL) && 
 							(controlname == NULL); group = group->next) 
 					{
-						/* loop through controls inside group */
-						for (control = group->control_list; (control != NULL); control = control->next) 
+						/* loop through subgroups inside group */
+						for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next) 
 						{
-							/* check for control id */
-							if (control->address == ctrl) 
+							/* loop through controls inside subgroup */
+							for (control = subgroup->control_list; (control != NULL); control = control->next) 
 							{
-								controlname = control->name;
-								/* look for the value */
-								for (valued = control->value_list; (valued != NULL); valued = valued->next) {
-									if (valued->value == value) {
-										valuename = valued->name;
-										break;
+								/* check for control id */
+								if (control->address == ctrl) 
+								{
+									controlname = control->name;
+									/* look for the value */
+									for (valued = control->value_list; (valued != NULL); valued = valued->next) {
+										if (valued->value == value) {
+											valuename = valued->name;
+											break;
+										}
 									}
+									break;
 								}
-								break;
 							}
 						}
 					}
@@ -276,45 +281,44 @@ int main(int argc, char **argv)
 		{
 			struct monitor_db* monitor = mon.db;
 			struct group_db* group;
+			struct subgroup_db* subgroup;
 			struct control_db* control;
 			struct value_db* valued;
 			
 			if (monitor) {		
 				printf("\n= %s\n", monitor->name);
 				
-				group = monitor->group_list;
-				while (group != NULL) {
+				for (group = monitor->group_list; group != NULL; group = group->next) {
 					printf("> %s\n", group->name);
 					
-					control = group->control_list;
-					while (control != NULL) {
-						printf("\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
-							control->id, control->name, control->address, control->delay, control->type);
+					for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
+						printf("\t> %s\n", subgroup->name);
 						
-						valued = control->value_list;
-						if (valued) {
-							printf("\t  Possible values:\n");
-						}
-						
-						while (valued != NULL) {
-							printf("\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
-							valued = valued->next;
-						}
-						
-						for (retry = RETRYS; retry; retry--) {
-							int result;
-							unsigned short value, maximum;
+						for (control = subgroup->control_list; control != NULL; control = control->next) {
+							printf("\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
+								control->id, control->name, control->address, control->delay, control->type);
 							
-							if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
-								printf("\t  %ssupported, value=%d, maximum=%d\n", 
-									(result > 0) ? "" : "not ", value, maximum);
-								break;
+							valued = control->value_list;
+							if (valued) {
+								printf("\t\t  Possible values:\n");
+							}
+							
+							for (; valued != NULL; valued = valued->next) {
+								printf("\t\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
+							}
+							
+							for (retry = RETRYS; retry; retry--) {
+								int result;
+								unsigned short value, maximum;
+								
+								if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
+									printf("\t\t  %ssupported, value=%d, maximum=%d\n", 
+										(result > 0) ? "" : "not ", value, maximum);
+									break;
+								}
 							}
 						}
-						
-						control = control->next;
 					}
-					group = group->next;
 				}
 			}
 		}

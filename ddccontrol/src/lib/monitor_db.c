@@ -116,13 +116,124 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	return 0;
 }
 
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group) {
+	xmlNodePtr cur;
+	xmlChar *mon_ctrlid;
+	xmlChar *options_ctrlid, *options_ctrlname;
+	xmlChar *tmp;
+	char *endptr;
+	
+	struct control_db *current_control = malloc(sizeof(struct control_db));
+	struct control_db **last_control_ref = &current_group->control_list;
+	memset(current_control, 0, sizeof(struct control_db));
+	
+	/* List controls in group (options.xml) */
+	while (control != NULL)
+	{
+		if (!xmlStrcmp(control->name, (const xmlChar *) "control")) {
+			options_ctrlid   = xmlGetProp(control, "id");
+			DDCCI_RETURN_IF(options_ctrlid == NULL, 0, "Can't find id property.", control);
+			options_ctrlname = xmlGetProp(control, "name");
+			DDCCI_RETURN_IF(options_ctrlname == NULL, 0, "Can't find name property.", control);
+			
+			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
+			
+			/* Find the related control in monitor specifications */
+			cur = mon_control->xmlChildrenNode;
+			while (1)
+			{
+				if (cur == NULL) {
+					/* Control not found, free strings */
+					xmlFree(options_ctrlid);
+					xmlFree(options_ctrlname);
+					/* TODO: return */
+					break;
+				}
+				if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
+					mon_ctrlid = xmlGetProp(cur, "id");
+					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
+						current_control->id   = options_ctrlid;
+						current_control->name = options_ctrlname;
+						
+						tmp = xmlGetProp(cur, "address");
+						DDCCI_RETURN_IF(tmp == NULL, 0, "Can't find address property.", cur);
+						current_control->address = strtol(tmp, &endptr, 0);
+						DDCCI_RETURN_IF(*endptr != 0, 0, "Can't convert address to int.", cur);
+						xmlFree(tmp);
+						
+						tmp = xmlGetProp(cur, "delay");
+						if (tmp) {
+							current_control->delay = strtol(tmp, &endptr, 10);
+							DDCCI_RETURN_IF(endptr != NULL, 0, "Can't convert delay to int.", cur);
+							xmlFree(tmp);
+						}
+						else {
+							current_control->delay = -1;
+						}
+						
+						tmp = xmlGetProp(control, "type");
+						DDCCI_RETURN_IF(tmp == NULL, 0, "Can't find type property.", control);
+						if (!(xmlStrcmp(tmp, (const xmlChar *)"value"))) {
+							current_control->type = value;
+						}
+						else if (!(xmlStrcmp(tmp, (const xmlChar *)"command"))) {
+							current_control->type = command;
+							if (ddcci_get_value_list(control, cur, current_control, 1) < 0) {
+								return 0;
+							}
+							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
+								struct value_db *current_value = malloc(sizeof(struct value_db));
+								current_value->id = xmlCharStrdup("default");
+								current_value->name = xmlCharStrdup("default");
+								current_value->value = 0x01;
+								current_value->next = NULL;
+								current_control->value_list = current_value;
+							}
+						}
+						else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
+							current_control->type = list;
+							if (ddcci_get_value_list(control, cur, current_control, 0) < 0) {
+								return 0;
+							}
+						}
+						else {
+							DDCCI_RETURN_IF(1, 0, "Invalid type.", control);
+						}
+						xmlFree(tmp);
+						
+						/*printf("**control id=%s group=%s name=%s address=%s\n", 
+						options_ctrlid, options_groupname, options_ctrlname, mon_address);*/
+						
+						*last_control_ref = current_control;
+						last_control_ref = &current_control->next;
+						current_control = malloc(sizeof(struct control_db));
+						memset(current_control, 0, sizeof(struct control_db));
+						
+						xmlFree(mon_ctrlid);
+						break;
+					}
+					else {
+						xmlFree(mon_ctrlid);
+					}
+				}
+				cur = cur->next;
+			}
+		}
+		
+		control = control->next;
+	} // controls loop
+	
+	free(current_control);
+	
+	return 1;
+}
 
 /* recursionlevel: Protection against looping includes */
 struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel)
 {
 	struct monitor_db* mon_db;
 	xmlDocPtr options_doc, mon_doc;
-	xmlNodePtr cur, controls;
+	xmlNodePtr cur, mon_control;
 	xmlChar *mon_name;
 	xmlChar *tmp;
 	char buffer[256];
@@ -181,6 +292,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	}
 	
 	mon_db = malloc(sizeof(struct monitor_db));
+	memset(mon_db, 0, sizeof(struct monitor_db));
 	mon_db->name = mon_name;
 	
 	tmp = xmlGetProp(cur, "init");
@@ -197,17 +309,17 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	xmlFree(tmp);
 	
 	cur = cur->xmlChildrenNode;
-	controls = NULL;
+	mon_control = NULL;
 	
 	while (cur != NULL) {
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "controls")) {
-			controls = cur;
+			mon_control = cur;
 		}
 		
 		cur = cur->next;
 	}
 	
-	if (!controls) {
+	if (!mon_control) {
 		fprintf(stderr,"document of the wrong type, can't find controls.\n");
 		xmlFreeDoc(mon_doc);
 		xmlFreeDoc(options_doc);
@@ -216,141 +328,71 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	
 	/* Find, if possible, each element of options_doc in mon_doc. */
 	
-	xmlChar *mon_ctrlid;
-	xmlChar *options_groupname, *options_ctrlid, *options_ctrlname;
-	char *endptr;
-	xmlNodePtr group, control;
+	xmlChar *options_groupname, *options_subgroupname;
+	xmlNodePtr group, subgroup, control;
 	
 	struct group_db *current_group = malloc(sizeof(struct group_db));
 	struct group_db **last_group_ref = &mon_db->group_list;
 	memset(current_group, 0, sizeof(struct group_db));
 	
 	/* List groups (options.xml) */
-	group = xmlDocGetRootElement(options_doc)->xmlChildrenNode;
-	while (group != NULL)
+	for (group = xmlDocGetRootElement(options_doc)->xmlChildrenNode; group != NULL; group = group->next)
 	{
 		options_groupname = NULL;
-		if (!xmlStrcmp(group->name, (const xmlChar *) "group")) {
-			options_groupname = xmlGetProp(group, "name");
-			//printf("*group name=%s\n", options_groupname);
-			
-			struct control_db *current_control = malloc(sizeof(struct control_db));
-			struct control_db **last_control_ref = &current_group->control_list;
-			memset(current_control, 0, sizeof(struct control_db));
-			
-			control = group->xmlChildrenNode;
-			/* List controls in group (options.xml) */
-			while (control != NULL)
-			{
-				if (!xmlStrcmp(control->name, (const xmlChar *) "control")) {
-					options_ctrlid   = xmlGetProp(control, "id");
-					DDCCI_RETURN_IF(options_ctrlid == NULL, NULL, "Can't find id property.", control);
-					options_ctrlname = xmlGetProp(control, "name");
-					DDCCI_RETURN_IF(options_ctrlname == NULL, NULL, "Can't find name property.", control);
-					
-					//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
-					
-					/* Find the related control in monitor specifications */
-					cur = controls->xmlChildrenNode;
-					while (1)
-					{
-						if (cur == NULL) {
-							/* Control not found, free strings */
-							xmlFree(options_ctrlid);
-							xmlFree(options_ctrlname);
-							/* TODO: return */
-							break;
-						}
-						if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
-							mon_ctrlid = xmlGetProp(cur, "id");
-							if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
-								current_control->id   = options_ctrlid;
-								current_control->name = options_ctrlname;
-								
-								tmp = xmlGetProp(cur, "address");
-								DDCCI_RETURN_IF(tmp == NULL, NULL, "Can't find address property.", cur);
-								current_control->address = strtol(tmp, &endptr, 0);
-								DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert address to int.", cur);
-								xmlFree(tmp);
-								
-								tmp = xmlGetProp(cur, "delay");
-								if (tmp) {
-									current_control->delay = strtol(tmp, &endptr, 10);
-									DDCCI_RETURN_IF(endptr != NULL, NULL, "Can't convert delay to int.", cur);
-									xmlFree(tmp);
-								}
-								else {
-									current_control->delay = -1;
-								}
-								
-								tmp = xmlGetProp(control, "type");
-								DDCCI_RETURN_IF(tmp == NULL, NULL, "Can't find type property.", control);
-								if (!(xmlStrcmp(tmp, (const xmlChar *)"value"))) {
-									current_control->type = value;
-								}
-								else if (!(xmlStrcmp(tmp, (const xmlChar *)"command"))) {
-									current_control->type = command;
-									if (ddcci_get_value_list(control, cur, current_control, 1) < 0) {
-										return NULL;
-									}
-									if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
-										struct value_db *current_value = malloc(sizeof(struct value_db));
-										current_value->id = xmlCharStrdup("default");
-										current_value->name = xmlCharStrdup("default");
-										current_value->value = 0x01;
-										current_value->next = NULL;
-										current_control->value_list = current_value;
-									}
-								}
-								else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
-									current_control->type = list;
-									if (ddcci_get_value_list(control, cur, current_control, 0) < 0) {
-										return NULL;
-									}
-								}
-								else {
-									DDCCI_RETURN_IF(1, NULL, "Invalid type.", control);
-								}
-								xmlFree(tmp);
-								
-								/*printf("**control id=%s group=%s name=%s address=%s\n", 
-								options_ctrlid, options_groupname, options_ctrlname, mon_address);*/
-								
-								*last_control_ref = current_control;
-								last_control_ref = &current_control->next;
-								current_control = malloc(sizeof(struct control_db));
-								memset(current_control, 0, sizeof(struct control_db));
-								
-								xmlFree(mon_ctrlid);
-								break;
-							}
-							else {
-								xmlFree(mon_ctrlid);
-							}
-						}
-						cur = cur->next;
-					}
-				}
-				
-				control = control->next;
-			} // controls loop
-			
-			free(current_control);
-			
-			if (current_group->control_list) {
-				current_group->name = options_groupname;
-				*last_group_ref = current_group;
-				last_group_ref = &current_group->next;
-				current_group = malloc(sizeof(struct group_db));
-				memset(current_group, 0, sizeof(struct group_db));
-				options_groupname = NULL; /* So it is not freed */
+		if (xmlStrcmp(group->name, (const xmlChar *) "group")) { // Not a group
+			continue;
+		}
+		
+		options_groupname = xmlGetProp(group, "name");
+		//printf("*group name=%s\n", options_groupname);
+		
+		struct subgroup_db *current_subgroup = malloc(sizeof(struct subgroup_db));
+		struct subgroup_db **last_subgroup_ref = &current_group->subgroup_list;
+		memset(current_subgroup, 0, sizeof(struct subgroup_db));
+		
+		/* List subgroups (options.xml) */
+		for (subgroup = group->xmlChildrenNode; subgroup != NULL; subgroup = subgroup->next)
+		{
+			options_subgroupname = NULL;
+			if (xmlStrcmp(subgroup->name, (const xmlChar *) "subgroup")) { // Not a subgroup
+				continue;
 			}
+			
+			options_subgroupname = xmlGetProp(subgroup, "name");
+			//printf("*group name=%s\n", options_groupname);
+		
+			control = subgroup->xmlChildrenNode;
+			
+			DDCCI_RETURN_IF(
+				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup), 
+					NULL, "Error enumerating controls in group.", control);
+			
+			if (current_subgroup->control_list) {
+				current_subgroup->name = options_subgroupname;
+				*last_subgroup_ref = current_subgroup;
+				last_subgroup_ref = &current_subgroup->next;
+				current_subgroup = malloc(sizeof(struct subgroup_db));
+				memset(current_subgroup, 0, sizeof(struct subgroup_db));
+				options_subgroupname = NULL; /* So it is not freed */
+			}
+			
+			if (options_subgroupname) {
+				xmlFree(options_subgroupname);
+			}
+		}
+		
+		if (current_group->subgroup_list) {
+			current_group->name = options_groupname;
+			*last_group_ref = current_group;
+			last_group_ref = &current_group->next;
+			current_group = malloc(sizeof(struct group_db));
+			memset(current_group, 0, sizeof(struct group_db));
+			options_groupname = NULL; /* So it is not freed */
 		}
 		
 		if (options_groupname) {
 			xmlFree(options_groupname);
 		}
-		group = group->next;
 	}
 	
 	free(current_group);

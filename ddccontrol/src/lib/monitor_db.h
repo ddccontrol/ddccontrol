@@ -53,11 +53,18 @@ struct control_db {
 	struct value_db* value_list;
 };
 
+struct subgroup_db {
+	xmlChar* name;
+	
+	struct subgroup_db* next;
+	struct control_db* control_list;
+};
+
 struct group_db {
 	xmlChar* name;
 	
 	struct group_db* next;
-	struct control_db* control_list;
+	struct subgroup_db* subgroup_list;
 };
 
 struct monitor_db {

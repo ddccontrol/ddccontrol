@@ -139,10 +139,9 @@ char* wrapText(const char* const original, char* new)
 	return new;
 }
 
-void createPage(GtkWidget* notebook, struct group_db* group)
+void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 {
 	int x, y;
-	int width = 0;
 	GtkWidget* table = gtk_table_new(1, 1, TRUE);
 	GtkWidget* button;
 	GtkWidget* label;
@@ -152,9 +151,9 @@ void createPage(GtkWidget* notebook, struct group_db* group)
 	
 	struct control_db* control;
 	
-	for (control = group->control_list; control != NULL; control = control->next)
+	for (control = subgroup->control_list; control != NULL; control = control->next)
 	{
-		char* buffer = malloc(strlen(control->name));
+		char* buffer = malloc(strlen(control->name)+1);
 		button = gtk_toggle_button_new();
 		label = gtk_label_new(wrapText(control->name, buffer));
 		free(buffer);
@@ -173,12 +172,9 @@ void createPage(GtkWidget* notebook, struct group_db* group)
 		}
 	}
 	
-	if (x > width)
-		width = x;
+	gtk_table_resize(GTK_TABLE(table), y+1, 3);
 	
-	gtk_table_resize(GTK_TABLE(table), y+1, width);
-	
-	label = gtk_label_new(group->name);
+	label = gtk_label_new(subgroup->name);
 	
 	gtk_widget_show (label);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, label);
@@ -193,13 +189,28 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	ddcci_open(&mon, monitor->filename);
 	
 	GtkWidget* notebook = gtk_notebook_new();
+	GtkWidget* secnotebook;
+	GtkWidget* label;
+	
+	struct group_db* group;
+	struct subgroup_db* subgroup;
 	
 	if (mon.db)
 	{
-		struct group_db* group;
-		
 		for (group = mon.db->group_list; group != NULL; group = group->next) {
-			createPage(notebook, group);
+			secnotebook = gtk_notebook_new();
+			
+			gtk_notebook_set_tab_pos(GTK_NOTEBOOK(secnotebook), GTK_POS_LEFT);
+			
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
+				createPage(secnotebook, subgroup);
+			}
+			
+			label = gtk_label_new(group->name);
+			
+			gtk_widget_show (label);
+			gtk_notebook_append_page (GTK_NOTEBOOK (notebook), secnotebook, label);
+			gtk_widget_show (secnotebook);
 		}
 	}
 	
@@ -217,9 +228,9 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	gtk_table_attach(GTK_TABLE(right), restorevalue, 0, 1, 2, 3, GTK_EXPAND, GTK_EXPAND, 5, 5);
 	g_signal_connect_after(G_OBJECT(restorevalue), "clicked", G_CALLBACK(restore_callback), NULL);
 	
-	GtkWidget* table = gtk_table_new(1, 2, TRUE);
+	GtkWidget* table = gtk_table_new(1, 2, FALSE);
 	gtk_widget_show (notebook);
-	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 3, 0);
+	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 0, 1, 0, 0, 3, 0);
 	gtk_widget_show (right);
 	gtk_table_attach(GTK_TABLE(table), right, 1, 2, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 3, 0);
 	gtk_widget_show (table);

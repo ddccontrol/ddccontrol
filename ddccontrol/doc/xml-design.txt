@@ -8,8 +8,8 @@ options.xml
 -----------
 
 Controls (for example "brightness"...) are contained in groups
-(for example "color settings"). Groups allow the GUI to separate the
-options in tabs.
+(for example "color settings"). Groups and subgroups allow the GUI 
+to separate the options in tabs.
 
 Controls IDs are usually like Control Name, but abbreviated.
 
@@ -30,17 +30,19 @@ File format:
 <?xml version="1.0"?>
 <options>
   <group name="%groupname%">
-    <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
-	  <!-- Command using the default 0x01 address -->
-    <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>
-    <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
-      <value id="%value_id%" value="%hex_value%"/>
-    </control>
-    <control id="%control_id%" type="list" name="%control_name%" address="%hex_address%">
-      <value id="%value_id%" name="%value_name%" value="%hex_value%"/>
-      <value...>
-    </control>
-    <control ...>
+    <subgroup name="%subgroupname%">
+      <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
+        <!-- Command using the default 0x01 address -->
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" value="%hex_value%"/>
+      </control>
+      <control id="%control_id%" type="list" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" name="%value_name%" value="%hex_value%"/>
+        <value...>
+      </control>
+      <control ...>
+    </subgroup>
   </group>
   <group ...>
 <options>
