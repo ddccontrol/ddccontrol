@@ -1,3 +1,9 @@
+2004-12-10 18:05  nboichat
+
+	* db/options.xml, db/monitor/NEC662B.xml, po/ddccontrol-db.pot,
+	  po/fr.gmo, po/fr.po: Add complete suppport for NEC MultiSync LCD
+	  2080UX+, french translation updated.
+
 2004-11-05 15:14  nboichat
 
 	* db/monitor/NEC662B.xml: Add support for NEC MultiSync LCD 2080UX+
