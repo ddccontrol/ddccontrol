@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://docbook.org/xml/4.2/docbookx.dtd" []>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://docbook.org/xml/4.3/docbookx.dtd" []>
  
 <book>
  
@@ -17,7 +17,6 @@
 <holder>Nicolas Boichat</holder>
 </copyright>
 
-<pubdate>2005-03-18</pubdate>
 <releaseinfo role="meta">
 $Id$
 </releaseinfo> 
@@ -52,38 +51,33 @@ using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
-libxml2, available at (***LINK***).
+<ulink url="http://www.xmlsoft.org/">libxml2</ulink>
 </para>
 </listitem>
 <listitem>
 <para>
-pci-utils, available at (***LINK***).
-<footnote>
-<para>
-You don't need this package if you don't need to use direct PCI memory access.
-</para>
-</footnote>
+<ulink url="http://atrey.karlin.mff.cuni.cz/~mj/pciutils.shtml">pci-utils</ulink>
 </para>
 </listitem>
 <listitem>
 <para>
-gtk+&gt;=2.4, available at (***LINK***).
-<footnote>
-<para>
-You don't need this package if you don't plan to use the Gnome GUI (this is usually not the case).
-</para>
-</footnote>
+<ulink url="http://www.gtk.org/">gtk+&gt;=2.4</ulink>
 </para>
 </listitem>
 </itemizedlist>
-
-
+<note>
+<para>
+You don't need pci-utils if you don't use direct PCI memory access, and you don't need gtk+ if you don't plan to use the Gnome GUI.
+Usually, this is not the case, so you will need these packages.
+</para>
+</note>
 </sect1>
 
 <sect1 id="download">
 <title>Download the sources</title>
-<para>Go to the download section of sourceforge project's page and download the latest
-ddccontrol and ddccontrol-db source tarballs. (****LINK****)</para>
+<para>Go to the <ulink url="http://sourceforge.net/project/showfiles.php?group_id=117933">download section</ulink>
+of ddccontrol project's page and download the latest
+ddccontrol and ddccontrol-db source tarballs.</para>
 <para>Then unpack these two archives, you should have two directories, ddccontrol and
 ddccontrol-db.</para>
 </sect1>
@@ -101,5 +95,150 @@ ddccontrol-db.</para>
 same value when configuring the second.</para>
 </sect1>
 
+</chapter>
+
+<chapter id="techdocs">
+<title>Documents for developpers</title>
+<sect1 id="xmlstruct">
+<title>Monitor database structure</title>
+<para>The monitor database is written in XML, it can be found in the db directory of ddccontrol-db package.</para>
+<para>This directory contains the following files:
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+options.xml
+</para>
+</listitem>
+<listitem>
+<para>
+monitor/%monitor_id%.xml
+</para>
+</listitem>
+</itemizedlist>
+</para>
+<sect2 id="optionsxml">
+<title>Control list</title>
+<subtitle>XML file: options.xml</subtitle>
+<para>Controls (e.g. "brightness"...) are contained in groups
+(e.g. "color settings"). Groups and subgroups allow the GUI 
+to separate the options in different branches on the tree.</para>
+
+<para>Controls IDs are usually abbreviated Control Names.</para>
+
+<para>Control types:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+"value": The control accepts values in a continuous range (e.g. brightness)
+</para>
+</listitem>
+<listitem>
+<para>
+"command": An action occurs when the value is set to something greater than 0 (e.g. degauss).
+</para>
+<para>If you don't define any value entry in a command control, the default
+value 0x01 will be used.</para>
+</listitem>
+<listitem>
+<para>
+"list": The control accepts a list of values (e.g. OSD language).
+</para>
+</listitem>
+</itemizedlist>
+
+<para>The "address" parameter in control and "value" in value are optional.</para>
+
+<para>File format:</para>
+<screen>
+<![CDATA[<?xml version="1.0"?>
+<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
+  <controls>
+    <!--- value -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command using a default 0x01 value-->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="activate" value="%hex_value%"/>
+    </control>
+    <!--- list -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="%value_id%" value="%hex_value%"/>
+      <value...>
+    </control>
+    <control...>
+  </controls>
+</monitor>
+]]></screen>
+</sect2>
+<sect2 id="monitorxml">
+<title>Monitor Profiles</title>
+<subtitle>XML files: monitor/%monitor_id%.xml</subtitle>
+<para>List of controls supported by a monitor.</para>
+<para>Controls IDs are defined in options.xml, if it is a list or a command
+with a non-default value, supported values must be defined. "address" 
+parameter for controls, and "value", are optional if they are defined 
+in the general options file.</para>
+
+<para>The init parameter in monitor define the type of the initialisation:
+DDC/CI standard ("standard"), or Samsung ("samsung"). </para>
+
+<para>The caps parameter is optional. It is compatible with ACCESS.bus
+specifications and is treated as following: </para>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+If caps is not defined, caps are read from monitor.
+</para>
+</listitem>
+<listitem>
+<para>
+If this attribute exists and have a vcp string
+(e.g. caps="type(lcd) vcp(10 12)") then specified caps string are used.
+</para>
+</listitem>
+<listitem>
+<para> 
+If specified caps string does not contain vcp (e.g. caps="type(crt)"
+or caps=""), then all controls defined in the monitor profile are 
+supposed to be supported.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>
+You can set a parameter delay to set the time in milliseconds to wait
+after changing the value of this control. If you don't, a default value
+is used.</para>
+
+<para>File format:</para>
+<screen>
+<![CDATA[<?xml version="1.0"?>
+<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
+  <controls>
+    <!--- value -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command using a default 0x01 value-->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="activate" value="%hex_value%"/>
+    </control>
+    <!--- list -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="%value_id%" value="%hex_value%"/>
+      <value...>
+    </control>
+    <control...>
+  </controls>
+</monitor>
+]]></screen>
+<para>If a monitor supports exactly the same controls as another one, you can define it as shown:</para>
+<screen>
+<![CDATA[<?xml version="1.0"?>
+<monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>
+]]></screen>
+</sect2>
+</sect1>
 </chapter>
 </book>

@@ -120,12 +120,52 @@ AC_SUBST([GNOME_LDFLAGS])
 AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
 
+DOC=
+# Docbook tests
+# Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
+# Copyright © 2003 John Levon
+# It's just rude to go over the net to build
+XSLTPROC_FLAGS=--nonet
+
+AC_MSG_CHECKING([whether /etc/xml/catalog exists])
+if test ! -f /etc/xml/catalog; then
+   AC_MSG_RESULT(no)
+else
+   AC_MSG_RESULT(yes)
+   XSLTPROC_WORKS=no
+   AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
+   if test -n "$XSLTPROC"; then
+      AC_MSG_CHECKING([whether xsltproc works])
+
+      DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
+      DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
+
+      $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
+<?xml version="1.0" encoding='ISO-8859-1'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<book id="test">
+</book>
+END
+      if test "$?" = 0; then
+         XSLTPROC_WORKS=yes
+         DOC=doc
+      fi
+      AC_MSG_RESULT($XSLTPROC_WORKS)
+   fi
+fi
+
+AC_SUBST(XML_CATALOG)
+AC_SUBST(XSLTPROC_FLAGS)
+AC_SUBST(DOCBOOK_ROOT)
+AC_SUBST(DOC)
+
 AC_CONFIG_FILES([ 
-    po/Makefile.in
+	po/Makefile.in
 	Makefile
 	src/Makefile
 	src/lib/Makefile 
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
-	src/ddcpci/Makefile])
+	src/ddcpci/Makefile
+	doc/Makefile])
 AC_OUTPUT
