@@ -30,21 +30,19 @@
 
 #include "monitor_db.h"
 
-#define DDCCI_RETURN_IF_NULL(cond, value, message) \
-	if (!cond) { \
-		fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
-		return value; \
-	}
-	
-#define DDCCI_RETURN_IF_NOT_NULL(cond, value, message) \
+#define DDCCI_RETURN_IF(cond, value, message, node) \
 	if (cond) { \
-		fprintf(stderr, "Error : %s @%s:%d\n", message, __FILE__, __LINE__); \
+		if (node) \
+			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, node->doc->name, XML_GET_LINE(node)); \
+		else \
+			fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
 		return value; \
 	}
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control) {
 	xmlNodePtr value, cur;
 	xmlChar *options_valueid, *options_valuename, *mon_valueid;
+	int options_value;
 	xmlChar *tmp;
 	char *endptr;
 	
@@ -56,9 +54,19 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	while (value != NULL) {
 		if (!xmlStrcmp(value->name, (const xmlChar *) "value")) {
 			options_valueid   = xmlGetProp(value, "id");
-			DDCCI_RETURN_IF_NULL(options_valueid, -1, "Can't find id property.");
+			DDCCI_RETURN_IF(options_valueid == NULL, -1, "Can't find id property.", value);
 			options_valuename = xmlGetProp(value, "name");
-			DDCCI_RETURN_IF_NULL(options_valuename, -1, "Can't find name property.");
+			DDCCI_RETURN_IF(options_valuename == NULL, -1, "Can't find name property.", value);
+			
+			tmp = xmlGetProp(value, "value");
+			if (tmp != NULL) {
+				options_value = strtol(tmp, &endptr, 16);
+				DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert hex value to int (%s).", value);
+				xmlFree(tmp);
+			}
+			else {
+				options_value = -1;
+			}
 			
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 			
@@ -78,10 +86,16 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						current_value->name = options_valuename;
 						
 						tmp = xmlGetProp(cur, "value");
-						DDCCI_RETURN_IF_NULL(tmp, -1, "Can't find value property.");
-						current_value->value = strtol(tmp, &endptr, 16);
-						DDCCI_RETURN_IF_NOT_NULL(*endptr, -1, "Can't convert hex value to int.");
-						xmlFree(tmp);
+						
+						if (tmp != NULL) {
+							current_value->value = strtol(tmp, &endptr, 16);
+							DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert hex value to int.", cur);
+							xmlFree(tmp);
+						}
+						else {
+							DDCCI_RETURN_IF(options_value == -1, -1, "Can't find value property.", cur);
+							current_value->value = options_value;
+						}
 						
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 
 						options_ctrlid, options_groupname, options_ctrlname, mon_address);*/
@@ -150,7 +164,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	}
 	
 	mon_name = xmlGetProp(cur, "name");
-	DDCCI_RETURN_IF_NULL(mon_name, NULL, "Can't find name property.");
+	DDCCI_RETURN_IF(mon_name == NULL, NULL, "Can't find name property.", cur);
 	
 	if ((tmp = xmlGetProp(cur, "include"))) {
 		recursionlevel++;
@@ -175,7 +189,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	mon_db->name = mon_name;
 	
 	tmp = xmlGetProp(cur, "init");
-	DDCCI_RETURN_IF_NULL(tmp, NULL, "Can't find init property.");
+	DDCCI_RETURN_IF(tmp == NULL, NULL, "Can't find init property.", cur);
 	if (!(xmlStrcmp(tmp, (const xmlChar *)"standard"))) {
 		mon_db->init = standard;
 	}
@@ -183,7 +197,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		mon_db->init = samsung;
 	}
 	else {
-		DDCCI_RETURN_IF_NULL(NULL, NULL, "Invalid type.");
+		DDCCI_RETURN_IF(1, NULL, "Invalid type.", cur);
 	}
 	xmlFree(tmp);
 	
@@ -209,6 +223,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	
 	xmlChar *mon_ctrlid;
 	xmlChar *options_groupname, *options_ctrlid, *options_ctrlname;
+	int options_address;
 	char *endptr;
 	xmlNodePtr group, control;
 	
@@ -216,7 +231,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	struct group_db **last_group_ref = &mon_db->group_list;
 	memset(current_group, 0, sizeof(struct group_db));
 	
-	/* List groups */
+	/* List groups (options.xml) */
 	group = xmlDocGetRootElement(options_doc)->xmlChildrenNode;
 	while (group != NULL) {
 		options_groupname = NULL;
@@ -229,15 +244,26 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			memset(current_control, 0, sizeof(struct control_db));
 			
 			control = group->xmlChildrenNode;
+			/* List controls in group (options.xml) */
 			while (control != NULL) {
 				if (!xmlStrcmp(control->name, (const xmlChar *) "control")) {
 					options_ctrlid   = xmlGetProp(control, "id");
-					DDCCI_RETURN_IF_NULL(options_ctrlid, NULL, "Can't find id property.");
+					DDCCI_RETURN_IF(options_ctrlid == NULL, NULL, "Can't find id property.", control);
 					options_ctrlname = xmlGetProp(control, "name");
-					DDCCI_RETURN_IF_NULL(options_ctrlname, NULL, "Can't find name property.");
+					DDCCI_RETURN_IF(options_ctrlname == NULL, NULL, "Can't find name property.", control);
 					
+					tmp = xmlGetProp(control, "address");
+					if (tmp != NULL) {
+						options_address = strtol(tmp, &endptr, 16);
+						DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert hex address to int (%s).", control);
+						xmlFree(tmp);
+					}
+					else {
+						options_address = -1;
+					}
 					//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 					
+					/* Find the related control in monitor specifications */
 					cur = controls->xmlChildrenNode;
 					while (1) {
 						if (cur == NULL) {
@@ -254,15 +280,20 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 								current_control->name = options_ctrlname;
 								
 								tmp = xmlGetProp(cur, "address");
-								DDCCI_RETURN_IF_NULL(tmp, NULL, "Can't find address property.")
-								current_control->address = strtol(tmp, &endptr, 16);
-								DDCCI_RETURN_IF_NOT_NULL(*endptr, NULL, "Can't convert hex address to int.");
-								xmlFree(tmp);
+								if (tmp != NULL) {
+									current_control->address = strtol(tmp, &endptr, 16);
+									DDCCI_RETURN_IF(*endptr != 0, NULL, "Can't convert hex address to int.", cur);
+									xmlFree(tmp);
+								}
+								else {
+									DDCCI_RETURN_IF(options_address == -1, NULL, "Can't find address property.", cur);
+									current_control->address = options_address;
+								}
 								
 								tmp = xmlGetProp(cur, "delay");
 								if (tmp) {
 									current_control->delay = strtol(tmp, &endptr, 10);
-									DDCCI_RETURN_IF_NOT_NULL(*endptr, NULL, "Can't convert delay to int.");
+									DDCCI_RETURN_IF(endptr != NULL, NULL, "Can't convert delay to int.", cur);
 									xmlFree(tmp);
 								}
 								else {
@@ -270,20 +301,24 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 								}
 								
 								tmp = xmlGetProp(control, "type");
-								DDCCI_RETURN_IF_NULL(tmp, NULL, "Can't find type property.");
+								DDCCI_RETURN_IF(tmp == NULL, NULL, "Can't find type property.", control);
 								if (!(xmlStrcmp(tmp, (const xmlChar *)"value"))) {
 									current_control->type = value;
 								}
 								else if (!(xmlStrcmp(tmp, (const xmlChar *)"command"))) {
 									current_control->type = command;
-									ddcci_get_value_list(control, cur, current_control);
+									if (ddcci_get_value_list(control, cur, current_control) < 0) {
+										return NULL;
+									}
 								}
 								else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
 									current_control->type = list;
-									ddcci_get_value_list(control, cur, current_control);
+									if (ddcci_get_value_list(control, cur, current_control) < 0) {
+										return NULL;
+									}
 								}
 								else {
-									DDCCI_RETURN_IF_NULL(NULL, NULL, "Invalid type.");
+									DDCCI_RETURN_IF(1, NULL, "Invalid type.", control);
 								}
 								xmlFree(tmp);
 								

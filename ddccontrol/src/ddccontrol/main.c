@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}
-		if (dump) {
+		else if (dump) {
 			fprintf(stdout, "\nControls (valid/current/max):\n");
 			
 			for (i = 0; i < 256; i++) {
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}
-		else {
+		else if (ctrl == -1) {
 			struct monitor_db* monitor = mon.db;
 			struct group_db* group;
 			struct control_db* control;

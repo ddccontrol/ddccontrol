@@ -18,14 +18,21 @@ a value (for example brightness), and those with type set to "command"
 are controls that do something when the value is set to something >0
 (for example degauss), "list" indicates a list of possible value.
 
+The "address" parameter in control and "value" in value are optional.
+These are default values used if not redefined in the monitor configuration
+file.
+
 File format:
 
 <?xml version="1.0"?>
 <options>
   <group name="%groupname%">
-    <control id="%control_id%" type="value" name="%control_name%"/>
-    <control id="%control_id%" type="[list|command]" name="%control_name%">
-      <value id="%value_id%" name="%value_name%"/>
+    <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
+    <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
+      <value id="%value_id%" value="%hex_value%"/>
+    </control>
+    <control id="%control_id%" type="list" name="%control_name%" address="%hex_address%">
+      <value id="%value_id%" name="%value_name%" value="%hex_value%"/>
       <value...>
     </control>
     <control ...>
@@ -38,7 +45,9 @@ monitor/%monitor_id%.xml
 
 List of controls related to this monitor.
 Controls IDs are defined in options.xml, if it is a list or a command, 
-supported values must be defined.
+supported values must be defined. "Address" parameter for controls,
+and "value", are optional if they are defined in the general options
+file.
 
 The init parameter in monitor define the type of the initialisation:
 DDC/CI standard ("standard"), or Samsung ("samsung"). 
