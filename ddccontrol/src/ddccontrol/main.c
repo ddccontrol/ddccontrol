@@ -133,9 +133,10 @@ int main(int argc, char **argv)
 	int verbosity = 0;
 	int probe = 0;
 	
-	setlocale (LC_ALL, "");
-	bindtextdomain (PACKAGE, LOCALEDIR);
-	textdomain (PACKAGE);
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	bindtextdomain("ddccontrol-db", LOCALEDIR);
+	textdomain(PACKAGE);
 	
 	fprintf(stdout,
 		_("ddccontrol version %s\n"

@@ -28,7 +28,14 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
+#include <libintl.h>
+
 #include "monitor_db.h"
+
+#define DBPACKAGE "ddccontrol-db"
+
+/* Localize, and alloc in libxml */
+#define _D(text) xmlCharStrdup(dgettext(DBPACKAGE, text))
 
 #define DDCCI_RETURN_IF(cond, value, message, node) \
 	if (cond) { \
@@ -82,7 +89,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 					mon_valueid = xmlGetProp(cur, "id");
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
 						current_value->id   = options_valueid;
-						current_value->name = options_valuename;
+						current_value->name = _D(options_valuename);
 						
 						tmp = xmlGetProp(cur, "value");
 						
@@ -153,7 +160,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 					mon_ctrlid = xmlGetProp(cur, "id");
 					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
 						current_control->id   = options_ctrlid;
-						current_control->name = options_ctrlname;
+						current_control->name = _D(options_ctrlname);
 						
 						tmp = xmlGetProp(cur, "address");
 						DDCCI_RETURN_IF(tmp == NULL, 0, "Can't find address property.", cur);
@@ -184,7 +191,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
 								struct value_db *current_value = malloc(sizeof(struct value_db));
 								current_value->id = xmlCharStrdup("default");
-								current_value->name = xmlCharStrdup("default");
+								current_value->name = xmlCharStrdup(gettext("default"));
 								current_value->value = 0x01;
 								current_value->next = NULL;
 								current_control->value_list = current_value;
@@ -368,7 +375,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 					NULL, "Error enumerating controls in group.", control);
 			
 			if (current_subgroup->control_list) {
-				current_subgroup->name = options_subgroupname;
+				current_subgroup->name = _D(options_subgroupname);
 				*last_subgroup_ref = current_subgroup;
 				last_subgroup_ref = &current_subgroup->next;
 				current_subgroup = malloc(sizeof(struct subgroup_db));
@@ -382,7 +389,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		}
 		
 		if (current_group->subgroup_list) {
-			current_group->name = options_groupname;
+			current_group->name = _D(options_groupname);
 			*last_group_ref = current_group;
 			last_group_ref = &current_group->next;
 			current_group = malloc(sizeof(struct group_db));

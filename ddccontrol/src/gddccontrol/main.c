@@ -91,7 +91,9 @@ int main( int   argc, char *argv[] )
 { 
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
+	bindtextdomain("ddccontrol-db", LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	bind_textdomain_codeset("ddccontrol-db", "UTF-8");
 	textdomain(PACKAGE);
 	
 	gtk_init(&argc, &argv);
