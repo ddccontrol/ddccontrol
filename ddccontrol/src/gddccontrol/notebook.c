@@ -88,10 +88,10 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
 	{
 		currentbutton = widget;
-		currentControl = control->address;
+		currentControl = -1;
 		gtk_label_set_text(GTK_LABEL(valuelabel), control->name);
 		for (retry = RETRYS; retry; retry--) {
-			if (ddcci_readctrl(&mon, currentControl, &currentDefault, &currentMaximum)) {
+			if (ddcci_readctrl(&mon, control->address, &currentDefault, &currentMaximum)) {
 				break;
 			}
 		}
@@ -114,6 +114,7 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 			gtk_widget_hide(valuerange);
 		}
 		gtk_widget_set_sensitive(restorevalue, FALSE);
+		currentControl = control->address;
 	} 
 	else
 	{

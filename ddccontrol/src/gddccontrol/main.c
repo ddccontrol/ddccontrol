@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "ddcci.h"
 #include "monitor_db.h"
@@ -54,17 +55,21 @@ static void destroy( GtkWidget *widget,
 
 static void combo_change(GtkWidget *widget, gpointer data)
 {
+	int id = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
+	
+	if (id == -1) { 
+		return;
+	}
+	
 	int i = 0;
 
 	if (notebook != NULL) {
 		deleteNotebook();
-		gtk_container_remove(GTK_CONTAINER(table), notebook);
 		gtk_widget_destroy(notebook);
+		notebook = NULL;
 	}
 
 	char buffer[256];
-	
-	int id = gtk_combo_box_get_active(GTK_COMBO_BOX(combo_box));
 	
 	struct monitorlist* current;
 	
@@ -89,12 +94,25 @@ static void combo_change(GtkWidget *widget, gpointer data)
 
 int main( int   argc, char *argv[] )
 { 
+	int i, verbosity = 0;
+	
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bindtextdomain("ddccontrol-db", LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 	bind_textdomain_codeset("ddccontrol-db", "UTF-8");
 	textdomain(PACKAGE);
+	
+	while ((i=getopt(argc,argv,"v")) >= 0)
+	{
+		switch(i) {
+		case 'v':
+			verbosity++;
+			break;
+		}
+	}
+	
+	ddcci_verbosity(verbosity);
 	
 	gtk_init(&argc, &argv);
 	

@@ -188,7 +188,7 @@ static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char le
 	unsigned xor = ((unsigned char)mon->addr << 1);	/* initial xor value */
 
 	if (verbosity > 1) {
-		fprintf(stderr, _("Send: "));
+		fprintf(stderr, "Send: ");
 		dumphex(stderr, buf, len);
 	}
 
@@ -263,7 +263,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	memcpy(buf, _buf + 2, _len);
 	
 	if (verbosity > 1) {
-		fprintf(stderr, _("Recv: "));
+		fprintf(stderr, "Recv: ");
 		dumphex(stderr, buf, _len);
 	}
 	
