@@ -62,6 +62,8 @@
 	<!--- vendor specific controls -->
     <control id="tlpurity" type="value" name="Top left screen purity" address="0xE8"/>
     <control id="trpurity" type="value" name="Top right screen purity" address="0xE9"/>
+    <control id="blpurity" type="value" name="Bottom left screen purity" address="0xEA"/>
+    <control id="brpurity" type="value" name="Bottom right screen purity" address="0xEB"/>
   </group>
   <group name="Audio">
 	<control id="audiospeakervolume" type="value" name="Audio Speaker Volume Adjust" address="0x62"/>

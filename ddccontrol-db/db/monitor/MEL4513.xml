@@ -1,12 +1,53 @@
 <?xml version="1.0"?>
 <monitor name="Mitsubishi Diamond Pro 2060u" init="standard">
   <controls>
-    <control id="degauss" address="0x00">
-      <value id="degauss" value="0x01"/>
+    <control id="brightness"/>
+    <control id="contrast"/>
+	<control id="red"/>
+	<control id="green"/>
+	<control id="blue"/>
+
+    <control id="hpos"/>
+    <control id="hsize"/>
+    <control id="vpos"/>
+    <control id="vsize"/>
+
+    <control id="hpincushion"/>
+    <control id="hpincushionbalance"/>
+    <control id="hmisconvergence"/>
+    <control id="hlinearity"/>
+    <control id="hlinearitybalance"/>
+    <control id="vpincushion"/>
+    <control id="vpincushionbalance"/>
+    <control id="vmisconvergence"/>
+    <control id="vlinearity"/>
+    <control id="vlinearitybalance"/>
+
+    <control id="keybalance"/>
+    <control id="key"/>
+    <control id="tilt"/>
+    <control id="tdistortionctrl"/>
+    <control id="tdistortionbalance"/>
+    <control id="bdistortionctrl"/>
+    <control id="bdistortionbalance"/>
+
+	<control id="vmoire"/>
+    <control id="tlpurity"/>
+    <control id="trpurity"/>
+    <control id="blpurity"/>
+    <control id="brpurity"/>
+
+    <control id="degauss">
+      <value id="degauss"/>
     </control>
-    <control id="brightness" address="0x10"/>
-    <control id="contrast" address="0x12"/>
-    <control id="tlpurity" address="0xE8"/>
-    <control id="trpurity" address="0xE9"/>
+    <control id="restoredefaults">
+      <value id="restoredefaults"/>
+	</control>
+    <control id="restoredefaultgeom">
+      <value id="restoredefaultgeom"/>
+	</control>
+    <control id="restoredefaultcolor">
+      <value id="restoredefaultcolor"/>
+	</control>
   </controls>
 </monitor>
