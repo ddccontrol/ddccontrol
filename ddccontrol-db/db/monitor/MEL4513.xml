@@ -1,45 +1,45 @@
 <?xml version="1.0"?>
 <monitor name="Mitsubishi Diamond Pro 2060u" init="standard">
-  <controls>
-    <control id="brightness"/>
-    <control id="contrast"/>
-	<control id="red"/>
-	<control id="green"/>
-	<control id="blue"/>
-
-    <control id="hpos"/>
-    <control id="hsize"/>
-    <control id="vpos"/>
-    <control id="vsize"/>
-
-    <control id="hpincushion"/>
-    <control id="hpincushionbalance"/>
-    <control id="hmisconvergence"/>
-    <control id="hlinearity"/>
-    <control id="hlinearitybalance"/>
-    <control id="vpincushion"/>
-    <control id="vpincushionbalance"/>
-    <control id="vmisconvergence"/>
-    <control id="vlinearity"/>
-    <control id="vlinearitybalance"/>
-
-    <control id="keybalance"/>
-    <control id="key"/>
-    <control id="tilt"/>
-    <control id="tdistortionctrl"/>
-    <control id="tdistortionbalance"/>
-    <control id="bdistortionctrl"/>
-    <control id="bdistortionbalance"/>
-
-	<control id="vmoire"/>
-    <control id="tlpurity"/>
-    <control id="trpurity"/>
-    <control id="blpurity"/>
-    <control id="brpurity"/>
-
-    <control id="degauss"/>
-    <control id="defaults"/>
-    <control id="defaultgeom"/>
-    <control id="defaultcolor"/>
-  </controls>
+	<controls>
+		<control id="brightness"/>
+		<control id="contrast"/>
+		<control id="red"/>
+		<control id="green"/>
+		<control id="blue"/>
+		
+		<control id="hpos"/>
+		<control id="hsize"/>
+		<control id="vpos"/>
+		<control id="vsize"/>
+		
+		<control id="hpincushion"/>
+		<control id="hpincushionbalance"/>
+		<control id="hmisconvergence"/>
+		<control id="hlinearity"/>
+		<control id="hlinearitybalance"/>
+		<control id="vpincushion"/>
+		<control id="vpincushionbalance"/>
+		<control id="vmisconvergence"/>
+		<control id="vlinearity"/>
+		<control id="vlinearitybalance"/>
+		
+		<control id="keybalance"/>
+		<control id="key"/>
+		<control id="tilt"/>
+		<control id="tdistortionctrl"/>
+		<control id="tdistortionbalance"/>
+		<control id="bdistortionctrl"/>
+		<control id="bdistortionbalance"/>
+		
+		<control id="vmoire"/>
+		<control id="tlpurity"/>
+		<control id="trpurity"/>
+		<control id="blpurity"/>
+		<control id="brpurity"/>
+		
+		<control id="degauss"/>
+		<control id="defaults"/>
+		<control id="defaultgeom"/>
+		<control id="defaultcolor"/>
+	</controls>
 </monitor>
