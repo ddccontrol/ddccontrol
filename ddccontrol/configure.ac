@@ -7,6 +7,8 @@ AM_INIT_AUTOMAKE
 # Avoid automatic *.in file regeneration
 AM_MAINTAINER_MODE
 
+AM_GNU_GETTEXT([external])
+
 AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -57,7 +59,8 @@ AC_SUBST([GNOME_LDFLAGS])
 AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
 
-AC_CONFIG_FILES([
+AC_CONFIG_FILES([ 
+    po/Makefile.in
 	Makefile
 	src/Makefile
 	src/lib/Makefile 

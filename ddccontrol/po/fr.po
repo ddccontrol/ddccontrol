@@ -1,0 +1,326 @@
+# French translations for DDC/CI control tool package
+# Traduction anglaise du package DDC/CI control tool.
+# Copyright (C) 2004 Oleg I. Vdovikin and Nicolas Boichat
+# This file is distributed under the same license as the DDC/CI control tool package.
+#  <nicolas@boichat.ch>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: DDC/CI control tool 0.1\n"
+"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2004-09-13 00:33+0200\n"
+"PO-Revision-Date: 2004-09-13 00:51+0100\n"
+"Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/ddccontrol/main.c:84
+#: src/ddccontrol/main.c:88
+#: src/ddccontrol/main.c:92
+msgid "Control"
+msgstr "Contrôle"
+
+#: src/ddccontrol/main.c:104
+#, c-format
+msgid ""
+"Usage:\n"
+"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+"\tdev: device, e.g. /dev/i2c-0\n"
+"\t-p : probe I2C devices to find monitor busses.\n"
+"\t-c : query capability\n"
+"\t-d : query ctrls 0 - 255\n"
+"\t-r : query ctrl\n"
+"\t-w : value to write to ctrl\n"
+"\t-f : force (avoid validity checks)\n"
+"\t-s : save settings\n"
+"\t-v : verbosity (specify more to increase)\n"
+msgstr ""
+"Usage:\n"
+"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+"\tdev: périphérique, par exemple /dev/i2c-0\n"
+"\t-p : interroge les périphériques I2C pour trouver un moniteur.\n"
+"\t-c : query capability\n"
+"\t-d : query ctrls 0 - 255\n"
+"\t-r : query ctrl\n"
+"\t-w : value to write to ctrl\n"
+"\t-f : force (avoid validity checks)\n"
+"\t-s : save settings\n"
+"\t-v : verbosity (specify more to increase)\n"
+
+#: src/ddccontrol/main.c:141
+#, c-format
+msgid ""
+"ddccontrol version %s\n"
+"Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+"Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n"
+"This program comes with ABSOLUTELY NO WARRANTY.\n"
+"You may redistribute copies of this program under the terms of the GNU General Public License.\n"
+"\n"
+msgstr ""
+"ddccontrol, version %s\n"
+"Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+"Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Ce programme est livré SANS AUCUNE GARANTIE.\n"
+"Vous pouvez redistribuer des copies de ce programme sous les termes de la licence générale publique de GNU (GNU General Public License).\n"
+"\n"
+
+#: src/ddccontrol/main.c:158
+#, c-format
+msgid "'%s' does not seem to be a valid register name\n"
+msgstr "'%s' ne semble pas être un nom de contrôle valide\n"
+
+#: src/ddccontrol/main.c:165
+#, c-format
+msgid "'%s' does not seem to be a valid value.\n"
+msgstr "'%s' ne semble pas être une valeur valide\n"
+
+#: src/ddccontrol/main.c:211
+msgid "Detected monitors :\n"
+msgstr "Moniteurs détectés :\n"
+
+#: src/ddccontrol/main.c:216
+#, c-format
+msgid " - Device : %s\n"
+msgstr " - Périphérique : %s\n"
+
+#: src/ddccontrol/main.c:217
+#, c-format
+msgid "   DDC/CI supported : %s\n"
+msgstr "   DDC/CI supporté : %s\n"
+
+#: src/ddccontrol/main.c:217
+msgid "Yes"
+msgstr "Oui"
+
+#: src/ddccontrol/main.c:217
+msgid "No"
+msgstr "Non"
+
+#: src/ddccontrol/main.c:218
+#, c-format
+msgid "   Monitor Name : %s\n"
+msgstr "   Nom du moniteur : %s\n"
+
+#: src/ddccontrol/main.c:219
+#, c-format
+msgid "   Input type : %s\n"
+msgstr "   Type d'entrée : %s\n"
+
+#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:250
+msgid "Digital"
+msgstr "digitale"
+
+#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:250
+msgid "Analog"
+msgstr "analogue"
+
+#: src/ddccontrol/main.c:223
+msgid "  (Automatically selected)\n"
+msgstr "  (Choisi automatiquement)\n"
+
+#: src/ddccontrol/main.c:232
+msgid "No supported monitor detected.\n"
+msgstr "Pas de moniteur supporté détecté.\n"
+
+#: src/ddccontrol/main.c:242
+#, c-format
+msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
+msgstr "Lecture de l'EDID et initialisation du DDC/CI sur le bus %s...\n"
+
+#: src/ddccontrol/main.c:245
+#, c-format
+msgid ""
+"\n"
+"DDC/CI at %s is unusable (%d).\n"
+msgstr ""
+"\n"
+"Le DDC/CI sur %s est inutilisable (%d).\n"
+
+#: src/ddccontrol/main.c:247
+msgid ""
+"\n"
+"EDID readings:\n"
+msgstr ""
+"\n"
+"Lectures EDID :\n"
+
+#: src/ddccontrol/main.c:248
+#, c-format
+msgid "\tPlug and Play ID: %s [%s]\n"
+msgstr "\tID Plug and Play: %s [%s]\n"
+
+#: src/ddccontrol/main.c:250
+#, c-format
+msgid "\tInput type: %s\n"
+msgstr "\tType d'entrée : %s\n"
+
+#: src/ddccontrol/main.c:255
+msgid ""
+"\n"
+"Capabilities:\n"
+msgstr ""
+"\n"
+"Capacités:\n"
+
+#: src/ddccontrol/main.c:265
+msgid "Capabilities read fail.\n"
+msgstr "Échec lors de la lecture des capacités.\n"
+
+#: src/ddccontrol/main.c:271
+#, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d)...\n"
+msgstr ""
+"\n"
+"Écriture 0x%02x, 0x%02x(%d)...\n"
+
+#: src/ddccontrol/main.c:275
+#, c-format
+msgid ""
+"\n"
+"Reading 0x%02x...\n"
+msgstr ""
+"\n"
+"Lecture 0x%02x...\n"
+
+#: src/ddccontrol/main.c:282
+msgid ""
+"\n"
+"Controls (valid/current/max) [Description - Value name]:\n"
+msgstr ""
+"\n"
+"Contrôles (valide/actuel/maximum) [Description - Nom de la valeur]:\n"
+
+#: src/ddccontrol/main.c:306
+#, c-format
+msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
+msgstr "\t\t> id=%s, nom=%s, adresse=%#x, délai=%dms, type=%d\n"
+
+#: src/ddccontrol/main.c:311
+msgid "\t\t  Possible values:\n"
+msgstr "\t\t  Valeurs autorisées:\n"
+
+#: src/ddccontrol/main.c:315
+#, c-format
+msgid "\t\t\t> id=%s - name=%s, value=%d\n"
+msgstr "\t\t\t> id=%s - name=%s, value=%d\n"
+
+#: src/ddccontrol/main.c:325
+#, c-format
+msgid "\t\t  supported, value=%d, maximum=%d\n"
+msgstr "\t\t  supporté, valeur=%d, maximum=%d\n"
+
+#: src/ddccontrol/main.c:326
+#, c-format
+msgid "\t\t  not supported, value=%d, maximum=%d\n"
+msgstr "\t\t  non supporté, valeur=%d, maximum=%d\n"
+
+#: src/ddccontrol/main.c:337
+msgid ""
+"\n"
+"Saving settings...\n"
+msgstr ""
+"\n"
+"Sauvegarde des paramètres...\n"
+
+#: src/gddccontrol/notebook.c:110
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"Error while getting value"
+msgstr ""
+"%s\n"
+"\n"
+"Erreur lors de la lecture de la valeur"
+
+#: src/gddccontrol/notebook.c:122
+#: src/gddccontrol/notebook.c:233
+msgid "Please click on a parameter to the left to change it."
+msgstr "Cliquez sur un paramètre à gauche pour le changer."
+
+#: src/gddccontrol/notebook.c:242
+msgid "Restore default value"
+msgstr "Restaurer la valeur par défaut"
+
+#: src/gddccontrol/main.c:132
+msgid "No monitor supporting DDC/CI available.Please check all the needed kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+msgstr "Pas de moniteur supportant le DDC/CI accessible. Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de \"framebuffer\")."
+
+#: src/lib/ddcci.c:121
+#: src/lib/ddcci.c:148
+#, c-format
+msgid "ioctl returned %d\n"
+msgstr "ioctl a renvoyé %d\n"
+
+#: src/lib/ddcci.c:191
+msgid "Send: "
+msgstr "Envoyé: "
+
+#: src/lib/ddcci.c:231
+#, c-format
+msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
+msgstr "Réponse invalide, le premier caractère est 0x%02x, mais devrait être 0x%02x\n"
+
+#: src/lib/ddcci.c:239
+#, c-format
+msgid "Invalid response, magic is 0x%02x\n"
+msgstr "Réponse invalide, le nombre \"magique\" est 0x%02x\n"
+
+#: src/lib/ddcci.c:245
+#, c-format
+msgid "Invalid response, length is %d, should be %d at most\n"
+msgstr "Réponse invalide, la longueur est %d, et devrait être de %d au moins\n"
+
+#: src/lib/ddcci.c:256
+#, c-format
+msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
+msgstr "Réponse invalide, données corrompues - le xor est 0x%02x, la longueur 0x%02x\n"
+
+#: src/lib/ddcci.c:266
+msgid "Recv: "
+msgstr "Reçu: "
+
+#: src/lib/ddcci.c:359
+msgid "Invalid sequence in caps.\n"
+msgstr "Séquence invalide dans la chaîne de capacité.\n"
+
+#: src/lib/ddcci.c:366
+msgid "Buffer too small to contain caps.\n"
+msgstr "Tampon trop petit pour contenir la chaîne de capacité.\n"
+
+#: src/lib/ddcci.c:404
+#, c-format
+msgid "Corrupted EDID at 0x%02x.\n"
+msgstr "EDID corrompu à 0x%02x.\n"
+
+#: src/lib/ddcci.c:418
+#, c-format
+msgid "Reading EDID 0x%02x failed.\n"
+msgstr "Echec de lecture de l'EDID 0x%02x.\n"
+
+#: src/lib/ddcci.c:435
+msgid "Be sure you've modprobed i2c-dev and correct framebuffer device.\n"
+msgstr "Vérifiez que vous avez chargé les modules i2c-dev et le driver du framebuffer correct avec la commande modprobe.\n"
+
+#: src/lib/ddcci.c:542
+#, c-format
+msgid "Found I2C device (%s)\n"
+msgstr "Périphérique I2C trouvé (%s)\n"
+
+#: src/lib/ddcci.c:548
+#, c-format
+msgid "ddcci_open returned %d\n"
+msgstr "ddcci_open a renvoyé %d\n"
+
+#: src/lib/ddcci.c:561
+#, c-format
+msgid "Unknown monitor (%s)"
+msgstr "Moniteur inconnu (%s)"
+

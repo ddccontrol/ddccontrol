@@ -81,15 +81,15 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 					}
 				}
 				if (controlname == NULL) {
-					fprintf(stdout, "Control 0x%02x: %c/%d/%d [???]\n", 
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d [???]\n", _("Control"),
 						ctrl, (result > 0) ? '+' : '-',  value, maximum);
 				}
 				else if (valuename == NULL) {
-					fprintf(stdout, "Control 0x%02x: %c/%d/%d [%s]\n", 
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d [%s]\n", _("Control"),
 						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname);
 				}
 				else {
-					fprintf(stdout, "Control 0x%02x: %c/%d/%d [%s - %s]\n",
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d [%s - %s]\n", _("Control"),
 						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname, valuename);
 				}
 			}
@@ -100,17 +100,19 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 
 static void usage(char *name)
 {
-	fprintf(stderr,"Usage:\n");
-	fprintf(stderr,"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n", name);
-	fprintf(stderr,"\tdev: device, e.g. /dev/i2c-0\n");
-	fprintf(stderr,"\t-p : probe I2C devices to find monitor busses.\n");
-	fprintf(stderr,"\t-c : query capability\n");
-	fprintf(stderr,"\t-d : query ctrls 0 - 255\n");
-	fprintf(stderr,"\t-r : query ctrl\n");
-	fprintf(stderr,"\t-w : value to write to ctrl\n");
-	fprintf(stderr,"\t-f : force (avoid validity checks)\n");
-	fprintf(stderr,"\t-s : save settings\n");
-	fprintf(stderr,"\t-v : verbosity (specify more to increase)\n");
+	fprintf(stderr,_(
+		"Usage:\n"
+		"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+		"\tdev: device, e.g. /dev/i2c-0\n"
+		"\t-p : probe I2C devices to find monitor busses.\n"
+		"\t-c : query capability\n"
+		"\t-d : query ctrls 0 - 255\n"
+		"\t-r : query ctrl\n"
+		"\t-w : value to write to ctrl\n"
+		"\t-f : force (avoid validity checks)\n"
+		"\t-s : save settings\n"
+		"\t-v : verbosity (specify more to increase)\n"
+	), name);
 }
 
 int main(int argc, char **argv)
@@ -131,11 +133,17 @@ int main(int argc, char **argv)
 	int verbosity = 0;
 	int probe = 0;
 	
-	fprintf(stdout, "ddccontrol version " VERSION "\n");
-	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n");
-	fprintf(stdout, "Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n");
-	fprintf(stdout, "This program comes with ABSOLUTELY NO WARRANTY.\n");
-	fprintf(stdout, "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n");
+	setlocale (LC_ALL, "");
+	bindtextdomain (PACKAGE, LOCALEDIR);
+	textdomain (PACKAGE);
+	
+	fprintf(stdout,
+		_("ddccontrol version %s\n"
+		"Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+		"Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n"
+		"This program comes with ABSOLUTELY NO WARRANTY.\n"
+		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
+		VERSION);
 	
 	while ((i=getopt(argc,argv,"hdr:w:csfvp")) >= 0)
 	{
@@ -147,14 +155,14 @@ int main(int argc, char **argv)
 		case 'r':
 			if ((ctrl = strtol(optarg, NULL, 0)) < 0 || (ctrl > 255))
 			{
-				fprintf(stderr,"'%s' does not seem to be a valid register name\n", optarg);
+				fprintf(stderr,_("'%s' does not seem to be a valid register name\n"), optarg);
 				exit(1);
 			}
 			break;
 		case 'w':
 			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535))
 			{
-				fprintf(stderr,"'%s' does not seem to be a valid value.\n", optarg);
+				fprintf(stderr,_("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
 			}
 			break;
@@ -200,19 +208,19 @@ int main(int argc, char **argv)
 		
 		monlist = ddcci_probe();
 		
-		printf("Detected monitors :\n");
+		printf(_("Detected monitors :\n"));
 		
 		current = monlist;
 		while (current != NULL)
 		{
-			printf(" - Device : %s\n", current->filename);
-			printf("   DDC/CI supported : %s\n", current->supported ? "Yes" : "No");
-			printf("   Monitor Name : %s\n", current->name);
-			printf("   Input type : %s\n", current->digital ? "Digital" : "Analog");
+			printf(_(" - Device : %s\n"), current->filename);
+			printf(_("   DDC/CI supported : %s\n"), current->supported ? _("Yes") : _("No"));
+			printf(_("   Monitor Name : %s\n"), current->name);
+			printf(_("   Input type : %s\n"), current->digital ? _("Digital") : _("Analog"));
 			
 			if ((!fn) && (current->supported))
 			{
-				printf("  (Automatically selected)\n");
+				printf(_("  (Automatically selected)\n"));
 				fn = malloc(strlen(current->filename)+1);
 				strcpy(fn, current->filename);
 			}
@@ -221,7 +229,7 @@ int main(int argc, char **argv)
 		}
 		
 		if (fn == NULL) {
-			fprintf(stderr, "No supported monitor detected.\n");
+			fprintf(stderr, _("No supported monitor detected.\n"));
 			exit(0);
 		}
 		
@@ -231,20 +239,20 @@ int main(int argc, char **argv)
 		fn = argv[optind];
 	}
 	
-	fprintf(stdout, "Reading EDID and initializing DDC/CI at bus %s...\n", fn);
+	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 	
 	if ((ret = ddcci_open(&mon, fn)) < 0) {
-		fprintf(stderr, "\nDDC/CI at %s is unusable (%d).\n", fn, ret);
+		fprintf(stderr, _("\nDDC/CI at %s is unusable (%d).\n"), fn, ret);
 	} else {
-		fprintf(stdout, "\nEDID readings:\n");
-		fprintf(stdout, "\tPlug and Play ID: %s [%s]\n", 
+		fprintf(stdout, _("\nEDID readings:\n"));
+		fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"), 
 			mon.pnpid, mon.db ? mon.db->name : NULL);
-		fprintf(stdout, "\tInput type: %s\n", mon.digital ? "Digital" : "Analog");
+		fprintf(stdout, _("\tInput type: %s\n"), mon.digital ? _("Digital") : _("Analog"));
 
 		if (caps) {
 			unsigned char buf[1024];
 			
-			fprintf(stdout, "\nCapabilities:\n");
+			fprintf(stdout, _("\nCapabilities:\n"));
 			
 			for (retry = RETRYS; retry; retry--) {
 				if (ddcci_caps(&mon, buf, 1024) >= 0) {
@@ -254,24 +262,24 @@ int main(int argc, char **argv)
 			}
 			
 			if (retry == 0) {
-				fprintf(stderr, "Capabilities read fail.\n");
+				fprintf(stderr, _("Capabilities read fail.\n"));
 			}
 		}
 		
 		if (ctrl >= 0) {
 			if (value >= 0) {
-				fprintf(stdout, "\nWriting 0x%02x, 0x%02x(%d)...\n",
+				fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"),
 					ctrl, value, value);
 				ddcci_writectrl(&mon, ctrl, value);
 			} else {
-				fprintf(stdout, "\nReading 0x%02x...\n", ctrl);
+				fprintf(stdout, _("\nReading 0x%02x...\n"), ctrl);
 			}
 			
 			dumpctrl(&mon, ctrl, 1);
 		}
 		
 		if (dump) {
-			fprintf(stdout, "\nControls (valid/current/max) [Description - Value name]:\n");
+			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 			
 			for (i = 0; i < 256; i++) {
 				dumpctrl(&mon, i, force);
@@ -295,16 +303,16 @@ int main(int argc, char **argv)
 						printf("\t> %s\n", subgroup->name);
 						
 						for (control = subgroup->control_list; control != NULL; control = control->next) {
-							printf("\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
+							printf(_("\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"), 
 								control->id, control->name, control->address, control->delay, control->type);
 							
 							valued = control->value_list;
 							if (valued) {
-								printf("\t\t  Possible values:\n");
+								printf(_("\t\t  Possible values:\n"));
 							}
 							
 							for (; valued != NULL; valued = valued->next) {
-								printf("\t\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
+								printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value);
 							}
 							
 							for (retry = RETRYS; retry; retry--) {
@@ -312,8 +320,10 @@ int main(int argc, char **argv)
 								unsigned short value, maximum;
 								
 								if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
-									printf("\t\t  %ssupported, value=%d, maximum=%d\n", 
-										(result > 0) ? "" : "not ", value, maximum);
+									printf(
+										(result > 0) 
+											? _("\t\t  supported, value=%d, maximum=%d\n")
+											: _("\t\t  not supported, value=%d, maximum=%d\n"), value, maximum);
 									break;
 								}
 							}
@@ -324,7 +334,7 @@ int main(int argc, char **argv)
 		}
 		
 		if (save) {
-			fprintf(stdout, "\nSaving settings...\n");
+			fprintf(stdout, _("\nSaving settings...\n"));
 	
 			ddcci_save(&mon);
 		}

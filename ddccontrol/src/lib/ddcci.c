@@ -118,7 +118,7 @@ static int i2c_write(int fd, unsigned int addr, unsigned char *buf, unsigned cha
 	if ((i = ioctl(fd, I2C_RDWR, &msg_rdwr)) < 0 )
 	{
 	    perror("ioctl()");
-	    fprintf(stderr,"ioctl returned %d\n",i);
+	    fprintf(stderr,_("ioctl returned %d\n"),i);
 	    return -1;
 	}
 
@@ -145,7 +145,7 @@ static int i2c_read(int fd, unsigned int addr, unsigned char *buf, unsigned char
 	if ((i = ioctl(fd, I2C_RDWR, &msg_rdwr)) < 0)
 	{
 	    perror("ioctl()");
-	    fprintf(stderr,"ioctl returned %d\n",i);
+	    fprintf(stderr,_("ioctl returned %d\n"),i);
 	    return -1;
 	}
 
@@ -188,7 +188,7 @@ static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char le
 	unsigned xor = ((unsigned char)mon->addr << 1);	/* initial xor value */
 
 	if (verbosity > 1) {
-		fprintf(stderr, "Send: ");
+		fprintf(stderr, _("Send: "));
 		dumphex(stderr, buf, len);
 	}
 
@@ -228,7 +228,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	/* validate answer */
 	if (_buf[0] != mon->addr * 2) { /* busy ??? */
 		if (verbosity) {
-			fprintf(stderr, "Invalid response, first byte is 0x%02x, should be 0x%02x\n",
+			fprintf(stderr, _("Invalid response, first byte is 0x%02x, should be 0x%02x\n"),
 				_buf[0], mon->addr * 2);
 			dumphex(stderr, _buf, len + 3);
 		}
@@ -236,13 +236,13 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 
 	if ((_buf[1] & MAGIC_2) == 0) {
-		fprintf(stderr, "Invalid response, magic is 0x%02x\n", _buf[1]);
+		fprintf(stderr, _("Invalid response, magic is 0x%02x\n"), _buf[1]);
 		return -1;
 	}
 
 	_len = _buf[1] & ~MAGIC_2;
 	if (_len > len || _len > sizeof(_buf)) {
-		fprintf(stderr, "Invalid response, length is %d, should be %d at most\n",
+		fprintf(stderr, _("Invalid response, length is %d, should be %d at most\n"),
 			_len, len);
 		return -1;
 	}
@@ -253,7 +253,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 	
 	if (xor != 0) {
-		fprintf(stderr, "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n", xor, _len);
+		fprintf(stderr, _("Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"), xor, _len);
 		dumphex(stderr, _buf, len + 3);
 		
 		return -1;
@@ -263,7 +263,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	memcpy(buf, _buf + 2, _len);
 	
 	if (verbosity > 1) {
-		fprintf(stderr, "Recv: ");
+		fprintf(stderr, _("Recv: "));
 		dumphex(stderr, buf, _len);
 	}
 	
@@ -356,14 +356,14 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 		
 		if (len < 3 || buf[0] != DDCCI_REPLY_CAPS || (buf[1] * 256 + buf[2]) != offset) 
 		{
-			fprintf(stderr, "Invalid sequence in caps.\n");
+			fprintf(stderr, _("Invalid sequence in caps.\n"));
 			return -1;
 		}
 
 		for (i = 3; i < len; i++) {
 			buffer[bufferpos++] = buf[i];
 			if (bufferpos >= buflen) {
-				fprintf(stderr, "Buffer too small to contain caps.\n");
+				fprintf(stderr, _("Buffer too small to contain caps.\n"));
 				return -1;
 			}
 		}
@@ -401,7 +401,7 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 		if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
 		    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
 		{
-			fprintf(stderr, "Corrupted EDID at 0x%02x.\n", addr);
+			fprintf(stderr, _("Corrupted EDID at 0x%02x.\n"), addr);
 			return -1;
 		}
 		
@@ -415,7 +415,7 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 		return 0;
 	} 
 	else {
-		fprintf(stderr, "Reading EDID 0x%02x failed.\n", addr);
+		fprintf(stderr, _("Reading EDID 0x%02x failed.\n"), addr);
 		return -1;
 	}
 }
@@ -432,7 +432,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	
 	if ((mon->fd = open(filename, O_RDWR)) < 0) {
 		perror(filename);
-		fprintf(stderr, "Be sure you've modprobed i2c-dev and correct framebuffer device.\n");
+		fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
 		return -3;
 	}
 	
@@ -539,13 +539,13 @@ struct monitorlist* ddcci_probe() {
 			//snprintf(filename, strlen(direntp->d_name)+6, "/dev/%s", direntp->d_name);
 			
 			if (verbosity) {
-				printf("Found I2C device (%s)\n", filename);
+				printf(_("Found I2C device (%s)\n"), filename);
 			}
 			
 			ret = ddcci_open(&mon, filename);
 			
 			if (verbosity) {
-				printf("ddcci_open returned %d\n", ret);
+				printf(_("ddcci_open returned %d\n"), ret);
 			}
 			
 			if (ret > -2) { /* At least the EDID has been read correctly */
@@ -558,7 +558,7 @@ struct monitorlist* ddcci_probe() {
 				}
 				else {
 					current->name = malloc(32);
-					snprintf((char*)current->name, 32, "Unknown monitor (%s)", mon.pnpid);
+					snprintf((char*)current->name, 32, _("Unknown monitor (%s)"), mon.pnpid);
 				}
 				current->digital = mon.digital;
 				current->next = NULL;

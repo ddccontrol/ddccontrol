@@ -1,0 +1,6 @@
+# List of source files containing translatable strings.
+src/ddccontrol/main.c
+src/gddccontrol/notebook.c
+src/lib/monitor_db.c
+src/gddccontrol/main.c
+src/lib/ddcci.c

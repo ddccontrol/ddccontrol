@@ -107,7 +107,7 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 		else
 		{
 			char buf[256];
-			snprintf(buf, 256, "%s\n\nError while getting value", control->name);
+			snprintf(buf, 256, _("%s\n\nError while getting value"), control->name);
 			gtk_label_set_text(GTK_LABEL(valuelabel), buf);
 			//fprintf(stderr, "Error while getting value\n");
 			gtk_widget_hide(restorevalue);
@@ -119,7 +119,7 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 	{
 		currentbutton = NULL;
 		currentControl = -1;
-		gtk_label_set_text(GTK_LABEL(valuelabel), "Please click on a parameter to the left to change it.");
+		gtk_label_set_text(GTK_LABEL(valuelabel), _("Please click on a parameter to the left to change it."));
 		gtk_widget_hide(restorevalue);
 		gtk_widget_hide(valuerange);
 	}
@@ -230,7 +230,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	}
 	
 	GtkWidget* right = gtk_table_new(3, 1, TRUE);
-	valuelabel = gtk_label_new ("Please click on a parameter to the left to change it.");
+	valuelabel = gtk_label_new (_("Please click on a parameter to the left to change it."));
 	gtk_table_attach(GTK_TABLE(right), valuelabel, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
 	valuerange = gtk_hscale_new_with_range(0.0, 100.0, 1.0 );
 	gtk_widget_show(valuelabel);
@@ -239,7 +239,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	gtk_table_attach(GTK_TABLE(right), valuerange, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
 	g_signal_connect_after(G_OBJECT(valuerange), "value-changed", G_CALLBACK(range_callback), NULL);
 	
-	restorevalue = gtk_button_new_with_label("Restore default value");
+	restorevalue = gtk_button_new_with_label(_("Restore default value"));
 	gtk_table_attach(GTK_TABLE(right), restorevalue, 0, 1, 2, 3, GTK_EXPAND, GTK_EXPAND, 5, 5);
 	g_signal_connect_after(G_OBJECT(restorevalue), "clicked", G_CALLBACK(restore_callback), NULL);
 	gtk_widget_set_sensitive(restorevalue, FALSE);

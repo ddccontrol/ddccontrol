@@ -1,5 +1,5 @@
-
-INCLUDES = -I../lib -I..
+localedir = $(datadir)/locale
+INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 
 LDADD = ../lib/libddcci.a
 

@@ -1,4 +1,6 @@
-INCLUDES = -I..
+localedir = $(datadir)/locale
+INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
+
 
 noinst_LIBRARIES = libddcci.a
 

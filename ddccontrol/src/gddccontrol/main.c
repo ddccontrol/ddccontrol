@@ -89,9 +89,14 @@ static void combo_change(GtkWidget *widget, gpointer data)
 
 int main( int   argc, char *argv[] )
 { 
-	gtk_init (&argc, &argv);
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
 	
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_init(&argc, &argv);
+	
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	
 	gtk_window_set_default_size(GTK_WINDOW(window), 500, 300);
 	
@@ -128,7 +133,10 @@ int main( int   argc, char *argv[] )
 	
 	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
 	
-	moninfo = gtk_label_new ("No monitor supporting DDC/CI available.\nPlease check all the needed kernel modules are loaded (i2c-dev, and your framebuffer driver).");
+	moninfo = gtk_label_new (_(
+		"No monitor supporting DDC/CI available."
+		"Please check all the needed kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+	));
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
 	
 	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
