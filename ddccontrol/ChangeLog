@@ -1,3 +1,7 @@
+2004-11-07 09:03  nboichat
+
+	* src/ddcpci/nvidia.c: Add original copyright to nvidia.c.
+
 2004-11-05 15:13  nboichat
 
 	* src/lib/monitor_db.c: Fix CAPS parsing error.
