@@ -138,7 +138,8 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 version = @VERSION@
-nobase_dist_data_DATA = *.xml monitor/*.xml options.xml.in
+nobase_dist_data_DATA = *.xml monitor/*.xml
+EXTRA_DIST = options.xml.in
 all: all-am
 
 .SUFFIXES:

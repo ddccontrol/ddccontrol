@@ -2,7 +2,8 @@ version=@VERSION@
 
 datadir=@datadir@/ddccontrol-db
 
-nobase_dist_data_DATA = *.xml monitor/*.xml options.xml.in
+nobase_dist_data_DATA = *.xml monitor/*.xml
+EXTRA_DIST = options.xml.in
 
 options.xml: options.xml.in
 	cat options.xml.in | sed s/\$$DATE/$(version)/mg > options.xml.tmp
