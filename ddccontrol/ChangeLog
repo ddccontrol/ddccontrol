@@ -1,3 +1,11 @@
+2004-09-08 22:21  nboichat
+
+	* configure, configure.ac, src/config.h.in,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.am,
+	  src/gddccontrol/Makefile.in, src/gddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/gddccontrol/notebook.h: Ported
+	  old GTK code to this project.
+
 2004-09-08 17:37  vdovikin
 
 	* src/ddccontrol/main.c: Fixed input type printing bug for detected
