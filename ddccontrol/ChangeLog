@@ -1,3 +1,10 @@
+2005-01-10 00:16  nboichat
+
+	* configure, configure.ac, src/config.h.in,
+	  src/ddcpci/i2c-algo-bit.h, src/lib/ddcci.c, src/lib/i2c-dev.h:
+	  Define I2C structures and constants if linux/i2c-dev.h cannot be
+	  used.
+
 2004-12-17 17:02  nboichat
 
 	* Makefile.in, configure, configure.ac, src/Makefile.in,
