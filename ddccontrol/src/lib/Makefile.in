@@ -80,6 +80,7 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DDCPCI = @DDCPCI@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 ECHO_C = @ECHO_C@
@@ -168,7 +169,7 @@ target_alias = @target_alias@
 localedir = $(datadir)/locale
 INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
 noinst_LIBRARIES = libddcci.a
-libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitordb.h
+libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitordb.h ddcpci-ipc.h
 all: all-am
 
 .SUFFIXES:

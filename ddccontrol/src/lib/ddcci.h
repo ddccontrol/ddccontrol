@@ -69,4 +69,8 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen);
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
 void ddcci_verbosity(int verbosity);
 
+int ddcpci_init();
+
+void ddcpci_release();
+
 #endif //DDCCI_H

@@ -1,1 +1,1 @@
-SUBDIRS = lib ddccontrol $(GDDCCONTROL)
+SUBDIRS = lib ddccontrol $(GDDCCONTROL) $(DDCPCI)

@@ -4,5 +4,4 @@ INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
 
 noinst_LIBRARIES = libddcci.a
 
-libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitordb.h
-
+libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitordb.h ddcpci-ipc.h

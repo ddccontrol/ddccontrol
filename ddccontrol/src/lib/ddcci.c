@@ -71,6 +71,98 @@ void ddcci_verbosity(int _verbosity)
 	verbosity = _verbosity;
 }
 
+/* IPC functions */
+#ifdef HAVE_DDCPCI
+#include "ddcpci-ipc.h"
+#include <sys/msg.h>
+#include <sys/ipc.h>
+
+#define DDCPCI_RETRY_DELAY 10000 /* in us */
+#define DDCPCI_RETRIES 100
+
+static int msqid = -2;
+
+int ddcpci_init()
+{
+	if (msqid == -2) {
+		if (verbosity) {
+			printf("ddcpci initing...\n");
+		}
+		
+		key_t key = ftok(BINDIR "/ddcpci", getpid());
+		
+		if ((msqid = msgget(key, IPC_CREAT | 0666)) < 0) {
+			perror(_("Error while initialisating the message queue"));
+			return 0;
+		}
+		
+		char buffer[256];
+		
+		snprintf(buffer, 256, BINDIR "/ddcpci %u &", key);
+		
+		if (verbosity) {
+			printf("Starting %s...\n", buffer);
+		}
+		
+		system(buffer);
+	}
+	return (msqid >= 0);
+}
+
+void ddcpci_release()
+{
+	if (verbosity) {
+		printf("ddcpci being released...\n");
+	}
+	if (msqid >= 0) {
+		struct query qlist;
+		qlist.mtype = 1;
+		qlist.qtype = QUERY_QUIT;
+		
+		if (msgsnd(msqid, &qlist, sizeof(struct query), IPC_NOWAIT) < 0) {
+			perror(_("Error while sending list message"));
+		}
+		
+		msgctl(msqid, IPC_RMID, NULL);
+	}
+}
+
+/* Returns : 0 - OK, negative value - timed out or another error */
+int ddcpci_read(struct answer* manswer)
+{
+	int i;
+	for (i = DDCPCI_RETRIES;; i--) {
+		if (msgrcv(msqid, manswer, sizeof(struct answer), 2, IPC_NOWAIT) < 0) {
+			if (errno != ENOMSG) {
+				return -errno;
+			}
+		}
+		else {
+			if (manswer->status != 0) {
+				errno = EBADMSG;
+				return -EBADMSG;
+			}
+			else {
+				return 0;
+			}
+		}
+		
+		if (i == 0) {
+			errno = ETIMEDOUT;
+			return -ETIMEDOUT;
+		}
+		usleep(DDCPCI_RETRY_DELAY);
+	}
+}
+
+#else
+int ddcpci_init() {
+	return 0;
+}
+
+void ddcpci_release() {}
+#endif
+
 /* debugging */
 static void dumphex(FILE *f, unsigned char *buf, unsigned char len)
 {
@@ -440,10 +532,45 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 {
 	memset(mon, 0, sizeof(struct monitor));
 	
-	if ((mon->fd = open(filename, O_RDWR)) < 0) {
-		perror(filename);
-		fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
-		return -3;
+	if (strncmp(filename, "dev:", 4) == 0) {
+		if ((mon->fd = open(filename+4, O_RDWR)) < 0) {
+			perror(filename);
+			fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
+			return -3;
+		}
+	}
+#ifdef HAVE_DDCPCI
+	else if (strncmp(filename, "pci:", 4) == 0) {
+		printf("Device : %s\n", filename);
+		
+		struct query qopen;
+		qopen.mtype = 1;
+		qopen.qtype = QUERY_OPEN;
+		
+		/*sscanf(filename, "pci:%02x:%02x.%d-%d\n", 
+			(unsigned int*)&qopen.bus.bus,
+			(unsigned int*)&qopen.bus.dev,
+			(unsigned int*)&qopen.bus.func,
+			&qopen.bus.i2cbus);*/
+		
+		if (msgsnd(msqid, &qopen, sizeof(struct query), IPC_NOWAIT) < 0) {
+			perror(_("Error while sending open message"));
+			return -3;
+		}
+		
+		
+		struct answer aopen;
+		
+		if (ddcpci_read(&aopen) < 0) {
+			perror(_("Error while reading open message answer"));
+			return -3;
+		}
+		
+		return -2;
+	}
+#endif
+	else {
+		fprintf(stderr, _("Invalid filename (%s).\n"), filename);
 	}
 	
 	mon->addr = addr;
@@ -531,17 +658,97 @@ int ddcci_close(struct monitor* mon)
 	return 0;
 }
 
-struct monitorlist* ddcci_probe() {
-	DIR *dirp;
-	struct dirent *direntp;
+void ddcci_probe_device(char* filename, struct monitorlist** current, struct monitorlist*** last) {
 	struct monitor mon;
-	int ret;
+	int ret = ddcci_open(&mon, filename);
+	
+	if (verbosity) {
+		printf(_("ddcci_open returned %d\n"), ret);
+	}
+	
+	if (ret > -2) { /* At least the EDID has been read correctly */
+		(*current) = malloc(sizeof(struct monitorlist));
+		(*current)->filename = filename;
+		(*current)->supported = (ret == 0);
+		if (mon.db) {
+			(*current)->name = malloc(strlen(mon.db->name)+1);
+			strcpy((char*)(*current)->name, mon.db->name);
+		}
+		else {
+			(*current)->name = malloc(32);
+			snprintf((char*)(*current)->name, 32, _("Unknown monitor (%s)"), mon.pnpid);
+		}
+		(*current)->digital = mon.digital;
+		(*current)->next = NULL;
+		**last = (*current);
+		*last = &(*current)->next;
+	}
+	else {
+		free(filename);
+	}
+	
+	ddcci_close(&mon);
+}
+
+struct monitorlist* ddcci_probe() {
+	char* filename = NULL;
 	
 	struct monitorlist* list = NULL;
 	struct monitorlist* current = NULL;
 	struct monitorlist** last = &list;
 	
-	char* filename = NULL;
+#ifdef HAVE_DDCPCI
+	/* Fetch bus list from ddcpci */
+	if (msqid >= 0) {
+		struct query qlist;
+		qlist.mtype = 1;
+		qlist.qtype = QUERY_LIST;
+		
+		if (msgsnd(msqid, &qlist, sizeof(struct query), IPC_NOWAIT) < 0) {
+			perror(_("Error while sending list message"));
+		}
+		else {
+			int len = 0, i;
+			struct answer alist;
+			char** filelist = NULL;
+			
+			while (1) {
+				if (ddcpci_read(&alist) < 0){
+					perror("Error while reading list entry");
+					break;
+				}
+				else {
+					if (alist.last == 1) {
+						break;
+					}
+					
+					filelist = realloc(filelist, (len+1)*sizeof(struct answer));
+					
+					//printf("<==%02x:%02x.%d-%d\n", alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
+					filelist[len] = malloc(32);
+					
+					snprintf(filelist[len], 32, "pci:%02x:%02x.%d-%d", 
+						alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
+					
+					if (verbosity) {
+						printf(_("Found I2C device (%s)\n"), filelist[len]);
+					}
+					
+					len++;
+				}
+			}
+			
+			for (i = 0; i < len; i++) {
+				ddcci_probe_device(filelist[i], &current, &last);
+			}
+			free(filelist);
+		}
+	}
+#endif
+	
+	/* Probe real I2C device */
+	DIR *dirp;
+	struct dirent *direntp;
 	
 	dirp = opendir("/dev/");
 	
@@ -549,44 +756,15 @@ struct monitorlist* ddcci_probe() {
 	{
 		if (!strncmp(direntp->d_name, "i2c-", 4))
 		{
-			filename = malloc(strlen(direntp->d_name)+6);
+			filename = malloc(strlen(direntp->d_name)+12);
 			
-			strcpy(filename, "/dev/");
-			strcpy(filename+5, direntp->d_name);
-			//snprintf(filename, strlen(direntp->d_name)+6, "/dev/%s", direntp->d_name);
+			snprintf(filename, strlen(direntp->d_name)+12, "dev:/dev/%s", direntp->d_name);
 			
 			if (verbosity) {
 				printf(_("Found I2C device (%s)\n"), filename);
 			}
 			
-			ret = ddcci_open(&mon, filename);
-			
-			if (verbosity) {
-				printf(_("ddcci_open returned %d\n"), ret);
-			}
-			
-			if (ret > -2) { /* At least the EDID has been read correctly */
-				current = malloc(sizeof(struct monitorlist));
-				current->filename = filename;
-				current->supported = (ret == 0);
-				if (mon.db) {
-					current->name = malloc(strlen(mon.db->name)+1);
-					strcpy((char*)current->name, mon.db->name);
-				}
-				else {
-					current->name = malloc(32);
-					snprintf((char*)current->name, 32, _("Unknown monitor (%s)"), mon.pnpid);
-				}
-				current->digital = mon.digital;
-				current->next = NULL;
-				*last = current;
-				last = &current->next;
-			}
-			else {
-				free(filename);
-			}
-			
-			ddcci_close(&mon);
+			ddcci_probe_device(filename, &current, &last);
 		}
 	}
 	

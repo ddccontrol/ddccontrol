@@ -8,6 +8,9 @@
    */
 #undef HAVE_DCGETTEXT
 
+/* Define if ddccontrol is built with ddcpci support. */
+#undef HAVE_DDCPCI
+
 /* Define to 1 if you have the <dirent.h> header file. */
 #undef HAVE_DIRENT_H
 
@@ -26,11 +29,17 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the `pci' library (-lpci). */
+#undef HAVE_LIBPCI
+
 /* Define to 1 if you have the <linux/i2c-dev.h> header file. */
 #undef HAVE_LINUX_I2C_DEV_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <pci/pci.h> header file. */
+#undef HAVE_PCI_PCI_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

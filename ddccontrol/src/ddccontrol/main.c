@@ -200,6 +200,7 @@ int main(int argc, char **argv)
 	}
 	
 	ddcci_verbosity(verbosity);
+	ddcpci_init();
 	
 	if (probe) {
 		fn = NULL;
@@ -231,6 +232,7 @@ int main(int argc, char **argv)
 		
 		if (fn == NULL) {
 			fprintf(stderr, _("No supported monitor detected.\n"));
+			ddcpci_release();
 			exit(0);
 		}
 		
@@ -347,5 +349,6 @@ int main(int argc, char **argv)
 		free(fn);
 	}
 	
+	ddcpci_release();
 	exit(0);
 }

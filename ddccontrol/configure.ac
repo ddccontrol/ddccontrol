@@ -26,8 +26,28 @@ if test "x$XML2_CONFIG" = "xno" ; then
    AC_MSG_ERROR(xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.)
 fi
 
-CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\""
+CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
 LDFLAGS="$LDFLAGS `xml2-config --libs`"
+
+# Direct PCI memory access check
+support_ddcpci=yes
+AC_ARG_ENABLE(ddcpci,
+  [  --disable-ddcpci	  enable direct PCI memory access (enabled) ],
+  [if test x$enableval = xno; then
+    support_ddcpci=no
+  fi])
+
+DDCPCI=
+ddcpci_val=0
+if test x$support_ddcpci = xyes; then
+   AC_CHECK_HEADERS([pci/pci.h], [], [AC_MSG_ERROR([PCI utils headers not found, please install pci-utils.], [1])], [])
+   AC_CHECK_LIB([pci], [pci_alloc], [], [AC_MSG_ERROR([PCI utils library not found, please install pci-utils.], [1])])
+   DDCPCI=ddcpci
+   ddcpci_val=1
+fi
+AC_DEFINE_UNQUOTED(HAVE_DDCPCI, $ddcpci_val, [Define if ddccontrol is built with ddcpci support.])
+
+AC_SUBST([DDCPCI])
 
 # Gnome check
 
@@ -65,5 +85,6 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/lib/Makefile 
 	src/ddccontrol/Makefile
-	src/gddccontrol/Makefile])
+	src/gddccontrol/Makefile
+	src/ddcpci/Makefile])
 AC_OUTPUT

@@ -70,6 +70,7 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DDCPCI = @DDCPCI@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 ECHO_C = @ECHO_C@
@@ -155,7 +156,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = lib ddccontrol $(GDDCCONTROL)
+SUBDIRS = lib ddccontrol $(GDDCCONTROL) $(DDCPCI)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
