@@ -9,4 +9,6 @@ echo "Remaking..."
 make
 echo "Committing updated html files and other files (message: '$1')..."
 cvs commit -m "$1"
+echo "Updating website..."
+make update
 echo "OK"
