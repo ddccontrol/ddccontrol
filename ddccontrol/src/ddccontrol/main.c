@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include "config.h"
 
@@ -95,8 +96,9 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 static void usage(char *name)
 {
 	fprintf(stderr,"Usage:\n");
-	fprintf(stderr,"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] dev\n", name);
+	fprintf(stderr,"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n", name);
 	fprintf(stderr,"\tdev: device, e.g. /dev/i2c-0\n");
+	fprintf(stderr,"\t-p : probe I2C devices to find monitor busses.\n");
 	fprintf(stderr,"\t-c : query capability\n");
 	fprintf(stderr,"\t-d : query ctrls 0 - 255\n");
 	fprintf(stderr,"\t-r : query ctrl\n");
@@ -109,7 +111,7 @@ static void usage(char *name)
 int main(int argc, char **argv)
 {
 	int i, retry, ret;
-	
+		
 	/* filedescriptor and name of device */
 	struct monitor mon;
 	char *fn;
@@ -122,6 +124,7 @@ int main(int argc, char **argv)
 	int save = 0;
 	int force = 0;
 	int verbosity = 0;
+	int probe = 0;
 	
 	fprintf(stdout, "ddccontrol version " VERSION "\n");
 	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n");
@@ -129,7 +132,7 @@ int main(int argc, char **argv)
 	fprintf(stdout, "This program comes with ABSOLUTELY NO WARRANTY.\n");
 	fprintf(stdout, "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n");
 	
-	while ((i=getopt(argc,argv,"hdr:w:csfv")) >= 0)
+	while ((i=getopt(argc,argv,"hdr:w:csfvp")) >= 0)
 	{
 		switch(i) {
 		case 'h':
@@ -165,18 +168,63 @@ int main(int argc, char **argv)
 		case 'v':
 			verbosity++;
 			break;
+		case 'p':
+			probe++;
+			break;
 		}
 	}
 	
-	if (optind == argc) 
+	if ((optind == argc) && (!probe)) /* Nor device, nor probe option specified. */
+	{
+		usage(argv[0]);
+		exit(1);
+	}
+	else if ((optind != argc) && (probe)) /* Device and probe option specified. */
 	{
 		usage(argv[0]);
 		exit(1);
 	}
 	
-	fn = argv[optind];
-	
 	ddcci_verbosity(verbosity);
+	
+	if (probe) {
+		fn = NULL;
+		
+		struct monitorlist* monlist;
+		struct monitorlist* current;
+		
+		monlist = ddcci_probe();
+		
+		printf("Detected monitors :\n");
+		
+		current = monlist;
+		while (current != NULL)
+		{
+			printf(" - Device : %s\n", current->filename);
+			printf("   DDC/CI supported : %s\n", current->supported ? "Yes" : "No");
+			printf("   Monitor Name : %s\n", current->name);
+			printf("   Input type : %s\n", mon.digital ? "Digital" : "Analog");
+			
+			if ((!fn) && (current->supported))
+			{
+				printf("  (Automatically selected)\n");
+				fn = malloc(strlen(current->filename)+1);
+				strcpy(fn, current->filename);
+			}
+			
+			current = current->next;
+		}
+		
+		if (fn == NULL) {
+			fprintf(stderr, "No supported monitor detected.\n");
+			exit(0);
+		}
+		
+		ddcci_free_list(monlist);
+	}
+	else {
+		fn = argv[optind];
+	}
 	
 	fprintf(stdout, "Reading EDID and initializing DDC/CI at bus %s...\n", fn);
 	
@@ -279,6 +327,10 @@ int main(int argc, char **argv)
 	}
 	
 	ddcci_close(&mon);
+	
+	if (probe) {
+		free(fn);
+	}
 	
 	exit(0);
 }

@@ -35,6 +35,20 @@ struct monitor {
 	struct monitor_db* db;
 };
 
+/* Struct used to return monitor data probed by ddcci_probe */
+struct monitorlist {
+	const char* filename; /* I2C device filename */
+	
+	unsigned char supported; /* 0 - DDC/CI not supported, 1 - DDC/CI supported */
+	const char* name;
+	unsigned char digital; /* 0 - digital, 1 - analog */
+	
+	struct monitorlist* next;
+};
+
+struct monitorlist* ddcci_probe();
+void ddcci_free_list(struct monitorlist* list);
+
 int ddcci_open(struct monitor* mon, const char* filename);
 int ddcci_save(struct monitor* mon);
 int ddcci_close(struct monitor* mon);

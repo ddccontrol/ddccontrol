@@ -25,6 +25,8 @@
 #include <string.h>
 #include <linux/i2c-dev.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <stdlib.h>
 
 #include "ddcci.h"
 
@@ -426,6 +428,8 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 */
 static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid) 
 {
+	memset(mon, 0, sizeof(struct monitor));
+	
 	if ((mon->fd = open(filename, O_RDWR)) < 0) {
 		perror(filename);
 		fprintf(stderr, "Be sure you've modprobed i2c-dev and correct framebuffer device.\n");
@@ -485,13 +489,17 @@ int ddcci_save(struct monitor* mon)
 */
 int ddcci_close(struct monitor* mon)
 {
-	if (mon->db) {
+	if (mon->db)
+	{
 		if (mon->db->init == samsung) {
 			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
 				return -1;
 			}
 		}
-	} else { /* Alternate way of init mode detecting for unsupported monitors */
+		ddcci_free_db(mon->db);
+	}
+	else
+	{ /* Alternate way of init mode detecting for unsupported monitors */
 		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
 			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
 				return -1;
@@ -499,9 +507,77 @@ int ddcci_close(struct monitor* mon)
 		}
 	}
 	
-	if (close(mon->fd) < 0) {
+	if ((mon->fd > -1) && (close(mon->fd) < 0)) {
 		return -3;
 	}
 	
 	return 0;
+}
+
+struct monitorlist* ddcci_probe() {
+	DIR *dirp;
+	struct dirent *direntp;
+	struct monitor mon;
+	int ret;
+	
+	struct monitorlist* list = NULL;
+	struct monitorlist* current = NULL;
+	struct monitorlist** last = &list;
+	
+	char* filename = NULL;
+	
+	dirp = opendir("/dev/");
+	
+	while ((direntp = readdir(dirp)) != NULL)
+	{
+		if (!strncmp(direntp->d_name, "i2c-", 4))
+		{
+			filename = malloc(strlen(direntp->d_name)+6);
+			
+			strcpy(filename, "/dev/");
+			strcpy(filename+5, direntp->d_name);
+			//snprintf(filename, strlen(direntp->d_name)+6, "/dev/%s", direntp->d_name);
+			
+			if (verbosity) {
+				printf("Found I2C device (%s)\n", filename);
+			}
+			
+			ret = ddcci_open(&mon, filename);
+			
+			if (verbosity) {
+				printf("ddcci_open returned %d\n", ret);
+			}
+			
+			if (ret > -2) { /* At least the EDID has been read correctly */
+				current = malloc(sizeof(struct monitorlist));
+				current->filename = filename;
+				current->supported = (ret == 0);
+				if (mon.db) {
+					current->name = malloc(strlen(mon.db->name)+1);
+					strcpy((char*)current->name, mon.db->name);
+				}
+				else {
+					current->name = malloc(32);
+					snprintf((char*)current->name, 32, "Unknown monitor (%s)", mon.pnpid);
+				}
+				current->digital = mon.digital;
+				current->next = NULL;
+				*last = current;
+				last = &current->next;
+			}
+			else {
+				free(filename);
+			}
+			
+			ddcci_close(&mon);
+		}
+	}
+	
+	closedir(dirp);
+	
+	return list;
+}
+
+void ddcci_free_list(struct monitorlist* list) {
+	/* To be implemented... */
 }
