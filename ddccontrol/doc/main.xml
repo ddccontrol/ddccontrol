@@ -20,7 +20,13 @@
 
 <releaseinfo role="meta">
 $Id$
-</releaseinfo> 
+</releaseinfo>
+
+<abstract>
+<para>
+Documentation for DDCcontrol version 0.1.
+</para>
+</abstract>
 
 </bookinfo>
 
@@ -415,8 +421,8 @@ mailing lists (see <xref linkend="report"/>).</para>
 <informaltable frame="all">
 <tgroup cols='3'>
 <colspec colname='name' align="left"/>
-<colspec colname='i2c' align="center"/>
-<colspec colname='pci' align="center"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
 <thead>
 <row>
   <entry morerows='1' valign='middle'>Name</entry>
@@ -430,33 +436,33 @@ mailing lists (see <xref linkend="report"/>).</para>
 <tbody>
 <row>
   <entry>Radeon 7500</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 <row>
   <entry>Radeon 9200</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 <row>
   <entry>Radeon 9500</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 <row>
   <entry>Radeon 9550 SE</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 <row>
   <entry>Radeon 9600 Pro</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 <row>
   <entry>Radeon 9700</entry>
-  <entry>Yes</entry>
-  <entry>No</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
 </row>
 </tbody>
 </tgroup>
@@ -521,8 +527,8 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <informaltable frame="all">
 <tgroup cols='3'>
 <colspec colname='name' align="left"/>
-<colspec colname='i2c' align="center"/>
-<colspec colname='pci' align="center"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
 <thead>
 <row>
   <entry morerows='1' valign='middle'>Name</entry>
@@ -536,18 +542,18 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <tbody>
 <row>
   <entry>GeForce Ti 200</entry>
-  <entry>Yes</entry>
-  <entry>Yes</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="yes">Yes</entry>
 </row>
 <row>
   <entry>GeForce FX 5700</entry>
-  <entry>No</entry>
-  <entry>Yes</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
 </row>
 <row>
   <entry>nForce 2 IGP</entry>
-  <entry>No</entry>
-  <entry>No</entry>
+  <entry class="no">No</entry>
+  <entry class="no">No</entry>
 </row>
 </tbody>
 </tgroup>
@@ -674,7 +680,7 @@ needed if there is only one value for command controls).
 </itemizedlist></para>
 
 <para>File format:</para>
-<screen>
+<screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
 <options date="%date%" dbversion="1">
   <group name="%groupname%">
@@ -731,7 +737,7 @@ monitor.
 <listitem>
 <para>
 If this attribute exists and have a <sgmltag class="attvalue">vcp</sgmltag>
-string (e.g. <sgmltag class="attvalue">"type(lcd) vcp(10 12)"</sgmltag>) then the
+string (e.g. <sgmltag class="attvalue">type(lcd) vcp(10 12)</sgmltag>) then the
 specified caps string is used.
 </para>
 </listitem>
@@ -739,8 +745,8 @@ specified caps string is used.
 <para> 
 If this attribute exists but does not have a
 <sgmltag class="attvalue">vcp</sgmltag> (e.g.
-<sgmltag class="attvalue">"type(crt)"</sgmltag> or
-<sgmltag class="attvalue">""</sgmltag>), then all controls defined in the
+<sgmltag class="attvalue">type(crt)</sgmltag> or
+<sgmltag class="attvalue"></sgmltag>), then all controls defined in the
 monitor profile are supposed to be supported.</para>
 </listitem>
 </itemizedlist>
@@ -753,7 +759,7 @@ If you don't, a default value is used.
 </para>
 
 <para>File format:</para>
-<screen>
+<screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
 <monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
   <controls>
@@ -776,7 +782,7 @@ If you don't, a default value is used.
 ]]></screen>
 <para>If a monitor supports exactly the same controls as another one, you can
 define it as shown:</para>
-<screen>
+<screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
 <monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>
 ]]></screen>
