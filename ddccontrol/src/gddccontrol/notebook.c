@@ -48,8 +48,8 @@ enum
 // Globals
 ////////////////////
 
-int modified = 0;
-GSList *all_controls=0;
+int modified;
+GSList *all_controls;
 
 // Helpers
 ////////////////////
@@ -383,6 +383,9 @@ GtkWidget* createTree(GtkWidget *notebook)
 
 GtkWidget* createNotebook(struct monitorlist* monitor)
 {
+	modified = 0;
+	all_controls = 0;
+	
 	ddcci_open(&mon, monitor->filename);
 	
 	GtkWidget *notebook = gtk_notebook_new();
