@@ -21,7 +21,11 @@ AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h
 
 support_i2c_dev=no
 AC_MSG_CHECKING([if linux/i2c-dev.h works alone])
-AC_COMPILE_IFELSE([#include <linux/i2c-dev.h>],
+AC_COMPILE_IFELSE([
+[#include <linux/i2c-dev.h>]
+[const int a = I2C_RDWR + I2C_M_RD;]
+[struct i2c_msg i2cmsg;]
+],
 support_i2c_dev=yes
 AC_MSG_RESULT(yes),
 AC_MSG_RESULT(no)
@@ -34,6 +38,8 @@ if test "x$support_i2c_dev" = "xno" ; then
   [#define s32 int]
   [#include <linux/i2c.h>]
   [#include <linux/i2c-dev.h>]
+  [const int a = I2C_RDWR + I2C_M_RD;]
+  [struct i2c_msg i2cmsg;]
   ],
   AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [if linux/i2c-dev.h is buggy on your system, but could be workarounded])
   support_i2c_dev=yes
