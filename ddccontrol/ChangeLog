@@ -1,3 +1,8 @@
+2004-09-12 18:42  nboichat
+
+	* src/lib/: ddcci.c, ddcci.h, monitor_db.c: Added code to free
+	  structures.
+
 2004-09-12 18:17  nboichat
 
 	* src/gddccontrol/: main.c, notebook.c, notebook.h: gddccontrol:
