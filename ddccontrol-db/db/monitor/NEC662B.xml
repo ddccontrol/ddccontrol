@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<monitor name="NEC Multisync 2080UX+" init="standard">
+	<controls>
+		<control id="defaults" address="0x04"/>
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
+		<control id="coarse" address="0x0e"/>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<!-- Control 0x14: +/2/8 [???] -->
+		<!-- Control 0x1e: +/0/1 [???] -->
+		
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+		
+		<!-- Control 0x3e: +/11/31 [???] -->
+		<!-- Control 0x54: +/65486/46 [???] -->
+		
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="1"/>
+			<value id="deutsch" value="2"/>
+			<value id="french" value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="chinese" value="5"/>
+			<value id="italian" value="6"/>
+			<value id="swedish" value="7"/>
+		</control>
+		
+		<!-- Control 0x8a: +/5/10 [???] -->
+		<!-- Control 0x8c: +/8/46 [???] -->
+		<!-- Control 0x9b: +/128/256 [???] -->
+		<!-- Control 0x9c: +/128/256 [???] -->
+		<!-- Control 0x9d: +/128/256 [???] -->
+		<!-- Control 0x9e: +/128/256 [???] -->
+		<!-- Control 0x9f: +/128/256 [???] -->
+		<!-- Control 0xa0: +/128/256 [???] -->
+		<!-- Control 0xa8: +/1/3 [???] -->
+		<!-- Control 0xb1: +/0/1 [???] Not in CAPS -->
+		<!-- Control 0xb4: +/1/2 [???] -->
+		<!-- Control 0xb6: +/3/5 [???] -->
+		<!-- Control 0xf6: +/0/1 [???] Not in CAPS -->
+		<!-- Control 0xfa: +/766/65535 [???] -->
+		<!-- Control 0xfb: +/0/1 [???] -->
+		<!-- Control 0xff: +/587/65535 [???] -->
+	</controls>
+</monitor>
