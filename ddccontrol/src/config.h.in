@@ -71,3 +71,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Define unconditionally for setting a GNU environment. */
+#undef _GNU_SOURCE

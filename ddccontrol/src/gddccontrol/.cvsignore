@@ -1,5 +1,2 @@
 Makefile
 gddccontrol
-notebook.c
-notebook.h
-main.c

@@ -852,7 +852,7 @@ Optional Features:
 			  (and sometimes confusing) to the casual installer
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
-  --enable-gnome	  enable build of gnome-console GUI disabled
+  --enable-gnome	  enable build of gnome-console GUI (disabled)
 
 Some influential environment variables:
   CC          C compiler command
@@ -3839,6 +3839,12 @@ fi
 done
 
 
+
+cat >>confdefs.h <<\_ACEOF
+#define _GNU_SOURCE 1
+_ACEOF
+
+
 # libxml2 check
 
 # Extract the first word of "xml2-config", so it can be a program name with args.
@@ -3951,7 +3957,7 @@ echo "$as_me: error: pkg-config not found" >&2;}
    echo -n "checking for gtk+-2.0... "
    if pkg-config --exists gtk+-2.0 ; then
       GNOME_LDFLAGS="`pkg-config --libs gtk+-2.0`"
-      GNOME_CFLAGS="$CFLAGS `pkg-config --cflags gtk+-2.0` -DHAVE_GNOME=1"
+      GNOME_CFLAGS="$CFLAGS `pkg-config --cflags gtk+-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
    else
