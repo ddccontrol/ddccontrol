@@ -1,3 +1,11 @@
+2004-12-17 17:02  nboichat
+
+	* Makefile.in, configure, configure.ac, src/Makefile.in,
+	  src/config.h.in, src/ddccontrol/Makefile.in,
+	  src/ddcpci/Makefile.in, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/main.c, src/gddccontrol/notebook.c,
+	  src/lib/Makefile.in: Partial multi-screen support.
+
 2004-12-17 15:24  nboichat
 
 	* TODO, src/gddccontrol/notebook.c: Fixed a false warning in
