@@ -1,3 +1,8 @@
+2004-10-23 16:43  nboichat
+
+	* src/: ddcpci/i2c-algo-bit.c, ddcpci/main.c, lib/ddcci.c,
+	  lib/ddcpci-ipc.h: Implement PCI direct memory access.
+
 2004-10-17 12:45  nboichat
 
 	* TODO, src/ddcpci/main.c, src/ddcpci/nvidia.c,
