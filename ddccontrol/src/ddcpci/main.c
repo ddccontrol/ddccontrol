@@ -81,7 +81,7 @@ static void open_card(struct i2c_bus* bus) {
 	current_card_close = NULL;
 	current_algo = NULL;
 	
-	for(dev=pacc->devices; dev; dev=dev->next)	/* Iterate over all devices */
+	for(dev=pacc->devices; dev && (aopen.status != 0); dev=dev->next)	/* Iterate over all devices */
 	{
 		pci_fill_info(dev, PCI_FILL_IDENT | PCI_FILL_BASES);
 		c = pci_read_word(dev, PCI_CLASS_DEVICE);
@@ -93,6 +93,10 @@ static void open_card(struct i2c_bus* bus) {
 					if (bus->i2cbus < current_card->nbusses) {
 						current_algo = &current_card->i2c_busses[bus->i2cbus];
 						aopen.status = 0;
+						printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
+							dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
+							c, dev->irq, dev->base_addr[0], dev->size[0]);
+						break;
 					}
 					else {
 						current_card_close(current_card);
@@ -102,8 +106,12 @@ static void open_card(struct i2c_bus* bus) {
 		}
 	}
 	
+	if (verbosity == 2) {
+		printf("==>Opened (status=%d)...\n", aopen.status);
+	}
+	
 	if (msgsnd(msqid, &aopen, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-		perror("Error while sending open message");
+		perror("==>Error while sending open message");
 	}
 }
 
@@ -126,13 +134,13 @@ static void data(struct query* mquery, int len) {
 		if (ret < 0) {
 			adata.status = -1;
 			if (msgsnd(msqid, &adata, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-				perror("Error while sending data answer message");
+				perror("==>Error while sending data answer message");
 			}
 		}
 		else {
 			adata.status = 0;
 			if (msgsnd(msqid, &adata, ANSWER_SIZE + mquery->len, IPC_NOWAIT) < 0) {
-				perror("Error while sending data answer message");
+				perror("==>Error while sending data answer message");
 			}
 		}
 	}
@@ -149,7 +157,7 @@ static void data(struct query* mquery, int len) {
 		adata.mtype = 2;
 		adata.status = (ret < 0) ? -1 : ret;
 		if (msgsnd(msqid, &adata, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-			perror("Error while sending data answer message");
+			perror("==>Error while sending data answer message");
 		}
 	}
 }
@@ -181,7 +189,7 @@ static void list()
 			{
 				if ((thecard = cards_open[i](dev))) {
 					if (verbosity == 2) {
-						printf("Supported\n");
+						printf("==>Supported\n");
 					}
 					for (j = 0; j < thecard->nbusses; j++) {
 						struct answer alist;
@@ -211,7 +219,10 @@ static void list()
 	alist.status = 0;
 	alist.last = 1;
 	if (msgsnd(msqid, &alist, ANSWER_SIZE, IPC_NOWAIT) < 0) {
-		perror("Error while sending list message");
+		perror("==>Error while sending list message");
+	}
+	if (verbosity == 2) {
+		printf("==>EOL\n");
 	}
 }
 
@@ -232,19 +243,19 @@ int main(int argc, char **argv)
 	
 	verbosity = strtol(argv[1], &endptr, 0);
 	if (*endptr != 0) {
-		fprintf(stderr, "Can't read verbosity.\n");
+		fprintf(stderr, "==>Can't read verbosity.\n");
 		exit(1);
 	}
 	
 	key_t key = strtol(argv[2], &endptr, 0);
 	
 	if (*endptr != 0) {
-		fprintf(stderr, "Can't read key.\n");
+		fprintf(stderr, "==>Can't read key.\n");
 		exit(1);
 	}
 	
 	if ((msqid = msgget(key, 0666)) < 0) {
-		fprintf(stderr, "Can't open key %u\n", key);
+		fprintf(stderr, "==>Can't open key %u\n", key);
 		perror("msgget");
 		exit(1);
 	}
@@ -257,7 +268,7 @@ int main(int argc, char **argv)
 				usleep(10000);
 				continue;
 			}
-			perror("Error while receiving query");
+			perror("==>Error while receiving query");
 			break;
 		}
 		
@@ -285,7 +296,7 @@ int main(int argc, char **argv)
 			cont = 0;
 			break;
 		default:
-			fprintf(stderr, "Invalid query...\n");
+			fprintf(stderr, "==>Invalid query...\n");
 			break;
 		}
 	}

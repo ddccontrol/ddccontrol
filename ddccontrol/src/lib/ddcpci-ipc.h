@@ -46,7 +46,7 @@ struct i2c_bus {
 #define QUERY_QUIT 3  /* Nothing should be defined */
 
 struct query {
-	int mtype; /* Always 1 */
+	long mtype; /* Always 1 */
 	int qtype; /* see above for possible values */
 	/* QUERY_OPEN */
 	struct i2c_bus bus;
@@ -59,7 +59,7 @@ struct query {
 
 /* ddcpci to ddccontrol messages (answers) */
 struct answer {
-	int mtype; /* Always 2 */
+	long mtype; /* Always 2 */
 	int status; /* 0 or greater - OK (bytes read/written for answers to QUERY_DATA), -1 - an error occured */
 	
 	int last; /* 0 - Last message, no bus to read, 1 - Other messages follows (for QUERY_LIST) */

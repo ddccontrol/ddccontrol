@@ -229,14 +229,14 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		memcpy(qdata.buffer, buf, len);
 		
 		if (msgsnd(msqid, &qdata, QUERY_SIZE + len, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending open message"));
+			perror(_("Error while sending write message"));
 			return -3;
 		}
 		
 		struct answer adata;
 		
 		if (ddcpci_read(&adata) < 0) {
-			perror(_("Error while reading open message answer"));
+			perror(_("Error while reading write message answer"));
 			return -1;
 		}
 		return adata.status;
@@ -284,14 +284,14 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		qdata.len = len;
 		
 		if (msgsnd(msqid, &qdata, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending open message"));
+			perror(_("Error while sending read message"));
 			return -3;
 		}
 		
 		struct answer adata;
 		
 		if ((ret = ddcpci_read(&adata)) < 0) {
-			perror(_("Error while reading open message answer"));
+			perror(_("Error while reading read message answer"));
 			return -1;
 		}
 		

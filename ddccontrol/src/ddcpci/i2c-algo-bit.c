@@ -46,7 +46,7 @@
 
 /* module parameters:
  */
-static int i2c_debug = 0;
+static int i2c_debug = 2;
 static struct timeval lasttv;
 static struct timeval newtv;
 
