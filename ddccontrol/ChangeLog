@@ -1,3 +1,11 @@
+2004-10-09 15:36  nboichat
+
+	* Makefile.in, aclocal.m4, configure, doc/xml-design.txt,
+	  src/Makefile.in, src/ddccontrol/Makefile.in,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.in,
+	  src/lib/ddcci.c, src/lib/monitor_db.c, src/lib/monitor_db.h: Add
+	  support for the new caps behaviour (see doc/xml-design.txt).
+
 2004-09-25 15:02  nboichat
 
 	* src/gddccontrol/notebook.c: Minor fixes for gddccontrol.
