@@ -35,3 +35,6 @@ website.database.xml:  autolayout.xml Makefile
 	   $(filter-out autolayout.xml custom-tabular.xsl Makefile,$^)
 
 .PHONY : clean
+
+update:
+	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/; cvs update -d"

@@ -2,7 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:html='http://www.w3.org/1999/xhtml'
                 xmlns:doc="http://nwalsh.com/xsl/documentation/1.0"
-                exclude-result-prefixes="html doc"
+                xmlns:str="http://exslt.org/strings"
+                extension-element-prefixes="str"
+                exclude-result-prefixes="html doc str"
                 version="1.0">
 
 <xsl:import href="http://docbook.sourceforge.net/release/website/2.4.1/xsl/tabular.xsl"/>
@@ -56,7 +58,9 @@
 <xsl:template name="webpage.table.footer">
   <xsl:variable name="page" select="."/>
   <xsl:variable name="id" select="$page/@id"/>
-  <xsl:variable name="rcsdate" select="$page/config[@param='rcsdate']/@value"/>
+  <xsl:variable name="cvsid1" select="substring-before($page/config[@param='cvsid']/@value, ' $')"/>
+  <xsl:variable name="cvsid" select="substring-after($cvsid1, '$Id: ')"/>
+
   <xsl:variable name="title">
     <xsl:value-of select="$page/head/title[1]"/>
   </xsl:variable>
@@ -77,7 +81,26 @@
           </p>
           <p>
       <span class="footdate">
-        <xsl:value-of select="$rcsdate"/>
+        <!-- cvsid = "website.xml,v 1.1 2005/03/25 12:08:10 nboichat Exp" -->
+        <!-- timeString = "dow mon dd hh:mm:ss TZN yyyy" -->
+
+        <xsl:text>Last updated: </xsl:text>
+	<br/>
+	<xsl:value-of select="str:tokenize($cvsid,' ')[3]"/>
+        <xsl:text> </xsl:text>
+	<xsl:value-of select="str:tokenize($cvsid,' ')[4]"/>
+        by <xsl:value-of select="str:tokenize($cvsid,' ')[5]"/>
+        <br/>
+        CVS info:
+        <br/>
+		<xsl:value-of select="str:tokenize($cvsid,' ')[1]"/>
+        <xsl:text> </xsl:text>
+		<xsl:value-of select="str:tokenize($cvsid,' ')[2]"/>
+	<xsl:text> </xsl:text>
+		<xsl:value-of select="str:tokenize($cvsid,' ')[6]"/>
+	<xsl:text> </xsl:text>
+		<xsl:value-of select="str:tokenize($cvsid,' ')[7]"/>
+        <br/>
       </span>
       </p>
     </td>

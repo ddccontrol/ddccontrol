@@ -4,8 +4,7 @@
 <webpage id="home">
 
   <config param="desc" value="The Test Home Page"/>
-  <config param="rcsdate" value="$Id$"/>
-  <!---<config param="footer" value="about.html" altval="About..."/>-->
+  <config param="cvsid" value="$Id$"/>
 
   <head>
     <title>DDCcontrol homepage</title>
@@ -18,7 +17,7 @@
 parameters, like brightness and contrast, by software, i.e. without using the
 OSD (On Screen Display) and the buttons in front of the monitor.</para>
 <para>It currently runs on Linux.</para>
-<para>For more infos see <olink targetdoc="doc" targetptr="doc"> the
+<para>For more informations see <olink targetdoc="doc" targetptr="doc"> the
 documentation</olink>.</para>
 </section>
 
