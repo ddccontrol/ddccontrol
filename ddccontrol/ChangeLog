@@ -1,3 +1,10 @@
+2005-03-26 11:47  nboichat
+
+	* doc/main.xml, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
+	  src/ddccontrol/main.c, src/gddccontrol/main.c, src/lib/ddcci.c,
+	  src/lib/ddcci.h, src/lib/monitor_db.c, src/lib/monitor_db.h:
+	  Database format change
+
 2005-03-25 20:08  nboichat
 
 	* doc/Makefile.am, doc/Makefile.in, doc/main.xml, po/POTFILES.in,
