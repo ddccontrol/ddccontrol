@@ -191,7 +191,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
 								struct value_db *current_value = malloc(sizeof(struct value_db));
 								current_value->id = xmlCharStrdup("default");
-								current_value->name = xmlCharStrdup(gettext("default"));
+								current_value->name = _D(options_ctrlname);
 								current_value->value = 0x01;
 								current_value->next = NULL;
 								current_control->value_list = current_value;

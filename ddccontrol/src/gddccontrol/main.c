@@ -89,7 +89,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 		i++;
 	}
 	
-	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
 }
 
 int main( int   argc, char *argv[] )
@@ -151,7 +151,7 @@ int main( int   argc, char *argv[] )
 	table = gtk_table_new(3, 1, FALSE);
 	gtk_widget_show (table);
 	
-	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, 0, 5, 5);
 	
 	moninfo = gtk_label_new (_(
 		"No monitor supporting DDC/CI available."
@@ -159,7 +159,7 @@ int main( int   argc, char *argv[] )
 	));
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
 	
-	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
 	
 	gtk_container_add (GTK_CONTAINER (window), table);
 	
