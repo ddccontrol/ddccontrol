@@ -1,3 +1,10 @@
+2005-04-01 18:26  nboichat
+
+	* po/.cvsignore, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
+	  src/gddccontrol/main.c, src/gddccontrol/notebook.c,
+	  src/gddccontrol/notebook.h: Add status messages when gddccontrol
+	  loads.
+
 2005-03-29 22:31  nboichat
 
 	* Makefile.in, configure, configure.ac, doc/Makefile.in,

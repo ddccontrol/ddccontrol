@@ -1,9 +1,15 @@
+2005-04-01 18:30  nboichat
+
+	* commit.sh: Add tag names in ChangeLog.
+
 2005-03-30 21:59  nboichat
 
 	* Makefile.in, aclocal.m4, configure, configure.ac, db/.cvsignore,
 	  db/Makefile.am, db/Makefile.in, db/options.xml, db/options.xml.h,
 	  po/.cvsignore: Do not check for gcc when configuring and various
 	  other minor fixes.
+
+2005-03-29 08:30  tag Release-20050329
 
 2005-03-29 08:30  nboichat
 
@@ -143,6 +149,8 @@
 
 	* .cvsignore, db/.cvsignore: Remove autom4te cache and add
 	  cvsignore files
+
+2004-08-31 16:55  tag start
 
 2004-08-31 16:55  nboichat
 
