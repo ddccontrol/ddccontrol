@@ -82,7 +82,7 @@ int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
 		else if (caps_str[pos] == ')')
 		{
 			level--;
-			if (level == 0) {
+			if (level == 1) {
 				vcp = 0;
 			}
 		}
