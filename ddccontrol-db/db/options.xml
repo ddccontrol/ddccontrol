@@ -70,34 +70,20 @@
 	<control id="audiomicrovolume" type="value" name="Audio Microphone Volume Adjust" address="0x64"/>
   </group>
   <group name="Others">
-    <control id="degauss" type="command" name="Degauss" address="0x00">
-      <value id="degauss" value="0x01"/>
-    </control>
-    <control id="secdegauss" type="command" name="Secondary Degauss" address="0x02">
-      <value id="secdegauss" value="0x01"/>
-	</control>
-    <control id="restoredefaults" type="command" name="Restore Factory Defaults" address="0x04">
-      <value id="restoredefaults" value="0x01"/>
-	</control>
-    <control id="restoredefaultgeom" type="command" name="Restore Factory Default Geometry" address="0x06">
-      <value id="restoredefaultgeom" value="0x01"/>
-	</control>
-    <control id="restoredefaultcolor" type="command" name="Restore Factory Default Color" address="0x08">
-      <value id="restoredefaultcolor" value="0x01"/>
-	</control>
-    <control id="restoredefaultposition" type="command" name="Restore Factory Default Position" address="0x0A">
-      <value id="restoredefaultposition" value="0x01"/>
-	</control>
-    <control id="restoredefaultsize" type="command" name="Restore Factory Default Size" address="0x0C">
-      <value id="restoredefaultsize" value="0x01"/>
-	</control>
+    <control id="degauss" type="command" name="Degauss" address="0x00"/>
+    <control id="secdegauss" type="command" name="Secondary Degauss" address="0x02"/>
+    <control id="defaults" type="command" name="Restore Factory Defaults" address="0x04"/>
+    <control id="defaultgeom" type="command" name="Restore Factory Default Geometry" address="0x06"/>
+    <control id="defaultcolor" type="command" name="Restore Factory Default Color" address="0x08"/>
+    <control id="defaultposition" type="command" name="Restore Factory Default Position" address="0x0A"/>
+    <control id="defaultsize" type="command" name="Restore Factory Default Size" address="0x0C"/>
     <control id="inputlevel" type="list" name="Input level Select" address="0x5E">
 	<!-- To be completed -->
     </control>
     <control id="inputsource" type="list" name="Input source Select" address="0x60">
 	<!-- To be completed -->
     </control>
-    <control id="osdenable" type="list" name="On Screen Display" address="0x66"> <!--- USB specifies address 0xCA -->
+    <control id="osd" type="list" name="On Screen Display" address="0x66"> <!--- USB specifies address 0xCA -->
       <value id="disable" value="0x00" name="Disable"/>
       <value id="enable" value="0x01" name="Enable"/>
 	</control>

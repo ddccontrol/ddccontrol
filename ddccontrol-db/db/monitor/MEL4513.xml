@@ -40,14 +40,14 @@
     <control id="degauss">
       <value id="degauss"/>
     </control>
-    <control id="restoredefaults">
-      <value id="restoredefaults"/>
+    <control id="defaults">
+      <value id="defaults"/>
 	</control>
-    <control id="restoredefaultgeom">
-      <value id="restoredefaultgeom"/>
+    <control id="defaultgeom">
+      <value id="defaultgeom"/>
 	</control>
-    <control id="restoredefaultcolor">
-      <value id="restoredefaultcolor"/>
+    <control id="defaultcolor">
+      <value id="defaultcolor"/>
 	</control>
   </controls>
 </monitor>
