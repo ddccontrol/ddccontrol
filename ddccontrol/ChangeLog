@@ -1,3 +1,13 @@
+2004-09-05 12:10  nboichat
+
+	* TODO, src/lib/monitor_db.c: Allow decimal values and addresses in
+	  XML files.
+
+2004-09-05 11:45  nboichat
+
+	* src/ddccontrol/main.c: Revert -q parameter changes in console
+	  tool.
+
 2004-09-05 09:21  nboichat
 
 	* src/ddccontrol/main.c: Added new parameter to the command line
