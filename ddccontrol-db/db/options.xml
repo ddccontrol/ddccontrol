@@ -1,22 +1,106 @@
 <?xml version="1.0"?>
 <options>
   <group name="Color settings">
-    <control id="brightness" type="value" name="Brightness"/>
-    <control id="contrast" type="value" name="Contrast"/>
-    <control id="magicbright" type="list" address="0xDC" name="Magic Bright Mode">
+    <control id="brightness" type="value" name="Brightness" address="0x10"/>
+    <control id="contrast" type="value" name="Contrast" address="0x12"/>
+    <control id="colorpreset" type="list" name="Color Preset" address="0x14">
+	<!-- To be completed -->
+	</control>
+	<control id="red" type="value" name="Red maximum level" address="0x16"/>
+	<control id="green" type="value" name="Green maximum level" address="0x18"/>
+	<control id="blue" type="value" name="Blue maximum level" address="0x1A"/>
+	<control id="focus" type="value" name="Focus" address="0x1C"/>
+    <control id="hue" type="value" name="Hue" address="0x1C"/>
+	<control id="saturation" type="value" name="Saturation" address="0x50"/>
+	<control id="colorcurve" type="value" name="Color curve adjust" address="0x52"/>
+	<control id="redblack" type="value" name="Red minimum level" address="0x6C"/>
+	<control id="greenblack" type="value" name="Green minimum level" address="0x6E"/>
+	<control id="blueblack" type="value" name="Blue minimum level" address="0x70"/>
+	<!--- vendor specific controls -->
+    <control id="magicbright" type="list" name="Magic Bright Mode" address="0xDC">
       <value id="text" name="Text"/>
       <value id="internet" name="Internet"/>
       <value id="entertain" name="Entertain"/>
       <value id="custom" name="Custom"/>
     </control>
   </group>
+  <group name="Position and size">
+    <control id="hpos" type="value" name="Horizontal Position" address="0x20"/>
+    <control id="hsize" type="value" name="Horizontal Size" address="0x22"/>
+    <control id="vpos" type="value" name="Vertical Position" address="0x30"/>
+    <control id="vsize" type="value" name="Vertical Size" address="0x32"/>
+    <control id="autosize" type="list" name="Auto Size Center" address="0x5A">
+      <value id="text" name="Enable" value="0x00"/>
+      <value id="internet" name="Disable" value="0x01"/>
+    </control>
+  </group>
+  <group name="Geometry">
+    <control id="hpincushion" type="value" name="Horizontal Pincushion" address="0x24"/>
+    <control id="hpincushionbalance" type="value" name="Horizontal Pincushion Balance" address="0x26"/>
+    <control id="hmisconvergence" type="value" name="Horizontal Misconvergence" address="0x28"/>
+    <control id="hlinearity" type="value" name="Horizontal Linearity" address="0x2A"/>
+    <control id="hlinearitybalance" type="value" name="Horizontal Linearity Balance" address="0x2C"/>
+    <control id="vpincushion" type="value" name="Vertical Pincushion" address="0x34"/>
+    <control id="vpincushionbalance" type="value" name="Vertical Pincushion Balance" address="0x36"/>
+    <control id="vmisconvergence" type="value" name="Vertical Misconvergence" address="0x38"/>
+    <control id="vlinearity" type="value" name="Vertical Linearity" address="0x3A"/>
+    <control id="vlinearitybalance" type="value" name="Vertical Linearity Balance" address="0x3C"/>
+  </group>
+  <group name="Geometry 2">
+    <control id="keybalance" type="value" name="Parallelogram Distortion (Key Balance)" address="0x40"/>
+    <control id="key" type="value" name="Trapezoidal Distortion (Key)" address="0x42"/>
+    <control id="tilt" type="value" name="Rotation (Tilt)" address="0x44"/>
+    <control id="tdistortionctrl" type="value" name="Top Corner Distortion Control" address="0x46"/>
+    <control id="tdistortionbalance" type="value" name="Top Corner Distortion Balance" address="0x48"/>
+    <control id="bdistortionctrl" type="value" name="Bottom Corner Distortion Control" address="0x4A"/>
+    <control id="bdistortionbalance" type="value" name="Bottom Corner Distortion Balance" address="0x4C"/>
+  </group>
   <group name="Screen purity">
-    <control id="tlpurity" type="value" name="Top left screen purity"/>
-    <control id="trpurity" type="value" name="Top right screen purity"/>
+	<control id="hmoire" type="value" name="Horizontal Moire" address="0x54"/>
+	<control id="vmoire" type="value" name="Vertical Moire" address="0x56"/>
+	<control id="landing" type="value" name="Landing Adjust (RGB alignment)" address="0x5C"/>
+	<!--- vendor specific controls -->
+    <control id="tlpurity" type="value" name="Top left screen purity" address="0xE8"/>
+    <control id="trpurity" type="value" name="Top right screen purity" address="0xE9"/>
+  </group>
+  <group name="Audio">
+	<control id="audiospeakervolume" type="value" name="Audio Speaker Volume Adjust" address="0x62"/>
+	<control id="audiomicrovolume" type="value" name="Audio Microphone Volume Adjust" address="0x64"/>
   </group>
   <group name="Others">
-    <control id="degauss" type="command" name="Degauss">
-      <value id="degauss" name="Degauss"/>
+    <control id="degauss" type="command" name="Degauss" address="0x00">
+      <value id="degauss" value="0x01"/>
     </control>
+    <control id="secdegauss" type="command" name="Secondary Degauss" address="0x02">
+      <value id="secdegauss" value="0x01"/>
+	</control>
+    <control id="restoredefaults" type="command" name="Restore Factory Defaults" address="0x04">
+      <value id="restoredefaults" value="0x01"/>
+	</control>
+    <control id="restoredefaultgeom" type="command" name="Restore Factory Default Geometry" address="0x06">
+      <value id="restoredefaultgeom" value="0x01"/>
+	</control>
+    <control id="restoredefaultcolor" type="command" name="Restore Factory Default Color" address="0x08">
+      <value id="restoredefaultcolor" value="0x01"/>
+	</control>
+    <control id="restoredefaultposition" type="command" name="Restore Factory Default Position" address="0x0A">
+      <value id="restoredefaultposition" value="0x01"/>
+	</control>
+    <control id="restoredefaultsize" type="command" name="Restore Factory Default Size" address="0x0C">
+      <value id="restoredefaultsize" value="0x01"/>
+	</control>
+    <control id="inputlevel" type="list" name="Input level Select" address="0x5E">
+	<!-- To be completed -->
+    </control>
+    <control id="inputsource" type="list" name="Input source Select" address="0x60">
+	<!-- To be completed -->
+    </control>
+    <control id="osdenable" type="list" name="On Screen Display" address="0x66"> <!--- USB specifies address 0xCA -->
+      <value id="disable" value="0x00" name="Disable"/>
+      <value id="enable" value="0x01" name="Enable"/>
+	</control>
+    <control id="language" type="list" name="Language select" address="0x68">
+    <!-- To be completed -->
+	</control>
   </group>
 </options>
