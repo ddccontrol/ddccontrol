@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.4.0//EN" 
+          "website.dtd" >
+<webpage id="home">
+
+  <config param="desc" value="The Test Home Page"/>
+  <config param="rcsdate" value="$Id$"/>
+  <!---<config param="footer" value="about.html" altval="About..."/>-->
+
+  <head>
+    <title>DDCcontrol homepage</title>
+    <summary>Introduction</summary>
+    <keywords>DDCcontrol, DDC/CI</keywords>
+  </head>
+
+<section><title>What is a DDCcontrol?</title>
+<para>DDCcontrol is a program running on Linux, used to control monitor
+parameters, like brightness and contrast, by software, i.e. without using the
+OSD (On Screen Display) and the buttons in front of the monitor.</para>
+<para>It currently runs on Linux.</para>
+<para>For more infos see <olink targetdoc="doc" targetptr="doc"> the
+documentation</olink>.</para>
+</section>
+
+</webpage>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.4.0//EN" 
+          "website.dtd" >
+<webpage id="download">
+
+  <config param="desc" value="DDCcontrol download page"/>
+  <config param="rcsdate" value="$Id$"/>
+  <!---<config param="footer" value="about.html" altval="About..."/>-->
+
+  <head>
+    <title>Download</title>
+    <summary></summary>
+    <keywords>DDCcontrol, DDC/CI, Download</keywords>
+  </head>
+
+<para>By clicking on the right link in the left menu, you can download
+the current release, or fetch the latest sources from the CVS.</para>
+
+</webpage>

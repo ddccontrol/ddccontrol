@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.4.0//EN" 
+          "website.dtd" >
+<webpage id="doc">
+
+  <config param="desc" value="DDCcontrol documentation"/>
+  <config param="rcsdate" value="$Id$"/>
+  <!---<config param="footer" value="about.html" altval="About..."/>-->
+
+  <head>
+    <title>Documentation</title>
+    <summary></summary>
+    <keywords>DDCcontrol, DDC/CI, Documentation</keywords>
+  </head>
+
+<para>By clicking on the right link in the left menu, you can see development's,
+or current release's online documentation.</para>
+<section><title>Archives</title>
+<para>No archives yet.</para>
+</section>
+
+</webpage>
