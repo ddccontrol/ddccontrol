@@ -1,3 +1,9 @@
+2004-09-15 22:59  nboichat
+
+	* src/: gddccontrol/main.c, gddccontrol/notebook.c, lib/ddcci.c: -
+	  Don't translate debug output - Fix crash in gddccontrol when more
+	  than one monitor is connected
+
 2004-09-13 22:32  nboichat
 
 	* src/: ddccontrol/main.c, gddccontrol/main.c, lib/monitor_db.c:
