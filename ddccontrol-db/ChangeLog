@@ -1,3 +1,12 @@
+2004-09-02 17:38  nboichat
+
+	* db/: options.xml, monitor/SAM00BA.xml, monitor/SAM1234.xml: New
+	  db format, add Access.BUS options.
+
+2004-08-31 19:13  nboichat
+
+	* .cvsignore, ChangeLog: Update ChangeLog
+
 2004-08-31 19:12  nboichat
 
 	* db/: Makefile.am, Makefile.in: Change install directory
