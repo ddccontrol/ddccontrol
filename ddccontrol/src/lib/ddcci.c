@@ -98,7 +98,7 @@ int ddcpci_init()
 		
 		char buffer[256];
 		
-		snprintf(buffer, 256, BINDIR "/ddcpci %u &", key);
+		snprintf(buffer, 256, BINDIR "/ddcpci %d %d &", verbosity, key);
 		
 		if (verbosity) {
 			printf("Starting %s...\n", buffer);
@@ -119,9 +119,11 @@ void ddcpci_release()
 		qlist.mtype = 1;
 		qlist.qtype = QUERY_QUIT;
 		
-		if (msgsnd(msqid, &qlist, sizeof(struct query), IPC_NOWAIT) < 0) {
+		if (msgsnd(msqid, &qlist, QUERY_SIZE, IPC_NOWAIT) < 0) {
 			perror(_("Error while sending list message"));
 		}
+		
+		usleep(20000);
 		
 		msgctl(msqid, IPC_RMID, NULL);
 	}
@@ -130,20 +132,20 @@ void ddcpci_release()
 /* Returns : 0 - OK, negative value - timed out or another error */
 int ddcpci_read(struct answer* manswer)
 {
-	int i;
+	int i, ret;
 	for (i = DDCPCI_RETRIES;; i--) {
-		if (msgrcv(msqid, manswer, sizeof(struct answer), 2, IPC_NOWAIT) < 0) {
+		if ((ret = msgrcv(msqid, manswer, sizeof(struct answer), 2, IPC_NOWAIT)) < 0) {
 			if (errno != ENOMSG) {
 				return -errno;
 			}
 		}
 		else {
-			if (manswer->status != 0) {
+			if (manswer->status < 0) {
 				errno = EBADMSG;
 				return -EBADMSG;
 			}
 			else {
-				return 0;
+				return ret;
 			}
 		}
 		
@@ -192,56 +194,115 @@ static void dumphex(FILE *f, unsigned char *buf, unsigned char len)
 
 /* write len bytes (stored in buf) to i2c address addr */
 /* return 0 on success, -1 on failure */
-static int i2c_write(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
+static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf, unsigned char len)
 {
-	int i;
-	struct i2c_rdwr_ioctl_data msg_rdwr;
-	struct i2c_msg             i2cmsg;
-
-	/* done, prepare message */	
-	msg_rdwr.msgs = &i2cmsg;
-	msg_rdwr.nmsgs = 1;
-
-	i2cmsg.addr  = addr;
-	i2cmsg.flags = 0;
-	i2cmsg.len   = len;
-	i2cmsg.buf   = buf;
-
-	if ((i = ioctl(fd, I2C_RDWR, &msg_rdwr)) < 0 )
-	{
-	    perror("ioctl()");
-	    fprintf(stderr,_("ioctl returned %d\n"),i);
-	    return -1;
+	if (mon->type == dev) {
+		int i;
+		struct i2c_rdwr_ioctl_data msg_rdwr;
+		struct i2c_msg             i2cmsg;
+	
+		/* done, prepare message */	
+		msg_rdwr.msgs = &i2cmsg;
+		msg_rdwr.nmsgs = 1;
+	
+		i2cmsg.addr  = addr;
+		i2cmsg.flags = 0;
+		i2cmsg.len   = len;
+		i2cmsg.buf   = buf;
+	
+		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0 )
+		{
+			perror("ioctl()");
+			fprintf(stderr,_("ioctl returned %d\n"),i);
+			return -1;
+		}
+	
+		return i;
 	}
-
-	return i;
-
+#ifdef HAVE_DDCPCI
+	else if (mon->type == pci) {
+		struct query qdata;
+		qdata.mtype = 1;
+		qdata.qtype = QUERY_DATA;
+		qdata.addr = addr;
+		qdata.flags = 0;
+		memcpy(qdata.buffer, buf, len);
+		
+		if (msgsnd(msqid, &qdata, QUERY_SIZE + len, IPC_NOWAIT) < 0) {
+			perror(_("Error while sending open message"));
+			return -3;
+		}
+		
+		struct answer adata;
+		
+		if (ddcpci_read(&adata) < 0) {
+			perror(_("Error while reading open message answer"));
+			return -1;
+		}
+		return adata.status;
+	}
+#endif
+	else {
+		return -1;
+	}
 }
 
 /* read at most len bytes from i2c address addr, to buf */
 /* return -1 on failure */
-static int i2c_read(int fd, unsigned int addr, unsigned char *buf, unsigned char len)
+static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, unsigned char len)
 {
-	struct i2c_rdwr_ioctl_data msg_rdwr;
-	struct i2c_msg             i2cmsg;
-	int i;
-
-	msg_rdwr.msgs = &i2cmsg;
-	msg_rdwr.nmsgs = 1;
-
-	i2cmsg.addr  = addr;
-	i2cmsg.flags = I2C_M_RD;
-	i2cmsg.len   = len;
-	i2cmsg.buf   = buf;
-
-	if ((i = ioctl(fd, I2C_RDWR, &msg_rdwr)) < 0)
-	{
-	    perror("ioctl()");
-	    fprintf(stderr,_("ioctl returned %d\n"),i);
-	    return -1;
+	if (mon->type == dev) {
+		struct i2c_rdwr_ioctl_data msg_rdwr;
+		struct i2c_msg             i2cmsg;
+		int i;
+	
+		msg_rdwr.msgs = &i2cmsg;
+		msg_rdwr.nmsgs = 1;
+	
+		i2cmsg.addr  = addr;
+		i2cmsg.flags = I2C_M_RD;
+		i2cmsg.len   = len;
+		i2cmsg.buf   = buf;
+	
+		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0)
+		{
+			perror("ioctl()");
+			fprintf(stderr,_("ioctl returned %d\n"),i);
+			return -1;
+		}
+	
+		return i;
 	}
-
-	return i;
+#ifdef HAVE_DDCPCI
+	else if (mon->type == pci) {
+		int ret;
+		struct query qdata;
+		qdata.mtype = 1;
+		qdata.qtype = QUERY_DATA;
+		qdata.addr = addr;
+		qdata.flags = I2C_M_RD;
+		qdata.len = len;
+		
+		if (msgsnd(msqid, &qdata, QUERY_SIZE, IPC_NOWAIT) < 0) {
+			perror(_("Error while sending open message"));
+			return -3;
+		}
+		
+		struct answer adata;
+		
+		if ((ret = ddcpci_read(&adata)) < 0) {
+			perror(_("Error while reading open message answer"));
+			return -1;
+		}
+		
+		memcpy(buf, adata.buffer, ret - ANSWER_SIZE);
+		
+		return ret - ANSWER_SIZE;
+	}
+#endif
+	else {
+		return -1;
+	}
 }
 
 /* stalls execution, allowing write transaction to complete */
@@ -299,7 +360,7 @@ static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char le
 	/* wait for previous command to complete */
 	ddcci_delay(mon, 1);
 
-	return i2c_write(mon->fd, mon->addr, _buf, i);
+	return i2c_write(mon, mon->addr, _buf, i);
 }
 
 /* read ddc/ci formatted frame from ddc/ci at address addr, to buf */
@@ -312,7 +373,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	/* wait for previous command to complete */
 	ddcci_delay(mon, 0);
 
-	if (i2c_read(mon->fd, mon->addr, _buf, len + 3) <= 0) /* busy ??? */
+	if (i2c_read(mon, mon->addr, _buf, len + 3) <= 0) /* busy ??? */
 	{
 		return -1;
 	}
@@ -493,8 +554,8 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 	unsigned char buf[128];
 	buf[0] = 0;	/* eeprom offset */
 	
-	if (i2c_write(mon->fd, addr, buf, 1) > 0 &&
-	    i2c_read(mon->fd, addr, buf, sizeof(buf)) > 0) 
+	if (i2c_write(mon, addr, buf, 1) > 0 &&
+	    i2c_read(mon, addr, buf, sizeof(buf)) > 0) 
 	{
 		if (verbosity) {
 			dumphex(stdout, buf, sizeof(buf));
@@ -538,6 +599,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 			fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
 			return -3;
 		}
+		mon->type = dev;
 	}
 #ifdef HAVE_DDCPCI
 	else if (strncmp(filename, "pci:", 4) == 0) {
@@ -547,13 +609,13 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		qopen.mtype = 1;
 		qopen.qtype = QUERY_OPEN;
 		
-		/*sscanf(filename, "pci:%02x:%02x.%d-%d\n", 
+		sscanf(filename, "pci:%02x:%02x.%d-%d\n", 
 			(unsigned int*)&qopen.bus.bus,
 			(unsigned int*)&qopen.bus.dev,
 			(unsigned int*)&qopen.bus.func,
-			&qopen.bus.i2cbus);*/
+			&qopen.bus.i2cbus);
 		
-		if (msgsnd(msqid, &qopen, sizeof(struct query), IPC_NOWAIT) < 0) {
+		if (msgsnd(msqid, &qopen, QUERY_SIZE, IPC_NOWAIT) < 0) {
 			perror(_("Error while sending open message"));
 			return -3;
 		}
@@ -566,11 +628,12 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 			return -3;
 		}
 		
-		return -2;
+		mon->type = pci;
 	}
 #endif
 	else {
 		fprintf(stderr, _("Invalid filename (%s).\n"), filename);
+		return -3;
 	}
 	
 	mon->addr = addr;
@@ -704,7 +767,7 @@ struct monitorlist* ddcci_probe() {
 		qlist.mtype = 1;
 		qlist.qtype = QUERY_LIST;
 		
-		if (msgsnd(msqid, &qlist, sizeof(struct query), IPC_NOWAIT) < 0) {
+		if (msgsnd(msqid, &qlist, QUERY_SIZE, IPC_NOWAIT) < 0) {
 			perror(_("Error while sending list message"));
 		}
 		else {

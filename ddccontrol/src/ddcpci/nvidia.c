@@ -103,6 +103,7 @@ static int riva_gpio_getsda(void* data)
 
 int init_i2c_bus(struct i2c_algo_bit_data* algo, char* PCIO, int ddc_base)
 {
+	//fprintf(stderr, "init_i2c_bus: (ddc_base: %#x)\n", ddc_base);
 	struct i2c_data* data = malloc(sizeof(struct i2c_data));
 	if (!data) {
 		fprintf(stderr, "Malloc error.");
@@ -122,7 +123,7 @@ int init_i2c_bus(struct i2c_algo_bit_data* algo, char* PCIO, int ddc_base)
 	/* Raise SCL and SDA */
 	riva_gpio_setsda(algo->data, 1);
 	riva_gpio_setscl(algo->data, 1);
-	usleep(20);
+	usleep(200000);
 	
 	//test_bus(algo, "Boubou");
 	
@@ -138,7 +139,7 @@ struct card* nvidia_open(struct pci_dev *dev)
 	struct card* nvidia_card = malloc(sizeof(struct card));
 	struct mem_data* data = malloc(sizeof(struct mem_data));
 	if ((!nvidia_card) || (!data)) {
-		fprintf(stderr, "Malloc error.");
+		fprintf(stderr, "nvidia_open: Malloc error.\n");
 		exit(-1);
 	}
 	memset(nvidia_card, 0, sizeof(struct card));
@@ -150,11 +151,11 @@ struct card* nvidia_open(struct pci_dev *dev)
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0]);
 	
 	if (data->memory == MAP_FAILED) {
+		fprintf(stderr, "nvidia_open: Error: mmap failed\n");
 		nvidia_close(nvidia_card);
 		return 0;
 	}
 	
-
 	char* PCIO = data->memory + 0x00601000;
 	
 	switch ((dev->device_id >> 4) & 0xff) {
@@ -167,6 +168,7 @@ struct card* nvidia_open(struct pci_dev *dev)
 	case 0x32:
 	case 0x33:
 	case 0x34:
+		//fprintf(stderr, "nvidia_open: initing 3 busses\n");
 		nvidia_card->nbusses = 3;
 		nvidia_card->i2c_busses = malloc(3*sizeof(struct i2c_algo_bit_data));
 		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x50);
@@ -179,21 +181,25 @@ struct card* nvidia_open(struct pci_dev *dev)
 	case 0x11:
 	case 0x15:
 	case 0x20:
+		//fprintf(stderr, "nvidia_open: initing 2 busses\n");
 		nvidia_card->nbusses = 2;
 		nvidia_card->i2c_busses = malloc(2*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&nvidia_card->i2c_busses[1], PCIO, 0x36);
-		init_i2c_bus(&nvidia_card->i2c_busses[2], PCIO, 0x3e);
+		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x36);
+		init_i2c_bus(&nvidia_card->i2c_busses[1], PCIO, 0x3e);
 		break;
 	case 0x03:
+		//fprintf(stderr, "nvidia_open: initing 1 bus\n");
 		nvidia_card->nbusses = 1;
 		nvidia_card->i2c_busses = malloc(1*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&nvidia_card->i2c_busses[2], PCIO, 0x3e);
+		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x3e);
 		break;
 	default:
+		//fprintf(stderr, "nvidia_open: Error: unknown card type (%#x)\n", (dev->device_id >> 4) & 0xff);
 		nvidia_close(nvidia_card);
 		return 0;
 	}
 	
+	//fprintf(stderr, "nvidia_open: OK\n");
 	return nvidia_card;
 }
 

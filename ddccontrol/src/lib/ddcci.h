@@ -21,6 +21,8 @@
 #ifndef DDCCI_H
 #define DDCCI_H
 
+#include "config.h"
+
 #include <libintl.h>
 #define _(String) gettext (String)
 #define gettext_noop(String) String
@@ -38,6 +40,12 @@ struct monitor {
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
 	struct monitor_db* db;
+	enum {
+		dev
+#ifdef HAVE_DDCPCI
+		,pci
+#endif
+	} type;
 };
 
 /* Struct used to return monitor data probed by ddcci_probe */

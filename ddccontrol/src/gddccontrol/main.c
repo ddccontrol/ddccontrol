@@ -113,6 +113,7 @@ int main( int   argc, char *argv[] )
 	}
 	
 	ddcci_verbosity(verbosity);
+	ddcpci_init();
 	
 	gtk_init(&argc, &argv);
 	
@@ -174,6 +175,8 @@ int main( int   argc, char *argv[] )
 	deleteNotebook();
 	
 	ddcci_free_list(monlist);
+	
+	ddcpci_release();
 	
 	return 0;
 }
