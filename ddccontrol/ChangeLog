@@ -1,3 +1,7 @@
+2004-09-04 21:42  nboichat
+
+	* src/ddccontrol/main.c: Show text when dumping controls.
+
 2004-09-04 21:16  nboichat
 
 	* src/lib/: ddcci.c, monitor_db.c: Fixed indentation problems and
