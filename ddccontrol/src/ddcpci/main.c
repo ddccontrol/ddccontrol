@@ -38,11 +38,13 @@
 /* card list */
 card_open cards_open[] = {
 	&nvidia_open,
+	&intel855_open,
 	NULL
 };
 
 card_close cards_close[] = {
 	&nvidia_close,
+	&intel855_close,
 	NULL
 };
 /* end of card list */

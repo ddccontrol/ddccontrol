@@ -115,7 +115,7 @@ static int riva_gpio_getsda(void* data)
 	return val;
 }
 
-int init_i2c_bus(struct i2c_algo_bit_data* algo, char* PCIO, int ddc_base)
+static int init_i2c_bus(struct i2c_algo_bit_data* algo, char* PCIO, int ddc_base)
 {
 	//fprintf(stderr, "init_i2c_bus: (ddc_base: %#x)\n", ddc_base);
 	struct i2c_data* data = malloc(sizeof(struct i2c_data));

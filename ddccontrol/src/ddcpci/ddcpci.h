@@ -37,4 +37,8 @@ typedef void (*card_close)(struct card*);
 struct card* nvidia_open (struct pci_dev *dev);
 void         nvidia_close(struct card* nvidia_card);
 
+/* Intel 855 functions */
+struct card* intel855_open (struct pci_dev *dev);
+void         intel855_close(struct card* intel855_card);
+
 #endif //DDCPCI_H
