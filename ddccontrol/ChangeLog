@@ -1,3 +1,13 @@
+2004-09-08 17:37  vdovikin
+
+	* src/ddccontrol/main.c: Fixed input type printing bug for detected
+	  monitors
+
+2004-09-08 11:00  nboichat
+
+	* src/: ddccontrol/main.c, lib/ddcci.c, lib/ddcci.h: Added monitor
+	  probing feature.
+
 2004-09-05 12:38  nboichat
 
 	* src/lib/monitor_db.c: Monitor profiles must now define address
