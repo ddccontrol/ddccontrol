@@ -24,12 +24,15 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include "monitor_db.h"
+
 struct monitor {
 	int fd;
 	unsigned int addr;
 	unsigned char pnpid[8];
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
+	struct monitor_db* db;
 };
 
 /* Struct used to return control parameters read */

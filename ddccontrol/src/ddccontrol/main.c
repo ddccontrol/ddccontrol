@@ -19,6 +19,7 @@
 */
 
 #include "ddcci.h"
+#include "monitor_db.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -29,12 +30,13 @@
 
 #include "config.h"
 
-#define RETRYS 3	/* number of retrys */
+#define RETRYS 3 /* number of retrys */
 
 void usage(char *name)
 {
 	fprintf(stderr,"Usage:\n");
-	fprintf(stderr,"%s [-d] [-c] [-f] [-v] [-s] [-r ctrl] [-w value] dev\n", name);
+	fprintf(stderr,"%s [-v] [-c] [-f] [-a] dev\n", name);
+	fprintf(stderr,"%s [-v] [-c] [-f] [-s] [-r ctrl] [-w value] dev\n", name);
 	fprintf(stderr,"\tdev: device, e.g. /dev/i2c-0\n");
 	fprintf(stderr,"\t-c : query capability\n");
 	fprintf(stderr,"\t-d : query ctrls 0 - 255\n");
@@ -64,10 +66,10 @@ int main(int argc, char **argv)
 	verbosity = 1;
 	
 	fprintf(stdout, "ddccontrol version " VERSION "\n");
-	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su) and Nicolas Boichat (nicolas@boichat.ch)\n");
+	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n");
+	fprintf(stdout, "Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n");
 	fprintf(stdout, "This program comes with ABSOLUTELY NO WARRANTY.\n");
-	fprintf(stdout, "You may redistribute copies of this program\n");
-	fprintf(stdout, "under the terms of the GNU General Public License.\n\n");
+	fprintf(stdout, "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n");
 	
 	while ((i=getopt(argc,argv,"hdr:w:csfv")) >= 0)
 	{
@@ -158,6 +160,49 @@ int main(int argc, char **argv)
 					}
 				}
 			}
+		}
+		else {
+			struct monitor_db* monitor = mon.db;
+			struct group_db* group;
+			struct control_db* control;
+			struct value_db* valued;
+			
+			verbosity--;
+			if (monitor) {		
+				printf("\n= %s\n", monitor->name);
+				
+				group = monitor->group_list;
+				while (group != NULL) {
+					printf("> %s\n", group->name);
+					
+					control = group->control_list;
+					while (control != NULL) {
+						printf("\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
+							control->id, control->name, control->address, control->delay, control->type);
+						
+						valued = control->value_list;
+						if (valued) {
+							printf("\t  Possible values:\n");
+						}
+						while (valued != NULL) {
+							printf("\t\t> id=%s - name=%s, value=%#x\n", valued->id, valued->name, valued->value);
+							valued = valued->next;
+						}
+						
+						for (retry = RETRYS; retry; retry--) {
+							if (ddcci_readctrl(&mon, control->address, force, &ctrl_ret) >= 0) {
+								printf("\t  supported=%c, value=%#x, maximum=%#x\n", 
+									ctrl_ret.supported ? '+' : '-', ctrl_ret.value, ctrl_ret.maximum);
+								break;
+							}
+						}
+						
+						control = control->next;
+					}
+					group = group->next;
+				}
+			}
+			verbosity++;
 		}
 		if (save) {
 			ddcci_save(&mon);

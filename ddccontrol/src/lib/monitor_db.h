@@ -21,14 +21,53 @@
 #ifndef MONITOR_DB_H
 #define MONITOR_DB_H
 
+#include <libxml/xmlstring.h>
+
+enum control_type {
+value = 0,
+command = 1,
+list = 2
+};
+
+enum init_type {
+standard = 0,
+samsung = 1
+};
+
+struct value_db {
+	xmlChar* id;
+	xmlChar* name;
+	unsigned char value;
+	
+	struct value_db* next;
+};
+
 struct control_db {
-	char* name; /* malloc'ed, so must be freed on deletion */
+	xmlChar* id;
+	xmlChar* name;
+	unsigned char address;
+	int delay; /* -1 indicate default value */
+	enum control_type type;
+	
 	struct control_db* next;
+	struct value_db* value_list;
 };
 
 struct group_db {
-	char* name; /* malloc'ed, so must be freed on deletion */
+	xmlChar* name;
+	
 	struct group_db* next;
+	struct control_db* control_list;
 };
+
+struct monitor_db {
+	xmlChar* name;
+	enum init_type init;
+	
+	struct group_db* group_list;
+};
+
+struct monitor_db* ddcci_create_db(const char* pnpname);
+void ddcci_free_db(struct monitor_db* mon_db);
 
 #endif

@@ -18,39 +18,45 @@ a value (for example brightness), and those with type set to "command"
 are controls that do something when the value is set to something >0
 (for example degauss), "list" indicates a list of possible value.
 
+File format:
+
+<?xml version="1.0"?>
+<options>
+  <group name="%groupname%">
+    <control id="%control_id%" type="value" name="%control_name%"/>
+    <control id="%control_id%" type="[list|command]" name="%control_name%">
+      <value id="%value_id%" name="%value_name%"/>
+      <value...>
+    </control>
+    <control ...>
+  </group>
+  <group ...>
+<options>
+
+monitor/%monitor_id%.xml
+------------------------
+
+List of controls related to this monitor.
+Controls IDs are defined in options.xml, if it is a list or a command, 
+supported values must be defined.
+
+The init parameter in monitor define the type of the initialisation:
+DDC/CI standard ("standard"), or Samsung ("samsung"). 
+
 You can set a parameter delay to set the time in milliseconds to wait
 after changing the value of this control. If you don't, a default value
 is used.
 
 File format:
 
-<group name="%groupname%">
-  <control id="%control_id%" type="[value|command]" name="%control_name%" delay="%wait_time%"/>
-  <control id="%control_id%" type="list" name="%control_name%" delay="%wait_time%">
-    <value id="%value_id%" name="%value_name%"/>
-    <value...>
-  </control>
-  <control ...>
-</group>
-<group ...>
-
-monitor/%monitor_id%.xml
-------------------------
-
-List of controls related to this monitor.
-Controls IDs are defined in options.xml, if the control is a command,
-the value to activate it must be defined, if it is a list, supported 
-values must be defined.
-
-File format:
-
-<monitor name="%full_monitor_name%">
+<?xml version="1.0"?>
+<monitor name="%full_monitor_name%" init="[standard|samsung]">
   <controls>
-    <control id="%control_id%" address="%hex_address%"/> <!--- value -->
-    <control id="%control_id%" address="%hex_address%"> <!--- command -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/> <!--- value -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"> <!--- command -->
       <value id="activate" value="%hex_value%"/>
     </control>
-    <control id="%control_id%" address="%hex_address%"> <!--- list -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"> <!--- list -->
       <value id="%value_id%" value="%hex_value%"/>
       <value...>
     </control>
@@ -61,4 +67,5 @@ File format:
 If the monitor is exactly like another one, you can define it
 as shown:
 
+<?xml version="1.0"?>
 <monitor include="%monitor_id%" name="%full_monitor_name%"/>

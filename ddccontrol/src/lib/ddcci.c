@@ -440,7 +440,7 @@ int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, in
 		fprintf(stdout, "\nUsing ddc/ci : 0x%02x@%s\n", addr, filename);
 	}
 
-	if ((mon->fd = open(filename, O_RDWR)) < -1) {
+	if ((mon->fd = open(filename, O_RDWR)) < 0) {
 		perror(filename);
 		fprintf(stderr, "Be sure you've modprobed i2c-dev and correct framebuffer device.\n");
 		return -3;
@@ -448,20 +448,34 @@ int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, in
 	
 	mon->addr = addr;
 	
-	if (ddcci_read_edid(mon, edid) < -1) {
+	if (ddcci_read_edid(mon, edid) < 0) {
 		return -2;
 	}
 	
-	/* TODO: Read database to know if we should use Samsung mode */
+	mon->db = ddcci_create_db(mon->pnpid);
 	
-	if (strncmp(mon->pnpid, "SAM", 3) == 0) {
-		if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE) < 0) {
-			return -1;
+	if (mon->db) {
+		if (mon->db->init == samsung) {
+			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE) < 0) {
+				return -1;
+			}
+		}
+		else {
+			if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
+				return -1;
+			}
 		}
 	}
-	else {
-		if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
-			return -1;
+	else { /* Alternate way of init mode detecting for unsupported monitors */
+		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
+			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE) < 0) {
+				return -1;
+			}
+		}
+		else {
+			if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
+				return -1;
+			}
 		}
 	}
 	

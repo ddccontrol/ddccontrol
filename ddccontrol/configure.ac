@@ -8,15 +8,18 @@ AC_PROG_CC
 AC_PROG_INSTALL
 
 AC_STDC_HEADERS
-AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install them.], [1])], [])
+AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 AC_CHECK_HEADERS([linux/i2c-dev.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
 
-CFLAGS="$CFLAGS -Wall"
+# libxml2 check
 
-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-if test "x$PKG_CONFIG" = "xno" ; then
-	AC_MSG_ERROR(pkg-config not found please install pkg-config)
+AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
+if test "x$XML2_CONFIG" = "xno" ; then
+   AC_MSG_ERROR(xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.)
 fi
+
+CFLAGS="$CFLAGS -Wall `xml2-config --cflags`"
+LDFLAGS="$LDFLAGS `xml2-config --libs`"
 
 # Gnome check
 
@@ -28,6 +31,11 @@ AC_ARG_ENABLE(gnome,
 
 GDDCCONTROL=
 if test x$support_gnome = xyes; then
+   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+   if test "x$PKG_CONFIG" = "xno" ; then
+      AC_MSG_ERROR(pkg-config not found, please install pkg-config)
+   fi
+
    echo -n "checking for gtk+-2.0... "
    if pkg-config --exists gtk+-2.0 ; then
       GNOME_LDFLAGS="`pkg-config --libs gtk+-2.0`"
