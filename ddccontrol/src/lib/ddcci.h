@@ -81,4 +81,6 @@ int ddcci_init();
 
 void ddcci_release();
 
+void ddcpci_send_heartbeat();
+
 #endif //DDCCI_H

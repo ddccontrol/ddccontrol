@@ -31,6 +31,7 @@
 #endif
 
 #include "ddcci.h"
+#include "ddcpci-ipc.h"
 #include "monitor_db.h"
 
 #include "notebook.h"
@@ -180,6 +181,11 @@ void setStatus(char* message)
 		gtk_main_iteration ();
 }
 
+static gboolean heartbeat(gpointer data) {
+	ddcpci_send_heartbeat();
+	return TRUE;
+}
+
 int main( int   argc, char *argv[] )
 { 
 	int i, verbosity = 0;
@@ -216,6 +222,8 @@ int main( int   argc, char *argv[] )
 		gtk_widget_destroy (dialog);
 		return 1;
 	}
+	
+	g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
 	
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window),_("Monitor settings"));

@@ -25,6 +25,8 @@
 #include <fcntl.h>
 #include <string.h>
 
+#include <time.h>
+
 #include <sys/msg.h>
 #include <sys/ipc.h>
 
@@ -264,19 +266,30 @@ int main(int argc, char **argv)
 	
 	int cont = 1;
 	int len = 0;
+	
+	time_t last = time(NULL);
+	
 	while (cont) {
 		if ((len = msgrcv(msqid, &mquery, sizeof(struct query), 1, IPC_NOWAIT)) < 0) {
 			if (errno == ENOMSG) {
+				if ((time(NULL) - last) > (IDLE_TIMEOUT*1.1)) {
+					fprintf(stderr, _("==>No command received for %ld seconds, aborting.\n"), (time(NULL) - last));
+					cont = 0;
+					msgctl(msqid, IPC_RMID, NULL);
+					break;
+				}
 				usleep(10000);
 				continue;
 			}
-			perror(_("==>Error while receiving query"));
+			perror(_("==>Error while receiving query\n"));
 			break;
 		}
 		
 		if (verbosity == 2) {
 			printf("==>Received!\n");
 		}
+		
+		last = time(NULL);
 		
 		switch (mquery.qtype) {
 		case QUERY_LIST:
@@ -287,6 +300,11 @@ int main(int argc, char **argv)
 			break;
 		case QUERY_DATA:
 			data(&mquery, len);
+			break;
+		case QUERY_HEARTBEAT:
+			if (verbosity == 2) {
+				printf("==>Heartbeat received.\n");
+			}
 			break;
 		case QUERY_QUIT:
 			if (verbosity == 2) {

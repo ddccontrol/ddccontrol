@@ -84,13 +84,8 @@ void ddcci_verbosity(int _verbosity)
 
 static int msqid = -2;
 
-int ddcci_init()
+int ddcpci_init()
 {
-	if (!ddcci_init_db()) {
-		printf(_("Failed to initialize ddccontrol database...\n"));
-		return 0;
-	}
-	
 	if (msqid == -2) {
 		if (verbosity) {
 			printf("ddcpci initing...\n");
@@ -116,7 +111,7 @@ int ddcci_init()
 	return (msqid >= 0);
 }
 
-void ddcci_release()
+void ddcpci_release()
 {
 	if (verbosity) {
 		printf("ddcpci being released...\n");
@@ -127,14 +122,13 @@ void ddcci_release()
 		qlist.qtype = QUERY_QUIT;
 		
 		if (msgsnd(msqid, &qlist, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending list message"));
+			perror(_("Error while sending quit message"));
 		}
 		
 		usleep(20000);
 		
 		msgctl(msqid, IPC_RMID, NULL);
 	}
-	ddcci_release_db();
 }
 
 /* Returns : 0 - OK, negative value - timed out or another error */
@@ -165,13 +159,42 @@ int ddcpci_read(struct answer* manswer)
 	}
 }
 
+/* Send heartbeat so ddcpci doesn't timeout */
+void ddcpci_send_heartbeat() {
+	if (msqid >= 0) {
+		struct query qheart;
+		qheart.mtype = 1;
+		qheart.qtype = QUERY_HEARTBEAT;
+		
+		if (msgsnd(msqid, &qheart, QUERY_SIZE, IPC_NOWAIT) < 0) {
+			perror(_("Error while sending heartbeat message"));
+		}
+	}
+}
+
 #else
 int ddcpci_init() {
-	return 0;
+	return 1;
 }
 
 void ddcpci_release() {}
+
+void ddcpci_send_heartbeat() {}
 #endif
+
+int ddcci_init()
+{
+	if (!ddcci_init_db()) {
+		printf(_("Failed to initialize ddccontrol database...\n"));
+		return 0;
+	}
+	return ddcpci_init();
+}
+
+void ddcci_release() {
+	ddcpci_release();
+	ddcci_release_db();
+}
 
 /* debugging */
 static void dumphex(FILE *f, unsigned char *buf, unsigned char len)

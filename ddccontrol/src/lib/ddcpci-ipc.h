@@ -28,6 +28,9 @@
 
 #include <pci/pci.h>
 
+/* If ddcpci receives no connections during IDLE_TIMEOUT seconds, it will break the connection and exit. */
+#define IDLE_TIMEOUT 60
+
 struct i2c_bus {
 	int bus;
 	int dev;
@@ -40,10 +43,11 @@ struct i2c_bus {
 #define ANSWER_SIZE (sizeof(struct answer) - (MAX_BUFFER_SIZE))
 
 /* ddccontrol to ddcpci messages (queries) */
-#define QUERY_LIST 0  /* Nothing should be defined */
-#define QUERY_OPEN 1  /* i2c_bus must be defined */
-#define QUERY_DATA 2  /* addr and flags must be defined (and buffer for write operations) */
-#define QUERY_QUIT 3  /* Nothing should be defined */
+#define QUERY_LIST 0       /* Nothing should be defined */
+#define QUERY_OPEN 1       /* i2c_bus must be defined */
+#define QUERY_DATA 2       /* addr and flags must be defined (and buffer for write operations) */
+#define QUERY_HEARTBEAT 3  /* Nothing should be defined */
+#define QUERY_QUIT 4       /* Nothing should be defined */
 
 struct query {
 	long mtype; /* Always 1 */
