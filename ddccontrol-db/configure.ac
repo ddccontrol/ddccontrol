@@ -4,7 +4,10 @@ AC_INIT([DDC/CI control tool database], [`date +%Y%m%d`],
 AM_INIT_AUTOMAKE
 AC_PROG_INSTALL
 
-AC_CONFIG_FILES([
+AM_GNU_GETTEXT([external])
+
+AC_CONFIG_FILES([ 
+	po/Makefile.in
 	Makefile
 	db/Makefile])
 AC_OUTPUT

@@ -129,12 +129,13 @@
 			</control>
 			<control id="language" type="list" name="Language select" address="0x68">
 				<value id="english" name="English"/>
-				<value id="french" name="Francais"/>
-				<value id="deutsch" name="Deutsch"/>
-				<value id="italian" name="Italiano"/>
+				<value id="french" name="French"/>
+				<value id="deutsch" name="German"/>
+				<value id="italian" name="Italian"/>
 				<value id="russian" name="Russian"/>
-				<value id="spanish" name="Espanol"/>
-				<value id="svenska" name="Svenska"/>
+				<value id="spanish" name="Spanish"/>
+				<value id="swedish" name="Swedish"/>
+				<value id="chinese" name="Chinese"/>
 			</control>
 		</subgroup>
 		<subgroup name="Input settings">
