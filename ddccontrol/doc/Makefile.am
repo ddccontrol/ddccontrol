@@ -4,7 +4,7 @@ XHTML_STYLESHEET=style.xsl
 
 htmldir = $(prefix)/share/doc/@PACKAGE@
 dist_html_DATA = html/*
-EXTRA_DIST = main.xml gpl.xml style.xsl
+EXTRA_DIST = main.xml gpl.xml style.xsl style-fo.xsl
 
 html/*: main.xml gpl.xml style.xsl
 	rm -rf html.old
@@ -27,6 +27,7 @@ spell:
 
 clean:
 	rm -rf html
+	rm -f ddccontrol.fo ddccontrol.pdf
 
 ddccontrol.fo: main.xml gpl.xml style-fo.xsl
 	$(XSLTPROC)  \
