@@ -1,3 +1,12 @@
+2005-03-20 14:46  nboichat
+
+	* Makefile.am, Makefile.in, configure, configure.ac,
+	  doc/.cvsignore, doc/Makefile.am, doc/Makefile.in, doc/main.xml,
+	  doc/xml-design.txt, src/Makefile.in, src/ddccontrol/Makefile.in,
+	  src/ddcpci/Makefile.in, src/gddccontrol/Makefile.in,
+	  src/lib/Makefile.in: Add doc building to make process, merged
+	  xml-design.txt in the docbook document.
+
 2005-03-19 19:23  nboichat
 
 	* configure, configure.ac, doc/main.xml: Fix GTK+ check: we at
