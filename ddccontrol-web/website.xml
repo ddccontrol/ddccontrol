@@ -16,7 +16,6 @@
 <para>DDCcontrol is a program running on Linux, used to control monitor
 parameters, like brightness and contrast, by software, i.e. without using the
 OSD (On Screen Display) and the buttons in front of the monitor.</para>
-<para>It currently runs on Linux.</para>
 <para>For more informations see <olink targetdoc="doc" targetptr="doc"> the
 documentation</olink>.</para>
 </section>
