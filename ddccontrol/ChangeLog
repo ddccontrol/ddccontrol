@@ -1,3 +1,12 @@
+2004-09-02 17:34  nboichat
+
+	* doc/xml-design.txt, src/ddccontrol/main.c, src/lib/monitor_db.c:
+	  New XML design.
+
+2004-08-31 22:36  nboichat
+
+	* ChangeLog: Update Changelog
+
 2004-08-31 22:35  nboichat
 
 	* ChangeLog, Makefile.am, Makefile.in, configure, configure.ac,
