@@ -1,3 +1,8 @@
+2004-09-04 15:14  nboichat
+
+	* db/: options.xml, monitor/MEL4513.xml: Replace leading spaces by
+	  tabs.
+
 2004-09-04 14:57  nboichat
 
 	* db/monitor/MEL4513.xml: Modify MEL4513.
