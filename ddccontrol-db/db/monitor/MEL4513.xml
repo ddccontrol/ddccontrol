@@ -37,17 +37,9 @@
     <control id="blpurity"/>
     <control id="brpurity"/>
 
-    <control id="degauss">
-      <value id="degauss"/>
-    </control>
-    <control id="defaults">
-      <value id="defaults"/>
-	</control>
-    <control id="defaultgeom">
-      <value id="defaultgeom"/>
-	</control>
-    <control id="defaultcolor">
-      <value id="defaultcolor"/>
-	</control>
+    <control id="degauss"/>
+    <control id="defaults"/>
+    <control id="defaultgeom"/>
+    <control id="defaultcolor"/>
   </controls>
 </monitor>
