@@ -1,3 +1,7 @@
+2004-09-05 08:45  vdovikin
+
+	* src/ddccontrol/main.c: Simplified dumpctrl lookup code
+
 2004-09-04 21:42  nboichat
 
 	* src/ddccontrol/main.c: Show text when dumping controls.
