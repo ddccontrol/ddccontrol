@@ -142,7 +142,7 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (currentbutton), 0);
 	}
 	
-	int retry;
+	int retry = 1;
 	
 	struct control_db* control = (struct control_db*)data;
 	currentControl = NULL;
@@ -151,9 +151,11 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 	{
 		currentbutton = widget;
 		gtk_label_set_text(GTK_LABEL(valuelabel), control->name);
-		for (retry = RETRYS; retry; retry--) {
-			if (ddcci_readctrl(&mon, control->address, &currentDefault, &currentMaximum)) {
-				break;
+		if (control->type != command) { /* Don't read the current value if the control is a command */
+			for (retry = RETRYS; retry; retry--) {
+				if (ddcci_readctrl(&mon, control->address, &currentDefault, &currentMaximum) >= 0) {
+					break;
+				}
 			}
 		}
 		if (retry > 0)
