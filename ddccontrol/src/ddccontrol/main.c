@@ -49,29 +49,29 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 		{
 			if ((result > 0) || force)
 			{
-				if (monitor) {
-					group = monitor->group_list;
-					while ((group != NULL) && (controlname == NULL)) {
-						control = group->control_list;
-						while ((control != NULL) && (controlname == NULL)) {
-							valued = control->value_list;
-							
-							while ((valued != NULL) && (valuename == NULL)) {
-								if (valued->value == value) {
-									valuename = valued->name;
-									break;
-								}
-								valued = valued->next;
-							}
-							
-							if (control->address == ctrl) {
+				if (monitor) 
+				{
+					/* loop through groups */
+					for (group = monitor->group_list; (group != NULL) && 
+							(controlname == NULL); group = group->next) 
+					{
+						/* loop through controls inside group */
+						for (control = group->control_list; (control != NULL); control = control->next) 
+						{
+							/* check for control id */
+							if (control->address == ctrl) 
+							{
 								controlname = control->name;
+								/* look for the value */
+								for (valued = control->value_list; (valued != NULL); valued = valued->next) {
+									if (valued->value == value) {
+										valuename = valued->name;
+										break;
+									}
+								}
 								break;
 							}
-							
-							control = control->next;
 						}
-						group = group->next;
 					}
 				}
 				if (controlname == NULL) {
@@ -92,64 +92,10 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 	}
 }
 
-/* Show database for the monitor_db monitor.
- * If mon is not NULL, query control values.
- */
-static void showdatabase(struct monitor_db* monitor, struct monitor* mon)
-{
-	struct group_db* group;
-	struct control_db* control;
-	struct value_db* valued;
-	
-	int retry;
-	
-	if (monitor)
-	{
-		printf("\n= %s\n", monitor->name);
-		
-		for (group = monitor->group_list; group != NULL; group = group->next)
-		{
-			printf("> %s\n", group->name);
-			
-			for (control = group->control_list; control != NULL; control = control->next)
-			{
-				printf("\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
-					control->id, control->name, control->address, control->delay, control->type);
-				
-				valued = control->value_list;
-				if (valued) {
-					printf("\t  Possible values:\n");
-				}
-				
-				for (; valued != NULL; valued = valued->next) {
-					printf("\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
-				}
-				
-				for (retry = RETRYS; retry; retry--)
-				{
-					int result;
-					unsigned short value, maximum;
-					
-					if (mon) {
-						if ((result = ddcci_readctrl(mon, control->address, &value, &maximum)) >= 0) {
-							printf("\t  %ssupported, value=%d, maximum=%d\n", 
-								(result > 0) ? "" : "not ", value, maximum);
-							break;
-						}
-					}
-				}
-				
-				
-			}
-		}
-	}
-}
-
 static void usage(char *name)
 {
 	fprintf(stderr,"Usage:\n");
 	fprintf(stderr,"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] dev\n", name);
-	fprintf(stderr,"%s [-v] [-q] pnpid\n", name);
 	fprintf(stderr,"\tdev: device, e.g. /dev/i2c-0\n");
 	fprintf(stderr,"\t-c : query capability\n");
 	fprintf(stderr,"\t-d : query ctrls 0 - 255\n");
@@ -158,8 +104,6 @@ static void usage(char *name)
 	fprintf(stderr,"\t-f : force (avoid validity checks)\n");
 	fprintf(stderr,"\t-s : save settings\n");
 	fprintf(stderr,"\t-v : verbosity (specify more to increase)\n");
-	fprintf(stderr,"\tpnpid: pnpid, e.g. MEL4513\n");
-	fprintf(stderr,"\t-q : query the database about controls supported by the monitor indicated by pnpid\n");
 }
 
 int main(int argc, char **argv)
@@ -178,7 +122,6 @@ int main(int argc, char **argv)
 	int save = 0;
 	int force = 0;
 	int verbosity = 0;
-	int querydb = 0;
 	
 	fprintf(stdout, "ddccontrol version " VERSION "\n");
 	fprintf(stdout, "Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n");
@@ -186,7 +129,7 @@ int main(int argc, char **argv)
 	fprintf(stdout, "This program comes with ABSOLUTELY NO WARRANTY.\n");
 	fprintf(stdout, "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n");
 	
-	while ((i=getopt(argc,argv,"hdr:w:csfvq")) >= 0)
+	while ((i=getopt(argc,argv,"hdr:w:csfv")) >= 0)
 	{
 		switch(i) {
 		case 'h':
@@ -208,7 +151,7 @@ int main(int argc, char **argv)
 			}
 			break;
 		case 'c':
-			caps++;
+				caps++;
 			break;
 		case 'd':
 			dump++;
@@ -222,9 +165,6 @@ int main(int argc, char **argv)
 		case 'v':
 			verbosity++;
 			break;
-		case 'q':
-			querydb++;
-			break;
 		}
 	}
 	
@@ -237,25 +177,6 @@ int main(int argc, char **argv)
 	fn = argv[optind];
 	
 	ddcci_verbosity(verbosity);
-	
-	if (querydb) {
-		struct monitor_db* monitor;
-		
-		fprintf(stdout, "Reading DB for pnpid %s...\n", fn);
-		
-		monitor = ddcci_create_db(fn);
-		
-		if (monitor) {
-			showdatabase(monitor, NULL);
-			
-			ddcci_free_db(monitor);
-		}
-		else {
-			fprintf(stdout, "Error while reading the DB.\n");
-		}
-		
-		exit(0);
-	}
 	
 	fprintf(stdout, "Reading EDID and initializing DDC/CI at bus %s...\n", fn);
 	
@@ -303,8 +224,51 @@ int main(int argc, char **argv)
 				dumpctrl(&mon, i, force);
 			}
 		}
-		else if (ctrl == -1 && caps == 0) {
-			showdatabase(mon.db, &mon);
+		else if (ctrl == -1 && caps == 0) 
+		{
+			struct monitor_db* monitor = mon.db;
+			struct group_db* group;
+			struct control_db* control;
+			struct value_db* valued;
+			
+			if (monitor) {		
+				printf("\n= %s\n", monitor->name);
+				
+				group = monitor->group_list;
+				while (group != NULL) {
+					printf("> %s\n", group->name);
+					
+					control = group->control_list;
+					while (control != NULL) {
+						printf("\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n", 
+							control->id, control->name, control->address, control->delay, control->type);
+						
+						valued = control->value_list;
+						if (valued) {
+							printf("\t  Possible values:\n");
+						}
+						
+						while (valued != NULL) {
+							printf("\t\t> id=%s - name=%s, value=%d\n", valued->id, valued->name, valued->value);
+							valued = valued->next;
+						}
+						
+						for (retry = RETRYS; retry; retry--) {
+							int result;
+							unsigned short value, maximum;
+							
+							if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
+								printf("\t  %ssupported, value=%d, maximum=%d\n", 
+									(result > 0) ? "" : "not ", value, maximum);
+								break;
+							}
+						}
+						
+						control = control->next;
+					}
+					group = group->next;
+				}
+			}
 		}
 		
 		if (save) {
