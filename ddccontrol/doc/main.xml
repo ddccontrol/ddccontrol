@@ -8,9 +8,7 @@
 <author>
 <firstname>Nicolas</firstname>
 <surname>Boichat</surname>
-<affiliation>
-        <address><email>nicolas@boichat.ch</email></address>
-</affiliation>
+<email>nicolas@boichat.ch</email>
 </author>
 
 <copyright><year>2005</year>
@@ -47,7 +45,7 @@ using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
 
 <sect1 id="requirement">
 <title>Software Requirement</title>
-<para>To compile and run DDCcontrol, you usually need to install these packages:</para>
+<para>To compile and run DDCcontrol, you need to install these packages:</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
@@ -78,8 +76,12 @@ Usually, this is not the case, so you will need these packages.
 <para>Go to the <ulink url="http://sourceforge.net/project/showfiles.php?group_id=117933">download section</ulink>
 of ddccontrol project's page and download the latest
 ddccontrol and ddccontrol-db source tarballs.</para>
-<para>Then unpack these two archives, you should have two directories, ddccontrol and
-ddccontrol-db.</para>
+<para>Then unpack these two archives with these commands:</para>
+<screen format="linespecific">
+# tar xvfz ddccontrol-0.1.tar.gz
+# tar xvfz ddccontrol-db-0.1.tar.gz
+</screen>
+<para>You should now have two directories, ddccontrol and ddccontrol-db.</para>
 </sect1>
  
 <sect1 id="compile">
@@ -88,6 +90,8 @@ ddccontrol-db.</para>
 <screen format="linespecific">
 # ./configure
 # make
+# su root
+Password: <userinput>&lt;root password&gt;</userinput>
 # make install
 </screen>
 <para>You need to do this in ddccontrol <emphasis>and</emphasis> ddccontrol-db directories.</para>
@@ -95,9 +99,231 @@ ddccontrol-db.</para>
 same value when configuring the second.</para>
 </sect1>
 
+<sect1 id="kerneli2c">
+<title>Configure /dev/i2c-* devices</title>
+<note>/dev/i2c-* devices are only working with kernel 2.6 or greater.</note>
+<para>If your graphics card is supported by /dev/i2c-* devices (see (***list***)), you must load the i2c-dev module by typing, as root:</para>
+<screen format="linespecific">
+# modprobe i2c-dev
+</screen>
+<para>You must also load your graphics card framebuffer driver (for card-specific instructions see in (***list***)).</para>
+<para>If you want to load these modules automatically when Linux starts, see your distrubution's documentation.</para>
+<para>To allow standard (non-root) users to use ddccontrol, you must change the permissions on /dev/i2c-*. This is done by typing, as root:</para>
+<screen format="linespecific">
+# chmod a+rw /dev/i2c-*
+</screen>
+<sect2>
+<title>Kernel configuration options</title>
+<para>If i2c-dev or your graphics card's framebuffer modules are not available with your kernel, 
+you can build your own kernel with the following options turned on (with recommend to build them
+as modules):</para>
+<itemizedlist mark='bullet'>
+<listitem>
+Devices drivers-&gt;I2C support-&gt;I2C support.
+</listitem>
+<listitem>
+Devices drivers-&gt;I2C support-&gt;I2C device interface.
+</listitem>
+<listitem>
+Devices drivers-&gt;Graphics support-&gt;Framebuffer support.
+</listitem>
+<listitem>
+and a specific driver for your graphic card (see (***list***)).
+</listitem>
+</itemizedlist>
+</sect2>
+</sect1>
 </chapter>
 
-<chapter id="techdocs">
+<appendix id="supportedmonitors">
+<title>Supported monitors</title>
+<para>The following monitors are supported by DDCcontrol:</para>
+<sect3>
+<title>Mitsubishi</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Diamond Pro 2060u (VGA1 input only (***verify***))
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>NEC</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Multisync 2080UX+ (VGA and DVI inputs)
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>Samsung</title>
+<itemizedlist mark='bullet'>
+<listitem>
+SyncMaster 173P (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 173T
+</listitem>
+<listitem>
+SyncMaster 193P (VGA and DVI inputs)
+</listitem>
+</itemizedlist>
+</sect3>
+</appendix>
+
+
+
+<appendix id="supportedgc">
+<title>Supported graphics cards</title>
+<note>
+<para>To control a monitor, DDCcontrol must access to the I2C bus of the graphics card.
+They are two methods to do so: the first one uses /dev/i2c-* devices provided by
+kernel drivers (abbreviated by dev in tables), the second one reads and writes directly on the 
+card PCI memory (abbreviated by PCI in tables).</para>
+<para>Depending on your hardware, one method or the other works, or even both.</para>
+</note>
+<sect1>
+<title>ATI</title>
+<sect2>
+<title>Radeon series</title>
+<para>ATI Radeon cards only work with /dev/i2c-* devices. To use them, you must load the radeonfb module by typing, as root:</para>
+<screen format="linespecific">
+# modprobe radeonfb
+</screen>
+<para>The kernel configuration options needed to enable Radeon framebuffer and I2C support are:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;ATI Radeon display support
+</listitem>
+<listitem>
+Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;ATI Radeon display support-&gt;DDC/I2C for ATI Radeon support
+</listitem>
+</itemizedlist>
+</sect2>
+<sect3>
+<title>ATI cards support table</title>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center"/>
+<colspec colname='pci' align="center"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>Radeon 7500</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+<row>
+  <entry>Radeon 9200</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+<row>
+  <entry>Radeon 9500</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+<row>
+  <entry>Radeon 9550 SE</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+<row>
+  <entry>Radeon 9600 Pro</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+<row>
+  <entry>Radeon 9700</entry>
+  <entry>Yes</entry>
+  <entry>No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
+<title>nVidia</title>
+<sect2>
+<title>Direct PCI memory access support</title>
+<para>Almost every nVidia cards works with direct PCI memory access, and it is compatible with the nVidia proprietary drivers.</para>
+<para>To use it, you have nothing special to do, everything is done by DDCcontrol.</para>
+</sect2>
+<sect2>
+<title>/dev/i2c-* devices support</title>
+<note>To use /dev/i2c-* devices with nVidia cards, you must have a rather recent kernel (at least version 2.6.9).</note>
+<para>Most nVidia cards, starting with TNT, but excluding the most recent GeForce FX serie, work with /dev/i2c-* devices. 
+To use them, you must load the rivafb module by typing, as root:</para>
+<screen format="linespecific">
+# modprobe rivafb
+</screen>
+<para>The kernel configuration options needed to enable nVidia framebuffer and I2C support are:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;nVidia Riva support
+</listitem>
+<listitem>
+Devices drivers-&gt;Graphics support-&gt;Framebuffer support-&gt;nVidia Riva support-&gt;Enable DDC Support
+</listitem>
+</itemizedlist>
+<warning>
+<para>The rivafb kernel module is <emphasis>not</emphasis> compatible with the binary nVidia X drivers,
+which are the only drivers for nVidia cards to provide 3D acceleration.</para>
+<para>This is why we recommend that you use direct PCI memory access with nVidia cards.</para>
+</warning>
+</sect2>
+<sect3>
+<title>nVidia cards support table</title>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center"/>
+<colspec colname='pci' align="center"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>GeForce Ti 200</entry>
+  <entry>Yes</entry>
+  <entry>Yes</entry>
+</row>
+<row>
+  <entry>GeForce FX 5700</entry>
+  <entry>No</entry>
+  <entry>Yes</entry>
+</row>
+<row>
+  <entry>nForce 2 IGP</entry>
+  <entry>No</entry>
+  <entry>No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+</appendix>
+
+<appendix id="techdocs">
 <title>Documents for developpers</title>
 <sect1 id="xmlstruct">
 <title>Monitor database structure</title>
@@ -240,5 +466,5 @@ is used.</para>
 ]]></screen>
 </sect2>
 </sect1>
-</chapter>
+</appendix>
 </book>
