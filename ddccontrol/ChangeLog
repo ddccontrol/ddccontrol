@@ -1,3 +1,9 @@
+2005-04-02 12:28  nboichat
+
+	* src/: ddcpci/main.c, gddccontrol/main.c, lib/ddcci.c,
+	  lib/ddcci.h, lib/ddcpci-ipc.h: Add timeout in the connection
+	  between (g)ddccontrol and ddcpci.
+
 2005-04-01 18:30  nboichat
 
 	* commit.sh: Add tag names in ChangeLog.
