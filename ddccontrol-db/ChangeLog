@@ -1,3 +1,8 @@
+2004-09-05 12:35  nboichat
+
+	* db/monitor/MEL4513.xml: Updated MEL4513 to include addresses for
+	  all controls
+
 2004-09-05 12:29  vdovikin
 
 	* db/monitor/SAM00BA.xml: Updated SAM00BA to include addresses for

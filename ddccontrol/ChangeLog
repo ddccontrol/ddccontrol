@@ -1,3 +1,8 @@
+2004-09-05 12:38  nboichat
+
+	* src/lib/monitor_db.c: Monitor profiles must now define address
+	  for all controls and values.
+
 2004-09-05 12:10  nboichat
 
 	* TODO, src/lib/monitor_db.c: Allow decimal values and addresses in
