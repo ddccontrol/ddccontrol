@@ -579,5 +579,11 @@ struct monitorlist* ddcci_probe() {
 }
 
 void ddcci_free_list(struct monitorlist* list) {
-	/* To be implemented... */
+	if (list == NULL) {
+		return;
+	}
+	free(list->filename);
+	free(list->name);
+	ddcci_free_list(list->next);
+	free(list);
 }

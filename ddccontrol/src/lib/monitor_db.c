@@ -408,7 +408,58 @@ struct monitor_db* ddcci_create_db(const char* pnpname)
 	return ddcci_create_db_protected(pnpname, 0);
 }
 
-void ddcci_free_db(struct monitor_db* mon_db)
+void ddcci_free_db(struct monitor_db* monitor)
 {
-	/* TODO: implement... */
+	struct group_db    *group,    *ogroup;
+	struct subgroup_db *subgroup, *osubgroup;
+	struct control_db  *control,  *ocontrol;
+	struct value_db    *value,    *ovalue;
+	
+	xmlFree(monitor->name);
+	
+	/* free groups */
+	group = monitor->group_list;
+	while (group != NULL) 
+	{
+		xmlFree(group->name);
+		
+		/* free subgroups inside group */
+		subgroup = group->subgroup_list;
+		while (subgroup != NULL)
+		{
+			xmlFree(subgroup->name);
+			
+			/* free controls inside subgroup */
+			control = subgroup->control_list;
+			while (control != NULL)
+			{
+				xmlFree(control->name);
+				xmlFree(control->id);
+				
+				/* free controls' value list */
+				value = control->value_list;
+				while (value != NULL)
+				{
+					xmlFree(value->name);
+					xmlFree(value->id);
+					
+					ovalue = value;
+					value = ovalue->next;
+					free(ovalue);
+				}
+				
+				ocontrol = control;
+				control = ocontrol->next;
+				free(ocontrol);
+			}
+			
+			osubgroup = subgroup;
+			subgroup = osubgroup->next;
+			free(osubgroup);
+		}
+		
+		ogroup = group;
+		group = ogroup->next;
+		free(ogroup);
+	}
 }

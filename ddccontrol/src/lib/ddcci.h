@@ -37,10 +37,10 @@ struct monitor {
 
 /* Struct used to return monitor data probed by ddcci_probe */
 struct monitorlist {
-	const char* filename; /* I2C device filename */
+	char* filename; /* I2C device filename */
 	
 	unsigned char supported; /* 0 - DDC/CI not supported, 1 - DDC/CI supported */
-	const char* name;
+	char* name;
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	
 	struct monitorlist* next;
