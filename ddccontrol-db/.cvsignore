@@ -3,6 +3,4 @@ Makefile
 config.status
 config.log
 ChangeLog.bak
-config.guess
 config.rpath
-config.sub
