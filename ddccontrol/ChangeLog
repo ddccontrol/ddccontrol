@@ -1,3 +1,8 @@
+2004-08-31 22:35  nboichat
+
+	* ChangeLog, Makefile.am, Makefile.in, configure, configure.ac,
+	  src/lib/monitor_db.c: Add support for external database.
+
 2004-08-31 14:08  nboichat
 
 	* Makefile.in, configure, configure.ac, doc/xml-design.txt,
