@@ -1,3 +1,10 @@
+2004-09-10 09:53  nboichat
+
+	* doc/xml-design.txt, src/ddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/lib/monitor_db.c,
+	  src/lib/monitor_db.h: New database format (added subgroups in
+	  groups).
+
 2004-09-08 22:21  nboichat
 
 	* configure, configure.ac, src/config.h.in,

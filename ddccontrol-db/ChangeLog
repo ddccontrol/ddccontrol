@@ -1,3 +1,8 @@
+2004-09-10 09:54  nboichat
+
+	* db/monitor/: MEL4513.xml, SAM00BA.xml: Languages added to
+	  MEL4513.
+
 2004-09-09 22:20  nboichat
 
 	* db/options.xml: Fixed XML format problem.
