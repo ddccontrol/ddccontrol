@@ -1,3 +1,15 @@
+2005-03-25 20:08  nboichat
+
+	* doc/Makefile.am, doc/Makefile.in, doc/main.xml, po/POTFILES.in,
+	  po/ddccontrol.pot, po/fr.gmo, po/fr.po, src/ddccontrol/main.c,
+	  src/ddcpci/Makefile.am, src/ddcpci/Makefile.in,
+	  src/ddcpci/ddcpci.h, src/ddcpci/i2c-algo-bit.c,
+	  src/ddcpci/main.c, src/ddcpci/nvidia.c, src/gddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/lib/ddcci.c: Fix compilation warnings.
+	  Include all needed files when building source tarballs.  French
+	  translation updates.
+
 2005-03-24 14:43  nboichat
 
 	* Makefile.in, THANKS, doc/.cvsignore, doc/Makefile.am,
