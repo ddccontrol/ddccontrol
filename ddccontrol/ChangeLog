@@ -3,13 +3,9 @@
 	* doc/xml-design.txt, src/ddccontrol/main.c, src/lib/monitor_db.c:
 	  New XML design.
 
-2004-08-31 22:36  nboichat
-
-	* ChangeLog: Update Changelog
-
 2004-08-31 22:35  nboichat
 
-	* ChangeLog, Makefile.am, Makefile.in, configure, configure.ac,
+	* Makefile.am, Makefile.in, configure, configure.ac,
 	  src/lib/monitor_db.c: Add support for external database.
 
 2004-08-31 14:08  nboichat
@@ -34,29 +30,27 @@
 
 	* Makefile.am, NEWS, README, configure.ac, Makefile.in, THANKS,
 	  aclocal.m4, configure, install-sh, missing, INSTALL, COPYING,
-	  .cvsignore, AUTHORS, ChangeLog, autogen.sh, depcomp,
-	  src/Makefile.am, src/Makefile.in, src/config.h.in,
-	  src/lib/Makefile.am, src/lib/Makefile.in,
-	  src/gddccontrol/Makefile.am, src/lib/ddcci.c, src/lib/ddcci.h,
-	  src/lib/monitor_db.c, src/lib/monitor_db.h,
-	  src/ddccontrol/Makefile.am, src/gddccontrol/.cvsignore,
-	  src/gddccontrol/Makefile.in, src/gddccontrol/.deps/main.Po,
-	  src/gddccontrol/.deps/notebook.Po, doc/xml-design.txt,
-	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c: Initial
-	  import.
+	  .cvsignore, AUTHORS, autogen.sh, depcomp, src/Makefile.am,
+	  src/Makefile.in, src/config.h.in, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/gddccontrol/Makefile.am,
+	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
+	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
+	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
+	  src/ddccontrol/main.c: Initial import.
 
 2004-08-30 23:19  nboichat
 
 	* Makefile.am, NEWS, README, configure.ac, Makefile.in, THANKS,
 	  aclocal.m4, configure, install-sh, missing, INSTALL, COPYING,
-	  .cvsignore, AUTHORS, ChangeLog, autogen.sh, depcomp,
-	  src/Makefile.am, src/Makefile.in, src/config.h.in,
-	  src/lib/Makefile.am, src/lib/Makefile.in,
-	  src/gddccontrol/Makefile.am, src/lib/ddcci.c, src/lib/ddcci.h,
-	  src/lib/monitor_db.c, src/lib/monitor_db.h,
-	  src/ddccontrol/Makefile.am, src/gddccontrol/.cvsignore,
-	  src/gddccontrol/Makefile.in, src/gddccontrol/.deps/main.Po,
-	  src/gddccontrol/.deps/notebook.Po, doc/xml-design.txt,
-	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c: Initial
-	  revision
+	  .cvsignore, AUTHORS, autogen.sh, depcomp, src/Makefile.am,
+	  src/Makefile.in, src/config.h.in, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/gddccontrol/Makefile.am,
+	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
+	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
+	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
+	  src/ddccontrol/main.c: Initial revision
 

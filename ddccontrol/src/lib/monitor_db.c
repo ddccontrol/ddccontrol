@@ -39,7 +39,7 @@
 		return value; \
 	}
 
-int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control) {
+int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command) {
 	xmlNodePtr value, cur;
 	xmlChar *options_valueid, *options_valuename, *mon_valueid;
 	int options_value;
@@ -56,7 +56,14 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			options_valueid   = xmlGetProp(value, "id");
 			DDCCI_RETURN_IF(options_valueid == NULL, -1, "Can't find id property.", value);
 			options_valuename = xmlGetProp(value, "name");
-			DDCCI_RETURN_IF(options_valuename == NULL, -1, "Can't find name property.", value);
+			if (command) {
+				if (options_valuename == NULL) {
+					options_valuename = current_control->name;
+				}
+			}
+			else {
+				DDCCI_RETURN_IF(options_valuename == NULL, -1, "Can't find name property.", value);
+			}
 			
 			tmp = xmlGetProp(value, "value");
 			if (tmp != NULL) {
@@ -307,13 +314,13 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 								}
 								else if (!(xmlStrcmp(tmp, (const xmlChar *)"command"))) {
 									current_control->type = command;
-									if (ddcci_get_value_list(control, cur, current_control) < 0) {
+									if (ddcci_get_value_list(control, cur, current_control, 1) < 0) {
 										return NULL;
 									}
 								}
 								else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
 									current_control->type = list;
-									if (ddcci_get_value_list(control, cur, current_control) < 0) {
+									if (ddcci_get_value_list(control, cur, current_control, 0) < 0) {
 										return NULL;
 									}
 								}
