@@ -3,7 +3,7 @@ version=@VERSION@
 datadir=@datadir@/ddccontrol-db
 
 nobase_dist_data_DATA = *.xml monitor/*.xml
-EXTRA_DIST = options.xml.in
+EXTRA_DIST = options.xml.in options.xml.h
 
 options.xml: options.xml.in
 	cat options.xml.in | sed s/\$$DATE/$(version)/mg > options.xml.tmp
@@ -11,8 +11,13 @@ options.xml: options.xml.in
 	rm options.xml.tmp
 	make options.xml.h
 
+if HAVE_PERL
 options.xml.h: options.xml
-	perl ../xml2h.pl options.xml
+	@PERL@ ../xml2h.pl options.xml
+else
+options.xml.h:
+	
+endif
 
 all-am: options.xml.h options.xml
 
