@@ -37,12 +37,55 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 	unsigned short value, maximum;
 	int retry, result;
 
+	struct monitor_db* monitor = mon->db;
+	struct group_db* group;
+	struct control_db* control;
+	struct value_db* valued;
+	xmlChar* controlname = NULL;
+	xmlChar* valuename = NULL;
+	
 	for (retry = RETRYS; retry; retry--) {
 		if ((result = ddcci_readctrl(mon, ctrl, &value, &maximum)) >= 0) 
 		{
-			if ((result > 0) || force) {
-				fprintf(stdout, "Control 0x%02x: %c/%d/%d\n", ctrl, 
-					(result > 0) ? '+' : '-',  value, maximum);
+			if ((result > 0) || force)
+			{
+				if (monitor) {
+					group = monitor->group_list;
+					while ((group != NULL) && (controlname == NULL)) {
+						control = group->control_list;
+						while ((control != NULL) && (controlname == NULL)) {
+							valued = control->value_list;
+							
+							while ((valued != NULL) && (valuename == NULL)) {
+								if (valued->value == value) {
+									valuename = valued->name;
+									break;
+								}
+								valued = valued->next;
+							}
+							
+							if (control->address == ctrl) {
+								controlname = control->name;
+								break;
+							}
+							
+							control = control->next;
+						}
+						group = group->next;
+					}
+				}
+				if (controlname == NULL) {
+					fprintf(stdout, "Control 0x%02x: %c/%d/%d [???]\n", 
+						ctrl, (result > 0) ? '+' : '-',  value, maximum);
+				}
+				else if (valuename == NULL) {
+					fprintf(stdout, "Control 0x%02x: %c/%d/%d [%s]\n", 
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname);
+				}
+				else {
+					fprintf(stdout, "Control 0x%02x: %c/%d/%d [%s - %s]\n",
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname, valuename);
+				}
 			}
 			break;
 		}
@@ -175,7 +218,7 @@ int main(int argc, char **argv)
 		}
 		
 		if (dump) {
-			fprintf(stdout, "\nControls (valid/current/max):\n");
+			fprintf(stdout, "\nControls (valid/current/max) [Description - Value name]:\n");
 			
 			for (i = 0; i < 256; i++) {
 				dumpctrl(&mon, i, force);
@@ -226,7 +269,6 @@ int main(int argc, char **argv)
 					group = group->next;
 				}
 			}
-			verbosity++;
 		}
 		
 		if (save) {
