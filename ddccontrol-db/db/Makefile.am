@@ -1,0 +1,1 @@
+nobase_dist_data_DATA = *.xml */*.xml

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<monitor name="Mitsubishi Diamond Pro 2060u" init="standard">
+  <controls>
+    <control id="degauss" address="0x00">
+      <value id="degauss" value="0x01"/>
+    </control>
+    <control id="brightness" address="0x10"/>
+    <control id="contrast" address="0x12"/>
+    <control id="tlpurity" address="0xE8"/>
+    <control id="trpurity" address="0xE9"/>
+  </controls>
+</monitor>

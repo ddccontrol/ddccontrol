@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<options>
+  <group name="Color settings">
+    <control id="brightness" type="value" name="Brightness"/>
+    <control id="contrast" type="value" name="Contrast"/>
+    <control id="magicbright" type="list" address="0xDC" name="Magic Bright Mode">
+      <value id="text" name="Text"/>
+      <value id="internet" name="Internet"/>
+      <value id="entertain" name="Entertain"/>
+      <value id="custom" name="Custom"/>
+    </control>
+  </group>
+  <group name="Screen purity">
+    <control id="tlpurity" type="value" name="Top left screen purity"/>
+    <control id="trpurity" type="value" name="Top right screen purity"/>
+  </group>
+  <group name="Others">
+    <control id="degauss" type="command" name="Degauss">
+      <value id="degauss" name="Degauss"/>
+    </control>
+  </group>
+</options>

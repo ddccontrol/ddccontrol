@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 173T" init="samsung">
+  <controls>
+    <control id="brightness" address="0x10"/>
+    <control id="contrast" address="0x12"/>
+    <control id="magicbright" address="0xDC">
+      <value id="text" value="0x01"/>
+      <value id="internet" value="0x02"/>
+      <value id="entertain" value="0x03"/>
+      <value id="custom" value="0x04"/>
+    </control>
+  </controls>
+</monitor>
