@@ -1,4 +1,4 @@
-SUBDIRS = src po $(DOC)
+SUBDIRS = src po doc
 
 ACLOCAL_AMFLAGS = -I m4
 

@@ -112,7 +112,7 @@ if test x$support_gnome = xyes; then
       AC_SUBST([XINERAMA_LIBS])
    else
       echo "no"
-      AC_MSG_ERROR(gtk+>=2.4 development packages not found)
+      AC_MSG_ERROR([gtk+>=2.4 development packages not found])
    fi
 fi
 
@@ -120,21 +120,54 @@ AC_SUBST([GNOME_LDFLAGS])
 AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
 
-DOC=
-# Docbook tests
-# Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
-# Copyright © 2003 John Levon
-# It's just rude to go over the net to build
-XSLTPROC_FLAGS=--nonet
+# Doc check
+support_doc=no
+AC_ARG_ENABLE(doc,
+  [  --enable-doc	  enable build of the documentation (disabled)],
+  [if test x$enableval = xyes; then
+    support_doc=yes
+  fi])
 
-AC_MSG_CHECKING([whether /etc/xml/catalog exists])
-if test ! -f /etc/xml/catalog; then
-   AC_MSG_RESULT(no)
-else
-   AC_MSG_RESULT(yes)
-   XSLTPROC_WORKS=no
-   AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
-   if test -n "$XSLTPROC"; then
+AM_CONDITIONAL(BUILD_DOC, test x$support_doc = xyes)
+ 
+if test x$support_doc = xyes; then
+   HAVE_XSLTPROC=
+   # Docbook tests
+   # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
+   # Copyright © 2003 John Levon
+   # It's just rude to go over the net to build
+   XSLTPROC_FLAGS=--nonet
+
+   AC_MSG_CHECKING([whether /etc/xml/catalog exists])
+   if test ! -f /etc/xml/catalog; then
+      AC_MSG_ERROR([/etc/xml/catalog does not exists, fix this problem or disable doc building])
+   else
+      AC_MSG_RESULT(yes)
+      AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
+      if test -z "$XSLTPROC"; then
+         AC_MSG_ERROR([xsltproc does not exists, install it or disable doc building])
+      fi
+
+      AC_CHECK_PROG(SSH,ssh,ssh,)
+      if test -z "SSH"; then
+         AC_MSG_ERROR([ssh does not exists, install it or disable doc building])
+      fi
+      
+      AC_CHECK_PROG(SCP,scp,scp,)
+      if test -z "SCP"; then
+         AC_MSG_ERROR([scp does not exists, install it or disable doc building])
+      fi
+      
+      AC_CHECK_PROG(ASPELL,aspell,aspell,)
+      if test -z "ASPELL"; then
+         AC_MSG_ERROR([aspell does not exists, install it or disable doc building])
+      fi
+
+      AC_CHECK_PROG(FOP,fop,fop,)
+      if test -z "FOP"; then
+         AC_MSG_ERROR([fop does not exists, install it or disable doc building])
+      fi
+                  
       AC_MSG_CHECKING([whether xsltproc works])
 
       DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
@@ -147,17 +180,16 @@ else
 </book>
 END
       if test "$?" = 0; then
-         XSLTPROC_WORKS=yes
-         DOC=doc
+         AC_MSG_RESULT(yes)
+      else
+         AC_MSG_ERROR([xsltproc does not work, fix this problem or disable doc building])
       fi
-      AC_MSG_RESULT($XSLTPROC_WORKS)
    fi
 fi
 
 AC_SUBST(XML_CATALOG)
 AC_SUBST(XSLTPROC_FLAGS)
 AC_SUBST(DOCBOOK_ROOT)
-AC_SUBST(DOC)
 
 AC_CONFIG_FILES([ 
 	po/Makefile.in

@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB CPP EGREP XML2_CONFIG DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_LDFLAGS GNOME_CFLAGS GDDCCONTROL XSLTPROC XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT DOC LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB CPP EGREP XML2_CONFIG DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_LDFLAGS GNOME_CFLAGS GDDCCONTROL BUILD_DOC_TRUE BUILD_DOC_FALSE XSLTPROC SSH SCP ASPELL FOP XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -864,6 +864,7 @@ Optional Features:
   --disable-rpath         do not hardcode runtime library paths
   --disable-ddcpci	  enable direct PCI memory access (enabled)
   --disable-gnome	  disable build of gnome-console GUI (enabled)
+  --enable-doc	  enable build of the documentation (disabled)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -8441,23 +8442,45 @@ fi
 
 
 
-DOC=
-# Docbook tests
-# Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
-# Copyright © 2003 John Levon
-# It's just rude to go over the net to build
-XSLTPROC_FLAGS=--nonet
+# Doc check
+support_doc=no
+# Check whether --enable-doc or --disable-doc was given.
+if test "${enable_doc+set}" = set; then
+  enableval="$enable_doc"
+  if test x$enableval = xyes; then
+    support_doc=yes
+  fi
+fi;
 
-echo "$as_me:$LINENO: checking whether /etc/xml/catalog exists" >&5
-echo $ECHO_N "checking whether /etc/xml/catalog exists... $ECHO_C" >&6
-if test ! -f /etc/xml/catalog; then
-   echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
+
+
+if test x$support_doc = xyes; then
+  BUILD_DOC_TRUE=
+  BUILD_DOC_FALSE='#'
 else
-   echo "$as_me:$LINENO: result: yes" >&5
+  BUILD_DOC_TRUE='#'
+  BUILD_DOC_FALSE=
+fi
+
+
+if test x$support_doc = xyes; then
+   HAVE_XSLTPROC=
+   # Docbook tests
+   # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
+   # Copyright © 2003 John Levon
+   # It's just rude to go over the net to build
+   XSLTPROC_FLAGS=--nonet
+
+   echo "$as_me:$LINENO: checking whether /etc/xml/catalog exists" >&5
+echo $ECHO_N "checking whether /etc/xml/catalog exists... $ECHO_C" >&6
+   if test ! -f /etc/xml/catalog; then
+      { { echo "$as_me:$LINENO: error: /etc/xml/catalog does not exists, fix this problem or disable doc building" >&5
+echo "$as_me: error: /etc/xml/catalog does not exists, fix this problem or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+   else
+      echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
-   XSLTPROC_WORKS=no
-   # Extract the first word of "xsltproc", so it can be a program name with args.
+      # Extract the first word of "xsltproc", so it can be a program name with args.
 set dummy xsltproc; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
@@ -8492,7 +8515,176 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-   if test -n "$XSLTPROC"; then
+      if test -z "$XSLTPROC"; then
+         { { echo "$as_me:$LINENO: error: xsltproc does not exists, install it or disable doc building" >&5
+echo "$as_me: error: xsltproc does not exists, install it or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+
+      # Extract the first word of "ssh", so it can be a program name with args.
+set dummy ssh; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_SSH+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$SSH"; then
+  ac_cv_prog_SSH="$SSH" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_SSH="ssh"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+SSH=$ac_cv_prog_SSH
+if test -n "$SSH"; then
+  echo "$as_me:$LINENO: result: $SSH" >&5
+echo "${ECHO_T}$SSH" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+      if test -z "SSH"; then
+         { { echo "$as_me:$LINENO: error: ssh does not exists, install it or disable doc building" >&5
+echo "$as_me: error: ssh does not exists, install it or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+
+      # Extract the first word of "scp", so it can be a program name with args.
+set dummy scp; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_SCP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$SCP"; then
+  ac_cv_prog_SCP="$SCP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_SCP="scp"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+SCP=$ac_cv_prog_SCP
+if test -n "$SCP"; then
+  echo "$as_me:$LINENO: result: $SCP" >&5
+echo "${ECHO_T}$SCP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+      if test -z "SCP"; then
+         { { echo "$as_me:$LINENO: error: scp does not exists, install it or disable doc building" >&5
+echo "$as_me: error: scp does not exists, install it or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+
+      # Extract the first word of "aspell", so it can be a program name with args.
+set dummy aspell; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ASPELL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ASPELL"; then
+  ac_cv_prog_ASPELL="$ASPELL" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ASPELL="aspell"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+ASPELL=$ac_cv_prog_ASPELL
+if test -n "$ASPELL"; then
+  echo "$as_me:$LINENO: result: $ASPELL" >&5
+echo "${ECHO_T}$ASPELL" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+      if test -z "ASPELL"; then
+         { { echo "$as_me:$LINENO: error: aspell does not exists, install it or disable doc building" >&5
+echo "$as_me: error: aspell does not exists, install it or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+
+      # Extract the first word of "fop", so it can be a program name with args.
+set dummy fop; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_FOP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$FOP"; then
+  ac_cv_prog_FOP="$FOP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_FOP="fop"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+FOP=$ac_cv_prog_FOP
+if test -n "$FOP"; then
+  echo "$as_me:$LINENO: result: $FOP" >&5
+echo "${ECHO_T}$FOP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+      if test -z "FOP"; then
+         { { echo "$as_me:$LINENO: error: fop does not exists, install it or disable doc building" >&5
+echo "$as_me: error: fop does not exists, install it or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
+      fi
+
       echo "$as_me:$LINENO: checking whether xsltproc works" >&5
 echo $ECHO_N "checking whether xsltproc works... $ECHO_C" >&6
 
@@ -8506,14 +8698,15 @@ echo $ECHO_N "checking whether xsltproc works... $ECHO_C" >&6
 </book>
 END
       if test "$?" = 0; then
-         XSLTPROC_WORKS=yes
-         DOC=doc
+         echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+      else
+         { { echo "$as_me:$LINENO: error: xsltproc does not work, fix this problem or disable doc building" >&5
+echo "$as_me: error: xsltproc does not work, fix this problem or disable doc building" >&2;}
+   { (exit 1); exit 1; }; }
       fi
-      echo "$as_me:$LINENO: result: $XSLTPROC_WORKS" >&5
-echo "${ECHO_T}$XSLTPROC_WORKS" >&6
    fi
 fi
-
 
 
 
@@ -8637,6 +8830,13 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${BUILD_DOC_TRUE}" && test -z "${BUILD_DOC_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"BUILD_DOC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"BUILD_DOC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -9261,11 +9461,16 @@ s,@XINERAMA_LIBS@,$XINERAMA_LIBS,;t t
 s,@GNOME_LDFLAGS@,$GNOME_LDFLAGS,;t t
 s,@GNOME_CFLAGS@,$GNOME_CFLAGS,;t t
 s,@GDDCCONTROL@,$GDDCCONTROL,;t t
+s,@BUILD_DOC_TRUE@,$BUILD_DOC_TRUE,;t t
+s,@BUILD_DOC_FALSE@,$BUILD_DOC_FALSE,;t t
 s,@XSLTPROC@,$XSLTPROC,;t t
+s,@SSH@,$SSH,;t t
+s,@SCP@,$SCP,;t t
+s,@ASPELL@,$ASPELL,;t t
+s,@FOP@,$FOP,;t t
 s,@XML_CATALOG@,$XML_CATALOG,;t t
 s,@XSLTPROC_FLAGS@,$XSLTPROC_FLAGS,;t t
 s,@DOCBOOK_ROOT@,$DOCBOOK_ROOT,;t t
-s,@DOC@,$DOC,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

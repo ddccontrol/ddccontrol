@@ -55,10 +55,13 @@ ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
+ASPELL = @ASPELL@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BUILD_DOC_FALSE = @BUILD_DOC_FALSE@
+BUILD_DOC_TRUE = @BUILD_DOC_TRUE@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -68,13 +71,13 @@ CYGPATH_W = @CYGPATH_W@
 DDCPCI = @DDCPCI@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
-DOC = @DOC@
 DOCBOOK_ROOT = @DOCBOOK_ROOT@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+FOP = @FOP@
 GDDCCONTROL = @GDDCCONTROL@
 GMSGFMT = @GMSGFMT@
 GNOME_CFLAGS = @GNOME_CFLAGS@
@@ -110,8 +113,10 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
+SCP = @SCP@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSH = @SSH@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
@@ -162,7 +167,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 XHTML_STYLESHEET = style.xsl
-htmldir = $(prefix)/share/doc/@PACKAGE@
+htmldir = $(prefix)/share/doc/@PACKAGE@/html
 dist_html_DATA = html/*
 EXTRA_DIST = main.xml gpl.xml style.xsl style-fo.xsl
 all: all-am
@@ -281,6 +286,8 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@BUILD_DOC_FALSE@clean: clean-am
+
 clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-am
@@ -315,6 +322,8 @@ mostlyclean: mostlyclean-am
 
 mostlyclean-am: mostlyclean-generic
 
+@BUILD_DOC_FALSE@pdf: pdf-am
+
 pdf-am:
 
 ps: ps-am
@@ -334,40 +343,40 @@ uninstall-am: uninstall-dist_htmlDATA uninstall-info-am
 	uninstall-info-am
 
 
-html/*: main.xml gpl.xml style.xsl
-	rm -rf html.old
-	true `mv -f html html.old`
-	mkdir html
-	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
-	-tidy -q -raw -im html/*.html
+@BUILD_DOC_TRUE@html/*: main.xml gpl.xml style.xsl
+@BUILD_DOC_TRUE@	rm -rf html.old
+@BUILD_DOC_TRUE@	true `mv -f html html.old`
+@BUILD_DOC_TRUE@	mkdir html
+@BUILD_DOC_TRUE@	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
+@BUILD_DOC_TRUE@	-tidy -q -raw -im html/*.html
 
-publish: all
-	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
-	scp -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/latest
+@BUILD_DOC_TRUE@publish: all
+@BUILD_DOC_TRUE@	@SSH@ $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
+@BUILD_DOC_TRUE@	@SCP@ -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/latest
 
-publish-release: all pdf
-	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf @VERSION@"
-	scp -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/@VERSION@
-	scp -C ddccontrol.pdf $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/ddccontrol-@VERSION@.pdf
+@BUILD_DOC_TRUE@publish-release: all pdf
+@BUILD_DOC_TRUE@	@SSH@ $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf @VERSION@"
+@BUILD_DOC_TRUE@	@SCP@ -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/@VERSION@
+@BUILD_DOC_TRUE@	@SCP@ -C ddccontrol.pdf $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/ddccontrol-@VERSION@.pdf
 
-spell:
-	aspell --mode=sgml check main.xml
+@BUILD_DOC_TRUE@spell:
+@BUILD_DOC_TRUE@	@ASPELL@ --mode=sgml check main.xml
 
-clean:
-	rm -rf html
-	rm -f ddccontrol.fo ddccontrol.pdf
+@BUILD_DOC_TRUE@clean:
+@BUILD_DOC_TRUE@	rm -rf html
+@BUILD_DOC_TRUE@	rm -f ddccontrol.fo ddccontrol.pdf
 
-ddccontrol.fo: main.xml gpl.xml style-fo.xsl
-	$(XSLTPROC)  \
-		--output  ddccontrol.fo  \
-		--stringparam  paper.type  A4 \
-		style-fo.xsl  \
-		$<
+@BUILD_DOC_TRUE@ddccontrol.fo: main.xml gpl.xml style-fo.xsl
+@BUILD_DOC_TRUE@	$(XSLTPROC)  \
+@BUILD_DOC_TRUE@		--output  ddccontrol.fo  \
+@BUILD_DOC_TRUE@		--stringparam  paper.type  A4 \
+@BUILD_DOC_TRUE@		style-fo.xsl  \
+@BUILD_DOC_TRUE@		$<
 
-ddccontrol.pdf: ddccontrol.fo
-	fop  -fo  ddccontrol.fo  -pdf  ddccontrol.pdf
+@BUILD_DOC_TRUE@ddccontrol.pdf: ddccontrol.fo
+@BUILD_DOC_TRUE@	@FOP@  -fo  ddccontrol.fo  -pdf  ddccontrol.pdf
 
-pdf: ddccontrol.pdf
+@BUILD_DOC_TRUE@pdf: ddccontrol.pdf
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
