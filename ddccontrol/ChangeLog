@@ -1,3 +1,19 @@
+2004-10-17 12:45  nboichat
+
+	* TODO, src/ddcpci/main.c, src/ddcpci/nvidia.c,
+	  src/gddccontrol/main.c, src/lib/ddcci.c, src/lib/ddcci.h,
+	  src/lib/ddcpci-ipc.h: Add support for direct PCI memory access.
+
+2004-10-17 09:28  nboichat
+
+	* src/lib/ddcpci-ipc.h: Add ddcpci IPC header file.
+
+2004-10-17 09:24  nboichat
+
+	* src/ddcpci/: .cvsignore, Makefile.am, Makefile.in, ddcpci.h,
+	  i2c-algo-bit.c, i2c-algo-bit.h, main.c, nvidia.c: Add ddcpci
+	  directory.
+
 2004-10-14 16:25  nboichat
 
 	* Makefile.in, aclocal.m4, configure, configure.ac,
