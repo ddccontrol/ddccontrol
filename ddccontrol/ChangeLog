@@ -1,3 +1,10 @@
+2004-09-04 16:24  nboichat
+
+	* Makefile.in, TODO, aclocal.m4, configure, configure.ac,
+	  src/Makefile.in, src/ddccontrol/Makefile.in,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.in: Avoid automatic
+	  rebuilding of .in files.
+
 2004-09-04 14:59  nboichat
 
 	* TODO, doc/xml-design.txt, src/lib/monitor_db.c: New XML design
