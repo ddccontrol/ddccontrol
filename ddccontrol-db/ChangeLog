@@ -1,3 +1,14 @@
+2004-09-13 22:25  nboichat
+
+	* ABOUT-NLS, Makefile.am, Makefile.in, aclocal.m4, configure,
+	  configure.ac, mkinstalldirs, xml2h.pl, db/.cvsignore,
+	  db/Makefile.am, db/Makefile.in, db/options.xml, po/.cvsignore,
+	  po/LINGUAS, po/Makefile.in.in, po/Makevars, po/POTFILES.in,
+	  po/Rules-quot, po/boldquot.sed, po/ddccontrol-db.pot,
+	  po/en@boldquot.header, po/en@quot.header, po/fr.gmo, po/fr.po,
+	  po/insert-header.sin, po/quot.sed, po/remove-potcdate.sin: Add
+	  support for database translation, and french translation.
+
 2004-09-10 09:54  nboichat
 
 	* db/monitor/: MEL4513.xml, SAM00BA.xml: Languages added to
