@@ -67,7 +67,7 @@ You don't need this package if you don't need to use direct PCI memory access.
 </listitem>
 <listitem>
 <para>
-gtk+&gt;=2.0, available at (***LINK***).
+gtk+&gt;=2.4, available at (***LINK***).
 <footnote>
 <para>
 You don't need this package if you don't plan to use the Gnome GUI (this is usually not the case).

@@ -6959,8 +6959,8 @@ echo "$as_me: error: pkg-config not found" >&2;}
    { (exit please install pkg-config); exit please install pkg-config; }; }
    fi
 
-   echo -n "checking for gtk+-2.0... "
-   if pkg-config --exists gtk+-2.0 ; then
+   echo -n "checking for gtk+>=2.4... "
+   if pkg-config --atleast-version=2.4 gtk+-2.0 ; then
       GNOME_LDFLAGS="`pkg-config --libs gtk+-2.0`"
       GNOME_CFLAGS="$CFLAGS `pkg-config --cflags gtk+-2.0`"
       GDDCCONTROL=gddccontrol
@@ -8431,8 +8431,8 @@ fi
 
    else
       echo "no"
-      { { echo "$as_me:$LINENO: error: gtk+-2.0 development packages not found" >&5
-echo "$as_me: error: gtk+-2.0 development packages not found" >&2;}
+      { { echo "$as_me:$LINENO: error: gtk+>=2.4 development packages not found" >&5
+echo "$as_me: error: gtk+>=2.4 development packages not found" >&2;}
    { (exit 1); exit 1; }; }
    fi
 fi
