@@ -23,5 +23,10 @@
          <title>CVS</title>
       </tocentry>
     </tocentry>
+    <tocentry id="empty" href="empty"><title></title></tocentry>
+    <tocentry id="projectpage"
+        href="http://sourceforge.net/projects/ddccontrol/">
+      <title>SF Project Page</title>
+    </tocentry>
   </toc>
 </layout>
