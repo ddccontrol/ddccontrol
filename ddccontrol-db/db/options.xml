@@ -31,6 +31,12 @@
 				<value id="normal" name="Normal"/>
 				<value id="warm" name="Warm"/>
 				<value id="cool" name="Cool"/>
+				<value id="5000k" name="5000K"/>
+				<value id="6500k" name="6500K"/>
+				<value id="7500k" name="7500K"/>
+				<value id="8200k" name="8200K"/>
+				<value id="9300k" name="9300K"/>
+				<value id="native" name="Native"/>
 			</control>
 		</subgroup>
 	</group>
@@ -97,8 +103,9 @@
 		<subgroup name="Various">
 			<control id="focus" type="value" name="Focus" address="0x1C"/>
 			<control id="coarse" type="value" name="Image Lock Coarse" address="0x0e"/>
-			<control id="fine" type="value" name="Image Lock Fine" address="0x3e"/>
+			<control id="fine" type="value" name="Image Lock Fine (Clock Phase)" address="0x3e"/>
 			<control id="landing" type="value" name="Landing Adjust (RGB alignment)" address="0x5C"/>
+			<control id="sharpness" type="value" name="Sharpness" address="0x8c"/>
 		</subgroup>
 	</group>
 	<group name="Others">
@@ -124,8 +131,9 @@
 		</subgroup>
 		<subgroup name="OSD">
 			<control id="osd" type="list" name="On Screen Display" address="0x66"> <!--- USB specifies address 0xCA -->
-				<value id="disable" value="0x00" name="Disable"/>
-				<value id="enable" value="0x01" name="Enable"/>
+				<value id="disable" name="Disable"/>
+				<value id="enable" name="Enable"/>
+				<value id="partenable" name="Enable only brightness/contrast settings"/>
 			</control>
 			<control id="language" type="list" name="Language select" address="0x68">
 				<value id="english" name="English"/>

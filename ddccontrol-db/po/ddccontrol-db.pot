@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2004-09-13 23:49+0200\n"
+"POT-Creation-Date: 2004-12-10 17:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,449 +17,601 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: db/options.xml.h:3
+#, c-format
 msgid "Color settings"
 msgstr ""
 
 #: db/options.xml.h:4
+#, c-format
 msgid "Brightness and Contrast"
 msgstr ""
 
 #: db/options.xml.h:5
+#, c-format
 msgid "Brightness"
 msgstr ""
 
 #: db/options.xml.h:6
+#, c-format
 msgid "Contrast"
 msgstr ""
 
 #: db/options.xml.h:7
+#, c-format
 msgid "Magic Bright Mode"
 msgstr ""
 
 #: db/options.xml.h:8
+#, c-format
 msgid "Text"
 msgstr ""
 
 #: db/options.xml.h:9
+#, c-format
 msgid "Internet"
 msgstr ""
 
 #: db/options.xml.h:10
+#, c-format
 msgid "Entertain"
 msgstr ""
 
 #: db/options.xml.h:11
+#, c-format
 msgid "Custom"
 msgstr ""
 
 #: db/options.xml.h:12
+#, c-format
 msgid "Color maximum level"
 msgstr ""
 
 #: db/options.xml.h:13
+#, c-format
 msgid "Red maximum level"
 msgstr ""
 
 #: db/options.xml.h:14
+#, c-format
 msgid "Green maximum level"
 msgstr ""
 
 #: db/options.xml.h:15
+#, c-format
 msgid "Blue maximum level"
 msgstr ""
 
 #: db/options.xml.h:16
+#, c-format
 msgid "Color minimum level"
 msgstr ""
 
 #: db/options.xml.h:17
+#, c-format
 msgid "Red minimum level"
 msgstr ""
 
 #: db/options.xml.h:18
+#, c-format
 msgid "Green minimum level"
 msgstr ""
 
 #: db/options.xml.h:19
+#, c-format
 msgid "Blue minimum level"
 msgstr ""
 
 #: db/options.xml.h:20
+#, c-format
 msgid "Various color settings"
 msgstr ""
 
 #: db/options.xml.h:21
+#, c-format
 msgid "Hue"
 msgstr ""
 
 #: db/options.xml.h:22
+#, c-format
 msgid "Saturation"
 msgstr ""
 
 #: db/options.xml.h:23
+#, c-format
 msgid "Color curve adjust"
 msgstr ""
 
 #: db/options.xml.h:24
+#, c-format
 msgid "Color Preset"
 msgstr ""
 
 #: db/options.xml.h:25
+#, c-format
 msgid "Normal"
 msgstr ""
 
 #: db/options.xml.h:26
+#, c-format
 msgid "Warm"
 msgstr ""
 
 #: db/options.xml.h:27
+#, c-format
 msgid "Cool"
 msgstr ""
 
 #: db/options.xml.h:28
-msgid "Position and size"
+#, c-format
+msgid "5000K"
 msgstr ""
 
 #: db/options.xml.h:29
-msgid "Position"
+#, c-format
+msgid "6500K"
 msgstr ""
 
 #: db/options.xml.h:30
-msgid "Horizontal Position"
+#, c-format
+msgid "7500K"
 msgstr ""
 
 #: db/options.xml.h:31
-msgid "Vertical Position"
+#, c-format
+msgid "8200K"
 msgstr ""
 
 #: db/options.xml.h:32
-msgid "Size"
+#, c-format
+msgid "9300K"
 msgstr ""
 
 #: db/options.xml.h:33
-msgid "Horizontal Size"
+#, c-format
+msgid "Native"
 msgstr ""
 
 #: db/options.xml.h:34
-msgid "Vertical Size"
+#, c-format
+msgid "Position and size"
 msgstr ""
 
 #: db/options.xml.h:35
-msgid "Automatic adjustments"
+#, c-format
+msgid "Position"
 msgstr ""
 
 #: db/options.xml.h:36
-msgid "Auto Size Center"
+#, c-format
+msgid "Horizontal Position"
 msgstr ""
 
-#: db/options.xml.h:37 db/options.xml.h:98
-msgid "Enable"
+#: db/options.xml.h:37
+#, c-format
+msgid "Vertical Position"
 msgstr ""
 
-#: db/options.xml.h:38 db/options.xml.h:97
-msgid "Disable"
+#: db/options.xml.h:38
+#, c-format
+msgid "Size"
 msgstr ""
 
 #: db/options.xml.h:39
-msgid "Automatically adjust Size and Position"
+#, c-format
+msgid "Horizontal Size"
 msgstr ""
 
 #: db/options.xml.h:40
-msgid "Geometry"
+#, c-format
+msgid "Vertical Size"
 msgstr ""
 
 #: db/options.xml.h:41
-msgid "Pincushion"
+#, c-format
+msgid "Automatic adjustments"
 msgstr ""
 
 #: db/options.xml.h:42
-msgid "Horizontal Pincushion"
+#, c-format
+msgid "Auto Size Center"
 msgstr ""
 
-#: db/options.xml.h:43
-msgid "Horizontal Pincushion Balance"
+#: db/options.xml.h:43 db/options.xml.h:105
+#, c-format
+msgid "Enable"
 msgstr ""
 
-#: db/options.xml.h:44
-msgid "Vertical Pincushion"
+#: db/options.xml.h:44 db/options.xml.h:104
+#, c-format
+msgid "Disable"
 msgstr ""
 
 #: db/options.xml.h:45
-msgid "Vertical Pincushion Balance"
+#, c-format
+msgid "Automatically adjust Size and Position"
 msgstr ""
 
 #: db/options.xml.h:46
-msgid "Linearity"
+#, c-format
+msgid "Geometry"
 msgstr ""
 
 #: db/options.xml.h:47
-msgid "Horizontal Linearity"
+#, c-format
+msgid "Pincushion"
 msgstr ""
 
 #: db/options.xml.h:48
-msgid "Horizontal Linearity Balance"
+#, c-format
+msgid "Horizontal Pincushion"
 msgstr ""
 
 #: db/options.xml.h:49
-msgid "Vertical Linearity"
+#, c-format
+msgid "Horizontal Pincushion Balance"
 msgstr ""
 
 #: db/options.xml.h:50
-msgid "Vertical Linearity Balance"
+#, c-format
+msgid "Vertical Pincushion"
 msgstr ""
 
 #: db/options.xml.h:51
-msgid "Misconvergence"
+#, c-format
+msgid "Vertical Pincushion Balance"
 msgstr ""
 
 #: db/options.xml.h:52
-msgid "Horizontal Misconvergence"
+#, c-format
+msgid "Linearity"
 msgstr ""
 
 #: db/options.xml.h:53
-msgid "Vertical Misconvergence"
+#, c-format
+msgid "Horizontal Linearity"
 msgstr ""
 
 #: db/options.xml.h:54
-msgid "General distortion"
+#, c-format
+msgid "Horizontal Linearity Balance"
 msgstr ""
 
 #: db/options.xml.h:55
-msgid "Parallelogram Distortion (Key Balance)"
+#, c-format
+msgid "Vertical Linearity"
 msgstr ""
 
 #: db/options.xml.h:56
-msgid "Trapezoidal Distortion (Key)"
+#, c-format
+msgid "Vertical Linearity Balance"
 msgstr ""
 
 #: db/options.xml.h:57
-msgid "Corners distortion"
+#, c-format
+msgid "Misconvergence"
 msgstr ""
 
 #: db/options.xml.h:58
-msgid "Top Corner Distortion Control"
+#, c-format
+msgid "Horizontal Misconvergence"
 msgstr ""
 
 #: db/options.xml.h:59
-msgid "Top Corner Distortion Balance"
+#, c-format
+msgid "Vertical Misconvergence"
 msgstr ""
 
 #: db/options.xml.h:60
-msgid "Bottom Corner Distortion Control"
+#, c-format
+msgid "General distortion"
 msgstr ""
 
 #: db/options.xml.h:61
-msgid "Bottom Corner Distortion Balance"
+#, c-format
+msgid "Parallelogram Distortion (Key Balance)"
 msgstr ""
 
 #: db/options.xml.h:62
-msgid "Rotation"
+#, c-format
+msgid "Trapezoidal Distortion (Key)"
 msgstr ""
 
 #: db/options.xml.h:63
-msgid "Rotation (Tilt)"
+#, c-format
+msgid "Corners distortion"
 msgstr ""
 
 #: db/options.xml.h:64
-msgid "Screen purity"
+#, c-format
+msgid "Top Corner Distortion Control"
 msgstr ""
 
 #: db/options.xml.h:65
-msgid "Moire"
+#, c-format
+msgid "Top Corner Distortion Balance"
 msgstr ""
 
 #: db/options.xml.h:66
-msgid "Horizontal Moire"
+#, c-format
+msgid "Bottom Corner Distortion Control"
 msgstr ""
 
 #: db/options.xml.h:67
-msgid "Vertical Moire"
+#, c-format
+msgid "Bottom Corner Distortion Balance"
 msgstr ""
 
 #: db/options.xml.h:68
-msgid "Corners purity"
+#, c-format
+msgid "Rotation"
 msgstr ""
 
 #: db/options.xml.h:69
-msgid "Top left screen purity"
+#, c-format
+msgid "Rotation (Tilt)"
 msgstr ""
 
 #: db/options.xml.h:70
-msgid "Top right screen purity"
+#, c-format
+msgid "Screen purity"
 msgstr ""
 
 #: db/options.xml.h:71
-msgid "Bottom left screen purity"
+#, c-format
+msgid "Moire"
 msgstr ""
 
 #: db/options.xml.h:72
-msgid "Bottom right screen purity"
+#, c-format
+msgid "Horizontal Moire"
 msgstr ""
 
 #: db/options.xml.h:73
-msgid "Various"
+#, c-format
+msgid "Vertical Moire"
 msgstr ""
 
 #: db/options.xml.h:74
-msgid "Focus"
+#, c-format
+msgid "Corners purity"
 msgstr ""
 
 #: db/options.xml.h:75
-msgid "Image Lock Coarse"
+#, c-format
+msgid "Top left screen purity"
 msgstr ""
 
 #: db/options.xml.h:76
-msgid "Image Lock Fine"
+#, c-format
+msgid "Top right screen purity"
 msgstr ""
 
 #: db/options.xml.h:77
-msgid "Landing Adjust (RGB alignment)"
+#, c-format
+msgid "Bottom left screen purity"
 msgstr ""
 
 #: db/options.xml.h:78
-msgid "Others"
+#, c-format
+msgid "Bottom right screen purity"
 msgstr ""
 
 #: db/options.xml.h:79
-msgid "Restore defaults"
+#, c-format
+msgid "Various"
 msgstr ""
 
 #: db/options.xml.h:80
-msgid "Restore Factory Defaults"
+#, c-format
+msgid "Focus"
 msgstr ""
 
 #: db/options.xml.h:81
-msgid "Restore Brightness and Contrast"
+#, c-format
+msgid "Image Lock Coarse"
 msgstr ""
 
 #: db/options.xml.h:82
-msgid "Restore Factory Default Geometry"
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
 msgstr ""
 
 #: db/options.xml.h:83
-msgid "Restore Factory Default Color"
+#, c-format
+msgid "Landing Adjust (RGB alignment)"
 msgstr ""
 
 #: db/options.xml.h:84
-msgid "Restore Factory Default Position"
+#, c-format
+msgid "Sharpness"
 msgstr ""
 
 #: db/options.xml.h:85
-msgid "Restore Factory Default Size"
+#, c-format
+msgid "Others"
 msgstr ""
 
 #: db/options.xml.h:86
-msgid "Settings"
+#, c-format
+msgid "Restore defaults"
 msgstr ""
 
 #: db/options.xml.h:87
-msgid "Save Current Settings"
+#, c-format
+msgid "Restore Factory Defaults"
 msgstr ""
 
 #: db/options.xml.h:88
-msgid "Restore Factory Settings"
+#, c-format
+msgid "Restore Brightness and Contrast"
 msgstr ""
 
 #: db/options.xml.h:89
-msgid "Audio"
+#, c-format
+msgid "Restore Factory Default Geometry"
 msgstr ""
 
 #: db/options.xml.h:90
-msgid "Audio Speaker Volume Adjust"
+#, c-format
+msgid "Restore Factory Default Color"
 msgstr ""
 
 #: db/options.xml.h:91
-msgid "Audio Microphone Volume Adjust"
+#, c-format
+msgid "Restore Factory Default Position"
 msgstr ""
 
-#: db/options.xml.h:92 db/options.xml.h:93
-msgid "Degauss"
+#: db/options.xml.h:92
+#, c-format
+msgid "Restore Factory Default Size"
+msgstr ""
+
+#: db/options.xml.h:93
+#, c-format
+msgid "Settings"
 msgstr ""
 
 #: db/options.xml.h:94
-msgid "Secondary Degauss"
+#, c-format
+msgid "Save Current Settings"
 msgstr ""
 
 #: db/options.xml.h:95
-msgid "OSD"
+#, c-format
+msgid "Restore Factory Settings"
 msgstr ""
 
 #: db/options.xml.h:96
-msgid "On Screen Display"
+#, c-format
+msgid "Audio"
 msgstr ""
 
-#: db/options.xml.h:99
-msgid "Language select"
+#: db/options.xml.h:97
+#, c-format
+msgid "Audio Speaker Volume Adjust"
 msgstr ""
 
-#: db/options.xml.h:100
-msgid "English"
+#: db/options.xml.h:98
+#, c-format
+msgid "Audio Microphone Volume Adjust"
+msgstr ""
+
+#: db/options.xml.h:99 db/options.xml.h:100
+#, c-format
+msgid "Degauss"
 msgstr ""
 
 #: db/options.xml.h:101
-msgid "French"
+#, c-format
+msgid "Secondary Degauss"
 msgstr ""
 
 #: db/options.xml.h:102
-msgid "German"
+#, c-format
+msgid "OSD"
 msgstr ""
 
 #: db/options.xml.h:103
-msgid "Italian"
-msgstr ""
-
-#: db/options.xml.h:104
-msgid "Russian"
-msgstr ""
-
-#: db/options.xml.h:105
-msgid "Spanish"
+#, c-format
+msgid "On Screen Display"
 msgstr ""
 
 #: db/options.xml.h:106
-msgid "Swedish"
+#, c-format
+msgid "Enable only brightness/contrast settings"
 msgstr ""
 
 #: db/options.xml.h:107
-msgid "Chinese"
+#, c-format
+msgid "Language select"
 msgstr ""
 
 #: db/options.xml.h:108
-msgid "Input settings"
+#, c-format
+msgid "English"
 msgstr ""
 
 #: db/options.xml.h:109
-msgid "Input level Select"
+#, c-format
+msgid "French"
 msgstr ""
 
 #: db/options.xml.h:110
-msgid "Input Source Select"
+#, c-format
+msgid "German"
 msgstr ""
 
 #: db/options.xml.h:111
-msgid "Analog"
+#, c-format
+msgid "Italian"
 msgstr ""
 
 #: db/options.xml.h:112
-msgid "Digital"
+#, c-format
+msgid "Russian"
 msgstr ""
 
-#: db/options.xml.h:113 db/options.xml.h:117
-msgid "Power control"
+#: db/options.xml.h:113
+#, c-format
+msgid "Spanish"
 msgstr ""
 
 #: db/options.xml.h:114
-msgid "DPMS Control"
+#, c-format
+msgid "Swedish"
 msgstr ""
 
-#: db/options.xml.h:115 db/options.xml.h:119
-msgid "On"
+#: db/options.xml.h:115
+#, c-format
+msgid "Chinese"
 msgstr ""
 
 #: db/options.xml.h:116
-msgid "Standby"
+#, c-format
+msgid "Input settings"
+msgstr ""
+
+#: db/options.xml.h:117
+#, c-format
+msgid "Input level Select"
 msgstr ""
 
 #: db/options.xml.h:118
+#, c-format
+msgid "Input Source Select"
+msgstr ""
+
+#: db/options.xml.h:119
+#, c-format
+msgid "Analog"
+msgstr ""
+
+#: db/options.xml.h:120
+#, c-format
+msgid "Digital"
+msgstr ""
+
+#: db/options.xml.h:121 db/options.xml.h:125
+#, c-format
+msgid "Power control"
+msgstr ""
+
+#: db/options.xml.h:122
+#, c-format
+msgid "DPMS Control"
+msgstr ""
+
+#: db/options.xml.h:123 db/options.xml.h:127
+#, c-format
+msgid "On"
+msgstr ""
+
+#: db/options.xml.h:124
+#, c-format
+msgid "Standby"
+msgstr ""
+
+#: db/options.xml.h:126
+#, c-format
 msgid "Off"
 msgstr ""
