@@ -438,4 +438,5 @@ void deleteNotebook() {
 		ddcci_save(&mon);
 	}
 	ddcci_close(&mon);
+	g_slist_free(all_controls);
 }
