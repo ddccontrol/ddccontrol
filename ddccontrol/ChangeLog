@@ -1,3 +1,21 @@
+2005-02-03 22:14  nboichat
+
+	* src/gddccontrol/notebook.c: Fix bug in gddccontrol when switching
+	  from one monitor to another.
+
+2005-02-03 22:11  nboichat
+
+	* src/ddcpci/: Makefile.am, Makefile.in, ddcpci.h, intel855.c,
+	  main.c, nvidia.c: Add experimental support for Intel 855GM
+	  chipsets.
+
+2005-02-03 21:37  cs123
+
+	* src/gddccontrol/: main.c, notebook.c: Redesign of gddccontrol
+	  - Tree Control     - nicer arrangement of controls	 - range
+	  controls are updated when list or command controls are toggeled
+	  - Restore buttons are temporaly removed
+
 2005-01-10 00:16  nboichat
 
 	* configure, configure.ac, src/config.h.in,
