@@ -1,3 +1,11 @@
+2004-10-14 16:25  nboichat
+
+	* Makefile.in, aclocal.m4, configure, configure.ac,
+	  src/Makefile.am, src/Makefile.in, src/config.h.in,
+	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h: -m
+
 2004-10-09 15:36  nboichat
 
 	* Makefile.in, aclocal.m4, configure, doc/xml-design.txt,
