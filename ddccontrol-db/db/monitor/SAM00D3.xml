@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<monitor name="Samsung SyncMaster 173P" init="standard">
+<monitor name="Samsung SyncMaster 173P (VGA)" init="standard">
 	<controls>
 		<control id="defaults" address="0x04"/>
 		<control id="defaultluma" address="0x05"/>
