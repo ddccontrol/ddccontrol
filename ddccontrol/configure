@@ -863,7 +863,7 @@ Optional Features:
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-rpath         do not hardcode runtime library paths
   --disable-ddcpci	  enable direct PCI memory access (enabled)
-  --enable-gnome	  enable build of gnome-console GUI (disabled)
+  --disable-gnome	  disable build of gnome-console GUI (enabled)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -6902,12 +6902,12 @@ _ACEOF
 
 
 # Gnome check
-
+support_gnome=yes
 # Check whether --enable-gnome or --disable-gnome was given.
 if test "${enable_gnome+set}" = set; then
   enableval="$enable_gnome"
-  if test x$enableval = xyes; then
-    support_gnome=yes
+  if test x$enableval = xno; then
+    support_gnome=no
   fi
 fi;
 

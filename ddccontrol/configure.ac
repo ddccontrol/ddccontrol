@@ -82,11 +82,11 @@ AC_DEFINE_UNQUOTED(HAVE_DDCPCI, $ddcpci_val, [Define if ddccontrol is built with
 AC_SUBST([DDCPCI])
 
 # Gnome check
-
+support_gnome=yes
 AC_ARG_ENABLE(gnome,
-  [  --enable-gnome	  enable build of gnome-console GUI (disabled)],
-  [if test x$enableval = xyes; then
-    support_gnome=yes
+  [  --disable-gnome	  disable build of gnome-console GUI (enabled)],
+  [if test x$enableval = xno; then
+    support_gnome=no
   fi])
 
 GDDCCONTROL=
