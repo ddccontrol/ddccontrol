@@ -1,0 +1,64 @@
+Monitor database design
+
+The directory db contains the following files:
+options.xml
+monitor/%monitor_id%.xml
+
+options.xml
+-----------
+
+Controls (for example "brightness"...) are contained in groups
+(for example "color settings"). Groups allow the GUI to separate the
+options in tabs.
+
+Controls IDs are usually like Control Name, but abbreviated.
+
+Controls with type set to "value" are controls where you can define
+a value (for example brightness), and those with type set to "command"
+are controls that do something when the value is set to something >0
+(for example degauss), "list" indicates a list of possible value.
+
+You can set a parameter delay to set the time in milliseconds to wait
+after changing the value of this control. If you don't, a default value
+is used.
+
+File format:
+
+<group name="%groupname%">
+  <control id="%control_id%" type="[value|command]" name="%control_name%" delay="%wait_time%"/>
+  <control id="%control_id%" type="list" name="%control_name%" delay="%wait_time%">
+    <value id="%value_id%" name="%value_name%"/>
+    <value...>
+  </control>
+  <control ...>
+</group>
+<group ...>
+
+monitor/%monitor_id%.xml
+------------------------
+
+List of controls related to this monitor.
+Controls IDs are defined in options.xml, if the control is a command,
+the value to activate it must be defined, if it is a list, supported 
+values must be defined.
+
+File format:
+
+<monitor name="%full_monitor_name%">
+  <controls>
+    <control id="%control_id%" address="%hex_address%"/> <!--- value -->
+    <control id="%control_id%" address="%hex_address%"> <!--- command -->
+      <value id="activate" value="%hex_value%"/>
+    </control>
+    <control id="%control_id%" address="%hex_address%"> <!--- list -->
+      <value id="%value_id%" value="%hex_value%"/>
+      <value...>
+    </control>
+    <control...>
+  </controls>
+</monitor>
+
+If the monitor is exactly like another one, you can define it
+as shown:
+
+<monitor include="%monitor_id%" name="%full_monitor_name%"/>
