@@ -1,45 +1,45 @@
 <?xml version="1.0"?>
 <monitor name="Mitsubishi Diamond Pro 2060u" init="standard">
 	<controls>
-		<control id="brightness"/>
-		<control id="contrast"/>
-		<control id="red"/>
-		<control id="green"/>
-		<control id="blue"/>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1A"/>
 		
-		<control id="hpos"/>
-		<control id="hsize"/>
-		<control id="vpos"/>
-		<control id="vsize"/>
+		<control id="hpos" address="0x20"/>
+		<control id="hsize" address="0x22"/>
+		<control id="vpos" address="0x30"/>
+		<control id="vsize" address="0x32"/>
 		
-		<control id="hpincushion"/>
-		<control id="hpincushionbalance"/>
-		<control id="hmisconvergence"/>
-		<control id="hlinearity"/>
-		<control id="hlinearitybalance"/>
-		<control id="vpincushion"/>
-		<control id="vpincushionbalance"/>
-		<control id="vmisconvergence"/>
-		<control id="vlinearity"/>
-		<control id="vlinearitybalance"/>
+		<control id="hpincushion" address="0x24"/>
+		<control id="hpincushionbalance" address="0x26"/>
+		<control id="hmisconvergence" address="0x28"/>
+		<control id="hlinearity" address="0x2A"/>
+		<control id="hlinearitybalance" address="0x2C"/>
+		<control id="vpincushion" address="0x34"/>
+		<control id="vpincushionbalance" address="0x36"/>
+		<control id="vmisconvergence" address="0x38"/>
+		<control id="vlinearity"  address="0x3A"/>
+		<control id="vlinearitybalance" address="0x3C"/>
 		
-		<control id="keybalance"/>
-		<control id="key"/>
-		<control id="tilt"/>
-		<control id="tdistortionctrl"/>
-		<control id="tdistortionbalance"/>
-		<control id="bdistortionctrl"/>
-		<control id="bdistortionbalance"/>
+		<control id="keybalance" address="0x40"/>
+		<control id="key" address="0x42"/>
+		<control id="tilt" address="0x44"/>
+		<control id="tdistortionctrl" address="0x46"/>
+		<control id="tdistortionbalance" address="0x48"/>
+		<control id="bdistortionctrl" address="0x4A"/>
+		<control id="bdistortionbalance" address="0x4C"/>
 		
-		<control id="vmoire"/>
-		<control id="tlpurity"/>
-		<control id="trpurity"/>
-		<control id="blpurity"/>
-		<control id="brpurity"/>
+		<control id="vmoire" address="0x56"/>
+		<control id="tlpurity" address="0xE8"/>
+		<control id="trpurity" address="0xE9"/>
+		<control id="blpurity" address="0xEA"/>
+		<control id="brpurity" address="0xEB"/>
 		
-		<control id="degauss"/>
-		<control id="defaults"/>
-		<control id="defaultgeom"/>
-		<control id="defaultcolor"/>
+		<control id="degauss" address="0x00"/>
+		<control id="defaults" address="0x04"/>
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
 	</controls>
 </monitor>
