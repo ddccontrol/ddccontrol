@@ -53,6 +53,11 @@ static void riva_gpio_setscl(void* data, int state)
 {
 	u32			val;
 
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, 0x1f);
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d5, 0x57);
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, 0x44);
+    val = VGA_RD08(((struct i2c_data*)data)->PCIO, 0x3d5) & 0xf0;
+
 	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, ((struct i2c_data*)data)->ddc_base + 1);
 	val = VGA_RD08(((struct i2c_data*)data)->PCIO, 0x3d5) & 0xf0;
 
@@ -68,6 +73,11 @@ static void riva_gpio_setscl(void* data, int state)
 static void riva_gpio_setsda(void* data, int state)
 {
 	u32			val;
+
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, 0x1f);
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d5, 0x57);
+	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, 0x44);
+    val = VGA_RD08(((struct i2c_data*)data)->PCIO, 0x3d5) & 0xf0;
 
 	VGA_WR08(((struct i2c_data*)data)->PCIO, 0x3d4, ((struct i2c_data*)data)->ddc_base + 1);
 	val = VGA_RD08(((struct i2c_data*)data)->PCIO, 0x3d5) & 0xf0;
@@ -151,8 +161,8 @@ struct card* nvidia_open(struct pci_dev *dev)
 	nvidia_card->data = data;
 	
 	data->fd = open("/dev/mem", O_RDWR);
-	data->length = 0x01000000;
-	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0]);
+	data->length = 0x00001000;
+	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0] + 0x00601000);
 	
 	if (data->memory == MAP_FAILED) {
 		fprintf(stderr, "nvidia_open: Error: mmap failed\n");
@@ -160,11 +170,12 @@ struct card* nvidia_open(struct pci_dev *dev)
 		return 0;
 	}
 	
-	char* PCIO = data->memory + 0x00601000;
+	char* PCIO = data->memory;
 	
 	switch ((dev->device_id >> 4) & 0xff) {
 	case 0x17:
 	case 0x18:
+	case 0x1f:
 	case 0x25:
 	case 0x28:
 	case 0x30:
