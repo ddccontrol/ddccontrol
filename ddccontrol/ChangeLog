@@ -1,3 +1,7 @@
+2005-04-01 18:30  nboichat
+
+	* commit.sh: Add tag names in ChangeLog.
+
 2005-04-01 18:26  nboichat
 
 	* po/.cvsignore, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
@@ -26,6 +30,8 @@
 2005-03-29 08:57  nboichat
 
 	* doc/: Makefile.am, Makefile.in: Add style-fo.xsl to dist.
+
+2005-03-28 23:02  tag Release-0_1
 
 2005-03-28 23:02  nboichat
 
@@ -111,6 +117,8 @@
 	  controls are updated when list or command controls are toggeled
 	  - Restore buttons are temporaly removed
 
+2005-01-10 00:16  tag Before_new_gddccontrol_tag
+
 2005-01-10 00:16  nboichat
 
 	* configure, configure.ac, src/config.h.in,
@@ -194,6 +202,8 @@
 	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c,
 	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h: -m
+
+2004-10-09 15:36  tag BEFORE_DDCPCI
 
 2004-10-09 15:36  nboichat
 
@@ -366,6 +376,8 @@
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
 	  src/lib/.cvsignore: Add .cvsignore files.
+
+2004-08-30 21:19  tag start
 
 2004-08-30 21:19  nboichat
 
