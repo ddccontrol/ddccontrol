@@ -118,14 +118,15 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	xmlChar *tmp;
 	char buffer[256];
 
-	snprintf(buffer, 256, "../../db/monitor/%s.xml", pnpname);
+	snprintf(buffer, 256, "%s/monitor/%s.xml", DATADIR, pnpname);
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
 		fprintf(stderr,"Document not parsed successfully. \n");
 		return NULL;
 	}
 	
-	options_doc = xmlParseFile("../../db/options.xml");
+	snprintf(buffer, 256, "%s/options.xml", DATADIR);
+	options_doc = xmlParseFile(buffer);
 	if (options_doc == NULL) {
 		fprintf(stderr,"Document not parsed successfully. \n");
 		xmlFreeDoc(mon_doc);

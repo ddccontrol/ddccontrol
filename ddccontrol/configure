@@ -3858,7 +3858,7 @@ echo "$as_me: error: xml2-config not found" >&2;}
    { (exit please install libxml2); exit please install libxml2; }; }
 fi
 
-CFLAGS="$CFLAGS -Wall `xml2-config --cflags`"
+CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\""
 LDFLAGS="$LDFLAGS `xml2-config --libs`"
 
 # Gnome check

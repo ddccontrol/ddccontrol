@@ -18,7 +18,7 @@ if test "x$XML2_CONFIG" = "xno" ; then
    AC_MSG_ERROR(xml2-config not found, please install libxml2, available at http://www.xmlsoft.org/.)
 fi
 
-CFLAGS="$CFLAGS -Wall `xml2-config --cflags`"
+CFLAGS="$CFLAGS -Wall `xml2-config --cflags` -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\""
 LDFLAGS="$LDFLAGS `xml2-config --libs`"
 
 # Gnome check

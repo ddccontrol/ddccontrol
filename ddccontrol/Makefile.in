@@ -145,7 +145,6 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = src
-EXTRA_DIST = kernel-patches
 all: all-recursive
 
 .SUFFIXES:
