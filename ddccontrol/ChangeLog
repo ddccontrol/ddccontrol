@@ -1,3 +1,8 @@
+2004-09-04 14:59  nboichat
+
+	* TODO, doc/xml-design.txt, src/lib/monitor_db.c: New XML design
+	  allowing empty value list for commands.
+
 2004-09-03 00:31  nboichat
 
 	* commit.sh, src/lib/monitor_db.c: Small db fix.\nAdd automatic
