@@ -57,6 +57,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	int i = 0;
 
 	if (notebook != NULL) {
+		deleteNotebook();
 		gtk_container_remove(GTK_CONTAINER(table), notebook);
 		gtk_widget_destroy(notebook);
 	}
@@ -140,7 +141,9 @@ int main( int   argc, char *argv[] )
 	
 	gtk_widget_show (moninfo);
 	
-	gtk_main ();
+	gtk_main();
+	
+	deleteNotebook();
 	
 	ddcci_free_list(monlist);
 	

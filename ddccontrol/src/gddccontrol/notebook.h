@@ -27,5 +27,6 @@
 #include "monitor_db.h"
 
 GtkWidget* createNotebook(struct monitorlist* monitor);
+void deleteNotebook();
 
 #endif

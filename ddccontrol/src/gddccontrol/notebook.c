@@ -34,6 +34,8 @@
 
 #define LINE_LENGTH 15 //Maximum line length in buttons
 
+#define RETRYS 3 /* number of retrys */
+
 struct monitor mon;
 GtkWidget* valuelabel;
 GtkWidget* valuerange;
@@ -42,6 +44,8 @@ GtkWidget* currentbutton = NULL;
 int currentControl = -1;
 unsigned short currentDefault = 1;
 unsigned short currentMaximum = 1;
+
+int modified = 0;
 
 static void range_callback(GtkWidget *widget, gpointer data)
 {
@@ -55,6 +59,8 @@ static void range_callback(GtkWidget *widget, gpointer data)
 		ddcci_writectrl(&mon, currentControl, nval);
 		
 		gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*nval/(double)currentMaximum);
+		gtk_widget_set_sensitive(restorevalue, TRUE);
+		modified = 1;
 	}
 }
 
@@ -65,6 +71,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 		ddcci_writectrl(&mon, currentControl, currentDefault);
 		
 		gtk_range_set_value(GTK_RANGE(valuerange), (double)100.0*currentDefault/(double)currentMaximum);
+		gtk_widget_set_sensitive(restorevalue, FALSE);
 	}
 }
 
@@ -74,6 +81,8 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (currentbutton), 0);
 	}
 	
+	int retry;
+	
 	struct control_db* control = (struct control_db*)data;
 	
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
@@ -81,7 +90,12 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 		currentbutton = widget;
 		currentControl = control->address;
 		gtk_label_set_text(GTK_LABEL(valuelabel), control->name);
-		if (ddcci_readctrl(&mon, currentControl, &currentDefault, &currentMaximum) > 0)
+		for (retry = RETRYS; retry; retry--) {
+			if (ddcci_readctrl(&mon, currentControl, &currentDefault, &currentMaximum)) {
+				break;
+			}
+		}
+		if (retry > 0)
 		{
 			/*printf("def: %d, max: %d\n", currentDefault, currentMaximum);
 			printf("incs: %f, val: %f\n", 1.0/(double)currentMaximum, (double)currentDefault/(double)currentMaximum);*/
@@ -99,6 +113,7 @@ static void buttons_callback(GtkWidget *widget, gpointer data)
 			gtk_widget_hide(restorevalue);
 			gtk_widget_hide(valuerange);
 		}
+		gtk_widget_set_sensitive(restorevalue, FALSE);
 	} 
 	else
 	{
@@ -166,7 +181,7 @@ void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 		g_signal_connect_after(G_OBJECT(button), "toggled", 
 			G_CALLBACK(buttons_callback), (gpointer)control);
 		x++;
-		if (x == 3) { /* Temporary */
+		if (x == 3) {
 			x = 0;
 			y++;
 		}
@@ -227,6 +242,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	restorevalue = gtk_button_new_with_label("Restore default value");
 	gtk_table_attach(GTK_TABLE(right), restorevalue, 0, 1, 2, 3, GTK_EXPAND, GTK_EXPAND, 5, 5);
 	g_signal_connect_after(G_OBJECT(restorevalue), "clicked", G_CALLBACK(restore_callback), NULL);
+	gtk_widget_set_sensitive(restorevalue, FALSE);
 	
 	GtkWidget* table = gtk_table_new(1, 2, FALSE);
 	gtk_widget_show (notebook);
@@ -238,3 +254,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	return table;
 }
 
+void deleteNotebook() {
+	ddcci_save(&mon);
+	ddcci_close(&mon);
+}
