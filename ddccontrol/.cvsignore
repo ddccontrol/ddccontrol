@@ -7,3 +7,6 @@ ddccontrol.kdevelop
 ddccontrol.kdevelop.filelist
 ddccontrol.kdevelop.pcs
 ddccontrol.kdevses
+Makefile
+config.log
+config.status
