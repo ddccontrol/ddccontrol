@@ -41,5 +41,14 @@
 		<control id="defaults" address="0x04"/>
 		<control id="defaultgeom" address="0x06"/>
 		<control id="defaultcolor" address="0x08"/>
+		
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="0"/>
+			<value id="deutsch" value="1"/>
+			<value id="french" value="2"/>
+			<value id="spanish" value="3"/>
+			<value id="italian" value="4"/>
+			<value id="chinese" value="5"/>
+		</control>
 	</controls>
 </monitor>

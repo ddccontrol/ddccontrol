@@ -38,11 +38,11 @@
 		<control id="language" type="list" address="0xcc">
 			<value id="english" value="2"/>
 			<value id="french" value="3"/>
-			<value id="deutsch" value="4"/>
+			<value id="german" value="4"/>
 			<value id="italian" value="5"/>
 			<value id="russian" value="9"/>
 			<value id="spanish" value="10"/>
-			<value id="svenska" value="11"/>
+			<value id="swedish" value="11"/>
 		</control>
 		<control id="dpms" type="list" address="0xd6">
 			<value id="on" value="1"/>
