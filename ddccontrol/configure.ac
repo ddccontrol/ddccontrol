@@ -104,8 +104,17 @@ if test x$support_gnome = xyes; then
       GNOME_CFLAGS="$CFLAGS `pkg-config --cflags gtk+-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
+      
+      # Check for X11
+      AC_PATH_XTRA
+   
+      AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
+        AC_DEFINE(HAVE_XINERAMA, 1, [Xinerama support]) XINERAMA_LIBS=-lXinerama, 
+      ,$X_LIBS)
+      AC_SUBST([XINERAMA_LIBS])
    else
       echo "no"
+      AC_MSG_ERROR(gtk+-2.0 development packages not found)
    fi
 fi
 

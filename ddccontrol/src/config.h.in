@@ -71,6 +71,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Xinerama support */
+#undef HAVE_XINERAMA
+
 /* Name of package */
 #undef PACKAGE
 
@@ -94,6 +97,9 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Define to 1 if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
 
 /* Define unconditionally for setting a GNU environment. */
 #undef _GNU_SOURCE

@@ -24,6 +24,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#ifdef HAVE_XINERAMA
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+#include <X11/extensions/Xinerama.h>
+#endif
+
 #include "ddcci.h"
 #include "monitor_db.h"
 
@@ -42,14 +48,22 @@ GtkWidget *moninfo;
 
 struct monitorlist* monlist;
 
+#ifdef HAVE_XINERAMA
+int xineramacurrent = 0; //Arbitrary, should be read from the user
+int xineramanumber;
+XineramaScreenInfo* xineramainfo;
+#endif
+
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
-                              gpointer   data ) {
+                              gpointer   data )
+{
     return FALSE;
 }
 
 static void destroy( GtkWidget *widget,
-                     gpointer   data ) {
+                     gpointer   data )
+{
     gtk_main_quit ();
 }
 
@@ -73,8 +87,6 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	
 	struct monitorlist* current;
 	
-	combo_box = gtk_combo_box_new_text();
-	
 	for (current = monlist;; current = current->next)
 	{
 		g_assert(current != NULL);
@@ -92,9 +104,58 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
 }
 
+#ifdef HAVE_XINERAMA
+static gboolean window_changed(GtkWidget *widget, 
+				GdkEventConfigure *event,
+				gpointer user_data)
+{
+	if (xineramanumber == 2) { // If there are more than two monitors, we need a configuration menu
+		int cx, cy, i;
+		struct monitorlist* current;
+		
+		if (monlist == NULL) {
+			printf("monlist == NULL\n");
+			return FALSE;
+		}
+		
+		i = 0;
+		for (current = monlist; current != NULL; current = current->next) i++;
+		
+		if (i != 2) { // Every monitor does not support DDC/CI, or there are more monitors plugged-in
+			printf("i : %d\n", i);
+			return FALSE;
+		}
+		
+		cx = event->x + (event->width/2);
+		cy = event->y + (event->height/2);
+		
+		for (i = 0; i < xineramanumber; i++) {
+			if (
+				(cx >= xineramainfo[i].x_org) && (cx < xineramainfo[i].x_org+xineramainfo[i].width) &&
+				(cy >= xineramainfo[i].y_org) && (cy < xineramainfo[i].y_org+xineramainfo[i].height)
+			   ) {
+				if (xineramacurrent != i) {
+					int k = gtk_combo_box_get_active(GTK_COMBO_BOX(combo_box));
+					printf("Monitor changed (%d %d).\n", i, k);
+					k = (k == 0) ? 1 : 0;
+					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
+					xineramacurrent = i;
+				}
+				return FALSE;
+			}
+		}
+		
+		//g_warning(_("Could not find the current monitor in Xinerama monitors list."));
+	}
+	
+	return FALSE;
+}
+#endif
+
 int main( int   argc, char *argv[] )
 { 
 	int i, verbosity = 0;
+	int event_base, error_base;
 	
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -126,11 +187,38 @@ int main( int   argc, char *argv[] )
 	
 	g_signal_connect (G_OBJECT (window), "destroy",
 				G_CALLBACK (destroy), NULL);
+
+	#ifdef HAVE_XINERAMA
+	g_signal_connect (G_OBJECT (window), "configure-event",
+				G_CALLBACK (window_changed), NULL);
+	#endif
 	
 	gtk_container_set_border_width (GTK_CONTAINER (window), 10);
 	
 	gtk_widget_show (window);
-
+	
+	#ifdef HAVE_XINERAMA
+	if (XineramaQueryExtension(GDK_DISPLAY(), &event_base, &error_base)) {
+		if (XineramaIsActive(GDK_DISPLAY())) {
+			printf("Xinerama supported and active\n");
+			
+			xineramainfo = XineramaQueryScreens(GDK_DISPLAY(), &xineramanumber);
+			int i;
+			for (i = 0; i < xineramanumber; i++) {
+				printf("Display %d: %d, %d, %d, %d, %d\n", i, 
+					xineramainfo[i].screen_number, xineramainfo[i].x_org, xineramainfo[i].y_org, 
+					xineramainfo[i].width, xineramainfo[i].height);
+			}
+		}
+		else {
+			printf("Xinerama supported but inactive.\n");
+		}
+	}
+	else {
+		printf("Xinerama not supported\n");
+	}
+	#endif
+	
 	monlist = ddcci_probe();
 	struct monitorlist* current;
 	
@@ -177,6 +265,10 @@ int main( int   argc, char *argv[] )
 	ddcci_free_list(monlist);
 	
 	ddcpci_release();
+	
+	#ifdef HAVE_XINERAMA
+	XFree(xineramainfo);
+	#endif
 	
 	return 0;
 }

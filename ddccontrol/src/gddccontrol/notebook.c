@@ -110,13 +110,13 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 			gtk_widget_set_sensitive(restorevalue, FALSE);
 			break;
 		case command:
-			g_critical(_("restore_callback should not be called for command controls.\n"));
+			g_critical(_("restore_callback should not be called for command controls."));
 			break;
 		case list: {
 				GSList* group = valuegroup;
 				while(TRUE) {
 					if (group == NULL) {
-						g_critical(_("Cannot find current control value in value list.\n"));
+						g_critical(_("Cannot find current control value in value list."));
 						return;
 					}
 					
