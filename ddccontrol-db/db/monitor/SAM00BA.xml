@@ -1,13 +1,94 @@
 <?xml version="1.0"?>
-<monitor name="Samsung SyncMaster 173T" init="samsung">
-  <controls>
-    <control id="brightness" address="0x10"/>
-    <control id="contrast" address="0x12"/>
-    <control id="magicbright" address="0xDC">
-      <value id="text" value="0x01"/>
-      <value id="internet" value="0x02"/>
-      <value id="entertain" value="0x03"/>
-      <value id="custom" value="0x04"/>
-    </control>
-  </controls>
+<monitor name="Samsung SyncMaster 173T" init="standard">
+	<controls>
+		<!-- 0x04 -->
+		<control id="defaults"/>
+		<!-- 0x05 -->
+		<control id="defaultluma" type="command" name="Reset Brightness and Contrast" address="0x05"/>
+		<!-- 0x06 -->
+		<control id="defaultgeom"/>
+		<!-- 0x08 -->
+		<control id="defaultcolor"/>
+		<!-- 0x0e -->
+		<control id="coarse" type="value" name="Image Lock Coarse" address="0x0e"/>
+		<!-- 0x10 -->
+		<control id="brightness"/>
+		<!-- 0x12 -->
+		<control id="contrast"/>
+		<!-- 0x16 -->
+		<control id="red"/>
+		<!-- 0x18 -->
+		<control id="green"/>
+		<!-- 0x1a -->
+		<control id="blue"/>
+		<!-- 0x1e -->
+		<control id="auto" type="command" name="Automatically Adjust Size" address="0x1e"/>
+		<!-- 0x20 -->
+		<control id="hpos"/>
+		<!-- 0x30 -->
+		<control id="vpos"/>
+		<!-- 0x3e -->
+		<control id="fine" type="value" name="Image Lock Fine" address="0x3e"/>
+		<!-- 0x60 -->
+		<control id="inputsource" type="list">
+			<value id="analog" value="1" name="Analog"/>
+			<value id="digital" value="3" name="Digital"/>
+		</control>
+		<!-- 0x62 has no meaning for SM173T -->
+		<!-- 0x6c Service: Red Video Black Level -->
+		<!-- 0x6e Service: Green Video Black Level -->
+		<!-- 0x70 Service: Blue Video Black Level -->
+		<!-- 0xb0 -->
+		<control id="settings" type="command" name="Settings" address="0xb0">
+			<value id="store" value="1"/>
+			<value id="restorefactory" value="2"/>
+		</control>
+		<!-- 0xb6: +/3/8	[???] -->
+		<!-- 0xc6: +/1/1	[???] -->
+		<!-- 0xc8: +/5/16	[???] -->
+		<!-- 0xc9: +/1/0	[???] -->
+		<!-- 0xca -->
+		<control id="osdenable" type="list" name="On Screen Display" address="0xca">
+			<value id="disable" value="1" name="Disable"/>
+			<value id="enable" value="2" name="Enable"/>
+		</control>
+		<!-- 0xcc -->
+		<control id="language" type="list" name="Language select" address="0xcc">
+			<value id="english" value="2" name="English"/>
+			<value id="french" value="3" name="Francais"/>
+			<value id="deutsch" value="4" name="Deutsch"/>
+			<value id="italian" value="5" name="Italiano"/>
+			<value id="russian" value="9" name="Russian"/>
+			<value id="spanish" value="10" name="Espanol"/>
+			<value id="svenska" value="11" name="Svenska"/>
+		</control>
+		<!-- 0xd6 -->
+		<control id="dpms" type="list" name="DPMS Control" address="0xd6">
+			<value id="on" value="1" name="On"/>
+			<value id="standby" value="4" name="Standby"/>
+		</control>
+		<!-- 0xdc -->
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+			<value id="entertain" value="3"/>
+			<value id="custom" value="4"/>
+		</control>
+		<!-- 0xdf: +/512/0	[VCP Version] -->
+		<!-- 0xe0 -->
+		<control id="colorpreset" type="list" name="Color Preset" address="0xe0">
+			<value id="normal" value="0" name="Normal"/>
+			<value id="warm" value="1" name="Warm"/>
+			<value id="cool" value="2" name="Cool"/>
+		</control>
+		<!-- 0xe1 -->
+		<control id="power" type="list" name="Power control" address="0xe1">
+			<value id="off" value="0" name="Off"/>
+			<value id="on" value="1" name="On"/>
+		</control>
+		<!-- 0xe2: +/0/1	[???] -->
+		<!-- 0xed: +/108/255	[SAM: Red Video Black Level] -->
+		<!-- 0xee: +/101/255	[SAM: Green Video Black Level] -->
+		<!-- 0xef: +/103/255	[SAM: Blue Video Black Level] -->
+	</controls>
 </monitor>
