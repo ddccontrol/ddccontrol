@@ -1,4 +1,3 @@
 Nicolas:
- - Replace spaces by tabs in XMLs
  - Fix functions {} format to respect GNU standard
  

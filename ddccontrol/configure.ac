@@ -3,6 +3,10 @@ AC_INIT([DDC/CI control tool], [0.1],
         [ddccontrol])
 AM_CONFIG_HEADER(src/config.h)
 AM_INIT_AUTOMAKE
+
+# Avoid automatic *.in file regeneration
+AM_MAINTAINER_MODE
+
 AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_INSTALL
