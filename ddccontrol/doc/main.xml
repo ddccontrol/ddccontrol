@@ -35,7 +35,7 @@ of the monitor.</para>
 <para>All the software provided by monitor manufacturers (NEC/Mitsubishi NaviSet
 and Samsung MagicTune) are closed-source and only runs on Windows.
 DDCcontrol is open-source and runs on Linux.</para>
-<para>There is two version of this tool, a command line version, and a 
+<para>There is two versions of this tool, a command line version, and an 
 user-friendly Gnome GUI.</para>
 </sect1>
  
@@ -52,7 +52,7 @@ using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
 
 <sect1 id="requirement">
 <title>Software Requirement</title>
-<para>To compile and run DDCcontrol, you need to install these packages:</para>
+<para>To compile and run DDCcontrol, you need to have these packages installed:</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
@@ -70,6 +70,11 @@ using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
 </para>
 </listitem>
 </itemizedlist>
+<para>In addition to the library packages, you also need the development
+packages, which are not usually installed. For example, on Debian, their names
+are <filename>libxml2-dev</filename>, <filename>pciutils-dev</filename> and
+<filename>libgtk2.0-dev</filename>. Others distributions probably have similar
+packages names.</para>
 <note>
 <para>
 You don't need pci-utils if you don't use direct PCI memory access, and you 
@@ -88,8 +93,8 @@ download section</ulink> of ddccontrol project's page and download the latest
 source tarballs.</para>
 <para>Then unpack these two archives with:</para>
 <screen format="linespecific">
-# tar xvfz ddccontrol-0.1.tar.gz
-# tar xvfz ddccontrol-db-0.1.tar.gz
+# tar xvfz ddccontrol-<replaceable>X.Y</replaceable>.tar.gz
+# tar xvfz ddccontrol-db-<replaceable>YYYYMMDD</replaceable>.tar.gz
 </screen>
 <para>You should now have two directories, <filename>ddccontrol</filename> and
 <filename>ddccontrol-db</filename>.</para>
@@ -123,9 +128,9 @@ module by typing, as root:</para>
 </screen>
 <para>You must also load your graphics card framebuffer driver (for
 card-specific instructions see <xref linkend="supportedgc"/>).</para>
-<para>If you want to load these modules automatically when Linux starts, see 
+<para>If you want to automatically load these modules when Linux starts, see 
 your distribution's documentation.</para>
-<para>To allow standard (non-root) users to use DDCcontrol, you must change the
+<para>To allow standard (i.e. non-root) users to use DDCcontrol, you must change
 permissions on <filename>/dev/i2c-*</filename>. This is done by typing, as 
 root:</para>
 <screen format="linespecific">
@@ -191,17 +196,18 @@ information, type:</para>
 </note>
 <sect2>
 <title>Usage example</title>
-<para>On this, we will first list all available controls and change the brightness
-parameter.</para>
+<para>This example explains how to list all available controls and then
+change the brightness parameter.</para>
 <sect3>
 <title>List available controls</title>
 <para>To list available controls, type:</para>
 <screen format="linespecific">
 # ddccontrol -p
 </screen>
-<para>It will probe for available monitors, take the first available and list
-controls for this monitor. This should give you an output like below (this example uses
-a Samsung Syncmaster 173P and an nVidia GeForce FX 5700):</para>
+<para>This probes for available monitors, then takes the first probed monitor
+and lists controls supported by it. This should give you an output like this
+(this example uses a Samsung Syncmaster 173P and a nVidia GeForce FX 5700):
+</para>
 <screen format="linespecific">
 ddccontrol version 0.1
 Copyright 2004 Oleg I. Vdovikin (oleg-at-cs.msu.su)
@@ -285,7 +291,7 @@ EDID readings:
 <computeroutput>0x10</computeroutput>), current value
 (<computeroutput>55</computeroutput>) and maximum value
 (<computeroutput>100</computeroutput>).</para>
-<para>To change the brightness value to 70%, type:</para>
+<para>To change the brightness value to 70/100, type:</para>
 <screen format="linespecific">
 ddccontrol -p -r <userinput>0x10</userinput> -w <userinput>70</userinput>
 </screen>
@@ -298,6 +304,18 @@ Control 0x10: +/70/100 [Brightness]
 </sect2>
 </sect1>
 </chapter>
+
+<appendix id="report">
+<title>Report problems and successes</title>
+<para>If you have problems building or running DDCcontrol, if your monitor
+doesn't work with DDCcontrol, or if your graphics card is not listed in the
+<xref linkend="supportedgc"/>, please write a message to 
+<ulink url="mailto:ddccontrol-users@lists.sourceforge.net">
+ddccontrol-users@lists.sourceforge.net</ulink>.</para>
+<para>For more informations on ddccontrol mailing lists, see 
+<ulink url="http://sourceforge.net/mail/?group_id=117933">
+the sourceforge project page</ulink>.</para>
+</appendix>
 
 <appendix id="supportedmonitors">
 <title>Supported monitors</title>
@@ -332,20 +350,31 @@ SyncMaster 193P (VGA and DVI inputs)
 </listitem>
 </itemizedlist>
 </sect3>
+<sect2>
+<title>Your monitor is not on this list?</title>
+<para>If your monitor is not on this list, and so doesn't work with DDCcontrol,
+but you think that it supports the DDC/CI protocol, please run this command:
+<screen format="linespecific">
+ddccontrol -p -c -d
+</screen>
+And send the output to one of the DDCcontrol mailing lists (see
+<xref linkend="report"/>).</para>
+</sect2>
 </appendix>
 
 
 
 <appendix id="supportedgc">
 <title>Supported graphics cards</title>
-<note>
+<sect2>
+<title><filename>/dev/i2c-*</filename> versus PCI memory</title>
 <para>To control a monitor, DDCcontrol must access to the I2C bus of the
-graphics card. They are two methods to do so: the first one uses
+graphics card. There are two methods to do so: the first one uses
 <filename>/dev/i2c-*</filename> devices provided by kernel drivers (abbreviated
-by dev in tables), the second one reads and writes directly on the card PCI
-memory (abbreviated by PCI in tables).</para>
+by dev in tables), the second one reads and writes directly in the card PCI
+memory (abbreviated by PCI in the tables).</para>
 <para>Depending on your hardware, one method or the other works, or even both.</para>
-</note>
+</sect2>
 <sect1>
 <title>ATI</title>
 <sect2>
@@ -356,8 +385,8 @@ as root:</para>
 <screen format="linespecific">
 # modprobe radeonfb
 </screen>
-<para>The kernel configuration options needed to enable Radeon framebuffer and
-I2C support are:</para>
+<para>The kernel configuration options needed to enable Radeon framebuffer
+driver and I2C support are:</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <menuchoice>
@@ -380,6 +409,9 @@ I2C support are:</para>
 </sect2>
 <sect3>
 <title>ATI cards support table</title>
+<para>These ATI cards have been reported to work, but others models should also
+work. If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
 <informaltable frame="all">
 <tgroup cols='3'>
 <colspec colname='name' align="left"/>
@@ -436,8 +468,8 @@ I2C support are:</para>
 <title>nVidia</title>
 <sect2>
 <title>Direct PCI memory access support</title>
-<para>Almost every nVidia cards works with direct PCI memory access, and it is 
-compatible with the nVidia proprietary drivers.</para>
+<para>Almost every nVidia cards work with direct PCI memory access, and this
+method is compatible with the nVidia proprietary drivers.</para>
 <para>To use it, you have nothing special to do, everything is done by 
 DDCcontrol.</para>
 </sect2>
@@ -483,6 +515,9 @@ nVidia cards.</para>
 </sect2>
 <sect3>
 <title>nVidia cards support table</title>
+<para>Most of these nVidia cards have been reported to work, but others models
+should also work. If yours is not listed, please send a message to one of the
+DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <informaltable frame="all">
 <tgroup cols='3'>
 <colspec colname='name' align="left"/>
