@@ -332,7 +332,7 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 	_buf[0] = DDCCI_COMMAND_CAPS;
 	_buf[1] = offset >> 8;
 	_buf[2] = offset & 255;
-
+	
 	if (ddcci_write(mon, _buf, sizeof(_buf)) < 0) 
 	{
 		return -1;
@@ -341,23 +341,31 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 	return ddcci_read(mon, buf, len);
 }
 
-int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen) 
+int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 {
 	int bufferpos = 0;
 	unsigned char buf[35];	/* 35 bytes chunk */
 	int offset = 0;
 	int len, i;
+	int retries = 3;
 	
 	do {
+		buffer[bufferpos] = 0;
+		if (retries == 0) {
+			return -1;
+		}
+		
 		len = ddcci_raw_caps(mon, offset, buf, sizeof(buf));
 		if (len < 0) {
-			return -1;
+			retries--;
+			continue;
 		}
 		
 		if (len < 3 || buf[0] != DDCCI_REPLY_CAPS || (buf[1] * 256 + buf[2]) != offset) 
 		{
 			fprintf(stderr, _("Invalid sequence in caps.\n"));
-			return -1;
+			retries--;
+			continue;
 		}
 
 		for (i = 3; i < len; i++) {
@@ -367,9 +375,11 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 				return -1;
 			}
 		}
-
+		
 		offset += len - 3;
-	} while (len > 3);
+		
+		retries = 3;
+	} while (len != 3);
 
 	buffer[bufferpos] = 0;
 	
@@ -442,7 +452,14 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		return -2;
 	}
 	
-	mon->db = ddcci_create_db(mon->pnpid);
+	unsigned char buf[1024];
+	
+	if (ddcci_caps(mon, buf, 1024) > -1) {
+		mon->db = ddcci_create_db(mon->pnpid, buf);
+	}
+	else {
+		mon->db = ddcci_create_db(mon->pnpid, "");
+	}
 	
 	if (mon->db) {
 		if (mon->db->init == samsung) {

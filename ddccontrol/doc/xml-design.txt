@@ -22,8 +22,6 @@ If you don't define any value entry in a command control, the default
 value 0x01 will be used.
 
 The "address" parameter in control and "value" in value are optional.
-These are default values used if not redefined in the monitor configuration
-file.
 
 File format:
 
@@ -47,7 +45,7 @@ File format:
   <group ...>
 <options>
 
-monitor/%monitor_id%.xml
+monitor/%monitor_id%.xml (monitor profiles)
 ------------------------
 
 List of controls related to this monitor.
@@ -59,6 +57,16 @@ in the general options file.
 The init parameter in monitor define the type of the initialisation:
 DDC/CI standard ("standard"), or Samsung ("samsung"). 
 
+The caps parameter is optional. It is compatible with ACCESS.bus
+specifications and is treated as following: 
+ - If caps does not exist, then they would be read from monitor.
+ - If this attribute exists and have a vcp string
+   (i.e. caps="type(lcd) vcp(10 12)") then specified caps string
+   will be used.
+ - If specified caps string does not contain vcp (i.e. caps="type(crt)"
+   or caps=""), then all controls defined in the monitor profile are 
+   supposed to be supported.
+
 You can set a parameter delay to set the time in milliseconds to wait
 after changing the value of this control. If you don't, a default value
 is used.
@@ -66,7 +74,7 @@ is used.
 File format:
 
 <?xml version="1.0"?>
-<monitor name="%full_monitor_name%" init="[standard|samsung]">
+<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
   <controls>
     <!--- value -->
     <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
@@ -89,4 +97,4 @@ If the monitor is exactly like another one, you can define it
 as shown:
 
 <?xml version="1.0"?>
-<monitor include="%monitor_id%" name="%full_monitor_name%"/>
+<monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>

@@ -40,11 +40,104 @@
 #define DDCCI_RETURN_IF(cond, value, message, node) \
 	if (cond) { \
 		if (node) \
-			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, node->doc->name, XML_GET_LINE(node)); \
+			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, \
+				((xmlNodePtr)node)->doc->name, XML_GET_LINE(node)); \
 		else \
 			fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
 		return value; \
 	}
+
+/* Structure to store CAPS entry (control and related values) */
+struct caps_entry {
+	int values_len; /* -1 if values were not specified */
+	unsigned short* values;
+};
+
+/* See doc/xml-design.txt
+ * Returns :
+ * -1 if an error occured 
+ *  0 otherwise
+ */
+int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
+{
+//	printf("Parsing CAPS (%s).\n", caps_str);
+	int pos = 0; /* position in caps_str */
+	
+	int level = 0; /* CAPS parenthesis level */
+	int vcp = 0; /* Current CAPS section is vcp */
+	
+	int containsvcp = 0;
+	
+	char buf[8];
+	char* endptr;
+	long ind = -1;
+	long val = -1;
+	int i;
+	
+	for (pos = 0; caps_str[pos] != 0; pos++)
+	{
+		if (caps_str[pos] == '(') {
+			level++;
+		}
+		else if (caps_str[pos] == ')')
+		{
+			level--;
+			if (level == 0) {
+				vcp = 0;
+			}
+		}
+		else if (caps_str[pos] != ' ')
+		{
+			if ((level == 1) && (strncmp(caps_str+pos, "vcp", 3) == 0)) {
+				vcp = 1;
+				pos += 2;
+				containsvcp = 1;
+			}
+			else if ((vcp == 1) && (level == 2)) {
+				buf[0] = caps_str[pos];
+				buf[1] = caps_str[++pos];
+				buf[2] = 0;
+				ind = strtol(buf, &endptr, 16);
+				DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert value to int, invalid CAPS.", NULL);
+				//printf("Index %lx in CAPS.\n", ind);
+				caps[ind] = malloc(sizeof(struct caps_entry));
+				caps[ind]->values_len = -1;
+				caps[ind]->values = NULL;
+			}
+			else if ((vcp == 1) && (level == 3)) {
+				i = 0;
+				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
+					buf[i] = caps_str[pos+i];
+					i++;
+				}
+				buf[i] = 0;
+				val = strtol(buf, &endptr, 16);
+				DDCCI_RETURN_IF(*endptr != 0, -1, "Can't convert value to int, invalid CAPS.", NULL);
+				if (caps[ind]->values_len == -1) {
+					caps[ind]->values_len = 1;
+				}
+				else {
+					caps[ind]->values_len++;
+				}
+				caps[ind]->values = realloc(caps[ind]->values, caps[ind]->values_len*sizeof(unsigned short));
+				caps[ind]->values[caps[ind]->values_len-1] = val;
+			}
+		}
+	}
+	
+	/* If no vcp is specified, then every control is accepted */
+	if (!containsvcp) {
+		for (i = 0; i < 256; i++) {
+			caps[i] = malloc(sizeof(struct caps_entry));
+			caps[i]->values_len = -1;
+			caps[i]->values = NULL;
+		}
+	}
+	
+	return 0;
+}
+
+/* End of CAPS structs/functions */
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command)
 {
@@ -123,7 +216,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	return 0;
 }
 
-int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group) {
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
@@ -158,15 +251,21 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
 					mon_ctrlid = xmlGetProp(cur, "id");
-					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
-						current_control->id   = options_ctrlid;
-						current_control->name = _D(options_ctrlname);
-						
+					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {					
 						tmp = xmlGetProp(cur, "address");
 						DDCCI_RETURN_IF(tmp == NULL, 0, "Can't find address property.", cur);
 						current_control->address = strtol(tmp, &endptr, 0);
 						DDCCI_RETURN_IF(*endptr != 0, 0, "Can't convert address to int.", cur);
 						xmlFree(tmp);
+						if (caps[current_control->address] == NULL) {
+							memset(current_control, 0, sizeof(struct control_db));
+							xmlFree(options_ctrlid);
+							xmlFree(options_ctrlname);
+							break;
+						}
+						
+						current_control->id   = options_ctrlid;
+						current_control->name = _D(options_ctrlname);
 						
 						tmp = xmlGetProp(cur, "delay");
 						if (tmp) {
@@ -235,8 +334,11 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 	return 1;
 }
 
-/* recursionlevel: Protection against looping includes */
-struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel)
+/* recursionlevel: Protection against looping includes
+ * default_caps: CAPS passed to ddcci_create_db (read from the monitor)
+ * prof_caps: CAPS read from one of the profile (NULL if none has been read yet)
+ */
+struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel, const char* default_caps, xmlChar* prof_caps)
 {
 	struct monitor_db* mon_db;
 	xmlDocPtr options_doc, mon_doc;
@@ -278,6 +380,9 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	
 	mon_name = xmlGetProp(cur, "name");
 	DDCCI_RETURN_IF(mon_name == NULL, NULL, "Can't find name property.", cur);
+	if (prof_caps == NULL) {
+		prof_caps = xmlGetProp(cur, "caps");
+	}
 	
 	if ((tmp = xmlGetProp(cur, "include"))) {
 		recursionlevel++;
@@ -288,7 +393,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			return NULL;
 		}
 
-		mon_db = ddcci_create_db_protected(tmp, recursionlevel);
+		mon_db = ddcci_create_db_protected(tmp, recursionlevel, default_caps, prof_caps);
 		if (mon_db) {
 			xmlFree(mon_db->name);
 			mon_db->name = mon_name;
@@ -333,6 +438,16 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		return NULL;
 	}
 	
+	/* Parse caps, and fill structure array. */
+	struct caps_entry* caps[256];
+	int i;
+	
+	for (i = 0; i < 256; i++) {
+		caps[i] = NULL;
+	}
+	
+	ddcci_parse_caps((prof_caps == NULL) ? default_caps: (const char*)prof_caps, caps);
+	
 	/* Find, if possible, each element of options_doc in mon_doc. */
 	
 	xmlChar *options_groupname, *options_subgroupname;
@@ -371,7 +486,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			control = subgroup->xmlChildrenNode;
 			
 			DDCCI_RETURN_IF(
-				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup), 
+				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps), 
 					NULL, "Error enumerating controls in group.", control);
 			
 			if (current_subgroup->control_list) {
@@ -407,12 +522,22 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	xmlFreeDoc(mon_doc);
 	xmlFreeDoc(options_doc);
 	
+	for (i = 0; i < 256; i++) {
+		if(caps[i]) {
+			if (caps[i]->values) {
+				free(caps[i]->values);
+			}
+			free(caps[i]);
+		}
+	}
+	
 	return mon_db;
 }
 
-struct monitor_db* ddcci_create_db(const char* pnpname)
+/* Logic concerning CAPS, see doc/xml-design.txt */
+struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps)
 {
-	return ddcci_create_db_protected(pnpname, 0);
+	return ddcci_create_db_protected(pnpname, 0, default_caps, NULL);
 }
 
 void ddcci_free_db(struct monitor_db* monitor)
