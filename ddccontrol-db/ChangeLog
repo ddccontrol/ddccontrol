@@ -1,3 +1,7 @@
+2004-11-05 15:14  nboichat
+
+	* db/monitor/NEC662B.xml: Add support for NEC MultiSync LCD 2080UX+
+
 2004-10-09 15:40  nboichat
 
 	* db/monitor/: SAM00D3.xml, SAM00E2.xml: Modified Samsung 173P
