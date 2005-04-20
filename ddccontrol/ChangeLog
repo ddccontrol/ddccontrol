@@ -1,3 +1,8 @@
+2005-04-20 21:43  nboichat
+
+	* src/: ddcpci/main.c, lib/ddcci.c, lib/ddcpci-ipc.h: Fix
+	  query/answer messages length.
+
 2005-04-02 12:28  nboichat
 
 	* src/: ddcpci/main.c, gddccontrol/main.c, lib/ddcci.c,
@@ -378,6 +383,11 @@
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add database support.
 
+2004-08-30 21:29  nboichat
+
+	* src/gddccontrol/.deps/: main.Po, notebook.Po: remove .deps
+	  directory
+
 2004-08-30 21:26  nboichat
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
@@ -395,6 +405,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial import.
 
@@ -408,6 +419,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial revision
 
