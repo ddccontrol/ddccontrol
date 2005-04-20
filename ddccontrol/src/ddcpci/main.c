@@ -51,6 +51,33 @@ card_close cards_close[] = {
 };
 /* end of card list */
 
+/* debugging */
+static void dumphex(FILE *f, unsigned char *buf, int len)
+{
+	int i, j;
+	
+	for (j = 0; j < len; j +=16) {
+		if (len > 16) {
+			fprintf(f, "%04x: ", j);
+		}
+		
+		for (i = 0; i < 16; i++) {
+			if (i + j < len) fprintf(f, "%02x ", buf[i + j]);
+			else fprintf(f, "   ");
+		}
+
+		fprintf(f, "| ");
+
+		for (i = 0; i < 16; i++) {
+			if (i + j < len) fprintf(f, "%c", 
+				buf[i + j] >= ' ' && buf[i + j] < 127 ? buf[i + j] : '.');
+			else fprintf(f, " ");
+		}
+		
+		fprintf(f, "\n");
+	}
+}
+
 struct pci_access *pacc;
 
 struct card* current_card = NULL;
@@ -270,7 +297,7 @@ int main(int argc, char **argv)
 	time_t last = time(NULL);
 	
 	while (cont) {
-		if ((len = msgrcv(msqid, &mquery, sizeof(struct query), 1, IPC_NOWAIT)) < 0) {
+		if ((len = msgrcv(msqid, &mquery, sizeof(struct query) - sizeof(long), 1, IPC_NOWAIT)) < 0) {
 			if (errno == ENOMSG) {
 				if ((time(NULL) - last) > (IDLE_TIMEOUT*1.1)) {
 					fprintf(stderr, _("==>No command received for %ld seconds, aborting.\n"), (time(NULL) - last));

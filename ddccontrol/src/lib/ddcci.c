@@ -82,6 +82,33 @@ void ddcci_verbosity(int _verbosity)
 #define DDCPCI_RETRY_DELAY 10000 /* in us */
 #define DDCPCI_RETRIES 100
 
+/* debugging */
+static void dumphex(FILE *f, unsigned char *buf, int len)
+{
+	int i, j;
+	
+	for (j = 0; j < len; j +=16) {
+		if (len > 16) {
+			fprintf(f, "%04x: ", j);
+		}
+		
+		for (i = 0; i < 16; i++) {
+			if (i + j < len) fprintf(f, "%02x ", buf[i + j]);
+			else fprintf(f, "   ");
+		}
+
+		fprintf(f, "| ");
+
+		for (i = 0; i < 16; i++) {
+			if (i + j < len) fprintf(f, "%c", 
+				buf[i + j] >= ' ' && buf[i + j] < 127 ? buf[i + j] : '.');
+			else fprintf(f, " ");
+		}
+		
+		fprintf(f, "\n");
+	}
+}
+
 static int msqid = -2;
 
 int ddcpci_init()
@@ -136,7 +163,7 @@ int ddcpci_read(struct answer* manswer)
 {
 	int i, ret;
 	for (i = DDCPCI_RETRIES;; i--) {
-		if ((ret = msgrcv(msqid, manswer, sizeof(struct answer), 2, IPC_NOWAIT)) < 0) {
+		if ((ret = msgrcv(msqid, manswer, sizeof(struct answer) - sizeof(long), 2, IPC_NOWAIT)) < 0) {
 			if (errno != ENOMSG) {
 				return -errno;
 			}
@@ -194,33 +221,6 @@ int ddcci_init()
 void ddcci_release() {
 	ddcpci_release();
 	ddcci_release_db();
-}
-
-/* debugging */
-static void dumphex(FILE *f, unsigned char *buf, unsigned char len)
-{
-	int i, j;
-	
-	for (j = 0; j < len; j +=16) {
-		if (len > 16) {
-			fprintf(f, "%04x: ", j);
-		}
-		
-		for (i = 0; i < 16; i++) {
-			if (i + j < len) fprintf(f, "%02x ", buf[i + j]);
-			else fprintf(f, "   ");
-		}
-
-		fprintf(f, "| ");
-
-		for (i = 0; i < 16; i++) {
-			if (i + j < len) fprintf(f, "%c", 
-				buf[i + j] >= ' ' && buf[i + j] < 127 ? buf[i + j] : '.');
-			else fprintf(f, " ");
-		}
-		
-		fprintf(f, "\n");
-	}
 }
 
 /* write len bytes (stored in buf) to i2c address addr */

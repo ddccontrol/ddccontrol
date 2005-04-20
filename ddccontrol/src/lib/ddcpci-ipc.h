@@ -26,7 +26,7 @@
 #error "This file mustn\'t be included if ddcpci support is disabled."
 #endif
 
-#include <pci/pci.h>
+//#include <pci/pci.h>
 
 /* If ddcpci receives no connections during IDLE_TIMEOUT seconds, it will break the connection and exit. */
 #define IDLE_TIMEOUT 60
@@ -39,8 +39,8 @@ struct i2c_bus {
 };
 
 #define MAX_BUFFER_SIZE 256
-#define QUERY_SIZE  (sizeof(struct query) - (MAX_BUFFER_SIZE))
-#define ANSWER_SIZE (sizeof(struct answer) - (MAX_BUFFER_SIZE))
+#define QUERY_SIZE  (sizeof(struct query) - (MAX_BUFFER_SIZE) - sizeof(long))
+#define ANSWER_SIZE (sizeof(struct answer) - (MAX_BUFFER_SIZE) - sizeof(long))
 
 /* ddccontrol to ddcpci messages (queries) */
 #define QUERY_LIST 0       /* Nothing should be defined */
