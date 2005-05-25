@@ -172,47 +172,11 @@ struct card* nvidia_open(struct pci_dev *dev)
 	
 	char* PCIO = data->memory;
 	
-	switch ((dev->device_id >> 4) & 0xff) {
-	case 0x17:
-	case 0x18:
-	case 0x1f:
-	case 0x25:
-	case 0x28:
-	case 0x30:
-	case 0x31:
-	case 0x32:
-	case 0x33:
-	case 0x34:
-		//fprintf(stderr, "nvidia_open: initing 3 busses\n");
-		nvidia_card->nbusses = 3;
-		nvidia_card->i2c_busses = malloc(3*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x50);
-		init_i2c_bus(&nvidia_card->i2c_busses[1], PCIO, 0x36);
-		init_i2c_bus(&nvidia_card->i2c_busses[2], PCIO, 0x3e);
-		break;
-	case 0x04:
-	case 0x05:
-	case 0x10:
-	case 0x11:
-	case 0x15:
-	case 0x20:
-		//fprintf(stderr, "nvidia_open: initing 2 busses\n");
-		nvidia_card->nbusses = 2;
-		nvidia_card->i2c_busses = malloc(2*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x36);
-		init_i2c_bus(&nvidia_card->i2c_busses[1], PCIO, 0x3e);
-		break;
-	case 0x03:
-		//fprintf(stderr, "nvidia_open: initing 1 bus\n");
-		nvidia_card->nbusses = 1;
-		nvidia_card->i2c_busses = malloc(1*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x3e);
-		break;
-	default:
-		//fprintf(stderr, "nvidia_open: Error: unknown card type (%#x)\n", (dev->device_id >> 4) & 0xff);
-		nvidia_close(nvidia_card);
-		return 0;
-	}
+	nvidia_card->nbusses = 3;
+	nvidia_card->i2c_busses = malloc(3*sizeof(struct i2c_algo_bit_data));
+	init_i2c_bus(&nvidia_card->i2c_busses[0], PCIO, 0x50);
+	init_i2c_bus(&nvidia_card->i2c_busses[1], PCIO, 0x36);
+	init_i2c_bus(&nvidia_card->i2c_busses[2], PCIO, 0x3e);
 	
 	//fprintf(stderr, "nvidia_open: OK\n");
 	return nvidia_card;
