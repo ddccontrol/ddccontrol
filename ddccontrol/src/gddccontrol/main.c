@@ -57,6 +57,12 @@ int xineramanumber;
 XineramaScreenInfo* xineramainfo;
 #endif
 
+/* Current monitor id, and next one. */
+int currentid = -1;
+int nextid = -1;
+
+static GMutex* combo_change_mutex;
+
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
                               gpointer   data )
@@ -72,43 +78,53 @@ static void destroy( GtkWidget *widget,
 
 static void combo_change(GtkWidget *widget, gpointer data)
 {
-	gtk_widget_set_sensitive(widget, FALSE);
-	
-	int id = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
-	
-	if (id == -1) { 
+	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
+	if (!g_mutex_trylock(combo_change_mutex)) {
+		printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
 		return;
 	}
 	
-	int i = 0;
-
-	if (notebook != NULL) {
-		deleteNotebook();
-		gtk_widget_destroy(notebook);
-		notebook = NULL;
-	}
-
-	char buffer[256];
+	gtk_widget_set_sensitive(widget, FALSE);
 	
-	struct monitorlist* current;
+	while (currentid != nextid) {
+		printf("currentid(%d) != nextid(%d), trying...\n", currentid, nextid);
+		currentid = nextid;
+		int i = 0;
 	
-	for (current = monlist;; current = current->next)
-	{
-		g_assert(current != NULL);
-		if (i == id)
-		{
-			snprintf(buffer, 256, "%s: %s", current->filename, current->name);
-			notebook = createNotebook(current);
-			gtk_widget_show(notebook);
-			//gtk_label_set_text(GTK_LABEL(moninfo), buffer);
-			break;
+		if (notebook != NULL) {
+			deleteNotebook();
+			gtk_widget_destroy(notebook);
+			notebook = NULL;
 		}
-		i++;
+	
+		char buffer[256];
+		
+		struct monitorlist* current;
+		
+		for (current = monlist;; current = current->next)
+		{
+			g_assert(current != NULL);
+			if (i == currentid)
+			{
+				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
+				notebook = createNotebook(current);
+				gtk_widget_show(notebook);
+				//gtk_label_set_text(GTK_LABEL(moninfo), buffer);
+				break;
+			}
+			i++;
+		}
+		
+		gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+		
+		while (gtk_events_pending ())
+			gtk_main_iteration ();
 	}
 	
-	gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	printf("currentid == nextid (%d)\n", currentid);
 	
 	gtk_widget_set_sensitive(widget, TRUE);
+	g_mutex_unlock(combo_change_mutex);
 }
 
 #ifdef HAVE_XINERAMA
@@ -142,11 +158,11 @@ static gboolean window_changed(GtkWidget *widget,
 				(cy >= xineramainfo[i].y_org) && (cy < xineramainfo[i].y_org+xineramainfo[i].height)
 			   ) {
 				if (xineramacurrent != i) {
-					int k = gtk_combo_box_get_active(GTK_COMBO_BOX(combo_box));
+					int k = nextid;
 					printf(_("Monitor changed (%d %d).\n"), i, k);
 					k = (k == 0) ? 1 : 0;
+					xineramacurrent = k;
 					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
-					xineramacurrent = i;
 				}
 				return FALSE;
 			}
@@ -210,6 +226,9 @@ int main( int   argc, char *argv[] )
 	ddcci_verbosity(verbosity);
 	
 	gtk_init(&argc, &argv);
+	
+	g_thread_init(NULL);
+	combo_change_mutex = g_mutex_new();
 	
 	if (!ddcci_init()) {
 		printf(_("Unable to initialize ddcci library.\n"));

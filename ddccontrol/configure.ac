@@ -101,10 +101,10 @@ if test x$support_gnome = xyes; then
       AC_MSG_ERROR(pkg-config not found, please install pkg-config)
    fi
 
-   echo -n "checking for gtk+>=2.4... "
-   if pkg-config --atleast-version=2.4 gtk+-2.0 ; then
-      GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0`"
-      GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0`"
+   echo -n "checking for gtk+>=2.4 and gthread>=2.4... "
+   if pkg-config --atleast-version=2.4 gtk+-2.0 gthread-2.0 ; then
+      GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0`"
+      GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
       
