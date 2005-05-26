@@ -145,7 +145,7 @@ static gboolean window_changed(GtkWidget *widget,
 		for (current = monlist; current != NULL; current = current->next) i++;
 		
 		if (i != 2) { // Every monitor does not support DDC/CI, or there are more monitors plugged-in
-			printf("i : %d\n", i);
+			//printf("i : %d\n", i);
 			return FALSE;
 		}
 		

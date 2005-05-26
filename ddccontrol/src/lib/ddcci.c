@@ -627,7 +627,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	if (strncmp(filename, "dev:", 4) == 0) {
 		if ((mon->fd = open(filename+4, O_RDWR)) < 0) {
 			perror(filename);
-			fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
+			//fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
 			return -3;
 		}
 		mon->type = dev;

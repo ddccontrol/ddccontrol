@@ -138,8 +138,7 @@ int main(int argc, char **argv)
 	
 	fprintf(stdout,
 		_("ddccontrol version %s\n"
-		"Copyright 2004 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
-		"Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)\n"
+		"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) and Nicolas Boichat (nicolas@boichat.ch)\n"
 		"This program comes with ABSOLUTELY NO WARRANTY.\n"
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
 		VERSION);
@@ -232,7 +231,10 @@ int main(int argc, char **argv)
 		}
 		
 		if (fn == NULL) {
-			fprintf(stderr, _("No supported monitor detected.\n"));
+			fprintf(stderr, _(
+				"No monitor supporting DDC/CI available.\n"
+				"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+			    ));
 			ddcci_release();
 			exit(0);
 		}
@@ -246,7 +248,10 @@ int main(int argc, char **argv)
 	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 	
 	if ((ret = ddcci_open(&mon, fn)) < 0) {
-		fprintf(stderr, _("\nDDC/CI at %s is unusable (%d).\n"), fn, ret);
+		fprintf(stderr, _(
+			"\nDDC/CI at %s is unusable (%d).\n"
+			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+		    ), fn, ret);
 	} else {
 		fprintf(stdout, _("\nEDID readings:\n"));
 		fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"), 

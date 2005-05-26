@@ -2,6 +2,8 @@ Nicolas:
  - Work on Gnome tool
  - Add translations in ddcpci
  - Support for multi-screen (Xinerama)
+ - Problem with 173p Magic-bright mode (brightness/contrast adjusted)
+ - Read EDID info
  
 General:
  - See what to do with engineering VCP.
