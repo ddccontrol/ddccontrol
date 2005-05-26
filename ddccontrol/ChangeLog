@@ -1,3 +1,24 @@
+2005-05-26 23:49  nboichat
+
+	* TODO, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
+	  src/ddccontrol/main.c, src/gddccontrol/main.c, src/lib/ddcci.c:
+	  Display less error messages when devices are not usable.
+
+2005-05-26 23:30  nboichat
+
+	* doc/main.xml: Added GeForce 6200 TC to supported card list.
+
+2005-05-25 15:42  nboichat
+
+	* src/ddcpci/nvidia.c: Update ddcpci/nvidia.c to match kernel
+	  rivafb behaviour.
+
+2005-05-25 15:41  nboichat
+
+	* configure, configure.ac, src/gddccontrol/main.c: Fix a problem
+	  with Xinerama, when you move the window over the other monitor
+	  while loading monitor parameters.
+
 2005-04-24 12:00  nboichat
 
 	* .cvsignore, config.rpath: Add config.rpath
@@ -387,6 +408,11 @@
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add database support.
 
+2004-08-30 21:29  nboichat
+
+	* src/gddccontrol/.deps/: main.Po, notebook.Po: remove .deps
+	  directory
+
 2004-08-30 21:26  nboichat
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
@@ -404,6 +430,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial import.
 
@@ -417,6 +444,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial revision
 
