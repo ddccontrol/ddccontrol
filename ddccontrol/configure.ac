@@ -134,7 +134,8 @@ AC_ARG_ENABLE(doc,
   fi])
 
 AM_CONDITIONAL(BUILD_DOC, test x$support_doc = xyes)
- 
+
+DOC=
 if test x$support_doc = xyes; then
    # Docbook tests
    # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
@@ -147,29 +148,19 @@ if test x$support_doc = xyes; then
       AC_MSG_ERROR([/etc/xml/catalog does not exists, fix this problem or disable doc building])
    else
       AC_MSG_RESULT(yes)
-      AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
-      if test -z "$XSLTPROC"; then
+      AC_PATH_PROG(XSLTPROC,xsltproc,no)
+      if test "x$XSLTPROC" = "xno" ; then
          AC_MSG_ERROR([xsltproc does not exists, install it or disable doc building])
       fi
 
-      AC_CHECK_PROG(SSH,ssh,ssh,)
-      if test -z "SSH"; then
-         AC_MSG_ERROR([ssh does not exists, install it or disable doc building])
-      fi
-      
-      AC_CHECK_PROG(SCP,scp,scp,)
-      if test -z "SCP"; then
-         AC_MSG_ERROR([scp does not exists, install it or disable doc building])
-      fi
-      
-      AC_CHECK_PROG(ASPELL,aspell,aspell,)
-      if test -z "ASPELL"; then
-         AC_MSG_ERROR([aspell does not exists, install it or disable doc building])
-      fi
+      AC_PATH_PROG(SSH,ssh,ssh)      
+      AC_PATH_PROG(SCP,scp,scp)      
+      AC_PATH_PROG(ASPELL,aspell,no)
+      AC_PATH_PROG(FOP,fop,no)
 
-      AC_CHECK_PROG(FOP,fop,fop,)
-      if test -z "FOP"; then
-         AC_MSG_ERROR([fop does not exists, install it or disable doc building])
+      AC_PATH_PROG(TIDY,tidy,no)
+      if test "x$TIDY" = "xno" ; then
+         AC_MSG_ERROR([tidy does not exists, install it or disable doc building])
       fi
                   
       AC_MSG_CHECKING([whether xsltproc works])
@@ -185,6 +176,7 @@ if test x$support_doc = xyes; then
 END
       if test "$?" = 0; then
          AC_MSG_RESULT(yes)
+         DOC=doc
       else
          AC_MSG_ERROR([xsltproc does not work, fix this problem or disable doc building])
       fi
@@ -194,6 +186,7 @@ fi
 AC_SUBST(XML_CATALOG)
 AC_SUBST(XSLTPROC_FLAGS)
 AC_SUBST(DOCBOOK_ROOT)
+AC_SUBST(DOC)
 
 AC_CONFIG_FILES([ 
 	po/Makefile.in

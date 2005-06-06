@@ -12,7 +12,7 @@ html/*: main.xml gpl.xml style.xsl
 	true `mv -f html html.old`
 	mkdir html
 	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
-	-tidy -q -raw -im html/*.html
+	-@TIDY@ -q -raw -im html/*.html
 
 publish: all
 	@SSH@ $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"

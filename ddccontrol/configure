@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB CPP EGREP XML2_CONFIG LIBXML2_LDFLAGS LIBXML2_CFLAGS DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_LDFLAGS GNOME_CFLAGS GDDCCONTROL BUILD_DOC_TRUE BUILD_DOC_FALSE XSLTPROC SSH SCP ASPELL FOP XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB CPP EGREP XML2_CONFIG LIBXML2_LDFLAGS LIBXML2_CFLAGS DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_LDFLAGS GNOME_CFLAGS GDDCCONTROL BUILD_DOC_TRUE BUILD_DOC_FALSE XSLTPROC SSH SCP ASPELL FOP TIDY XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT DOC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -8468,6 +8468,7 @@ else
 fi
 
 
+DOC=
 if test x$support_doc = xyes; then
    # Docbook tests
    # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
@@ -8488,29 +8489,34 @@ echo "${ECHO_T}yes" >&6
 set dummy xsltproc; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_XSLTPROC+set}" = set; then
+if test "${ac_cv_path_XSLTPROC+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$XSLTPROC"; then
-  ac_cv_prog_XSLTPROC="$XSLTPROC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $XSLTPROC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_XSLTPROC="$XSLTPROC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_XSLTPROC="xsltproc"
+    ac_cv_path_XSLTPROC="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
+  test -z "$ac_cv_path_XSLTPROC" && ac_cv_path_XSLTPROC="no"
+  ;;
+esac
 fi
-fi
-XSLTPROC=$ac_cv_prog_XSLTPROC
+XSLTPROC=$ac_cv_path_XSLTPROC
+
 if test -n "$XSLTPROC"; then
   echo "$as_me:$LINENO: result: $XSLTPROC" >&5
 echo "${ECHO_T}$XSLTPROC" >&6
@@ -8519,7 +8525,7 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-      if test -z "$XSLTPROC"; then
+      if test "x$XSLTPROC" = "xno" ; then
          { { echo "$as_me:$LINENO: error: xsltproc does not exists, install it or disable doc building" >&5
 echo "$as_me: error: xsltproc does not exists, install it or disable doc building" >&2;}
    { (exit 1); exit 1; }; }
@@ -8529,29 +8535,34 @@ echo "$as_me: error: xsltproc does not exists, install it or disable doc buildin
 set dummy ssh; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_SSH+set}" = set; then
+if test "${ac_cv_path_SSH+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$SSH"; then
-  ac_cv_prog_SSH="$SSH" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $SSH in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_SSH="$SSH" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_SSH="ssh"
+    ac_cv_path_SSH="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
+  test -z "$ac_cv_path_SSH" && ac_cv_path_SSH="ssh"
+  ;;
+esac
 fi
-fi
-SSH=$ac_cv_prog_SSH
+SSH=$ac_cv_path_SSH
+
 if test -n "$SSH"; then
   echo "$as_me:$LINENO: result: $SSH" >&5
 echo "${ECHO_T}$SSH" >&6
@@ -8560,39 +8571,38 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-      if test -z "SSH"; then
-         { { echo "$as_me:$LINENO: error: ssh does not exists, install it or disable doc building" >&5
-echo "$as_me: error: ssh does not exists, install it or disable doc building" >&2;}
-   { (exit 1); exit 1; }; }
-      fi
-
       # Extract the first word of "scp", so it can be a program name with args.
 set dummy scp; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_SCP+set}" = set; then
+if test "${ac_cv_path_SCP+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$SCP"; then
-  ac_cv_prog_SCP="$SCP" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $SCP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_SCP="$SCP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_SCP="scp"
+    ac_cv_path_SCP="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
+  test -z "$ac_cv_path_SCP" && ac_cv_path_SCP="scp"
+  ;;
+esac
 fi
-fi
-SCP=$ac_cv_prog_SCP
+SCP=$ac_cv_path_SCP
+
 if test -n "$SCP"; then
   echo "$as_me:$LINENO: result: $SCP" >&5
 echo "${ECHO_T}$SCP" >&6
@@ -8601,39 +8611,38 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-      if test -z "SCP"; then
-         { { echo "$as_me:$LINENO: error: scp does not exists, install it or disable doc building" >&5
-echo "$as_me: error: scp does not exists, install it or disable doc building" >&2;}
-   { (exit 1); exit 1; }; }
-      fi
-
       # Extract the first word of "aspell", so it can be a program name with args.
 set dummy aspell; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_ASPELL+set}" = set; then
+if test "${ac_cv_path_ASPELL+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$ASPELL"; then
-  ac_cv_prog_ASPELL="$ASPELL" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $ASPELL in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ASPELL="$ASPELL" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ASPELL="aspell"
+    ac_cv_path_ASPELL="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
+  test -z "$ac_cv_path_ASPELL" && ac_cv_path_ASPELL="no"
+  ;;
+esac
 fi
-fi
-ASPELL=$ac_cv_prog_ASPELL
+ASPELL=$ac_cv_path_ASPELL
+
 if test -n "$ASPELL"; then
   echo "$as_me:$LINENO: result: $ASPELL" >&5
 echo "${ECHO_T}$ASPELL" >&6
@@ -8642,39 +8651,38 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-      if test -z "ASPELL"; then
-         { { echo "$as_me:$LINENO: error: aspell does not exists, install it or disable doc building" >&5
-echo "$as_me: error: aspell does not exists, install it or disable doc building" >&2;}
-   { (exit 1); exit 1; }; }
-      fi
-
       # Extract the first word of "fop", so it can be a program name with args.
 set dummy fop; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_FOP+set}" = set; then
+if test "${ac_cv_path_FOP+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$FOP"; then
-  ac_cv_prog_FOP="$FOP" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $FOP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_FOP="$FOP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_FOP="fop"
+    ac_cv_path_FOP="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
+  test -z "$ac_cv_path_FOP" && ac_cv_path_FOP="no"
+  ;;
+esac
 fi
-fi
-FOP=$ac_cv_prog_FOP
+FOP=$ac_cv_path_FOP
+
 if test -n "$FOP"; then
   echo "$as_me:$LINENO: result: $FOP" >&5
 echo "${ECHO_T}$FOP" >&6
@@ -8683,9 +8691,50 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-      if test -z "FOP"; then
-         { { echo "$as_me:$LINENO: error: fop does not exists, install it or disable doc building" >&5
-echo "$as_me: error: fop does not exists, install it or disable doc building" >&2;}
+
+      # Extract the first word of "tidy", so it can be a program name with args.
+set dummy tidy; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_TIDY+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $TIDY in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_TIDY="$TIDY" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_TIDY="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_TIDY" && ac_cv_path_TIDY="no"
+  ;;
+esac
+fi
+TIDY=$ac_cv_path_TIDY
+
+if test -n "$TIDY"; then
+  echo "$as_me:$LINENO: result: $TIDY" >&5
+echo "${ECHO_T}$TIDY" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+      if test "x$TIDY" = "xno" ; then
+         { { echo "$as_me:$LINENO: error: tidy does not exists, install it or disable doc building" >&5
+echo "$as_me: error: tidy does not exists, install it or disable doc building" >&2;}
    { (exit 1); exit 1; }; }
       fi
 
@@ -8704,6 +8753,7 @@ END
       if test "$?" = 0; then
          echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
+         DOC=doc
       else
          { { echo "$as_me:$LINENO: error: xsltproc does not work, fix this problem or disable doc building" >&5
 echo "$as_me: error: xsltproc does not work, fix this problem or disable doc building" >&2;}
@@ -8711,6 +8761,7 @@ echo "$as_me: error: xsltproc does not work, fix this problem or disable doc bui
       fi
    fi
 fi
+
 
 
 
@@ -9474,9 +9525,11 @@ s,@SSH@,$SSH,;t t
 s,@SCP@,$SCP,;t t
 s,@ASPELL@,$ASPELL,;t t
 s,@FOP@,$FOP,;t t
+s,@TIDY@,$TIDY,;t t
 s,@XML_CATALOG@,$XML_CATALOG,;t t
 s,@XSLTPROC_FLAGS@,$XSLTPROC_FLAGS,;t t
 s,@DOCBOOK_ROOT@,$DOCBOOK_ROOT,;t t
+s,@DOC@,$DOC,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

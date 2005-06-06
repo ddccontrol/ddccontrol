@@ -71,6 +71,7 @@ CYGPATH_W = @CYGPATH_W@
 DDCPCI = @DDCPCI@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DOC = @DOC@
 DOCBOOK_ROOT = @DOCBOOK_ROOT@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -120,6 +121,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SSH = @SSH@
 STRIP = @STRIP@
+TIDY = @TIDY@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 XGETTEXT = @XGETTEXT@
@@ -350,7 +352,7 @@ uninstall-am: uninstall-dist_htmlDATA uninstall-info-am
 @BUILD_DOC_TRUE@	true `mv -f html html.old`
 @BUILD_DOC_TRUE@	mkdir html
 @BUILD_DOC_TRUE@	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
-@BUILD_DOC_TRUE@	-tidy -q -raw -im html/*.html
+@BUILD_DOC_TRUE@	-@TIDY@ -q -raw -im html/*.html
 
 @BUILD_DOC_TRUE@publish: all
 @BUILD_DOC_TRUE@	@SSH@ $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
