@@ -1,0 +1,10 @@
+Version 0.1.1 - 2005-06-07
+ - Add support for newest nVidia cards (e.g. GeForce 6200 TC).
+ - Build ddcpci statically for security reasons.
+ - Add status messages when gddccontrol loads.
+ - Display less error messages when devices are not usable.
+ - Fix compile error with latest kernel headers.
+ - Other minor fixes.
+
+Version 0.1 - 2005-03-29
+ - Initial release
