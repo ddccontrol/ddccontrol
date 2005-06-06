@@ -1,3 +1,21 @@
+2005-06-06 23:43  nboichat
+
+	* Makefile.am, Makefile.in, configure, configure.ac,
+	  doc/Makefile.am, doc/Makefile.in: Fixes some problems with doc
+	  building.
+
+2005-06-06 23:41  nboichat
+
+	* po/: ddccontrol.pot, fr.gmo, fr.po: Update French translation.
+
+2005-06-06 23:38  nboichat
+
+	* src/: Makefile.in, ddccontrol/Makefile.in, ddcpci/Makefile.am,
+	  ddcpci/Makefile.in, ddcpci/ddcpci.h, ddcpci/intel855.c,
+	  ddcpci/main.c, ddcpci/nvidia.c, gddccontrol/Makefile.in,
+	  lib/Makefile.in, lib/i2c-dev.h: Fix compile error with latest
+	  kernel headers.
+
 2005-05-26 23:49  nboichat
 
 	* TODO, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
