@@ -30,7 +30,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#include <pci/pci.h>
 #include "ddcpci.h"
  
 struct mem_data {

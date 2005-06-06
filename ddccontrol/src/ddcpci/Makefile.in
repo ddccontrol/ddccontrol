@@ -89,6 +89,7 @@ CYGPATH_W = @CYGPATH_W@
 DDCPCI = @DDCPCI@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DOC = @DOC@
 DOCBOOK_ROOT = @DOCBOOK_ROOT@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -138,6 +139,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SSH = @SSH@
 STRIP = @STRIP@
+TIDY = @TIDY@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 XGETTEXT = @XGETTEXT@
@@ -447,7 +449,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 
 
 install-exec-hook:
-	chmod +s ${bindir}/ddcpci
+	chmod 4711 ${DESTDIR}/${bindir}/ddcpci
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

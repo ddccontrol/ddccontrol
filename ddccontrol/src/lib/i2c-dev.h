@@ -18,9 +18,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifndef I2C_DEV_H
+#define I2C_DEV_H
+
 /* If linux/i2c-dev.h is usable, use it, otherwise, define
  * the required constants and structures. */
- 
+
 #if HAVE_BUGGY_I2C_DEV
 #include <linux/types.h>
 
@@ -53,3 +56,5 @@ struct i2c_rdwr_ioctl_data {
 #include <linux/i2c-dev.h>
 
 #endif
+
+#endif //I2C_DEV_H

@@ -20,9 +20,9 @@
 #ifndef DDCPCI_H
 #define DDCPCI_H
 
-#include <pci/pci.h>
-
 #include "i2c-algo-bit.h"
+
+#include <pci/pci.h>
 
 #include <libintl.h>
 #define _(String) gettext (String)

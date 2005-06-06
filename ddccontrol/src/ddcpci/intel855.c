@@ -28,7 +28,6 @@
 #include <sys/io.h>
 #include <unistd.h>
 
-#include <pci/pci.h>
 #include "ddcpci.h"
  
 static void intel855_setscl(void* data, int state)

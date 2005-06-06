@@ -32,8 +32,6 @@
 
 #include <errno.h>
 
-#include <pci/pci.h>
-
 #include "ddcpci.h"
 #include "ddcpci-ipc.h"
 
