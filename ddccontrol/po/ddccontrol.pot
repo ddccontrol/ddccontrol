@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-05-27 01:45+0200\n"
+"POT-Creation-Date: 2005-06-07 00:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -534,48 +534,48 @@ msgstr ""
 msgid "Please update ddccontrol database.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:145
+#: src/ddcpci/main.c:143
 msgid "==>Error while sending open message"
 msgstr ""
 
-#: src/ddcpci/main.c:168 src/ddcpci/main.c:174 src/ddcpci/main.c:191
+#: src/ddcpci/main.c:166 src/ddcpci/main.c:172 src/ddcpci/main.c:189
 msgid "==>Error while sending data answer message"
 msgstr ""
 
-#: src/ddcpci/main.c:239 src/ddcpci/main.c:253
+#: src/ddcpci/main.c:237 src/ddcpci/main.c:251
 msgid "==>Error while sending list message"
 msgstr ""
 
-#: src/ddcpci/main.c:271
+#: src/ddcpci/main.c:269
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:277
+#: src/ddcpci/main.c:275
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:284
+#: src/ddcpci/main.c:282
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:289
+#: src/ddcpci/main.c:287
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr ""
 
-#: src/ddcpci/main.c:303
+#: src/ddcpci/main.c:301
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:311
+#: src/ddcpci/main.c:309
 msgid "==>Error while receiving query\n"
 msgstr ""
 
-#: src/ddcpci/main.c:346
+#: src/ddcpci/main.c:344
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr ""
@@ -590,12 +590,12 @@ msgstr ""
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr ""
 
-#: src/ddcpci/nvidia.c:156
+#: src/ddcpci/nvidia.c:155
 #, c-format
 msgid "nvidia_open: Malloc error.\n"
 msgstr ""
 
-#: src/ddcpci/nvidia.c:168
+#: src/ddcpci/nvidia.c:167
 #, c-format
 msgid "nvidia_open: Error: mmap failed\n"
 msgstr ""
