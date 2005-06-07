@@ -1,3 +1,11 @@
+2005-06-07 08:39  nboichat
+
+	* doc/main.xml: Fix version in doc.
+
+2005-06-06 23:56  nboichat
+
+	* NEWS: Prepare release 0.1.1.
+
 2005-06-06 23:43  nboichat
 
 	* Makefile.am, Makefile.in, configure, configure.ac,
