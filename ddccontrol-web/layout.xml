@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!DOCTYPE layout PUBLIC "-//Norman Walsh//DTD Website Layout V2.4.0//EN"
-                        "http://docbook.sourceforge.net/release/website/2.4.1/schema/dtd/layout.dtd">
+<!DOCTYPE layout PUBLIC "-//Norman Walsh//DTD Website Layout V2.6//EN"
+                        "http://docbook.sourceforge.net/release/website/2.6.0/schema/dtd/layout.dtd">
 <layout>
   <style src="ddccontrol.css" type="text/css"/>
 
@@ -9,14 +9,14 @@
   <toc page="website.xml" filename="index.html">
     <tocentry id="doc" page="doc.xml" filename="doc/index.html">
       <title>Documentation</title>
-      <tocentry id="doccurrent" href="/doc/0.1"><title>Current release (0.1)</title></tocentry>
+      <tocentry id="doccurrent" href="/doc/0.1.1"><title>Current release (0.1.1)</title></tocentry>
       <tocentry id="doclatest" href="/doc/latest"><title>Development</title></tocentry>
     </tocentry>
     <tocentry id="download" page="download.xml" filename="download.html">
       <title>Download</title>
       <tocentry id="downcurrent"
           href="http://sourceforge.net/project/showfiles.php?group_id=117933">
-        <title>Current release (0.1)</title>
+        <title>Current release (0.1.1)</title>
       </tocentry>
       <tocentry id="downlatest"
           href="http://sourceforge.net/cvs/?group_id=117933">

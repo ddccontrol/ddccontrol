@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.4.0//EN" 
-          "website.dtd" >
+<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.6//EN" 
+          "http://docbook.sourceforge.net/release/website/2.6.0/schema/dtd/website.dtd" >
 <webpage id="home">
 
   <config param="desc" value="The Test Home Page"/>
@@ -21,7 +21,25 @@ documentation</olink>.</para>
 </section>
 
 <section><title>News</title>
-<para>29 Mar 2005: Version 0.1 released!</para>
+<variablelist>
+<varlistentry><term>7 Jun 2005: Version 0.1.1 released.</term>
+<listitem>
+<para>
+ChangeLog:
+<itemizedlist mark='bullet'>
+<listitem>Add support for newest nVidia cards (e.g. GeForce 6200 TC).</listitem>
+<listitem>Build ddcpci statically for security reasons.</listitem>
+<listitem>Add status messages when gddccontrol loads.</listitem>
+<listitem>Display less error messages when devices are not usable.</listitem>
+<listitem>Fix compile error with latest kernel headers.</listitem>
+<listitem>Other minor fixes.</listitem>
+</itemizedlist>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>29 Mar 2005: Version 0.1 released!</term>
+</varlistentry>
+</variablelist>
 </section>
 
 </webpage>

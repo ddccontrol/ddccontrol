@@ -5,7 +5,7 @@ htdocs/doc/index.html: doc.xml
 htdocs/download.html: download.xml
 
 distclean: clean
-	-rm -f autolayout.xml depends.tabular
+	-rm -f autolayout.xml website.database.xml  
 
 clean:
 	-rm -f htdocs/doc/index.html htdocs/download.html htdocs/index.html 

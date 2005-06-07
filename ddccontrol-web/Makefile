@@ -1,4 +1,4 @@
-STYLEDIR=http://docbook.sourceforge.net/release/website/2.4.1/xsl
+STYLEDIR=http://docbook.sourceforge.net/release/website/2.6.0/xsl
 
 all: custom-tabular.xsl
 	make website

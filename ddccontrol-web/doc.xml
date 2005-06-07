@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.4.0//EN" 
-          "website.dtd" >
+<!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.6//EN" 
+          "http://docbook.sourceforge.net/release/website/2.6.0/schema/dtd/website.dtd" >
 <webpage id="doc">
 
   <config param="desc" value="DDCcontrol documentation"/>
@@ -19,13 +19,19 @@ or current release online documentation.</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
-<ulink url="ddccontrol-0.1.pdf">Version 0.1</ulink>
+<ulink url="ddccontrol-0.1.1.pdf">Version 0.1.1</ulink>
 </para>
 </listitem>
 </itemizedlist>
 </section>
 <section><title>Archives</title>
-<para>No archives yet.</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+<ulink url="/doc/0.1">Version 0.1</ulink> [<ulink url="ddccontrol-0.1.pdf">PDF</ulink>]
+</para>
+</listitem>
+</itemizedlist>
 </section>
 
 </webpage>
