@@ -7,7 +7,7 @@
                 exclude-result-prefixes="html doc str"
                 version="1.0">
 
-<xsl:import href="http://docbook.sourceforge.net/release/website/2.4.1/xsl/tabular.xsl"/>
+<xsl:import href="http://docbook.sourceforge.net/release/website/2.6.0/xsl/tabular.xsl"/>
 
 <!-- Replace the text in these templates with whatever you want -->
 <!-- to appear in the respective location on the home page. -->
