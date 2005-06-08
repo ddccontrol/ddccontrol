@@ -1,3 +1,12 @@
+2005-06-08 15:37  nboichat
+
+	* Makefile.am, Makefile.in, aclocal.m4, configure, configure.ac,
+	  doc/Makefile.in, src/Makefile.in, src/config.h.in,
+	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/.cvsignore, src/lib/Makefile.in: Fix typo
+	  in config.h.
+
 2005-06-07 08:39  tag Release-0_1_1
 
 2005-06-07 08:39  nboichat
