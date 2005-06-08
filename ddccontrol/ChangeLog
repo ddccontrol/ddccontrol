@@ -1,3 +1,7 @@
+2005-06-08 18:05  nboichat
+
+	* src/lib/i2c-dev.h: Fix compile error with 2.4 kernel headers.
+
 2005-06-08 15:37  nboichat
 
 	* Makefile.am, Makefile.in, aclocal.m4, configure, configure.ac,
