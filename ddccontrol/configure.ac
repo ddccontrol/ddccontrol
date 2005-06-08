@@ -39,7 +39,7 @@ if test "x$support_i2c_dev" = "xno" ; then
   [const int a = I2C_RDWR + I2C_M_RD;]
   [struct i2c_msg i2cmsg;]
   ],
-  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
+  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [Define if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
   support_i2c_dev=yes
   AC_MSG_RESULT(yes),
   AC_MSG_RESULT(no)
