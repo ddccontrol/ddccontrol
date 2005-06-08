@@ -1,6 +1,6 @@
 /*
     ddc/ci direct PCI memory interface
-    Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2005 Nicolas Boichat (nicolas@boichat.ch)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ card_close cards_close[] = {
 /* end of card list */
 
 /* debugging */
-static void dumphex(FILE *f, unsigned char *buf, int len)
+/*static void dumphex(FILE *f, unsigned char *buf, int len)
 {
 	int i, j;
 	
@@ -74,7 +74,7 @@ static void dumphex(FILE *f, unsigned char *buf, int len)
 		
 		fprintf(f, "\n");
 	}
-}
+}*/
 
 struct pci_access *pacc;
 
@@ -123,7 +123,7 @@ static void open_card(struct i2c_bus* bus) {
 						if (verbosity == 2) {
 							printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
 								dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
-								c, dev->irq, dev->base_addr[0], dev->size[0]);
+								c, dev->irq, (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
 						}
 						break;
 					}
@@ -212,7 +212,7 @@ static void list()
 			if (verbosity == 2) {
 				printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
 					dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
-					c, dev->irq, dev->base_addr[0], dev->size[0]);
+					c, dev->irq, (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
 			}
 			for (i = 0; cards_open[i] != NULL; i++)
 			{
