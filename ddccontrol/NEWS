@@ -1,3 +1,6 @@
+Version 0.1.2 - 2005-06-08
+ - Fix a compilation error in Fedora Core 3.
+
 Version 0.1.1 - 2005-06-07
  - Add support for newest nVidia cards (e.g. GeForce 6200 TC).
  - Build ddcpci statically for security reasons.

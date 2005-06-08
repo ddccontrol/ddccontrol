@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool], [0.1.1],
+AC_INIT([DDC/CI control tool], [0.1.2],
         [Nicolas Boichat <nicolas@boichat.ch>],
         [ddccontrol])
 AM_CONFIG_HEADER(src/config.h)
