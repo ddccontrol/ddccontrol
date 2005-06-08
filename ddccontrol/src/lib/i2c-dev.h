@@ -18,8 +18,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef I2C_DEV_H
-#define I2C_DEV_H
+#ifndef DDCCONTROL_I2C_DEV_H
+#define DDCCONTROL_I2C_DEV_H
 
 /* If linux/i2c-dev.h is usable, use it, otherwise, define
  * the required constants and structures. */
@@ -57,4 +57,4 @@ struct i2c_rdwr_ioctl_data {
 
 #endif
 
-#endif //I2C_DEV_H
+#endif //DDCCONTROL_I2C_DEV_H
