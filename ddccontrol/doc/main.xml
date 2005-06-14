@@ -24,7 +24,7 @@ $Id$
 
 <abstract>
 <para>
-Documentation for DDCcontrol version 0.1.2.
+Documentation for DDCcontrol version 0.1.3.
 </para>
 </abstract>
 
@@ -361,7 +361,7 @@ SyncMaster 193P (VGA and DVI inputs)
 <para>If your monitor is not on this list, and so doesn't work with DDCcontrol,
 but you think that it supports the DDC/CI protocol, please run this command:
 <screen format="linespecific">
-ddccontrol -p -c -d
+LANG= LC_ALL= ddccontrol -p -c -d
 </screen>
 And send the output to one of the DDCcontrol mailing lists (see
 <xref linkend="report"/>).</para>
@@ -565,6 +565,87 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 </informaltable>
 </sect3>
 </sect1>
+
+<sect1>
+<title>Matrox</title>
+<sect2>
+<title>G200/G400/G450/G550 series</title>
+<para>Matrox cards only work with <filename>/dev/i2c-*</filename> devices.
+To use them, you must load both <filename>matroxfb</filename> and
+<filename>i2c-matroxfb</filename> modules by typing,
+as root:</para>
+<screen format="linespecific">
+# modprobe matroxfb
+# modprobe i2c-matroxfb
+</screen>
+<para>The kernel configuration options needed to enable Matrox framebuffer
+driver and I2C support are, at least:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+  <guimenuitem>G100/G200/G400/G450/G550 support</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+  <guimenuitem>Matrox I2C support</guimenuitem>
+</menuchoice>.
+</listitem>
+</itemizedlist>
+</sect2>
+<sect3>
+<title>Matrox cards support table</title>
+<para>These Matrox cards have been reported to work.
+If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>Matrox G200 AGP</entry>
+  <entry class="no">No</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Matrox G450 AGP</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
 </appendix>
 
 <appendix>

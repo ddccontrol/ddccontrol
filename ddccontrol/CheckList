@@ -36,6 +36,8 @@ Release Check List (Nicolas Boichat)
   - Add old doc to archives
   - ./commit.sh
 
+- Send a message to the lists
+
 - update FreshMeat infos
 
 - update Gentoo ebuild
