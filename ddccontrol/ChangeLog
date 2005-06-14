@@ -1,3 +1,11 @@
+2005-06-14 10:12  nboichat
+
+	* CheckList, Makefile.in, aclocal.m4, configure, configure.ac,
+	  doc/Makefile.in, doc/main.xml, src/Makefile.in, src/config.h.in,
+	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.in: Doc update (add
+	  Matrox cards)
+
 2005-06-08 18:48  nboichat
 
 	* CheckList: [no log message]
