@@ -1,0 +1,616 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Oleg I. Vdovikin and Nicolas Boichat
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: DDC/CI control tool database\n"
+"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2004-12-10 17:15+0100\n"
+"PO-Revision-Date: 2005-06-17 13:32+0300\n"
+"Last-Translator: SergeiEpiphanov <serpiph@nikiet.ru>\n"
+"Language-Team: Russian <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db/options.xml.h:3
+#, c-format
+msgid "Color settings"
+msgstr "Настройки цвета"
+
+#: db/options.xml.h:4
+#, c-format
+msgid "Brightness and Contrast"
+msgstr "Яркость и контрастность"
+
+#: db/options.xml.h:5
+#, c-format
+msgid "Brightness"
+msgstr "Яркость"
+
+#: db/options.xml.h:6
+#, c-format
+msgid "Contrast"
+msgstr "Контрастность"
+
+#: db/options.xml.h:7
+#, c-format
+msgid "Magic Bright Mode"
+msgstr "Режим \"Bright Mode\""
+
+#: db/options.xml.h:8
+#, c-format
+msgid "Text"
+msgstr "Текст"
+
+#: db/options.xml.h:9
+#, c-format
+msgid "Internet"
+msgstr "Интернет"
+
+#: db/options.xml.h:10
+#, c-format
+msgid "Entertain"
+msgstr "Развлечения"
+
+#: db/options.xml.h:11
+#, c-format
+msgid "Custom"
+msgstr "Своё"
+
+#: db/options.xml.h:12
+#, c-format
+msgid "Color maximum level"
+msgstr "Уровень максимума цвета"
+
+#: db/options.xml.h:13
+#, c-format
+msgid "Red maximum level"
+msgstr "Уровень максимума красного"
+
+#: db/options.xml.h:14
+#, c-format
+msgid "Green maximum level"
+msgstr "Уровень максимума зелёного"
+
+#: db/options.xml.h:15
+#, c-format
+msgid "Blue maximum level"
+msgstr "Уровень максимума синего"
+
+#: db/options.xml.h:16
+#, c-format
+msgid "Color minimum level"
+msgstr "Уровень минимума цвета"
+
+#: db/options.xml.h:17
+#, c-format
+msgid "Red minimum level"
+msgstr "Уровень минимума красного"
+
+#: db/options.xml.h:18
+#, c-format
+msgid "Green minimum level"
+msgstr "Уровень минимума зелёного"
+
+#: db/options.xml.h:19
+#, c-format
+msgid "Blue minimum level"
+msgstr "Уровень минимума синего"
+
+#: db/options.xml.h:20
+#, c-format
+msgid "Various color settings"
+msgstr "Различные настройки цвета"
+
+#: db/options.xml.h:21
+#, c-format
+msgid "Hue"
+msgstr "Тон"
+
+#: db/options.xml.h:22
+#, c-format
+msgid "Saturation"
+msgstr "Насыщенность"
+
+#: db/options.xml.h:23
+#, c-format
+msgid "Color curve adjust"
+msgstr "Настрока кривой цвета"
+
+#: db/options.xml.h:24
+#, c-format
+msgid "Color Preset"
+msgstr "Предустановки цвета"
+
+#: db/options.xml.h:25
+#, c-format
+msgid "Normal"
+msgstr "Нормально"
+
+#: db/options.xml.h:26
+#, c-format
+msgid "Warm"
+msgstr "Тёплый оттенок"
+
+#: db/options.xml.h:27
+#, c-format
+msgid "Cool"
+msgstr "Холодный оттенок"
+
+#: db/options.xml.h:28
+#, c-format
+msgid "5000K"
+msgstr "5000K"
+
+#: db/options.xml.h:29
+#, c-format
+msgid "6500K"
+msgstr "6500K"
+
+#: db/options.xml.h:30
+#, c-format
+msgid "7500K"
+msgstr "7500K"
+
+#: db/options.xml.h:31
+#, c-format
+msgid "8200K"
+msgstr "8200K"
+
+#: db/options.xml.h:32
+#, c-format
+msgid "9300K"
+msgstr "9300K"
+
+#: db/options.xml.h:33
+#, c-format
+msgid "Native"
+msgstr "Заводской"
+
+#: db/options.xml.h:34
+#, c-format
+msgid "Position and size"
+msgstr "Положение и размер"
+
+#: db/options.xml.h:35
+#, c-format
+msgid "Position"
+msgstr "Положение"
+
+#: db/options.xml.h:36
+#, c-format
+msgid "Horizontal Position"
+msgstr "Положение по горизонтали"
+
+#: db/options.xml.h:37
+#, c-format
+msgid "Vertical Position"
+msgstr "Положение по вертикали"
+
+#: db/options.xml.h:38
+#, c-format
+msgid "Size"
+msgstr "Размер"
+
+#: db/options.xml.h:39
+#, c-format
+msgid "Horizontal Size"
+msgstr "Горизонтальный размер"
+
+#: db/options.xml.h:40
+#, c-format
+msgid "Vertical Size"
+msgstr "Вертикальный размер"
+
+#: db/options.xml.h:41
+#, c-format
+msgid "Automatic adjustments"
+msgstr "Автоматическая настройка"
+
+#: db/options.xml.h:42
+#, c-format
+msgid "Auto Size Center"
+msgstr "Автоматические размеры центра"
+
+#: db/options.xml.h:43 db/options.xml.h:105
+#, c-format
+msgid "Enable"
+msgstr "Вкл"
+
+#: db/options.xml.h:44 db/options.xml.h:104
+#, c-format
+msgid "Disable"
+msgstr "Выкл"
+
+#: db/options.xml.h:45
+#, c-format
+msgid "Automatically adjust Size and Position"
+msgstr "Автоматически настроить размер и положение"
+
+#: db/options.xml.h:46
+#, c-format
+msgid "Geometry"
+msgstr "Геометрия"
+
+#: db/options.xml.h:47
+#, c-format
+msgid "Pincushion"
+msgstr "Подушка"
+
+#: db/options.xml.h:48
+#, c-format
+msgid "Horizontal Pincushion"
+msgstr "Горизонтальная подушка"
+
+#: db/options.xml.h:49
+#, c-format
+msgid "Horizontal Pincushion Balance"
+msgstr "Баланс горизонтальной подушки"
+
+#: db/options.xml.h:50
+#, c-format
+msgid "Vertical Pincushion"
+msgstr "Вертикальная подушка"
+
+#: db/options.xml.h:51
+#, c-format
+msgid "Vertical Pincushion Balance"
+msgstr "Баланс вертикальной подушки"
+
+#: db/options.xml.h:52
+#, c-format
+msgid "Linearity"
+msgstr "Линейность"
+
+#: db/options.xml.h:53
+#, c-format
+msgid "Horizontal Linearity"
+msgstr "Горизонтальная линейность"
+
+#: db/options.xml.h:54
+#, c-format
+msgid "Horizontal Linearity Balance"
+msgstr "Баланс горизонтальной линейности"
+
+#: db/options.xml.h:55
+#, c-format
+msgid "Vertical Linearity"
+msgstr "Вертикальная линейность"
+
+#: db/options.xml.h:56
+#, c-format
+msgid "Vertical Linearity Balance"
+msgstr "Баланс вертикальной линейности"
+
+#: db/options.xml.h:57
+#, c-format
+msgid "Misconvergence"
+msgstr "Несведение"
+
+#: db/options.xml.h:58
+#, c-format
+msgid "Horizontal Misconvergence"
+msgstr "Горизонтальное несведение"
+
+#: db/options.xml.h:59
+#, c-format
+msgid "Vertical Misconvergence"
+msgstr "Вертикальное несведение"
+
+#: db/options.xml.h:60
+#, c-format
+msgid "General distortion"
+msgstr "Общая дисторсия"
+
+#: db/options.xml.h:61
+#, c-format
+msgid "Parallelogram Distortion (Key Balance)"
+msgstr "Параллелограммная дисторсия"
+
+#: db/options.xml.h:62
+#, c-format
+msgid "Trapezoidal Distortion (Key)"
+msgstr "Трапецеидальная дисторсия"
+
+#: db/options.xml.h:63
+#, c-format
+msgid "Corners distortion"
+msgstr "Дисторсия углов"
+
+#: db/options.xml.h:64
+#, c-format
+msgid "Top Corner Distortion Control"
+msgstr "Управление дисторсией верхних углов"
+
+#: db/options.xml.h:65
+#, c-format
+msgid "Top Corner Distortion Balance"
+msgstr "Изменение дисторсии верхних углов"
+
+#: db/options.xml.h:66
+#, c-format
+msgid "Bottom Corner Distortion Control"
+msgstr "Управление дисторсией нижних углов"
+
+#: db/options.xml.h:67
+#, c-format
+msgid "Bottom Corner Distortion Balance"
+msgstr "Изменение дисторсии нижних углов"
+
+#: db/options.xml.h:68
+#, c-format
+msgid "Rotation"
+msgstr "Поворот"
+
+#: db/options.xml.h:69
+#, c-format
+msgid "Rotation (Tilt)"
+msgstr "Наклон (Перспектива)"
+
+#: db/options.xml.h:70
+#, c-format
+msgid "Screen purity"
+msgstr "Чистота экрана"
+
+#: db/options.xml.h:71
+#, c-format
+msgid "Moire"
+msgstr "Муар"
+
+#: db/options.xml.h:72
+#, c-format
+msgid "Horizontal Moire"
+msgstr "Горизонтальный муар"
+
+#: db/options.xml.h:73
+#, c-format
+msgid "Vertical Moire"
+msgstr "Вертикальный муар"
+
+#: db/options.xml.h:74
+#, c-format
+msgid "Corners purity"
+msgstr "Чистота углов"
+
+#: db/options.xml.h:75
+#, c-format
+msgid "Top left screen purity"
+msgstr "Чистота верхнего левого угла"
+
+#: db/options.xml.h:76
+#, c-format
+msgid "Top right screen purity"
+msgstr "Чистота верхнего правого угла"
+
+#: db/options.xml.h:77
+#, c-format
+msgid "Bottom left screen purity"
+msgstr "Чистота нижнего левого угла"
+
+#: db/options.xml.h:78
+#, c-format
+msgid "Bottom right screen purity"
+msgstr "Чистота нижнего правого угла"
+
+#: db/options.xml.h:79
+#, c-format
+msgid "Various"
+msgstr "Различное"
+
+#: db/options.xml.h:80
+#, c-format
+msgid "Focus"
+msgstr "Фокус"
+
+#: db/options.xml.h:81
+#, c-format
+msgid "Image Lock Coarse"
+msgstr "Грубая настройка изображения"
+
+#: db/options.xml.h:82
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
+msgstr "Точная настройка изображения (фаза таймера)"
+
+#: db/options.xml.h:83
+#, c-format
+msgid "Landing Adjust (RGB alignment)"
+msgstr "Выравнивание RGB"
+
+#: db/options.xml.h:84
+#, c-format
+msgid "Sharpness"
+msgstr "Чёткость"
+
+#: db/options.xml.h:85
+#, c-format
+msgid "Others"
+msgstr "Другое"
+
+#: db/options.xml.h:86
+#, c-format
+msgid "Restore defaults"
+msgstr "Восстановить настройки"
+
+#: db/options.xml.h:87
+#, c-format
+msgid "Restore Factory Defaults"
+msgstr "Востановить заводские установки"
+
+#: db/options.xml.h:88
+#, c-format
+msgid "Restore Brightness and Contrast"
+msgstr "Восстановить яркость и контрастность"
+
+#: db/options.xml.h:89
+#, c-format
+msgid "Restore Factory Default Geometry"
+msgstr "Восстановить начальную геометрию"
+
+#: db/options.xml.h:90
+#, c-format
+msgid "Restore Factory Default Color"
+msgstr "Восстановить начальные цвета"
+
+#: db/options.xml.h:91
+#, c-format
+msgid "Restore Factory Default Position"
+msgstr "Восстановить начальное положение"
+
+#: db/options.xml.h:92
+#, c-format
+msgid "Restore Factory Default Size"
+msgstr "Восстановить начальный размер"
+
+#: db/options.xml.h:93
+#, c-format
+msgid "Settings"
+msgstr "Настройки"
+
+#: db/options.xml.h:94
+#, c-format
+msgid "Save Current Settings"
+msgstr "Сохранить текущие настройки"
+
+#: db/options.xml.h:95
+#, c-format
+msgid "Restore Factory Settings"
+msgstr "Восстановить заводские установки"
+
+#: db/options.xml.h:96
+#, c-format
+msgid "Audio"
+msgstr "Звук"
+
+#: db/options.xml.h:97
+#, c-format
+msgid "Audio Speaker Volume Adjust"
+msgstr "Настройка уровня динамиков"
+
+#: db/options.xml.h:98
+#, c-format
+msgid "Audio Microphone Volume Adjust"
+msgstr "Автоматическая настройка уровня микрофона"
+
+#: db/options.xml.h:99 db/options.xml.h:100
+#, c-format
+msgid "Degauss"
+msgstr "Размагничивание"
+
+#: db/options.xml.h:101
+#, c-format
+msgid "Secondary Degauss"
+msgstr "Вторичное размагничивание"
+
+#: db/options.xml.h:102
+#, c-format
+msgid "OSD"
+msgstr "OSD"
+
+#: db/options.xml.h:103
+#, c-format
+msgid "On Screen Display"
+msgstr "Экран меню"
+
+#: db/options.xml.h:106
+#, c-format
+msgid "Enable only brightness/contrast settings"
+msgstr "Разрешить настройку только яркости/контрастности"
+
+#: db/options.xml.h:107
+#, c-format
+msgid "Language select"
+msgstr "Выбор языка"
+
+#: db/options.xml.h:108
+#, c-format
+msgid "English"
+msgstr "Английский"
+
+#: db/options.xml.h:109
+#, c-format
+msgid "French"
+msgstr "Французский"
+
+#: db/options.xml.h:110
+#, c-format
+msgid "German"
+msgstr "Немецкий"
+
+#: db/options.xml.h:111
+#, c-format
+msgid "Italian"
+msgstr "Итальянский"
+
+#: db/options.xml.h:112
+#, c-format
+msgid "Russian"
+msgstr "Русский"
+
+#: db/options.xml.h:113
+#, c-format
+msgid "Spanish"
+msgstr "Испанский"
+
+#: db/options.xml.h:114
+#, c-format
+msgid "Swedish"
+msgstr "Шведский"
+
+#: db/options.xml.h:115
+#, c-format
+msgid "Chinese"
+msgstr "Китайский"
+
+#: db/options.xml.h:116
+#, c-format
+msgid "Input settings"
+msgstr "Настройки входов"
+
+#: db/options.xml.h:117
+#, c-format
+msgid "Input level Select"
+msgstr "Выбор уровень сигнала входа"
+
+#: db/options.xml.h:118
+#, c-format
+msgid "Input Source Select"
+msgstr "Выбор типа входа"
+
+#: db/options.xml.h:119
+#, c-format
+msgid "Analog"
+msgstr "Аналоговый"
+
+#: db/options.xml.h:120
+#, c-format
+msgid "Digital"
+msgstr "Цифровой"
+
+#: db/options.xml.h:121 db/options.xml.h:125
+#, c-format
+msgid "Power control"
+msgstr "Управление питанием"
+
+#: db/options.xml.h:122
+#, c-format
+msgid "DPMS Control"
+msgstr "Управление энергосбережением (DPMS)"
+
+#: db/options.xml.h:123 db/options.xml.h:127
+#, c-format
+msgid "On"
+msgstr "Вкл"
+
+#: db/options.xml.h:124
+#, c-format
+msgid "Standby"
+msgstr "Ожидание"
+
+#: db/options.xml.h:126
+#, c-format
+msgid "Off"
+msgstr "Выкл"
