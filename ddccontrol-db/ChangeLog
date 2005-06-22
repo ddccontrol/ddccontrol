@@ -1,3 +1,8 @@
+2005-06-22 19:32  nboichat
+
+	* po/: LINGUAS, ru.gmo, ru.po: Add Russian translation, thanks to
+	  Sergei Epiphanov.
+
 2005-04-01 18:30  nboichat
 
 	* commit.sh: Add tag names in ChangeLog.

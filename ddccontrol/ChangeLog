@@ -1,3 +1,8 @@
+2005-06-22 19:31  nboichat
+
+	* po/: .cvsignore, LINGUAS, ru.gmo, ru.po: Add Russian translation,
+	  thanks to Sergei Epiphanov.
+
 2005-06-14 10:12  nboichat
 
 	* CheckList, Makefile.in, aclocal.m4, configure, configure.ac,
@@ -31,8 +36,7 @@
 	  doc/Makefile.in, src/Makefile.in, src/config.h.in,
 	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
-	  src/gddccontrol/.deps/.cvsignore, src/lib/Makefile.in: Fix typo
-	  in config.h.
+	  src/lib/Makefile.in: Fix typo in config.h.
 
 2005-06-07 08:39  tag Release-0_1_1
 
@@ -472,11 +476,6 @@
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add database support.
 
-2004-08-30 21:29  nboichat
-
-	* src/gddccontrol/.deps/: main.Po, notebook.Po: remove .deps
-	  directory
-
 2004-08-30 21:26  nboichat
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
@@ -494,7 +493,6 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
-	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial import.
 
@@ -508,7 +506,6 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
-	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial revision
 
