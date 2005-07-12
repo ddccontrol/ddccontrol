@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-10 17:15+0100\n"
+"POT-Creation-Date: 2005-07-12 22:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,7 +126,7 @@ msgstr ""
 msgid "Color Preset"
 msgstr ""
 
-#: db/options.xml.h:25
+#: db/options.xml.h:25 db/options.xml.h:101
 #, c-format
 msgid "Normal"
 msgstr ""
@@ -216,12 +216,12 @@ msgstr ""
 msgid "Auto Size Center"
 msgstr ""
 
-#: db/options.xml.h:43 db/options.xml.h:105
+#: db/options.xml.h:43 db/options.xml.h:108
 #, c-format
 msgid "Enable"
 msgstr ""
 
-#: db/options.xml.h:44 db/options.xml.h:104
+#: db/options.xml.h:44 db/options.xml.h:107
 #, c-format
 msgid "Disable"
 msgstr ""
@@ -498,120 +498,150 @@ msgstr ""
 
 #: db/options.xml.h:99 db/options.xml.h:100
 #, c-format
+msgid "Mute"
+msgstr ""
+
+#: db/options.xml.h:102 db/options.xml.h:103
+#, c-format
 msgid "Degauss"
 msgstr ""
 
-#: db/options.xml.h:101
+#: db/options.xml.h:104
 #, c-format
 msgid "Secondary Degauss"
 msgstr ""
 
-#: db/options.xml.h:102
+#: db/options.xml.h:105
 #, c-format
 msgid "OSD"
 msgstr ""
 
-#: db/options.xml.h:103
+#: db/options.xml.h:106
 #, c-format
 msgid "On Screen Display"
 msgstr ""
 
-#: db/options.xml.h:106
+#: db/options.xml.h:109
 #, c-format
 msgid "Enable only brightness/contrast settings"
 msgstr ""
 
-#: db/options.xml.h:107
-#, c-format
-msgid "Language select"
-msgstr ""
-
-#: db/options.xml.h:108
-#, c-format
-msgid "English"
-msgstr ""
-
-#: db/options.xml.h:109
-#, c-format
-msgid "French"
-msgstr ""
-
 #: db/options.xml.h:110
 #, c-format
-msgid "German"
+msgid "Rotate OSD Display"
 msgstr ""
 
 #: db/options.xml.h:111
 #, c-format
-msgid "Italian"
+msgid "No"
 msgstr ""
 
 #: db/options.xml.h:112
 #, c-format
-msgid "Russian"
+msgid "Yes"
 msgstr ""
 
 #: db/options.xml.h:113
 #, c-format
-msgid "Spanish"
+msgid "Language select"
 msgstr ""
 
 #: db/options.xml.h:114
 #, c-format
-msgid "Swedish"
+msgid "English"
 msgstr ""
 
 #: db/options.xml.h:115
 #, c-format
-msgid "Chinese"
+msgid "French"
 msgstr ""
 
 #: db/options.xml.h:116
 #, c-format
-msgid "Input settings"
+msgid "German"
 msgstr ""
 
 #: db/options.xml.h:117
 #, c-format
-msgid "Input level Select"
+msgid "Italian"
 msgstr ""
 
 #: db/options.xml.h:118
 #, c-format
-msgid "Input Source Select"
+msgid "Russian"
 msgstr ""
 
 #: db/options.xml.h:119
 #, c-format
-msgid "Analog"
+msgid "Spanish"
 msgstr ""
 
 #: db/options.xml.h:120
 #, c-format
-msgid "Digital"
+msgid "Swedish"
 msgstr ""
 
-#: db/options.xml.h:121 db/options.xml.h:125
+#: db/options.xml.h:121
 #, c-format
-msgid "Power control"
+msgid "Chinese"
 msgstr ""
 
 #: db/options.xml.h:122
 #, c-format
-msgid "DPMS Control"
+msgid "Dutch"
 msgstr ""
 
-#: db/options.xml.h:123 db/options.xml.h:127
+#: db/options.xml.h:123
 #, c-format
-msgid "On"
+msgid "Input settings"
 msgstr ""
 
 #: db/options.xml.h:124
 #, c-format
-msgid "Standby"
+msgid "Input level Select"
 msgstr ""
 
-#: db/options.xml.h:126
+#: db/options.xml.h:125
+#, c-format
+msgid "Display Resolution Notifier"
+msgstr ""
+
+#: db/options.xml.h:126 db/options.xml.h:133 db/options.xml.h:137
+#, c-format
+msgid "On"
+msgstr ""
+
+#: db/options.xml.h:127 db/options.xml.h:136
 #, c-format
 msgid "Off"
+msgstr ""
+
+#: db/options.xml.h:128
+#, c-format
+msgid "Input Source Select"
+msgstr ""
+
+#: db/options.xml.h:129
+#, c-format
+msgid "Analog"
+msgstr ""
+
+#: db/options.xml.h:130
+#, c-format
+msgid "Digital"
+msgstr ""
+
+#: db/options.xml.h:131 db/options.xml.h:135
+#, c-format
+msgid "Power control"
+msgstr ""
+
+#: db/options.xml.h:132
+#, c-format
+msgid "DPMS Control"
+msgstr ""
+
+#: db/options.xml.h:134
+#, c-format
+msgid "Standby"
 msgstr ""
