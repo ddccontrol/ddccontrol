@@ -327,6 +327,14 @@ the sourceforge project page</ulink>.</para>
 <title>Supported monitors</title>
 <para>The following monitors are supported by DDCcontrol:</para>
 <sect3>
+<title>Fujitsu Siemens</title>
+<itemizedlist mark='bullet'>
+<listitem>
+P19-2
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
 <title>Mitsubishi</title>
 <itemizedlist mark='bullet'>
 <listitem>
