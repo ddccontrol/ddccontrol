@@ -1,3 +1,10 @@
+2005-07-12 21:02  nboichat
+
+	* db/options.xml, db/options.xml.h, db/options.xml.in,
+	  db/monitor/FUS0552.xml, po/ddccontrol-db.pot, po/fr.gmo,
+	  po/fr.po, po/ru.gmo, po/ru.po: Add support for the Fujitsu
+	  Siemens P19-2 (thanks to Olaf Tauber)
+
 2005-06-22 19:32  nboichat
 
 	* po/: LINGUAS, ru.gmo, ru.po: Add Russian translation, thanks to
