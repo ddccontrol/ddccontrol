@@ -1,75 +1,103 @@
 <?xml version="1.0"?>
 <monitor name="Fujitsu Siemens P19-2" init="standard">
 	<controls>
-		<!-- 0x02: +/1/2 -->
-		<!-- 0x04: +/0/1 -->
+		<!-- 0x02: +/1/2 New control value -->
 		<control id="defaults" address="0x04"/>
-		<!-- 0x05: +/0/1 -->
-		<!-- 0x08: +/0/1 -->
+		<control id="defaultluma" address="0x05"/>
+		<control id="defaultgeom" address="0x06"/>
 		<control id="defaultcolor" address="0x08"/>
-		<!-- 0x0b: +/100/0 -->
-		<!-- 0x0c: +/45/63  temperature -->
+		<control id="coarse" address="0x0E"/>
 
 		<control id="brightness" address="0x10"/>
 		<control id="contrast" address="0x12"/>
-		<!-- 0x14: +/6/13 temperature -->
 		<control id="colorpreset" address="0x14">
-			<value id="5000k"  value="4"/>
-			<value id="6500k"  value="1"/>
-			<value id="7500k"  value="6"/>
-			<value id="8200k"  value="7"/>
-			<value id="9300k"  value="8"/>
-			<value id="native" value="2"/>
+			<value id="sRGB"   value="0x1"/>
+			<value id="native" value="0x2"/>
+			<value id="4000k"  value="0x3"/>
+			<value id="5000k"  value="0x4"/>
+			<value id="6500k"  value="0x5"/>
+			<value id="7500k"  value="0x6"/>
+			<value id="8200k"  value="0x7"/>
+			<value id="9300k"  value="0x8"/>
+			<value id="10000k" value="0x9"/>
+			<value id="11500k" value="0xA"/>
+			<value id="user1"  value="0xB"/>
+			<value id="user2"  value="0xC"/>
+			<value id="user3"  value="0xD"/>
 		</control>
-		<!-- 0x60: +/3/3 -->
+
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1A"/>
+
+		<control id="auto" address="0x1e">
+			<value id="coarsefine" value="1"/>
+			<value id="sizepos" value="2"/>
+		</control>
+
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+
+		<control id="fine" address="0x3e"/>
+
 		<control id="inputsource" type="list" address="0x60">
 			<value id="analog" value="1"/>
 			<value id="digital" value="3"/>
 		</control>
 		<control id="audiospeakervolume" address="0x62"/>
-		<!-- 0x6c Service: +/50/100 Red Video Black Level -->
-		<!-- 0x6e Service: +/50/100 Green Video Black Level -->
-		<!-- 0x70 Service: +/50/100 Blue Video Black Level -->
+		<!-- 0x6c Red Video Black Level -->
+		<!-- 0x6e Green Video Black Level -->
+		<!-- 0x70 Blue Video Black Level -->
 
-		<!-- 0x94: +/1/3 [???] audio mute(0)/unmute(1) -->
 		<control id="mute" type="list" address="0x94">
 			<value id="mute" value="0"/>
-			<value id="normal" value="1"/>
+			<value id="normal" value="2"/>
 		</control>
-		<!-- 0xaa: +/1/4 [???] osd orientation norm(1)/vert(2) -->
-		<control id="osdrotation" type="list" address="0xaa">
-			<value id="no" value="1"/>
-			<value id="yes" value="2"/>
-		</control>
-		<!-- 0xac: +/6390/0 -->
-		<!-- 0xae: +/5990/0 -->
-		<!-- 0xb2: +/1/0 -->
-		<!-- 0xb6: +/3/0 -->
-		<!-- 0xc0: +/61/0 -->
-		<!-- 0xc6: +/69/0 -->
-		<!-- 0xc8: +/5/0 -->
-		<!-- 0xc9: +/19714/0 -->
-		<!-- 0xca: +/2/2 -->
 
-		<!-- 0xcc: +/4/12 osd language de(4) en(2) -->
+		<control id="osdorientation" type="list" address="0xaa">
+				<value id="landscape" value="1"/>
+				<value id="portrait" value="2"/>
+		</control>
+		<!-- 0xac: +/6390/0 Horizontal freq.  [kHz] -->
+		<!-- 0xae: +/5990/0 Vertical freq. [Hz] -->
+		<!-- 0xb2: +/1/0 Flat panel sub pixel layout
+			[1: RGB vertical stripe
+			 2: RGB horizontal stripe
+			 3: BGR vertical stripe
+			 4: BGR horizontal stripe] -->
+		<!-- 0xb6: +/3/0 Monitor Type
+			[1: CRT (shadow mask)
+			 2: CRT (aperture grill)
+			 3: TFT
+			 4: Projector 
+			 5: Plasma -->
+		<!-- 0xc0: +/61/0 Display usage time [h] -->
+		<!-- 0xc6: +/69/0 unknown -->
+		<!-- 0xc8: +/5/0 Display controller type -->
+		<!-- 0xc9: +/19714/0 Display firmware level -->
+		<control id="osd" type="list" address="0xca">
+			<value id="disable" value="1"/>
+			<value id="enable" value="2"/>
+		</control>
+
 		<control id="language" type="list" address="0xcc">
 			<value id="english" value="2"/>
-			<value id="french" value="3"/>
-			<value id="deutsch" value="4"/>
+			<value id="french"  value="3"/>
+			<value id="german"  value="4"/>
 			<value id="italian" value="5"/>
 			<value id="russian" value="9"/>
 			<value id="spanish" value="10"/>
-			<value id="dutch" value="11"/>
+			<value id="dutch"   value="11"/>
 			<value id="swedish" value="12"/>
 		</control>
 
-		<!-- 0xd6: +/1/0 possibly dpms -->
 		<control id="dpms" type="list" address="0xd6">
 			<value id="on" value="1"/>
 			<value id="standby" value="2"/>
 		</control>
-		<!-- 0xdf: +/512/0 -->
-		<!-- 0xf6: +/1/1 resolution hint on(1) off(0) -->
+		<!-- 0xdf: +/512/0 VCP version (02 00) -->
+		<!-- 0xfe: Auto level : For the auto level function a suitable test
+picture is required which has at least 1 full white (0xFFFFFF) line. -->
 		<control id="resolutionnotifier" type="list" address="0xf6">
 			<value id="on" value="1"/>
 			<value id="off" value="0"/>

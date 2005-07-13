@@ -31,12 +31,19 @@
 				<value id="normal" name="Normal"/>
 				<value id="warm" name="Warm"/>
 				<value id="cool" name="Cool"/>
+				<value id="sRGB" name="sRGB"/>
+				<value id="4000k" name="4000K"/>
 				<value id="5000k" name="5000K"/>
 				<value id="6500k" name="6500K"/>
 				<value id="7500k" name="7500K"/>
 				<value id="8200k" name="8200K"/>
 				<value id="9300k" name="9300K"/>
+				<value id="10000k" name="10000K"/>
+				<value id="11500k" name="11500K"/>
 				<value id="native" name="Native"/>
+				<value id="user1" name="User 1"/>
+				<value id="user2" name="User 2"/>
+				<value id="user3" name="User 3"/>
 			</control>
 		</subgroup>
 	</group>
@@ -54,7 +61,10 @@
 				<value id="enable" name="Enable" value="0x00"/>
 				<value id="disable" name="Disable" value="0x01"/>
 			</control>
-			<control id="auto" type="command" name="Automatically adjust Size and Position" address="0x1e"/>
+			<control id="auto" type="command" name="Automatically adjust" address="0x1e">
+				<value id="pos" name="H/V Position"/>
+				<value id="coarsefine" name="Clock and clock phase"/>
+			</control>
 		</subgroup>
 	</group>
 	<group name="Geometry">
@@ -102,7 +112,7 @@
 		</subgroup>
 		<subgroup name="Various">
 			<control id="focus" type="value" name="Focus" address="0x1C"/>
-			<control id="coarse" type="value" name="Image Lock Coarse" address="0x0e"/>
+			<control id="coarse" type="value" name="Image Lock Coarse (Clock)" address="0x0e"/>
 			<control id="fine" type="value" name="Image Lock Fine (Clock Phase)" address="0x3e"/>
 			<control id="landing" type="value" name="Landing Adjust (RGB alignment)" address="0x5C"/>
 			<control id="sharpness" type="value" name="Sharpness" address="0x8c"/>
@@ -139,20 +149,20 @@
 				<value id="enable" name="Enable"/>
 				<value id="partenable" name="Enable only brightness/contrast settings"/>
 			</control>
-			<control id="osdrotation" type="list" name="Rotate OSD Display" address="0xaa">
-				<value id="no" name="No"/>
-				<value id="yes" name="Yes"/>
+			<control id="osdorientation" type="list" name="OSD Orientation" address="0xaa">
+				<value id="landscape" name="Landscape"/>
+				<value id="portrait" name="Portrait"/>
 			</control>
 			<control id="language" type="list" name="Language select" address="0x68">
 				<value id="english" name="English"/>
-				<value id="french" name="French"/>
-				<value id="deutsch" name="German"/>
+				<value id="french"  name="French"/>
+				<value id="german"  name="German"/>
 				<value id="italian" name="Italian"/>
 				<value id="russian" name="Russian"/>
 				<value id="spanish" name="Spanish"/>
 				<value id="swedish" name="Swedish"/>
 				<value id="chinese" name="Chinese"/>
-				<value id="dutch" name="Dutch"/>
+				<value id="dutch"   name="Dutch"/>
 			</control>
 		</subgroup>
 		<subgroup name="Input settings">

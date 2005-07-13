@@ -44,8 +44,8 @@
 		
 		<control id="language" type="list" address="0x68">
 			<value id="english" value="0"/>
-			<value id="deutsch" value="1"/>
-			<value id="french" value="2"/>
+			<value id="german"  value="1"/>
+			<value id="french"  value="2"/>
 			<value id="spanish" value="3"/>
 			<value id="italian" value="4"/>
 			<value id="chinese" value="5"/>
