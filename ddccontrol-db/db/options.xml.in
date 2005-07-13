@@ -31,7 +31,7 @@
 				<value id="normal" name="Normal"/>
 				<value id="warm" name="Warm"/>
 				<value id="cool" name="Cool"/>
-				<value id="sRGB" name="sRGB"/>
+				<value id="srgb" name="sRGB"/>
 				<value id="4000k" name="4000K"/>
 				<value id="5000k" name="5000K"/>
 				<value id="6500k" name="6500K"/>

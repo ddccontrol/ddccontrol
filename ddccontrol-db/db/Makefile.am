@@ -24,3 +24,6 @@ all-am: options.xml.h options.xml
 dist-hook:
 	touch options.xml.in
 	make options.xml
+
+check-db: options.xml
+	ls monitor/*.xml | awk -F/ '{print $$2}' | awk -F. '{print "ddccontrol -b . -v -v -i " $$1 "\nif [ $$? = 1 ]; then\nexit 1;\nfi"}' | bash -

@@ -11,7 +11,7 @@
 		<control id="brightness" address="0x10"/>
 		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14">
-			<value id="sRGB"   value="0x1"/>
+			<value id="srgb"   value="0x1"/>
 			<value id="native" value="0x2"/>
 			<value id="4000k"  value="0x3"/>
 			<value id="5000k"  value="0x4"/>
@@ -32,7 +32,7 @@
 
 		<control id="auto" address="0x1e">
 			<value id="coarsefine" value="1"/>
-			<value id="sizepos" value="2"/>
+			<value id="pos" value="2"/>
 		</control>
 
 		<control id="hpos" address="0x20"/>
