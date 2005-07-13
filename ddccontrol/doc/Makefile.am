@@ -7,7 +7,7 @@ dist_html_DATA = html/*
 EXTRA_DIST = main.xml gpl.xml style.xsl style-fo.xsl
 
 if BUILD_DOC
-html/*: main.xml gpl.xml style.xsl
+html/*: main.xml *.xml style.xsl
 	rm -rf html.old
 	true `mv -f html html.old`
 	mkdir html

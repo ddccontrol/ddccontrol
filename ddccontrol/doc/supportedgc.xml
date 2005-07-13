@@ -1,0 +1,277 @@
+<appendix id="supportedgc">
+<title>Supported graphics cards</title>
+<sect2>
+<title><filename>/dev/i2c-*</filename> versus PCI memory</title>
+<para>To control a monitor, DDCcontrol must access to the I2C bus of the
+graphics card. There are two methods to do so: the first one uses
+<filename>/dev/i2c-*</filename> devices provided by kernel drivers (abbreviated
+by dev in tables), the second one reads and writes directly in the card PCI
+memory (abbreviated by PCI in the tables).</para>
+<para>Depending on your hardware, one method or the other works, or even both.</para>
+</sect2>
+<sect1>
+<title>ATI</title>
+<sect2>
+<title>Radeon series</title>
+<para>ATI Radeon cards only work with <filename>/dev/i2c-*</filename> devices.
+To use them, you must load the <filename>radeonfb</filename> module by typing,
+as root:</para>
+<screen format="linespecific">
+# modprobe radeonfb
+</screen>
+<para>The kernel configuration options needed to enable Radeon framebuffer
+driver and I2C support are:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>ATI Radeon display support</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>ATI Radeon display support</guimenuitem>
+  <guimenuitem>DDC/I2C for ATI Radeon support</guimenuitem>
+</menuchoice>.
+</listitem>
+</itemizedlist>
+</sect2>
+<sect3>
+<title>ATI cards support table</title>
+<para>These ATI cards have been reported to work, but others models should also
+work. If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>Radeon 7500</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Radeon 9200</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Radeon 9500</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Radeon 9550 SE</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Radeon 9600 Pro</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Radeon 9700</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
+<title>nVidia</title>
+<sect2>
+<title>Direct PCI memory access support</title>
+<para>Almost every nVidia cards work with direct PCI memory access, and this
+method is compatible with the nVidia proprietary drivers.</para>
+<para>To use it, you have nothing special to do, everything is done by 
+DDCcontrol.</para>
+</sect2>
+<sect2>
+<title><filename>/dev/i2c-*</filename> devices support</title>
+<note>To use <filename>/dev/i2c-*</filename> devices with nVidia cards, you must
+have a rather recent kernel (at least version 2.6.9).</note>
+<para>Most nVidia cards, starting with TNT, but excluding the most recent
+GeForce FX series, work with <filename>/dev/i2c-*</filename> devices. To use
+them, you must load the <filename>rivafb</filename> module by typing, as
+root:</para>
+<screen format="linespecific">
+# modprobe rivafb
+</screen>
+<para>The kernel configuration options needed to enable nVidia framebuffer and
+I2C support are:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>nVidia Riva support</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>nVidia Riva support</guimenuitem>
+  <guimenuitem>Enable DDC Support</guimenuitem>
+</menuchoice>.
+</listitem>
+</itemizedlist>
+<warning>
+<para>The <filename>rivafb</filename> kernel module is <emphasis>not</emphasis>
+compatible with the binary nVidia X drivers, which are the only drivers for
+nVidia cards to provide 3D acceleration.</para>
+<para>This is why we recommend that you use direct PCI memory access with 
+nVidia cards.</para>
+</warning>
+</sect2>
+<sect3>
+<title>nVidia cards support table</title>
+<para>Most of these nVidia cards have been reported to work, but others models
+should also work. If yours is not listed, please send a message to one of the
+DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>GeForce Ti 200</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
+  <entry>GeForce FX 5700</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
+  <entry>GeForce 6200 TC</entry>
+  <entry class="unknown">???</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
+  <entry>nForce 2 IGP</entry>
+  <entry class="no">No</entry>
+  <entry class="no">No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
+<title>Matrox</title>
+<sect2>
+<title>G200/G400/G450/G550 series</title>
+<para>Matrox cards only work with <filename>/dev/i2c-*</filename> devices.
+To use them, you must load both <filename>matroxfb</filename> and
+<filename>i2c-matroxfb</filename> modules by typing,
+as root:</para>
+<screen format="linespecific">
+# modprobe matroxfb
+# modprobe i2c-matroxfb
+</screen>
+<para>The kernel configuration options needed to enable Matrox framebuffer
+driver and I2C support are, at least:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+  <guimenuitem>G100/G200/G400/G450/G550 support</guimenuitem>
+</menuchoice>.
+</listitem>
+<listitem>
+<menuchoice>
+  <guimenu>Devices drivers</guimenu>
+  <guimenuitem>Graphics support</guimenuitem>
+  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Matrox acceleration</guimenuitem>
+  <guimenuitem>Matrox I2C support</guimenuitem>
+</menuchoice>.
+</listitem>
+</itemizedlist>
+</sect2>
+<sect3>
+<title>Matrox cards support table</title>
+<para>These Matrox cards have been reported to work.
+If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>Matrox G200 AGP</entry>
+  <entry class="no">No</entry>
+  <entry class="no">No</entry>
+</row>
+<row>
+  <entry>Matrox G450 AGP</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="no">No</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+</appendix>

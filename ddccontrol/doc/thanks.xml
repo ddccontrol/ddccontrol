@@ -1,0 +1,26 @@
+<appendix id="thanks">
+<title>Thanks</title>
+<para>
+Thanks to <personname><firstname>Oleg</firstname><othername>I.</othername>
+<surname>Vdovikin</surname></personname>, for his work which was used
+as a basis for ddccontrol, and for his help when designing the XML database.
+</para>
+<para>
+Thanks to <personname><firstname>Christian</firstname><surname>Schilling</surname>
+</personname>, for his nice additions to the Gnome GUI.
+</para>
+<para>
+Thanks to <personname><firstname>William</firstname>
+<surname>Hollingworth</surname></personname>, of NEC/Mitsubishi, for his
+constant help and support to this project.
+</para>
+<para>
+Thanks to all users that reported if DDCcontrol works on their hardware.
+</para>
+<para>
+Thanks to various people on mailing-lists (X.org, fbdevel...), for their help,
+in particular <personname><firstname>Jon</firstname><surname>Smirl</surname>
+</personname>, on the X.org list, who guided me in the direction of using the 
+kernel framebuffer driver.
+</para>
+</appendix>

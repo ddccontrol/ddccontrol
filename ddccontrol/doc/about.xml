@@ -1,0 +1,22 @@
+<chapter id="about">
+<title>About DDCcontrol</title>
+
+<sect1 id="ddccontrol">
+<title>About DDCcontrol</title>
+<para>DDCcontrol is a tool used to control monitor parameters, like brightness 
+and contrast, without using the OSD (On Screen Display) and the buttons in front
+of the monitor.</para>
+<para>All the software provided by monitor manufacturers (NEC/Mitsubishi NaviSet
+and Samsung MagicTune) are closed-source and only runs on Windows.
+DDCcontrol is open-source and runs on Linux.</para>
+<para>There is two versions of this tool, a command line version, and an 
+user-friendly Gnome GUI.</para>
+</sect1>
+ 
+<sect1 id="ddcci">
+<title>DDC/CI</title>
+<para>DDC/CI is a protocol designed by VESA to configure monitor by software,
+using two wires on the VGA or DVI cables, which forms an I2C bus.</para>
+</sect1>
+
+</chapter>

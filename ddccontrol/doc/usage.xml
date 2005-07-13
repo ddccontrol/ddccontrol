@@ -1,0 +1,133 @@
+<chapter id="usage">
+<title>Usage</title>
+<sect1>
+<title>Gnome GUI</title>
+<para>If GTK+&gt;=2.4 is installed on your computer, the configure process will
+detect it, and build the GTK+ application.</para>
+<para>The Gnome GUI is designed to be user-friendly, so it should be easy to
+use it. To launch this GUI, simply type:</para>
+<screen format="linespecific">
+# gddccontrol
+</screen>
+</sect1>
+<sect1>
+<title>Command line tool</title>
+<para>The command line tool is useful for debugging purpose, and to create
+automatic scripts.</para>
+<note>
+<para>We won't present everything you can do with ddccontrol, if you want more
+information, type:</para>
+<screen format="linespecific">
+# ddccontrol -h
+</screen>
+</note>
+<sect2>
+<title>Usage example</title>
+<para>This example explains how to list all available controls and then
+change the brightness parameter.</para>
+<sect3>
+<title>List available controls</title>
+<para>To list available controls, type:</para>
+<screen format="linespecific">
+# ddccontrol -p
+</screen>
+<para>This probes for available monitors, then takes the first probed monitor
+and lists controls supported by it. This should give you an output like this
+(this example uses a Samsung Syncmaster 173P and a nVidia GeForce FX 5700):
+</para>
+<screen format="linespecific">
+ddccontrol version 0.1
+Copyright 2004 Oleg I. Vdovikin (oleg-at-cs.msu.su)
+Copyright 2004 Nicolas Boichat (nicolas-at-boichat.ch)
+This program comes with ABSOLUTELY NO WARRANTY.
+You may redistribute copies of this program under the terms of the GNU General Public License.
+
+Device : pci:01:00.0-0
+Error while reading write message answer: Bad message
+Reading EDID 0x50 failed.
+Device : pci:01:00.0-1
+Device : pci:01:00.0-2
+Detected monitors :
+ - Device : pci:01:00.0-1
+   DDC/CI supported : Yes
+   Monitor Name : Samsung SyncMaster 173P (DVI)
+   Input type : Digital
+  (Automatically selected)
+ - Device : pci:01:00.0-2
+   DDC/CI supported : Yes
+   Monitor Name : NEC Multisync 2080UX+
+   Input type : Analog
+Reading EDID and initializing DDC/CI at bus pci:01:00.0-1...
+Device : pci:01:00.0-1
+
+EDID readings:
+   Plug and Play ID: SAM00E2 [Samsung SyncMaster 173P (DVI)]
+   Input type: Digital
+
+= Samsung SyncMaster 173P (DVI)
+&gt; Color settings
+   &gt; Brightness and Contrast
+      <emphasis>&gt; id=brightness, name=Brightness, address=0x10, delay=-1ms, type=0
+        supported, value=55, maximum=100</emphasis>
+      &gt; id=contrast, name=Contrast, address=0x12, delay=-1ms, type=0
+        supported, value=60, maximum=100
+      &gt; id=magicbright, name=Magic Bright Mode, address=0xdc, delay=-1ms, type=2
+        Possible values:
+         &gt; id=text - name=Text, value=1
+         &gt; id=internet - name=Internet, value=2
+         &gt; id=entertain - name=Entertain, value=3
+         &gt; id=custom - name=Custom, value=4
+        supported, value=4, maximum=4
+&gt; Others
+   &gt; Restore defaults
+      &gt; id=defaults, name=Restore Factory Defaults, address=0x4, delay=-1ms, type=1
+        Possible values:
+         &gt; id=default - name=Restore Factory Defaults, value=1
+        supported, value=0, maximum=1
+      &gt; id=defaultluma, name=Restore Brightness and Contrast, address=0x5, delay=-1ms, type=1
+        Possible values:
+         &gt; id=default - name=Restore Brightness and Contrast, value=1
+        supported, value=0, maximum=1
+      &gt; id=settings, name=Settings, address=0xb0, delay=-1ms, type=1
+        Possible values:
+         &gt; id=store - name=Save Current Settings, value=1
+         &gt; id=restorefactory - name=Restore Factory Settings, value=2
+        supported, value=0, maximum=2
+   &gt; Input settings
+      &gt; id=inputsource, name=Input Source Select, address=0x60, delay=-1ms, type=2
+        Possible values:
+         &gt; id=analog - name=Analog, value=1
+         &gt; id=digital - name=Digital, value=3
+        supported, value=3, maximum=3
+   &gt; Power control
+      &gt; id=dpms, name=DPMS Control, address=0xd6, delay=-1ms, type=2
+        Possible values:
+         &gt; id=on - name=On, value=1
+         &gt; id=standby - name=Standby, value=4
+        supported, value=1, maximum=4
+</screen>
+</sect3>
+<sect3>
+<title>Change the brightness</title>
+<para>The lines concerning brightness in the available controls list are:</para>
+<screen format="linespecific">
+      &gt; id=brightness, name=Brightness, <emphasis>address=0x10</emphasis>, delay=-1ms, type=0
+        supported, <emphasis>value=55</emphasis>, <emphasis>maximum=100</emphasis>
+</screen>
+<para>The important elements are address (here:
+<computeroutput>0x10</computeroutput>), current value
+(<computeroutput>55</computeroutput>) and maximum value
+(<computeroutput>100</computeroutput>).</para>
+<para>To change the brightness value to 70/100, type:</para>
+<screen format="linespecific">
+ddccontrol -p -r <userinput>0x10</userinput> -w <userinput>70</userinput>
+</screen>
+The last lines of the output should be:
+<screen format="linespecific">
+Writing 0x10, 0x46(70)...
+Control 0x10: +/70/100 [Brightness]
+</screen>
+</sect3>
+</sect2>
+</sect1>
+</chapter>

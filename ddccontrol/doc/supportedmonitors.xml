@@ -1,0 +1,52 @@
+<appendix id="supportedmonitors">
+<title>Supported monitors</title>
+<para>The following monitors are supported by DDCcontrol:</para>
+<sect3>
+<title>Fujitsu Siemens</title>
+<itemizedlist mark='bullet'>
+<listitem>
+P19-2
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>Mitsubishi</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Diamond Pro 2060u (VGA input B only)
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>NEC</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Multisync 2080UX+ (VGA and DVI inputs)
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>Samsung</title>
+<itemizedlist mark='bullet'>
+<listitem>
+SyncMaster 173P (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 173T
+</listitem>
+<listitem>
+SyncMaster 193P (VGA and DVI inputs)
+</listitem>
+</itemizedlist>
+</sect3>
+<sect2>
+<title>Your monitor is not on this list?</title>
+<para>If your monitor is not on this list, and so doesn't work with DDCcontrol,
+but you think that it supports the DDC/CI protocol, please run this command:
+<screen format="linespecific">
+LANG= LC_ALL= ddccontrol -p -c -d
+</screen>
+And send the output to one of the DDCcontrol mailing lists (see
+<xref linkend="report"/>).</para>
+</sect2>
+</appendix>

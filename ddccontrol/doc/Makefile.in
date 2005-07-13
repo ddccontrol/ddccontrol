@@ -357,7 +357,7 @@ uninstall-am: uninstall-dist_htmlDATA uninstall-info-am
 	uninstall-info-am
 
 
-@BUILD_DOC_TRUE@html/*: main.xml gpl.xml style.xsl
+@BUILD_DOC_TRUE@html/*: main.xml *.xml style.xsl
 @BUILD_DOC_TRUE@	rm -rf html.old
 @BUILD_DOC_TRUE@	true `mv -f html html.old`
 @BUILD_DOC_TRUE@	mkdir html

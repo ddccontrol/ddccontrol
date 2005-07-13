@@ -1,0 +1,200 @@
+<appendix id="techdocs">
+<title>Documents for developers</title>
+<sect1 id="xmlstruct">
+<title>Monitor database structure</title>
+<para>The monitor database is written in XML, it can be found in the
+<filename>db</filename> directory of <filename>ddccontrol-db</filename>
+package.</para>
+<para>This directory contains the following files:
+<itemizedlist mark='bullet'>
+<listitem>
+<filename>
+options.xml
+</filename>
+</listitem>
+<listitem>
+<filename>
+monitor/<replaceable>%monitor_id%</replaceable>.xml
+</filename>
+</listitem>
+</itemizedlist>
+</para>
+<sect2 id="optionsxml">
+<title>Control list</title>
+<subtitle>XML file: <filename>options.xml</filename></subtitle>
+<para><sgmltag class="element">control</sgmltag> elements (e.g.
+<sgmltag class="attvalue">brightness</sgmltag>) are contained in
+<sgmltag class="element">group</sgmltag> elements (e.g.
+<sgmltag class="attvalue">color settings</sgmltag>).
+<sgmltag class="element">group</sgmltag> and 
+<sgmltag class="element">subgroup</sgmltag> elements allow the GUI to separate
+the controls in different branches on the tree.</para>
+
+<para><sgmltag class="element">options</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">date</sgmltag>: indicates the release date of the
+current database (YYYYMMDD format).
+</listitem>
+<listitem>
+<sgmltag class="attribute">dbversion</sgmltag>: indicates which version of
+database format is used (must be set to 1).
+</listitem>
+</itemizedlist></para>
+
+<para><sgmltag class="element">control</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">id</sgmltag>: abbreviated control name.
+</listitem>
+<listitem>
+<sgmltag class="attribute">name</sgmltag>: full English control name.
+</listitem>
+<listitem>
+<sgmltag class="attribute">address</sgmltag>: DDC address (optional).
+</listitem>
+<listitem>
+<sgmltag class="attribute">type</sgmltag>: one of these values:
+<itemizedlist mark='opencircle'>
+<listitem>
+<sgmltag class="attvalue">value</sgmltag>: The control accepts values in a
+continuous range (e.g. brightness).
+</listitem>
+<listitem>
+<sgmltag class="attvalue">command</sgmltag>: An action occurs when the value is
+set to something greater than <sgmltag class="attvalue">0</sgmltag>
+(e.g. degauss). If you don't define any <sgmltag class="element">value</sgmltag>
+element in a command control, the default value
+<sgmltag class="attvalue">0x01</sgmltag> will be used.
+</listitem>
+<listitem>
+<sgmltag class="attvalue">list</sgmltag>: The control accepts a list of values
+(e.g. OSD language).
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist></para>
+<para><sgmltag class="element">value</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">id</sgmltag>: abbreviated value name.
+</listitem>
+<listitem>
+<sgmltag class="attribute">name</sgmltag>: full English value name (it is not
+needed if there is only one value for command controls).
+</listitem>
+<listitem>
+<sgmltag class="attribute">value</sgmltag>: DDC control value (optional).
+</listitem>
+</itemizedlist></para>
+
+<para>File format:</para>
+<screen format='linespecific'>
+<![CDATA[<?xml version="1.0"?>
+<options date="%date%" dbversion="1">
+  <group name="%groupname%">
+    <subgroup name="%subgroupname%">
+      <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
+        <!-- Command using the default 0x01 address -->
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>
+      <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" value="%hex_value%"/>
+      </control>
+      <control id="%control_id%" type="list" name="%control_name%" address="%hex_address%">
+        <value id="%value_id%" name="%value_name%" value="%hex_value%"/>
+        <value...>
+      </control>
+      <control ...>
+    </subgroup>
+  </group>
+  <group ...>
+</options>]]></screen>
+</sect2>
+<sect2 id="monitorxml">
+<title>Monitor Profiles</title>
+<subtitle>XML files:
+<filename>monitor/<replaceable>%monitor_id%</replaceable>.xml</filename></subtitle>
+<para>List of controls supported by a monitor.</para>
+<para><sgmltag class="element">control</sgmltag>
+<sgmltag class="attribute">id</sgmltag> attributes are defined in
+<filename>options.xml</filename>. If <sgmltag class="element">control</sgmltag>
+<sgmltag class="attribute">type</sgmltag> is
+<sgmltag class="attvalue">list</sgmltag> or
+<sgmltag class="attvalue">command</sgmltag> without non-default value, supported
+values must be defined.</para>
+<para><sgmltag class="attribute">address</sgmltag> attribute for 
+<sgmltag class="element">control</sgmltag> elements and
+<sgmltag class="attribute">value</sgmltag> attribute for 
+<sgmltag class="element">value</sgmltag> elements are optional if they are
+defined in the general options file.</para>
+
+<para>The <sgmltag class="attribute">init</sgmltag> attribute in
+<sgmltag class="element">monitor</sgmltag> element define the type of the
+initialization: DDC/CI standard (<sgmltag class="attvalue">standard</sgmltag>),
+or Samsung (<sgmltag class="attvalue">samsung</sgmltag>).</para>
+
+<para>The <sgmltag class="attribute">caps</sgmltag> attribute is optional. Its
+format is defined in ACCESS.bus specifications and is treated as
+following:</para>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+If <sgmltag class="attribute">caps</sgmltag> is not defined, caps are read from
+monitor.
+</para>
+</listitem>
+<listitem>
+<para>
+If this attribute exists and have a <sgmltag class="attvalue">vcp</sgmltag>
+string (e.g. <sgmltag class="attvalue">type(lcd) vcp(10 12)</sgmltag>) then the
+specified caps string is used.
+</para>
+</listitem>
+<listitem>
+<para> 
+If this attribute exists but does not have a
+<sgmltag class="attvalue">vcp</sgmltag> (e.g.
+<sgmltag class="attvalue">type(crt)</sgmltag> or
+<sgmltag class="attvalue"></sgmltag>), then all controls defined in the
+monitor profile are supposed to be supported.</para>
+</listitem>
+</itemizedlist>
+
+<para>
+You can set a <sgmltag class="attribute">delay</sgmltag> attribute in
+<sgmltag class="element">control</sgmltag> elements to set the time in
+milliseconds to wait after changing the value of this control.
+If you don't, a default value is used.
+</para>
+
+<para>File format:</para>
+<screen format='linespecific'>
+<![CDATA[<?xml version="1.0"?>
+<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
+  <controls>
+    <!--- value -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command using a default 0x01 value-->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
+    <!--- command -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="activate" value="%hex_value%"/>
+    </control>
+    <!--- list -->
+    <control id="%control_id%" address="%hex_address%" delay="%wait_time%">
+      <value id="%value_id%" value="%hex_value%"/>
+      <value...>
+    </control>
+    <control...>
+  </controls>
+</monitor>
+]]></screen>
+<para>If a monitor supports exactly the same controls as another one, you can
+define it as shown:</para>
+<screen format='linespecific'>
+<![CDATA[<?xml version="1.0"?>
+<monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>
+]]></screen>
+</sect2>
+</sect1>
+</appendix>
