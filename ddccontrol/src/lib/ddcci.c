@@ -209,9 +209,9 @@ void ddcpci_release() {}
 void ddcpci_send_heartbeat() {}
 #endif
 
-int ddcci_init()
+int ddcci_init(char* usedatadir)
 {
-	if (!ddcci_init_db()) {
+	if (!ddcci_init_db(usedatadir)) {
 		printf(_("Failed to initialize ddccontrol database...\n"));
 		return 0;
 	}
@@ -528,7 +528,7 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 {
 	int bufferpos = 0;
-	unsigned char buf[35];	/* 35 bytes chunk */
+	unsigned char buf[64];	/* 64 bytes chunk (was 35, but 173P+ send 43 bytes chunks) */
 	int offset = 0;
 	int len, i;
 	int retries = 3;

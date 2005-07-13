@@ -80,7 +80,7 @@ struct monitor_db {
 struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps);
 void ddcci_free_db(struct monitor_db* mon_db);
 
-int ddcci_init_db();
+int ddcci_init_db(char* usedatadir);
 void ddcci_release_db();
 
 #endif

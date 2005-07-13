@@ -128,8 +128,6 @@ static int init_i2c_bus(struct i2c_algo_bit_data* algo, char* mmio, int gpio)
 
 struct card* i810_open(struct pci_dev *dev)
 {
-	printf("i810_open: start\n");
-
 	if (dev->vendor_id != 0x8086) { // PCI_VENDOR_ID_INTEL
 		return 0;
 	}

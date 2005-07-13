@@ -52,6 +52,8 @@
 	}
 
 
+char* datadir = NULL;
+
 xmlDocPtr options_doc = NULL;
 
 /* Structure to store CAPS entry (control and related values) */
@@ -152,6 +154,21 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	xmlChar *options_valueid, *options_valuename, *mon_valueid;
 	xmlChar *tmp;
 	char *endptr;
+	int nvalues = 0; /* Number of values in monitor control */
+	char *matchedvalues; /* Array of monitor values with (=1) or without (=0) corresponding global value */
+	int i;
+	
+	/* Compute nvalues */
+	cur = mon_control->xmlChildrenNode;
+	while (cur) {
+		if (cur->type == XML_ELEMENT_NODE) {
+			nvalues++;
+		}
+		cur = cur->next;
+	}
+	
+	matchedvalues = malloc((nvalues+1)*sizeof(char)); /* Will not be freed on error, no problem */
+	memset(matchedvalues, 0, nvalues*sizeof(char));
 	
 	struct value_db *current_value = malloc(sizeof(struct value_db));
 	struct value_db **last_value_ref = &current_control->value_list;
@@ -175,6 +192,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 			
+			i = 0;
 			cur = mon_control->xmlChildrenNode;
 			while (1)
 			{
@@ -206,6 +224,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						current_value = malloc(sizeof(struct value_db));
 						memset(current_value, 0, sizeof(struct value_db));
 						
+						matchedvalues[i] = 1;
+						
 						xmlFree(mon_valueid);
 						break;
 					}
@@ -213,6 +233,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						xmlFree(mon_valueid);
 					}
 				}
+				if (cur->type == XML_ELEMENT_NODE) i++;
 				cur = cur->next;
 			}
 		}
@@ -220,15 +241,31 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 		value = value->next;
 	} // controls loop
 	
+	i = 0;
+	cur = mon_control->xmlChildrenNode;
+	while (cur) {
+		if (cur->type == XML_ELEMENT_NODE) {
+			if (!matchedvalues[i]) {
+				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, xmlGetProp(cur, "id"), XML_GET_LINE(cur));
+				return -1;
+			}
+			i++;
+		}
+		cur = cur->next;
+	}
+	
+	free(matchedvalues);
+	
 	return 0;
 }
 
-int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps) {
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char *matchedcontrols) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
 	xmlChar *tmp;
 	char *endptr;
+	int i;
 	
 	struct control_db *current_control = malloc(sizeof(struct control_db));
 	struct control_db **last_control_ref = &current_group->control_list;
@@ -246,6 +283,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 			
 			/* Find the related control in monitor specifications */
+			i = 0;
 			cur = mon_control->xmlChildrenNode;
 			while (1)
 			{
@@ -258,7 +296,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
 					mon_ctrlid = xmlGetProp(cur, "id");
-					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {					
+					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
 						tmp = xmlGetProp(cur, "address");
 						DDCCI_RETURN_IF(tmp == NULL, 0, _("Can't find address property."), cur);
 						current_control->address = strtol(tmp, &endptr, 0);
@@ -322,6 +360,8 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						current_control = malloc(sizeof(struct control_db));
 						memset(current_control, 0, sizeof(struct control_db));
 						
+						matchedcontrols[i] = 1;
+						
 						xmlFree(mon_ctrlid);
 						break;
 					}
@@ -329,6 +369,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						xmlFree(mon_ctrlid);
 					}
 				}
+				if (cur->type == XML_ELEMENT_NODE) i++;
 				cur = cur->next;
 			}
 		}
@@ -359,7 +400,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		return NULL;
 	}
 	
-	snprintf(buffer, 256, "%s/monitor/%s.xml", DATADIR, pnpname);
+	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
@@ -458,6 +499,21 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	struct group_db **last_group_ref = &mon_db->group_list;
 	memset(current_group, 0, sizeof(struct group_db));
 	
+	int ncontrols = 0; /* Number of controls in monitor file */
+	char *matchedcontrols; /* Array of monitor controls with (=1) or without (=0) corresponding global control */
+	
+	/* Compute nvalues */
+	cur = mon_control->xmlChildrenNode;
+	while (cur) {
+		if (cur->type == XML_ELEMENT_NODE) {
+			ncontrols++;
+		}
+		cur = cur->next;
+	}
+	
+	matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
+	memset(matchedcontrols, 0, ncontrols*sizeof(char));
+	
 	/* List groups (options.xml) */
 	for (group = xmlDocGetRootElement(options_doc)->xmlChildrenNode; group != NULL; group = group->next)
 	{
@@ -487,8 +543,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			control = subgroup->xmlChildrenNode;
 			
 			DDCCI_RETURN_IF(
-				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps), 
-					NULL,  _("Error enumerating controls in group."), control);
+				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps, matchedcontrols), 
+				NULL,  _("Error enumerating controls in group."), control);
 			
 			if (current_subgroup->control_list) {
 				current_subgroup->name = _D(options_subgroupname);
@@ -519,6 +575,21 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	}
 	
 	free(current_group);
+	
+	i = 0;
+	cur = mon_control->xmlChildrenNode;
+	while (cur) {
+		if (cur->type == XML_ELEMENT_NODE) {
+			if (!matchedcontrols[i]) {
+				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, xmlGetProp(cur, "id"), XML_GET_LINE(cur));
+				return NULL;
+			}
+			i++;
+		}
+		cur = cur->next;
+	}
+	
+	free(matchedcontrols);
 	
 	xmlFreeDoc(mon_doc);
 	
@@ -596,7 +667,8 @@ void ddcci_free_db(struct monitor_db* monitor)
 	}
 }
 
-int ddcci_init_db() {
+/* usedatadir : data directory to use (if NULL, uses DATADIR preprocessor symbol) */
+int ddcci_init_db(char* usedatadir) {
 	xmlChar *version;
 	xmlChar *date;
 	char buffer[256];
@@ -604,7 +676,16 @@ int ddcci_init_db() {
 	char* endptr;
 	int iversion;
 	
-	snprintf(buffer, 256, "%s/options.xml", DATADIR);
+	if (usedatadir) {
+		datadir = malloc(strlen(usedatadir)+1);
+		strcpy(datadir, usedatadir);
+	}
+	else {
+		datadir = malloc(strlen(DATADIR)+1);
+		strcpy(datadir, DATADIR);
+	}
+	
+	snprintf(buffer, 256, "%s/options.xml", datadir);
 	options_doc = xmlParseFile(buffer);
 	if (options_doc == NULL) {
 		fprintf(stderr,  _("Document not parsed successfully.\n"));
@@ -666,4 +747,5 @@ void ddcci_release_db() {
 	if (options_doc) {
 		xmlFreeDoc(options_doc);
 	}
+	free(datadir);
 }

@@ -230,7 +230,7 @@ int main( int   argc, char *argv[] )
 	g_thread_init(NULL);
 	combo_change_mutex = g_mutex_new();
 	
-	if (!ddcci_init()) {
+	if (!ddcci_init(NULL)) {
 		printf(_("Unable to initialize ddcci library.\n"));
 		GtkWidget* dialog = gtk_message_dialog_new (NULL,
 				GTK_DIALOG_DESTROY_WITH_PARENT,

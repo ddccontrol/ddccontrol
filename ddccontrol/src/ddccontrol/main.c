@@ -100,7 +100,7 @@ static void usage(char *name)
 {
 	fprintf(stderr,_(
 		"Usage:\n"
-		"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
 		"\tdev: device, e.g. dev:/dev/i2c-0\n"
 		"\t-p : probe I2C devices to find monitor busses.\n"
 		"\t-c : query capability\n"
@@ -110,7 +110,35 @@ static void usage(char *name)
 		"\t-f : force (avoid validity checks)\n"
 		"\t-s : save settings\n"
 		"\t-v : verbosity (specify more to increase)\n"
+		"\t-b : ddccontrol-db directory (if other than " DATADIR ")\n"
 	), name);
+}
+
+static void check_integrity(char* datadir, char* pnpname) {
+	struct monitor_db* mon_db;
+	
+	printf("Checking options.xml integrity...\n");
+	if (!ddcci_init_db(datadir)) {
+		printf("[ FAILED ]\n");
+		exit(1);
+	}
+
+	printf("[ OK ]\n");
+	
+	printf("Checking %s integrity...\n", pnpname);
+	if (!(mon_db = ddcci_create_db(pnpname, ""))) {
+		printf("[ FAILED ]\n");
+		ddcci_release_db();
+		exit(1);
+	}
+	
+	printf("[ OK ]\n");
+	
+	ddcci_free_db(mon_db);
+	
+	ddcci_release_db();
+	
+	exit(0);
 }
 
 int main(int argc, char **argv)
@@ -120,6 +148,9 @@ int main(int argc, char **argv)
 	/* filedescriptor and name of device */
 	struct monitor mon;
 	char *fn;
+	
+	char *datadir = NULL;
+	char *pnpname = NULL; /* pnpname for -i parameter */
 	
 	/* what to do */
 	int dump = 0;
@@ -143,12 +174,15 @@ int main(int argc, char **argv)
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
 		VERSION);
 	
-	while ((i=getopt(argc,argv,"hdr:w:csfvp")) >= 0)
+	while ((i=getopt(argc,argv,"hdr:w:csfvpb:i:")) >= 0)
 	{
 		switch(i) {
 		case 'h':
 			usage(argv[0]);
 			exit(1);
+			break;
+		case 'b':
+			datadir = optarg;
 			break;
 		case 'r':
 			if ((ctrl = strtol(optarg, NULL, 0)) < 0 || (ctrl > 255))
@@ -158,6 +192,10 @@ int main(int argc, char **argv)
 			}
 			break;
 		case 'w':
+			if (ctrl == -1) {
+				fprintf(stderr,_("You cannot use -w parameter without -r.\n"));
+				exit(1);
+			}
 			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535))
 			{
 				fprintf(stderr,_("'%s' does not seem to be a valid value.\n"), optarg);
@@ -165,7 +203,7 @@ int main(int argc, char **argv)
 			}
 			break;
 		case 'c':
-				caps++;
+			caps++;
 			break;
 		case 'd':
 			dump++;
@@ -182,7 +220,15 @@ int main(int argc, char **argv)
 		case 'p':
 			probe++;
 			break;
+		case 'i': /* Undocumented developer parameter: check integrity of a specific EDID id */
+			pnpname = optarg;
+			break;
 		}
+	}
+	
+	ddcci_verbosity(verbosity);
+	if (pnpname) {
+		check_integrity(datadir, pnpname);
 	}
 	
 	if ((optind == argc) && (!probe)) /* Nor device, nor probe option specified. */
@@ -196,8 +242,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	
-	ddcci_verbosity(verbosity);
-	if (!ddcci_init()) {
+	if (!ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));
 		exit(1);
 	}
