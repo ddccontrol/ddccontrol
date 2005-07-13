@@ -195,6 +195,45 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 </sect1>
 
 <sect1>
+<title>Intel</title>
+<sect2>
+<title>i810/i815/i830/i845/i855/i865/i915/i945 with Integrated Graphics Controller</title>
+<para>Intel integrated graphics controllers only works with direct PCI memory access, so you
+don't have to have any kernel module built or loaded.</para>
+</sect2>
+<sect3>
+<title>Intel chipset support table</title>
+<para>These Intel chipsets have been reported to work.
+If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>Intel i865G (82865G)</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
 <title>Matrox</title>
 <sect2>
 <title>G200/G400/G450/G550 series</title>
