@@ -1,3 +1,34 @@
+2005-07-13 23:28  nboichat
+
+	* src/: ddccontrol/main.c, ddcpci/intel810.c, gddccontrol/main.c,
+	  lib/ddcci.c, lib/ddcci.h, lib/monitor_db.c, lib/monitor_db.h: Add
+	  -i (check integrity of a monitor database entry) and -b (specify
+	  database directory) options to ddccontrol.
+
+2005-07-13 20:55  nboichat
+
+	* doc/supportedmonitors.xml: Update 173T entry in documentation.
+
+2005-07-13 16:43  nboichat
+
+	* doc/supportedgc.xml: Add Intel IGPs to supported graphics cards.
+
+2005-07-13 16:32  nboichat
+
+	* doc/: Makefile.am, Makefile.in, about.xml, install.xml, main.xml,
+	  report.xml, supportedgc.xml, supportedmonitors.xml, techdocs.xml,
+	  thanks.xml, usage.xml: Split documentation
+
+2005-07-13 16:07  nboichat
+
+	* src/ddcpci/: Makefile.am, Makefile.in, ddcpci.h, intel740.c,
+	  intel810.c, intel855.c, main.c: Add support for i810/815/865
+	  chipsets...
+
+2005-07-12 21:17  nboichat
+
+	* doc/main.xml: Add Fujitsu Siemens P19-2 to monitor's list.
+
 2005-06-22 19:31  nboichat
 
 	* po/: .cvsignore, LINGUAS, ru.gmo, ru.po: Add Russian translation,
