@@ -1,3 +1,10 @@
+2005-07-13 17:49  nboichat
+
+	* db/: options.xml.in, monitor/FUS0552.xml, monitor/MEL4513.xml,
+	  monitor/NEC662B.xml, monitor/SAM00BA.xml, monitor/SAM00D3.xml:
+	  Full support for Fujitsu Siemens P19-2 (thanks to Johann
+	  Leonhardmair of FSC)
+
 2005-07-12 21:02  nboichat
 
 	* db/options.xml, db/options.xml.h, db/options.xml.in,
