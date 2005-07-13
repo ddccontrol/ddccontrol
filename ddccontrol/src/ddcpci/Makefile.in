@@ -52,7 +52,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_ddcpci_OBJECTS = main.$(OBJEXT) nvidia.$(OBJEXT) \
-	i2c-algo-bit.$(OBJEXT) intel855.$(OBJEXT)
+	i2c-algo-bit.$(OBJEXT) intel810.$(OBJEXT)
 ddcpci_OBJECTS = $(am_ddcpci_OBJECTS)
 ddcpci_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
@@ -191,7 +191,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 INCLUDES = -I../lib  -DLOCALEDIR=\"$(localedir)\"
 ddcpci_LDFLAGS = -Wl,-z,now
-ddcpci_SOURCES = main.c nvidia.c i2c-algo-bit.c intel855.c ddcpci.h i2c-algo-bit.h
+ddcpci_SOURCES = main.c nvidia.c i2c-algo-bit.c intel810.c ddcpci.h i2c-algo-bit.h
 all: all-am
 
 .SUFFIXES:
@@ -259,7 +259,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/i2c-algo-bit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intel855.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intel810.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nvidia.Po@am__quote@
 

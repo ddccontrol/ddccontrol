@@ -1,5 +1,7 @@
 /*
-    ddc/ci direct PCI memory interface for some Intel chipsets (855GM)
+	Note: this file is not built by Makefile
+
+    ddc/ci direct PCI memory interface for some Intel chips (i740)
     Copyright(c) 2005 Nicolas Boichat (nicolas@boichat.ch)
 
     Completely experimental: Never tested.
@@ -30,7 +32,7 @@
 
 #include "ddcpci.h"
  
-static void intel855_setscl(void* data, int state)
+static void intel740_setscl(void* data, int state)
 {
 	outb(0x62, 0x3d6);
 	u8 val = (inb(0x3d7) & 0xF7); //Remove SCL bit
@@ -41,7 +43,7 @@ static void intel855_setscl(void* data, int state)
 	outb(val,  0x3d7);
 }
 
-static void intel855_setsda(void* data, int state)
+static void intel740_setsda(void* data, int state)
 {
 	outb(0x62, 0x3d6);
 	u8 val = (inb(0x3d7) & 0xFB); //Remove SDA bit
@@ -52,7 +54,7 @@ static void intel855_setsda(void* data, int state)
 	outb(val,  0x3d7);
 }
 
-static int intel855_getscl(void* data)
+static int intel740_getscl(void* data)
 {
 	outb(0x63, 0x3d6);
 	u8 val = inb(0x3d7);
@@ -60,7 +62,7 @@ static int intel855_getscl(void* data)
 	return ((val >> 3) & 0x01);
 }
 
-static int intel855_getsda(void* data)
+static int intel740_getsda(void* data)
 {
 	outb(0x63, 0x3d6);
 	u8 val = inb(0x3d7);
@@ -70,74 +72,72 @@ static int intel855_getsda(void* data)
 
 static int init_i2c_bus(struct i2c_algo_bit_data* algo)
 {
-	algo->setsda		= intel855_setsda;
-	algo->setscl		= intel855_setscl;
-	algo->getsda		= intel855_getsda;
-	algo->getscl		= intel855_getscl;
+	algo->setsda		= intel740_setsda;
+	algo->setscl		= intel740_setscl;
+	algo->getsda		= intel740_getsda;
+	algo->getscl		= intel740_getscl;
 	algo->udelay		= 40;
 	algo->timeout		= 100;
 	algo->data 		= NULL;
 	
 	/* Raise SCL and SDA */
-	intel855_setsda(algo->data, 1);
-	intel855_setscl(algo->data, 1);
+	intel740_setsda(algo->data, 1);
+	intel740_setscl(algo->data, 1);
 	usleep(200000);
 	
-	test_bus(algo, "Boubou");
+	test_bus(algo, "i740");
 	
 	return 1;
 }
 
-struct card* intel855_open(struct pci_dev *dev)
+struct card* intel740_open(struct pci_dev *dev)
 {
-	return 0;
-	
-	if (dev->vendor_id != 0x0000) { //FIXME
+    return 0;
+
+	if (dev->vendor_id != 0x8086) {
 		return 0;
 	}
 	
-	struct card* intel855_card = malloc(sizeof(struct card));
-	if (!intel855_card) {
-		fprintf(stderr, "intel855_open: Malloc error.\n");
+	struct card* intel740_card = malloc(sizeof(struct card));
+	if (!intel740_card) {
+		fprintf(stderr, "intel740_open: Malloc error.\n");
 		exit(-1);
 	}
-	memset(intel855_card, 0, sizeof(struct card));
+	memset(intel740_card, 0, sizeof(struct card));
 	
 	if (ioperm(0x3d6, 2, 1)) {
-		perror("intel855_open: Error: ioperm failed");
-		intel855_close(intel855_card);
+		perror("intel740_open: Error: ioperm failed");
+		intel740_close(intel740_card);
 		return 0;
 	}
 	
-	switch (dev->device_id) { //FIXME
-	case 0x0000:
-		//fprintf(stderr, "nvidia_open: initing 1 bus\n");
-		intel855_card->nbusses = 1;
-		intel855_card->i2c_busses = malloc(1*sizeof(struct i2c_algo_bit_data));
-		init_i2c_bus(&intel855_card->i2c_busses[0]);
+	switch (dev->device_id) {
+	case 0x2572:
+		intel740_card->nbusses = 1;
+		intel740_card->i2c_busses = malloc(1*sizeof(struct i2c_algo_bit_data));
+		init_i2c_bus(&intel740_card->i2c_busses[0]);
 		break;
 	default:
-		//fprintf(stderr, "nvidia_open: Error: unknown card type (%#x)\n", (dev->device_id >> 4) & 0xff);
-		intel855_close(intel855_card);
+		fprintf(stderr, "intel740_open: Error: unknown card type (%#x)\n", dev->device_id);
+		intel740_close(intel740_card);
 		return 0;
 	}
 	
-	//fprintf(stderr, "nvidia_open: OK\n");
-	return intel855_card;
+	return intel740_card;
 }
 
-void intel855_close(struct card* intel855_card)
+void intel740_close(struct card* intel740_card)
 {
 	int i;
 	
 	ioperm(0x3d6, 2, 0);
 	
-	for (i = 0; i < intel855_card->nbusses; i++) {
-		free((&intel855_card->i2c_busses[i])->data);
+	for (i = 0; i < intel740_card->nbusses; i++) {
+		free((&intel740_card->i2c_busses[i])->data);
 	}
 	
-	free(intel855_card->i2c_busses);
+	free(intel740_card->i2c_busses);
 	
-	free(intel855_card);
+	free(intel740_card);
 }
 

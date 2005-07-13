@@ -35,6 +35,8 @@ struct card {
 	struct i2c_algo_bit_data* i2c_busses;
 };
 
+int get_verbosity();
+
 typedef struct card* (*card_open)(struct pci_dev*);
 typedef void (*card_close)(struct card*);
 
@@ -42,8 +44,8 @@ typedef void (*card_close)(struct card*);
 struct card* nvidia_open (struct pci_dev *dev);
 void         nvidia_close(struct card* nvidia_card);
 
-/* Intel 855 functions */
-struct card* intel855_open (struct pci_dev *dev);
-void         intel855_close(struct card* intel855_card);
+/* Intel 810 functions */
+struct card* i810_open (struct pci_dev *dev);
+void         i810_close(struct card* intel810_card);
 
 #endif //DDCPCI_H

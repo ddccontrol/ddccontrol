@@ -38,13 +38,13 @@
 /* card list */
 card_open cards_open[] = {
 	&nvidia_open,
-	&intel855_open,
+	&i810_open,
 	NULL
 };
 
 card_close cards_close[] = {
 	&nvidia_close,
-	&intel855_close,
+	&i810_close,
 	NULL
 };
 /* end of card list */
@@ -85,6 +85,10 @@ struct i2c_algo_bit_data* current_algo = NULL;
 static int msqid;
 
 static int verbosity = 0;
+
+int get_verbosity() {
+	return verbosity;
+}
 
 static void open_card(struct i2c_bus* bus) {
 	if (verbosity == 2) {
