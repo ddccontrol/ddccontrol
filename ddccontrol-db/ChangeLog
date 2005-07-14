@@ -1,3 +1,7 @@
+2005-07-14 08:55  nboichat
+
+	* db/monitor/SAM0196.xml: Add Samsung SyncMaster 173P Plus support.
+
 2005-07-14 08:29  nboichat
 
 	* Makefile.in, po/ddccontrol-db.pot, po/fr.gmo, po/fr.po,
