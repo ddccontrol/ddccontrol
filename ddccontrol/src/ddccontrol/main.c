@@ -110,8 +110,8 @@ static void usage(char *name)
 		"\t-f : force (avoid validity checks)\n"
 		"\t-s : save settings\n"
 		"\t-v : verbosity (specify more to increase)\n"
-		"\t-b : ddccontrol-db directory (if other than " DATADIR ")\n"
-	), name);
+		"\t-b : ddccontrol-db directory (if other than %s)\n"
+	), name, DATADIR);
 }
 
 static void check_integrity(char* datadir, char* pnpname) {

@@ -7,7 +7,8 @@ src/lib/monitor_db.c
 src/ddcpci/main.c
 src/ddcpci/i2c-algo-bit.c
 src/ddcpci/nvidia.c
-src/ddcpci/intel855.c
+src/ddcpci/intel740.c
+src/ddcpci/intel810.c
 src/gddccontrol/notebook.h
 src/lib/ddcci.h
 src/lib/monitor_db.h

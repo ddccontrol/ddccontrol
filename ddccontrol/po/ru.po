@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-06-07 00:23+0200\n"
+"POT-Creation-Date: 2005-07-14 10:17+0200\n"
 "PO-Revision-Date: 2005-06-17 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -20,10 +20,10 @@ msgid "Control"
 msgstr "Управление"
 
 #: src/ddccontrol/main.c:102
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Usage:\n"
-"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
 "\tdev: device, e.g. dev:/dev/i2c-0\n"
 "\t-p : probe I2C devices to find monitor busses.\n"
 "\t-c : query capability\n"
@@ -33,6 +33,7 @@ msgid ""
 "\t-f : force (avoid validity checks)\n"
 "\t-s : save settings\n"
 "\t-v : verbosity (specify more to increase)\n"
+"\t-b : ddccontrol-db directory (if other than %s)\n"
 msgstr ""
 "Вызов:\n"
 "%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
@@ -46,7 +47,7 @@ msgstr ""
 "\t-s : сохранить установки\n"
 "\t-v : подробные сообщения (введите больше для увеличения информации)\n"
 
-#: src/ddccontrol/main.c:140
+#: src/ddccontrol/main.c:171
 #, c-format
 msgid ""
 "ddccontrol version %s\n"
@@ -65,68 +66,73 @@ msgstr ""
 "Public License.\n"
 "\n"
 
-#: src/ddccontrol/main.c:156
+#: src/ddccontrol/main.c:190
 #, c-format
 msgid "'%s' does not seem to be a valid register name\n"
 msgstr "'%s' не является правильным именем регистра\n"
 
-#: src/ddccontrol/main.c:163
+#: src/ddccontrol/main.c:196
+#, c-format
+msgid "You cannot use -w parameter without -r.\n"
+msgstr ""
+
+#: src/ddccontrol/main.c:201
 #, c-format
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' не является правильным значением.\n"
 
-#: src/ddccontrol/main.c:201 src/gddccontrol/main.c:234
+#: src/ddccontrol/main.c:246 src/gddccontrol/main.c:234
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Не могу инициализировать библиотеку ddcci.\n"
 
-#: src/ddccontrol/main.c:213
+#: src/ddccontrol/main.c:258
 #, c-format
 msgid "Detected monitors :\n"
 msgstr "Найдены мониторы :\n"
 
-#: src/ddccontrol/main.c:218
+#: src/ddccontrol/main.c:263
 #, c-format
 msgid " - Device: %s\n"
 msgstr " - Устройство: %s\n"
 
-#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:264
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr "   Поддерживается DDC/CI: %s\n"
 
-#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:264
 msgid "Yes"
 msgstr "Да"
 
-#: src/ddccontrol/main.c:219
+#: src/ddccontrol/main.c:264
 msgid "No"
 msgstr "Нет"
 
-#: src/ddccontrol/main.c:220
+#: src/ddccontrol/main.c:265
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr "   Имя монитора: %s\n"
 
-#: src/ddccontrol/main.c:221
+#: src/ddccontrol/main.c:266
 #, c-format
 msgid "   Input type: %s\n"
 msgstr "   Тип входа: %s\n"
 
-#: src/ddccontrol/main.c:221 src/ddccontrol/main.c:259
+#: src/ddccontrol/main.c:266 src/ddccontrol/main.c:304
 msgid "Digital"
 msgstr "Цифровой"
 
-#: src/ddccontrol/main.c:221 src/ddccontrol/main.c:259
+#: src/ddccontrol/main.c:266 src/ddccontrol/main.c:304
 msgid "Analog"
 msgstr "Аналоговый"
 
-#: src/ddccontrol/main.c:225
+#: src/ddccontrol/main.c:270
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr "  (Автоматический выбор)\n"
 
-#: src/ddccontrol/main.c:235
+#: src/ddccontrol/main.c:280
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
@@ -137,12 +143,12 @@ msgstr ""
 "Если Ваша видеокарта это требует, то проверьте, что все требуемые модули "
 "ядра загружены (i2c-dev и драйвер фрейбуфера).\n"
 
-#: src/ddccontrol/main.c:248
+#: src/ddccontrol/main.c:293
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr "Чтение EDID и инициализация DDC/CI на шине %s...\n"
 
-#: src/ddccontrol/main.c:252
+#: src/ddccontrol/main.c:297
 #, c-format
 msgid ""
 "\n"
@@ -155,7 +161,7 @@ msgstr ""
 "Если Ваша видеокарта это требует, то проверьте, что все требуемые модули "
 "ядра загружены (i2c-dev и драйвер фрейбуфера).\n"
 
-#: src/ddccontrol/main.c:256
+#: src/ddccontrol/main.c:301
 #, c-format
 msgid ""
 "\n"
@@ -164,17 +170,17 @@ msgstr ""
 "\n"
 "Чтение EDID:\n"
 
-#: src/ddccontrol/main.c:257
+#: src/ddccontrol/main.c:302
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr "\tPlug and Play ID: %s [%s]\n"
 
-#: src/ddccontrol/main.c:259
+#: src/ddccontrol/main.c:304
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr "\tТип входа: %s\n"
 
-#: src/ddccontrol/main.c:264
+#: src/ddccontrol/main.c:309
 #, c-format
 msgid ""
 "\n"
@@ -183,12 +189,12 @@ msgstr ""
 "\n"
 "Возможности:\n"
 
-#: src/ddccontrol/main.c:274
+#: src/ddccontrol/main.c:319
 #, c-format
 msgid "Capabilities read fail.\n"
 msgstr "Не могу прочесть возможности.\n"
 
-#: src/ddccontrol/main.c:280
+#: src/ddccontrol/main.c:325
 #, c-format
 msgid ""
 "\n"
@@ -197,7 +203,7 @@ msgstr ""
 "\n"
 "Записываю 0x%02x, 0x%02x(%d)...\n"
 
-#: src/ddccontrol/main.c:284
+#: src/ddccontrol/main.c:329
 #, c-format
 msgid ""
 "\n"
@@ -206,7 +212,7 @@ msgstr ""
 "\n"
 "Читаю 0x%02x...\n"
 
-#: src/ddccontrol/main.c:291
+#: src/ddccontrol/main.c:336
 #, c-format
 msgid ""
 "\n"
@@ -215,32 +221,32 @@ msgstr ""
 "\n"
 "Управление (разрешенное/текущее/максимальное) [Описание - Имя величины]:\n"
 
-#: src/ddccontrol/main.c:315
+#: src/ddccontrol/main.c:360
 #, c-format
 msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
 msgstr "\t\t> id=%s, имя=%s, адрес=%#x, задержка=%dms, тип=%d\n"
 
-#: src/ddccontrol/main.c:320
+#: src/ddccontrol/main.c:365
 #, c-format
 msgid "\t\t  Possible values:\n"
 msgstr "\t\t  Возможные значения:\n"
 
-#: src/ddccontrol/main.c:324
+#: src/ddccontrol/main.c:369
 #, c-format
 msgid "\t\t\t> id=%s - name=%s, value=%d\n"
 msgstr "\t\t\t> id=%s - имя=%s, значение=%d\n"
 
-#: src/ddccontrol/main.c:334
+#: src/ddccontrol/main.c:379
 #, c-format
 msgid "\t\t  supported, value=%d, maximum=%d\n"
 msgstr "\t\t  поддерживается, значение=%d, максимум=%d\n"
 
-#: src/ddccontrol/main.c:335
+#: src/ddccontrol/main.c:380
 #, c-format
 msgid "\t\t  not supported, value=%d, maximum=%d\n"
 msgstr "\t\t  не поддерживается, значение=%d, максимум=%d\n"
 
-#: src/ddccontrol/main.c:346
+#: src/ddccontrol/main.c:391
 #, c-format
 msgid ""
 "\n"
@@ -458,175 +464,180 @@ msgstr "Ошибка при отправке сообщения списка"
 msgid "Found I2C device (%s)\n"
 msgstr "Найдено устройство I2C (%s)\n"
 
-#: src/lib/monitor_db.c:108 src/lib/monitor_db.c:122
+#: src/lib/monitor_db.c:110 src/lib/monitor_db.c:124
 msgid "Can't convert value to int, invalid CAPS."
 msgstr "Не могу преобразовать значение в int, неверный заголовок."
 
-#: src/lib/monitor_db.c:165 src/lib/monitor_db.c:242
+#: src/lib/monitor_db.c:182 src/lib/monitor_db.c:279
 msgid "Can't find id property."
 msgstr "Не могу найти элемент id."
 
-#: src/lib/monitor_db.c:173 src/lib/monitor_db.c:244 src/lib/monitor_db.c:384
+#: src/lib/monitor_db.c:190 src/lib/monitor_db.c:281 src/lib/monitor_db.c:425
 msgid "Can't find name property."
 msgstr "Не могу найти элемент name."
 
-#: src/lib/monitor_db.c:196
+#: src/lib/monitor_db.c:214
 msgid "Can't find value property."
 msgstr "Не могу найти элемент value."
 
-#: src/lib/monitor_db.c:198
+#: src/lib/monitor_db.c:216
 msgid "Can't convert value to int."
 msgstr "Не могу пребразовать значение в int."
 
-#: src/lib/monitor_db.c:263
+#: src/lib/monitor_db.c:249 src/lib/monitor_db.c:584
+#, c-format
+msgid "Element %s (id=%s) has not been found (line %ld).\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:301
 msgid "Can't find address property."
 msgstr "Не могу найти элемент address."
 
-#: src/lib/monitor_db.c:265
+#: src/lib/monitor_db.c:303
 msgid "Can't convert address to int."
 msgstr "Не могу преобразовать адрес в int."
 
-#: src/lib/monitor_db.c:280
+#: src/lib/monitor_db.c:318
 msgid "Can't convert delay to int."
 msgstr "Не могу преобразовать задержку в int."
 
-#: src/lib/monitor_db.c:288
+#: src/lib/monitor_db.c:326
 msgid "Can't find type property."
 msgstr "Не могу найти элемент type."
 
-#: src/lib/monitor_db.c:313 src/lib/monitor_db.c:421
+#: src/lib/monitor_db.c:351 src/lib/monitor_db.c:462
 msgid "Invalid type."
 msgstr "Неверный тип."
 
-#: src/lib/monitor_db.c:358
+#: src/lib/monitor_db.c:399
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr "База данных должна быть инициализирована до чтения файла монитора.\n"
 
-#: src/lib/monitor_db.c:365 src/lib/monitor_db.c:610
+#: src/lib/monitor_db.c:406 src/lib/monitor_db.c:691
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "Документ обработан неправльно.\n"
 
-#: src/lib/monitor_db.c:372
+#: src/lib/monitor_db.c:413
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr "Пустой файл monitor/%s.xml\n"
 
-#: src/lib/monitor_db.c:378
+#: src/lib/monitor_db.c:419
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr "monitor/%s.xml неверного типа, root node %s != monitor"
 
-#: src/lib/monitor_db.c:392
+#: src/lib/monitor_db.c:433
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr "Ошибка, найдена глубина рекурсии > 15 (файл: %s).\n"
 
-#: src/lib/monitor_db.c:413
+#: src/lib/monitor_db.c:454
 msgid "Can't find init property."
 msgstr "Не могу найти свойство init."
 
-#: src/lib/monitor_db.c:437
+#: src/lib/monitor_db.c:478
 #, c-format
 msgid "document of the wrong type, can't find controls.\n"
 msgstr "документ неверного типа, не могу найти регистры.\n"
 
-#: src/lib/monitor_db.c:491
+#: src/lib/monitor_db.c:547
 msgid "Error enumerating controls in group."
 msgstr "Ошибка при перечислении регистров в группе."
 
-#: src/lib/monitor_db.c:617
+#: src/lib/monitor_db.c:698
 #, c-format
 msgid "empty options.xml\n"
 msgstr "пустой options.xml\n"
 
-#: src/lib/monitor_db.c:623
+#: src/lib/monitor_db.c:704
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr "options.xml неверного типа, root node %s != options"
 
-#: src/lib/monitor_db.c:632
+#: src/lib/monitor_db.c:713
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут dbversion, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:638
+#: src/lib/monitor_db.c:719
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут date, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:644
+#: src/lib/monitor_db.c:725
 msgid "Can't convert version to int."
 msgstr "Не могу преобразовать версию в int"
 
-#: src/lib/monitor_db.c:647
+#: src/lib/monitor_db.c:728
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) больше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:648
+#: src/lib/monitor_db.c:729
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr "Пожалуйста, обновите программу ddccontrol.\n"
 
-#: src/lib/monitor_db.c:654
+#: src/lib/monitor_db.c:735
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) меньше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:655
+#: src/lib/monitor_db.c:736
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
 
-#: src/ddcpci/main.c:143
+#: src/ddcpci/main.c:147
 msgid "==>Error while sending open message"
 msgstr "==>Ошибка при отправке сообщения открытия"
 
-#: src/ddcpci/main.c:166 src/ddcpci/main.c:172 src/ddcpci/main.c:189
+#: src/ddcpci/main.c:170 src/ddcpci/main.c:176 src/ddcpci/main.c:193
 msgid "==>Error while sending data answer message"
 msgstr "==>Ошибка при отправке ответа на сообщение открытия"
 
-#: src/ddcpci/main.c:237 src/ddcpci/main.c:251
+#: src/ddcpci/main.c:241 src/ddcpci/main.c:255
 msgid "==>Error while sending list message"
 msgstr "==>Ошибка при отправке сообщения списка"
 
-#: src/ddcpci/main.c:269
+#: src/ddcpci/main.c:273
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "Неверные аргументы.\n"
 
-#: src/ddcpci/main.c:275
+#: src/ddcpci/main.c:279
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>Не могу прочесть подробные сообщения.\n"
 
-#: src/ddcpci/main.c:282
+#: src/ddcpci/main.c:286
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>Не могу прочесть ключ.\n"
 
-#: src/ddcpci/main.c:287
+#: src/ddcpci/main.c:291
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>Не могу открыть ключ %u.\n"
 
-#: src/ddcpci/main.c:301
+#: src/ddcpci/main.c:305
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>Команда не получена в течение %ld секунд, прерываюсь.\n"
 
-#: src/ddcpci/main.c:309
+#: src/ddcpci/main.c:313
 msgid "==>Error while receiving query\n"
 msgstr "==>Ошибка при получении очереди\n"
 
-#: src/ddcpci/main.c:344
+#: src/ddcpci/main.c:348
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>Неверная очередь...\n"
@@ -649,4 +660,14 @@ msgstr "nvidia_open: ошибка malloc.\n"
 #: src/ddcpci/nvidia.c:167
 #, c-format
 msgid "nvidia_open: Error: mmap failed\n"
+msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
+
+#: src/ddcpci/intel810.c:162
+#, fuzzy, c-format
+msgid "i810_open: Malloc error.\n"
+msgstr "nvidia_open: ошибка malloc.\n"
+
+#: src/ddcpci/intel810.c:183
+#, fuzzy, c-format
+msgid "i810_open: Error: mmap failed\n"
 msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
