@@ -172,11 +172,11 @@ struct card* i810_open(struct pci_dev *dev)
 	if (dev->size[0] == data->length) {
 		data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0]);
 		if (get_verbosity())
-			printf("i810_open: Using region 0 (%lx, %lx)", (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
+			printf("i810_open: Using region 0 (%lx, %lx)\n", (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
 	} else {
 		data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[1]);
 		if (get_verbosity())
-			printf("i810_open: Using region 1 (%lx, %lx)", (long unsigned int)dev->base_addr[1], (long unsigned int)dev->size[1]);
+			printf("i810_open: Using region 1 (%lx, %lx)\n", (long unsigned int)dev->base_addr[1], (long unsigned int)dev->size[1]);
 	}
 	
 	if (data->memory == MAP_FAILED) {
