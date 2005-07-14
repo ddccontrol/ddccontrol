@@ -41,3 +41,7 @@ Release Check List (Nicolas Boichat)
 - update FreshMeat infos
 
 - update Gentoo ebuild
+
+Set next version :
+- update version in configure.ac
+- update version in doc/main.xml
