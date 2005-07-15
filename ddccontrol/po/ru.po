@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-07-14 10:17+0200\n"
+"POT-Creation-Date: 2005-07-15 17:38+0200\n"
 "PO-Revision-Date: 2005-06-17 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -348,250 +348,255 @@ msgstr "Пожалуйста, щёлкните на параметре слев�
 msgid "Getting controls values (%d%%)..."
 msgstr "Получаю значения регистров (%d%%)..."
 
-#: src/lib/ddcci.c:124
+#: src/lib/ddcci.c:128
 msgid "Error while initialisating the message queue"
 msgstr "Ошибка при инициализации очереди сообщений"
 
-#: src/lib/ddcci.c:152
+#: src/lib/ddcci.c:156
 msgid "Error while sending quit message"
 msgstr "Ошибка при отправке сообщения о выходе"
 
-#: src/lib/ddcci.c:197
+#: src/lib/ddcci.c:201
 msgid "Error while sending heartbeat message"
 msgstr "Ошибка при отправке очередного сообщения"
 
-#: src/lib/ddcci.c:215
+#: src/lib/ddcci.c:219
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr "Не могу инициализировать базу данных ddccontrol...\n"
 
-#: src/lib/ddcci.c:247 src/lib/ddcci.c:301
+#: src/lib/ddcci.c:251 src/lib/ddcci.c:305
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr "ioctl вернул %d\n"
 
-#: src/lib/ddcci.c:263
+#: src/lib/ddcci.c:267
 msgid "Error while sending write message"
 msgstr "Ошибка при отправке сообщения записи"
 
-#: src/lib/ddcci.c:270
+#: src/lib/ddcci.c:274
 msgid "Error while reading write message answer"
 msgstr "Ошибка при получении ответа на сообщение записи"
 
-#: src/lib/ddcci.c:318
+#: src/lib/ddcci.c:322
 msgid "Error while sending read message"
 msgstr "Ошибка при отправке сообщения чтения"
 
-#: src/lib/ddcci.c:325
+#: src/lib/ddcci.c:329
 msgid "Error while reading read message answer"
 msgstr "Ошибка при получении ответа на сообщение чтения"
 
-#: src/lib/ddcci.c:415
+#: src/lib/ddcci.c:419
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr "Неправильный ответ, первый байт 0x%02x, должен быть 0x%02x\n"
 
-#: src/lib/ddcci.c:423
+#: src/lib/ddcci.c:427
 #, c-format
 msgid "Invalid response, magic is 0x%02x\n"
 msgstr "Неправильный ответ, код 0x%02x\n"
 
-#: src/lib/ddcci.c:429
+#: src/lib/ddcci.c:433
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr "Неправльный ответ, длина %d, должна быть как минимум %d\n"
 
-#: src/lib/ddcci.c:440
+#: src/lib/ddcci.c:444
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr ""
 "Неправльный ответ, разрушенные данные - xor равен 0x%02x, длина 0x%02x\n"
 
-#: src/lib/ddcci.c:550
+#: src/lib/ddcci.c:554
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr "Неправльная последовательность в заголовках.\n"
 
-#: src/lib/ddcci.c:558
+#: src/lib/ddcci.c:562
 #, c-format
 msgid "Buffer too small to contain caps.\n"
 msgstr "Буфер слишком маленький для хранения заголовков.\n"
 
-#: src/lib/ddcci.c:598
+#: src/lib/ddcci.c:602
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr "Разрушен EDID в 0x%02x.\n"
 
-#: src/lib/ddcci.c:612
+#: src/lib/ddcci.c:616
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr "Ошибка чтения EDID 0x%02x.\n"
 
-#: src/lib/ddcci.c:637
+#: src/lib/ddcci.c:641
 #, c-format
 msgid "Device: %s\n"
 msgstr "Устройство: %s\n"
 
-#: src/lib/ddcci.c:650
+#: src/lib/ddcci.c:654
 msgid "Error while sending open message"
 msgstr "Ошибка при отправке сообщения открытия"
 
-#: src/lib/ddcci.c:658
+#: src/lib/ddcci.c:662
 msgid "Error while reading open message answer"
 msgstr "Ошибка при получении ответа на сообщение открытия"
 
-#: src/lib/ddcci.c:666
+#: src/lib/ddcci.c:670
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr "Неправльное имя файла (%s).\n"
 
-#: src/lib/ddcci.c:760
+#: src/lib/ddcci.c:764
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr "ddcci_open вернул %d\n"
 
-#: src/lib/ddcci.c:773
+#: src/lib/ddcci.c:777
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr "Неизвестный монитор (%s)"
 
-#: src/lib/ddcci.c:802
+#: src/lib/ddcci.c:806
 msgid "Error while sending list message"
 msgstr "Ошибка при отправке сообщения списка"
 
-#: src/lib/ddcci.c:828 src/lib/ddcci.c:858
+#: src/lib/ddcci.c:832 src/lib/ddcci.c:862
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr "Найдено устройство I2C (%s)\n"
 
-#: src/lib/monitor_db.c:110 src/lib/monitor_db.c:124
+#: src/lib/monitor_db.c:112 src/lib/monitor_db.c:126
 msgid "Can't convert value to int, invalid CAPS."
 msgstr "Не могу преобразовать значение в int, неверный заголовок."
 
-#: src/lib/monitor_db.c:182 src/lib/monitor_db.c:279
+#: src/lib/monitor_db.c:184 src/lib/monitor_db.c:284
 msgid "Can't find id property."
 msgstr "Не могу найти элемент id."
 
-#: src/lib/monitor_db.c:190 src/lib/monitor_db.c:281 src/lib/monitor_db.c:425
+#: src/lib/monitor_db.c:192 src/lib/monitor_db.c:286 src/lib/monitor_db.c:434
 msgid "Can't find name property."
 msgstr "Не могу найти элемент name."
 
-#: src/lib/monitor_db.c:214
+#: src/lib/monitor_db.c:216
 msgid "Can't find value property."
 msgstr "Не могу найти элемент value."
 
-#: src/lib/monitor_db.c:216
+#: src/lib/monitor_db.c:218
 msgid "Can't convert value to int."
 msgstr "Не могу пребразовать значение в int."
 
-#: src/lib/monitor_db.c:249 src/lib/monitor_db.c:584
+#: src/lib/monitor_db.c:252 src/lib/monitor_db.c:594
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:301
+#: src/lib/monitor_db.c:306
 msgid "Can't find address property."
 msgstr "Не могу найти элемент address."
 
-#: src/lib/monitor_db.c:303
+#: src/lib/monitor_db.c:308
 msgid "Can't convert address to int."
 msgstr "Не могу преобразовать адрес в int."
 
-#: src/lib/monitor_db.c:318
+#: src/lib/monitor_db.c:315
+#, c-format
+msgid "Control %s has been discarded by the caps string.\n"
+msgstr ""
+
+#: src/lib/monitor_db.c:329
 msgid "Can't convert delay to int."
 msgstr "Не могу преобразовать задержку в int."
 
-#: src/lib/monitor_db.c:326
+#: src/lib/monitor_db.c:337
 msgid "Can't find type property."
 msgstr "Не могу найти элемент type."
 
-#: src/lib/monitor_db.c:351 src/lib/monitor_db.c:462
+#: src/lib/monitor_db.c:362 src/lib/monitor_db.c:471
 msgid "Invalid type."
 msgstr "Неверный тип."
 
-#: src/lib/monitor_db.c:399
+#: src/lib/monitor_db.c:408
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr "База данных должна быть инициализирована до чтения файла монитора.\n"
 
-#: src/lib/monitor_db.c:406 src/lib/monitor_db.c:691
+#: src/lib/monitor_db.c:415 src/lib/monitor_db.c:708
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "Документ обработан неправльно.\n"
 
-#: src/lib/monitor_db.c:413
+#: src/lib/monitor_db.c:422
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr "Пустой файл monitor/%s.xml\n"
 
-#: src/lib/monitor_db.c:419
+#: src/lib/monitor_db.c:428
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr "monitor/%s.xml неверного типа, root node %s != monitor"
 
-#: src/lib/monitor_db.c:433
+#: src/lib/monitor_db.c:442
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr "Ошибка, найдена глубина рекурсии > 15 (файл: %s).\n"
 
-#: src/lib/monitor_db.c:454
+#: src/lib/monitor_db.c:463
 msgid "Can't find init property."
 msgstr "Не могу найти свойство init."
 
-#: src/lib/monitor_db.c:478
+#: src/lib/monitor_db.c:487
 #, c-format
 msgid "document of the wrong type, can't find controls.\n"
 msgstr "документ неверного типа, не могу найти регистры.\n"
 
-#: src/lib/monitor_db.c:547
+#: src/lib/monitor_db.c:556
 msgid "Error enumerating controls in group."
 msgstr "Ошибка при перечислении регистров в группе."
 
-#: src/lib/monitor_db.c:698
+#: src/lib/monitor_db.c:715
 #, c-format
 msgid "empty options.xml\n"
 msgstr "пустой options.xml\n"
 
-#: src/lib/monitor_db.c:704
+#: src/lib/monitor_db.c:721
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr "options.xml неверного типа, root node %s != options"
 
-#: src/lib/monitor_db.c:713
+#: src/lib/monitor_db.c:730
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут dbversion, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:719
+#: src/lib/monitor_db.c:736
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут date, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:725
+#: src/lib/monitor_db.c:742
 msgid "Can't convert version to int."
 msgstr "Не могу преобразовать версию в int"
 
-#: src/lib/monitor_db.c:728
+#: src/lib/monitor_db.c:745
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) больше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:729
+#: src/lib/monitor_db.c:746
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr "Пожалуйста, обновите программу ddccontrol.\n"
 
-#: src/lib/monitor_db.c:735
+#: src/lib/monitor_db.c:752
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) меньше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:736
+#: src/lib/monitor_db.c:753
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
