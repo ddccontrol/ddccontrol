@@ -22,6 +22,19 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+<varlistentry><term>15 July 2005: Database version 20050715 released.</term>
+<listitem>
+<para>
+ChangeLog:
+<itemizedlist mark='bullet'>
+<listitem>Add Samsung SyncMaster 173P Plus support.</listitem>
+<listitem>Add support for the Fujitsu Siemens P17-2, P19-2 and P20-2 (thanks to 
+Olaf Tauber, and thanks to Johann Leonhardmair of Fujitsu Siemens)</listitem>
+<listitem>Add Russian translation, thanks to Sergei Epiphanov.</listitem>
+</itemizedlist>
+</para>
+</listitem>
+</varlistentry>
 <varlistentry><term>8 Jun 2005: Version 0.1.2 released.</term>
 <listitem>
 <para>
