@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool database], [`date +%Y%m%d`],
+AC_INIT([DDC/CI control tool database], [20050715],
         [Nicolas Boichat <nicolas@boichat.ch>],
         [ddccontrol-db])
 AM_INIT_AUTOMAKE

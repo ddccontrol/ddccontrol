@@ -1,1 +1,8 @@
+Version 20050715:
+ - Add Samsung SyncMaster 173P Plus support.
+ - Add support for the Fujitsu Siemens P17-2, P19-2 and P20-2
+    (thanks to Olaf Tauber, and thanks to Johann Leonhardmair of Fujitsu Siemens)
+ - Add Russian translation, thanks to Sergei Epiphanov.
 
+Version 20050329:
+ - Initial release

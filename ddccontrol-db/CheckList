@@ -1,0 +1,43 @@
+Release Check List (Nicolas Boichat)
+
+- in po/:
+  - make update-po
+  - poedit fr.po
+
+- cvs commit
+- update NEWS
+- make clean
+- change date in configure.ac
+- touch db/options.xml.in
+- make
+- make check-db
+
+- check date in db/options.xml
+
+- make distdir
+- in ddccontrol-db-x/:
+  - ./configure
+  - make
+  - make install
+  - test at least gddccontrol
+  - cd ..
+
+- ./commit.sh "Prepare release xx"
+- cvs tag Release-xx
+
+- make dist
+- ftp upload.sourceforge.net:
+  - cd incoming
+  - bin
+  - put ddccontrol-db-x.tar.gz
+- add file to SF
+
+- update website :
+  - Update website.xml news
+  - ./commit.sh
+
+- Send a message to the lists
+
+- update FreshMeat infos
+
+- update Gentoo ebuild

@@ -1,3 +1,8 @@
+2005-07-15 13:52  nboichat
+
+	* db/monitor/: FUS0550.xml, FUS0554.xml, FUS0555.xml, SAM0196.xml:
+	  Add support for Fujitsu Siemens P17-2 and P20-2
+
 2005-07-14 08:55  nboichat
 
 	* db/monitor/SAM0196.xml: Add Samsung SyncMaster 173P Plus support.
