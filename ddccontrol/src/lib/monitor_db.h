@@ -77,7 +77,7 @@ struct monitor_db {
 	struct group_db* group_list;
 };
 
-struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps);
+struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps, int faulttolerance);
 void ddcci_free_db(struct monitor_db* mon_db);
 
 int ddcci_init_db(char* usedatadir);

@@ -77,6 +77,8 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen);
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
 void ddcci_verbosity(int verbosity);
 
+int get_verbosity();
+
 int ddcci_init(char* usedatadir);
 
 void ddcci_release();

@@ -126,7 +126,7 @@ static void check_integrity(char* datadir, char* pnpname) {
 	printf("[ OK ]\n");
 	
 	printf("Checking %s integrity...\n", pnpname);
-	if (!(mon_db = ddcci_create_db(pnpname, ""))) {
+	if (!(mon_db = ddcci_create_db(pnpname, "", 0))) {
 		printf("[ FAILED ]\n");
 		ddcci_release_db();
 		exit(1);

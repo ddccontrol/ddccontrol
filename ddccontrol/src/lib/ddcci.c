@@ -73,6 +73,10 @@ void ddcci_verbosity(int _verbosity)
 	verbosity = _verbosity;
 }
 
+int get_verbosity() {
+	return verbosity;
+}
+
 /* IPC functions */
 #ifdef HAVE_DDCPCI
 #include "ddcpci-ipc.h"
@@ -676,10 +680,10 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	unsigned char buf[1024];
 	
 	if (ddcci_caps(mon, buf, 1024) > -1) {
-		mon->db = ddcci_create_db(mon->pnpid, buf);
+		mon->db = ddcci_create_db(mon->pnpid, buf, 1);
 	}
 	else {
-		mon->db = ddcci_create_db(mon->pnpid, "");
+		mon->db = ddcci_create_db(mon->pnpid, "", 1);
 	}
 	
 	if (mon->db) {

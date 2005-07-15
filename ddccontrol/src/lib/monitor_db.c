@@ -62,6 +62,8 @@ struct caps_entry {
 	unsigned short* values;
 };
 
+int get_verbosity(); /* Defined in ddcci.c */
+
 /* See documentation Appendix D.
  * Returns :
  * -1 if an error occured 
@@ -148,7 +150,7 @@ int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
 
 /* End of CAPS structs/functions */
 
-int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command)
+int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
 {
 	xmlNodePtr value, cur;
 	xmlChar *options_valueid, *options_valuename, *mon_valueid;
@@ -246,8 +248,11 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	while (cur) {
 		if (cur->type == XML_ELEMENT_NODE) {
 			if (!matchedvalues[i]) {
-				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, xmlGetProp(cur, "id"), XML_GET_LINE(cur));
-				return -1;
+				tmp = xmlGetProp(cur, "id");
+				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
+				xmlFree(tmp);
+				if (!faulttolerance)
+					return -1;
 			}
 			i++;
 		}
@@ -259,7 +264,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	return 0;
 }
 
-int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char *matchedcontrols) {
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char *matchedcontrols, int faulttolerance) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
@@ -302,7 +307,13 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						current_control->address = strtol(tmp, &endptr, 0);
 						DDCCI_RETURN_IF(*endptr != 0, 0, _("Can't convert address to int."), cur);
 						xmlFree(tmp);
+						
+						matchedcontrols[i] = 1;
+						
 						if (caps[current_control->address] == NULL) {
+							if (get_verbosity()) {
+								printf(_("Control %s has been discarded by the caps string.\n"), options_ctrlid);
+							}
 							memset(current_control, 0, sizeof(struct control_db));
 							xmlFree(options_ctrlid);
 							xmlFree(options_ctrlname);
@@ -329,7 +340,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						}
 						else if (!(xmlStrcmp(tmp, (const xmlChar *)"command"))) {
 							current_control->type = command;
-							if (ddcci_get_value_list(control, cur, current_control, 1) < 0) {
+							if (ddcci_get_value_list(control, cur, current_control, 1, faulttolerance) < 0) {
 								return 0;
 							}
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
@@ -343,7 +354,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						}
 						else if (!(xmlStrcmp(tmp, (const xmlChar *)"list"))) {
 							current_control->type = list;
-							if (ddcci_get_value_list(control, cur, current_control, 0) < 0) {
+							if (ddcci_get_value_list(control, cur, current_control, 0, faulttolerance) < 0) {
 								return 0;
 							}
 						}
@@ -359,8 +370,6 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						last_control_ref = &current_control->next;
 						current_control = malloc(sizeof(struct control_db));
 						memset(current_control, 0, sizeof(struct control_db));
-						
-						matchedcontrols[i] = 1;
 						
 						xmlFree(mon_ctrlid);
 						break;
@@ -386,7 +395,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
  * default_caps: CAPS passed to ddcci_create_db (read from the monitor)
  * prof_caps: CAPS read from one of the profile (NULL if none has been read yet)
  */
-struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel, const char* default_caps, xmlChar* prof_caps)
+struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel, const char* default_caps, xmlChar* prof_caps, int faulttolerance)
 {
 	struct monitor_db* mon_db;
 	xmlDocPtr mon_doc;
@@ -436,7 +445,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			return NULL;
 		}
 
-		mon_db = ddcci_create_db_protected(tmp, recursionlevel, default_caps, prof_caps);
+		mon_db = ddcci_create_db_protected(tmp, recursionlevel, default_caps, prof_caps, faulttolerance);
 		if (mon_db) {
 			xmlFree(mon_db->name);
 			mon_db->name = mon_name;
@@ -543,7 +552,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			control = subgroup->xmlChildrenNode;
 			
 			DDCCI_RETURN_IF(
-				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps, matchedcontrols), 
+				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps, matchedcontrols, faulttolerance), 
 				NULL,  _("Error enumerating controls in group."), control);
 			
 			if (current_subgroup->control_list) {
@@ -581,8 +590,11 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	while (cur) {
 		if (cur->type == XML_ELEMENT_NODE) {
 			if (!matchedcontrols[i]) {
-				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, xmlGetProp(cur, "id"), XML_GET_LINE(cur));
-				return NULL;
+				tmp = xmlGetProp(cur, "id");
+				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
+				xmlFree(tmp);
+				if (!faulttolerance)
+					return NULL;
 			}
 			i++;
 		}
@@ -605,10 +617,15 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	return mon_db;
 }
 
-/* Logic concerning CAPS, see documentation Appendix D. */
-struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps)
+/* 
+ * Logic concerning CAPS, see documentation Appendix D.
+ * faulttolerance :
+ *  - 0 : fail on every database error
+ "  - 1 : do not fail on minor errors
+ */
+struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps, int faulttolerance)
 {
-	return ddcci_create_db_protected(pnpname, 0, default_caps, NULL);
+	return ddcci_create_db_protected(pnpname, 0, default_caps, NULL, faulttolerance);
 }
 
 void ddcci_free_db(struct monitor_db* monitor)
