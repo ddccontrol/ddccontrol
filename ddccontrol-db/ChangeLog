@@ -1,3 +1,8 @@
+2005-07-15 14:28  nboichat
+
+	* CheckList, NEWS, configure, configure.ac, db/options.xml,
+	  po/.cvsignore: Prepare release 20050715
+
 2005-07-15 13:52  nboichat
 
 	* db/monitor/: FUS0550.xml, FUS0554.xml, FUS0555.xml, SAM0196.xml:
