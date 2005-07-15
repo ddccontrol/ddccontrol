@@ -1,3 +1,7 @@
+Version 0.1.3 - 2005-07-14
+ - Add support for i810/i815/i830/i845/i855/i865/i915/i945 chipsets.
+ - Add Russian translation, thanks to Sergei Epiphanov.
+
 Version 0.1.2 - 2005-06-08
  - Fix a compilation error in Fedora Core 3.
 

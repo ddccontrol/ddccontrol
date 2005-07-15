@@ -1,3 +1,22 @@
+2005-07-15 15:40  nboichat
+
+	* po/: ddccontrol.pot, fr.gmo, fr.po, ru.gmo, ru.po: Update
+	  translations.
+
+2005-07-15 15:38  nboichat
+
+	* src/: ddccontrol/main.c, lib/ddcci.c, lib/ddcci.h,
+	  lib/monitor_db.c, lib/monitor_db.h: Add fault tolerance when
+	  checking if all monitor controls/values are matched.
+
+2005-07-14 09:00  nboichat
+
+	* CheckList, po/fr.po: Update French translation.
+
+2005-07-14 08:59  nboichat
+
+	* doc/supportedmonitors.xml: Add 173P+ to supported monitors.
+
 2005-07-14 08:21  nboichat
 
 	* po/POTFILES.in, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
