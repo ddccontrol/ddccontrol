@@ -12,14 +12,22 @@
     <keywords>DDCcontrol, Documentation</keywords>
   </head>
 
-<para>By clicking on the right link in the left menu, you can see development's,
-or current release online documentation.</para>
+<section><title>Online documentation</title>
+<itemizedlist mark='bullet'>
+<listitem>
+<para>
+<ulink url="/doc/0.1.3">Version 0.1.3</ulink>
+<ulink url="/doc/latest">Latest development version</ulink>
+</para>
+</listitem>
+</itemizedlist>
+</section>
 <section><title>Printable documents</title>
 <para>You can also download the documentation as PDF files:</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
-<ulink url="ddccontrol-0.1.2.pdf">Version 0.1.2</ulink>
+<ulink url="ddccontrol-0.1.3.pdf">Version 0.1.3</ulink>
 </para>
 </listitem>
 </itemizedlist>
@@ -28,6 +36,7 @@ or current release online documentation.</para>
 <itemizedlist mark='bullet'>
 <listitem>
 <para>
+<ulink url="/doc/0.1.2">Version 0.1.2</ulink> [<ulink url="ddccontrol-0.1.2.pdf">PDF</ulink>]
 <ulink url="/doc/0.1">Version 0.1</ulink> [<ulink url="ddccontrol-0.1.pdf">PDF</ulink>]
 </para>
 </listitem>
