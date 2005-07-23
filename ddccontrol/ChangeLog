@@ -1,3 +1,9 @@
+2005-07-23 21:27  nboichat
+
+	* NEWS, configure, configure.ac, doc/main.xml,
+	  doc/supportedmonitors.xml, po/ru.gmo, po/ru.po: Update Russian
+	  translation.
+
 2005-07-15 15:47  tag Release-0_1_3
 
 2005-07-15 15:47  nboichat
