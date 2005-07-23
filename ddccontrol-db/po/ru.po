@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-07-14 10:23+0200\n"
-"PO-Revision-Date: 2005-06-17 13:32+0300\n"
+"PO-Revision-Date: 2005-07-19 13:32+0300\n"
 "Last-Translator: SergeiEpiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -143,12 +143,12 @@ msgstr "Холодный оттенок"
 #: db/options.xml.h:28
 #, c-format
 msgid "sRGB"
-msgstr ""
+msgstr "sRGB"
 
 #: db/options.xml.h:29
-#, fuzzy, c-format
+#, c-format
 msgid "4000K"
-msgstr "5000K"
+msgstr "4000K"
 
 #: db/options.xml.h:30
 #, c-format
@@ -176,14 +176,14 @@ msgid "9300K"
 msgstr "9300K"
 
 #: db/options.xml.h:35
-#, fuzzy, c-format
+#, c-format
 msgid "10000K"
-msgstr "5000K"
+msgstr "10000K"
 
 #: db/options.xml.h:36
-#, fuzzy, c-format
+#, c-format
 msgid "11500K"
-msgstr "5000K"
+msgstr "11500K"
 
 #: db/options.xml.h:37
 #, c-format
@@ -193,17 +193,17 @@ msgstr "Заводской"
 #: db/options.xml.h:38
 #, c-format
 msgid "User 1"
-msgstr ""
+msgstr "Своя 1"
 
 #: db/options.xml.h:39
 #, c-format
 msgid "User 2"
-msgstr ""
+msgstr "Своя 2"
 
 #: db/options.xml.h:40
 #, c-format
 msgid "User 3"
-msgstr ""
+msgstr "Своя 3"
 
 #: db/options.xml.h:41
 #, c-format
@@ -261,17 +261,17 @@ msgid "Disable"
 msgstr "Выкл"
 
 #: db/options.xml.h:52
-#, fuzzy, c-format
+#, c-format
 msgid "Automatically adjust"
 msgstr "Автоматическая настройка"
 
 #: db/options.xml.h:53
-#, fuzzy, c-format
+#, c-format
 msgid "H/V Position"
-msgstr "Положение"
+msgstr "Положение по вертикали/горизонтали"
 
 #: db/options.xml.h:54
-#, fuzzy, c-format
+#, c-format
 msgid "Clock and clock phase"
 msgstr "Точная настройка изображения (фаза таймера)"
 
@@ -451,9 +451,9 @@ msgid "Focus"
 msgstr "Фокус"
 
 #: db/options.xml.h:90
-#, fuzzy, c-format
+#, c-format
 msgid "Image Lock Coarse (Clock)"
-msgstr "Грубая настройка изображения"
+msgstr "Грубая настройка изображения (таймер)"
 
 #: db/options.xml.h:91
 #, c-format
@@ -543,7 +543,7 @@ msgstr "Автоматическая настройка уровня микро�
 #: db/options.xml.h:108 db/options.xml.h:109
 #, c-format
 msgid "Mute"
-msgstr ""
+msgstr "Отключить звук"
 
 #: db/options.xml.h:111 db/options.xml.h:112
 #, c-format
@@ -563,7 +563,7 @@ msgstr "OSD"
 #: db/options.xml.h:115
 #, c-format
 msgid "On Screen Display"
-msgstr "Экран меню"
+msgstr "Экранное меню"
 
 #: db/options.xml.h:118
 #, c-format
@@ -573,17 +573,17 @@ msgstr "Разрешить настройку только яркости/кон
 #: db/options.xml.h:119
 #, c-format
 msgid "OSD Orientation"
-msgstr ""
+msgstr "Положение экранного меню"
 
 #: db/options.xml.h:120
 #, c-format
 msgid "Landscape"
-msgstr ""
+msgstr "Пейзажное"
 
 #: db/options.xml.h:121
-#, fuzzy, c-format
+#, c-format
 msgid "Portrait"
-msgstr "Контрастность"
+msgstr "Портретное"
 
 #: db/options.xml.h:122
 #, c-format
@@ -633,7 +633,7 @@ msgstr "Китайский"
 #: db/options.xml.h:131
 #, c-format
 msgid "Dutch"
-msgstr ""
+msgstr "Датский"
 
 #: db/options.xml.h:132
 #, c-format
@@ -648,7 +648,7 @@ msgstr "Выбор уровень сигнала входа"
 #: db/options.xml.h:134
 #, c-format
 msgid "Display Resolution Notifier"
-msgstr ""
+msgstr "Информация о разрешении экрана"
 
 #: db/options.xml.h:135 db/options.xml.h:142 db/options.xml.h:146
 #, c-format

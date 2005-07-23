@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-07-15 17:38+0200\n"
-"PO-Revision-Date: 2005-06-17 13:32+0300\n"
+"PO-Revision-Date: 2005-07-19 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgid "Control"
 msgstr "Управление"
 
 #: src/ddccontrol/main.c:102
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage:\n"
 "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
@@ -36,7 +36,7 @@ msgid ""
 "\t-b : ddccontrol-db directory (if other than %s)\n"
 msgstr ""
 "Вызов:\n"
-"%s [-v] [-c] [-d] [-f] [-s] [-r ctrl] [-w value] [-p | dev]\n"
+"%s [-b каталог] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
 "\tdev: устройство, например dev:/dev/i2c-0\n"
 "\t-p : опросить устройства I2C для поиска шины монитора.\n"
 "\t-c : запросить возможности\n"
@@ -46,6 +46,7 @@ msgstr ""
 "\t-f : выполнить обязательно (избежать проверок целостности)\n"
 "\t-s : сохранить установки\n"
 "\t-v : подробные сообщения (введите больше для увеличения информации)\n"
+"\t-b : каталог ddccontrol-db (если отличается от %s)\n"
 
 #: src/ddccontrol/main.c:171
 #, c-format
@@ -74,7 +75,7 @@ msgstr "'%s' не является правильным именем регис�
 #: src/ddccontrol/main.c:196
 #, c-format
 msgid "You cannot use -w parameter without -r.\n"
-msgstr ""
+msgstr "Нельзя использовать параметр -w без -r.\n"
 
 #: src/ddccontrol/main.c:201
 #, c-format
@@ -487,7 +488,7 @@ msgstr "Не могу пребразовать значение в int."
 #: src/lib/monitor_db.c:252 src/lib/monitor_db.c:594
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
-msgstr ""
+msgstr "Элемент %s (id=%s) не найден (строка %ld).\n"
 
 #: src/lib/monitor_db.c:306
 msgid "Can't find address property."
@@ -500,7 +501,7 @@ msgstr "Не могу преобразовать адрес в int."
 #: src/lib/monitor_db.c:315
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
-msgstr ""
+msgstr "Управление %s отключено согласно строке заголовка.\n"
 
 #: src/lib/monitor_db.c:329
 msgid "Can't convert delay to int."
@@ -668,11 +669,11 @@ msgid "nvidia_open: Error: mmap failed\n"
 msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
 
 #: src/ddcpci/intel810.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "i810_open: Malloc error.\n"
-msgstr "nvidia_open: ошибка malloc.\n"
+msgstr "i810_open: ошибка malloc.\n"
 
 #: src/ddcpci/intel810.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "i810_open: Error: mmap failed\n"
-msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
+msgstr "i810_open: Ошибка: mmap не выполнена\n"
