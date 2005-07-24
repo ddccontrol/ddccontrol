@@ -1,3 +1,8 @@
+2005-07-24 10:24  nboichat
+
+	* doc/supportedgc.xml, src/ddcpci/intel810.c: Small fix to support
+	  Intel 82915G.
+
 2005-07-23 21:27  nboichat
 
 	* NEWS, configure, configure.ac, doc/main.xml,
