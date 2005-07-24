@@ -184,6 +184,11 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
   <entry class="yes">Yes</entry>
 </row>
 <row>
+  <entry>GeForce FX 5950 Ultra</entry>
+  <entry class="unknown">???</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
   <entry>nForce 2 IGP</entry>
   <entry class="no">No</entry>
   <entry class="no">No</entry>

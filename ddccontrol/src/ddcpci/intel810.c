@@ -168,20 +168,44 @@ struct card* i810_open(struct pci_dev *dev)
 	
 	data->fd = open("/dev/mem", O_RDWR);
 	data->length = 512*1024; //MMIO_SIZE
+	data->memory = 0;
 	
-	if (dev->size[0] == data->length) {
-		data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0]);
+	int reg;
+	int found = 0;
+	
+	for (reg = 0; reg < 6; reg++) {
+		if (dev->size[reg] == data->length) {
+			data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[reg]);
+			if (get_verbosity())
+				printf("i810_open: Using region %d (%lx, %lx)\n", reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
+			found = 1;
+			break;
+		}
+	}
+	
+	if (!found) { /* We did not find a region with a valid size, so we take the first one with a zero size (915G) */
 		if (get_verbosity())
-			printf("i810_open: Using region 0 (%lx, %lx)\n", (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
-	} else {
-		data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[1]);
-		if (get_verbosity())
-			printf("i810_open: Using region 1 (%lx, %lx)\n", (long unsigned int)dev->base_addr[1], (long unsigned int)dev->size[1]);
+			printf("i810_open: Cannot find any 512k region, searching for a 0 one.\n");
+		for (reg = 0; reg < 6; reg++) {
+			if (dev->size[reg] == 0) {
+				data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[reg]);
+				if (get_verbosity())
+					printf("i810_open: Using region %d (%lx, %lx)\n", reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
+				found = 1;
+				break;
+			}
+		}
+		
+		if (!found) {
+			fprintf(stderr, _("i810_open: Error: cannot find any valid MMIO PCI region.\n"));
+			i810_close(i810_card);
+			return 0;
+		}
 	}
 	
 	if (data->memory == MAP_FAILED) {
 		fprintf(stderr, _("i810_open: Error: mmap failed\n"));
-		nvidia_close(i810_card);
+		i810_close(i810_card);
 		return 0;
 	}
 	
