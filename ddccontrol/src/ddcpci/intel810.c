@@ -211,10 +211,11 @@ struct card* i810_open(struct pci_dev *dev)
 	
 	char* mmio = data->memory;
 	
-	i810_card->nbusses = 2;
-	i810_card->i2c_busses = malloc(2*sizeof(struct i2c_algo_bit_data));
+	i810_card->nbusses = 3;
+	i810_card->i2c_busses = malloc(3*sizeof(struct i2c_algo_bit_data));
 	init_i2c_bus(&i810_card->i2c_busses[0], mmio, 0x05010); // GPIOA
 	init_i2c_bus(&i810_card->i2c_busses[1], mmio, 0x05014); // GPIOB
+	init_i2c_bus(&i810_card->i2c_busses[2], mmio, 0x0501C); // GPIO"C" (DVI daughter card) 
 	
 	return i810_card;
 }
