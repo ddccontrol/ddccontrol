@@ -1,3 +1,8 @@
+2005-07-25 16:52  nboichat
+
+	* db/monitor/: SAM00D3.xml, SAM0124.xml: Add support for Samsung
+	  SyncMaster 712N
+
 2005-07-23 21:27  nboichat
 
 	* po/: ru.gmo, ru.po: Update Russian translation.
