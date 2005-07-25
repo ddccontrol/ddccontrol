@@ -63,5 +63,6 @@
 		<!-- 0xed: +/108/255	[SAM: Red Video Black Level] -->
 		<!-- 0xee: +/101/255	[SAM: Green Video Black Level] -->
 		<!-- 0xef: +/103/255	[SAM: Blue Video Black Level] -->
+		<!-- 0xf5: +/1/2 [???] (on 712N) -->
 	</controls>
 </monitor>
