@@ -119,7 +119,7 @@ static int init_i2c_bus(struct i2c_algo_bit_data* algo, char* PCIO, int ddc_base
 	//fprintf(stderr, "init_i2c_bus: (ddc_base: %#x)\n", ddc_base);
 	struct i2c_data* data = malloc(sizeof(struct i2c_data));
 	if (!data) {
-		fprintf(stderr, "Malloc error.");
+		fprintf(stderr, _("nvidia.c:init_i2c_bus: Malloc error."));
 		exit(-1);
 	}
 	data->PCIO = PCIO;
@@ -164,7 +164,7 @@ struct card* nvidia_open(struct pci_dev *dev)
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0] + 0x00601000);
 	
 	if (data->memory == MAP_FAILED) {
-		fprintf(stderr, _("nvidia_open: Error: mmap failed\n"));
+		perror(_("nvidia_open: Error: mmap failed"));
 		nvidia_close(nvidia_card);
 		return 0;
 	}

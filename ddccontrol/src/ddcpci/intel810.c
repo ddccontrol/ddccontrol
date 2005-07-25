@@ -102,7 +102,7 @@ static int init_i2c_bus(struct i2c_algo_bit_data* algo, char* mmio, int gpio)
 	//fprintf(stderr, "init_i2c_bus: (ddc_base: %#x)\n", ddc_base);
 	struct i2c_data* data = malloc(sizeof(struct i2c_data));
 	if (!data) {
-		fprintf(stderr, "Malloc error.");
+		fprintf(stderr, _("intel810.c:init_i2c_bus: Malloc error."));
 		exit(-1);
 	}
 	data->mmio = mmio;
@@ -204,7 +204,7 @@ struct card* i810_open(struct pci_dev *dev)
 	}
 	
 	if (data->memory == MAP_FAILED) {
-		fprintf(stderr, _("i810_open: Error: mmap failed\n"));
+		perror(_("i810_open: Error: mmap failed"));
 		i810_close(i810_card);
 		return 0;
 	}

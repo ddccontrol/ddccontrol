@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-07-15 17:38+0200\n"
+"POT-Creation-Date: 2005-07-25 18:11+0200\n"
 "PO-Revision-Date: 2005-07-19 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -658,22 +658,37 @@ msgstr "i2c-algo-bit.o: readbytes: тайм-аут i2c_inb .\n"
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: тайм-аут при подтверждении\n"
 
+#: src/ddcpci/nvidia.c:122
+#, fuzzy, c-format
+msgid "nvidia.c:init_i2c_bus: Malloc error."
+msgstr "nvidia_open: ошибка malloc.\n"
+
 #: src/ddcpci/nvidia.c:155
 #, c-format
 msgid "nvidia_open: Malloc error.\n"
 msgstr "nvidia_open: ошибка malloc.\n"
 
 #: src/ddcpci/nvidia.c:167
-#, c-format
-msgid "nvidia_open: Error: mmap failed\n"
+#, fuzzy
+msgid "nvidia_open: Error: mmap failed"
 msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
+
+#: src/ddcpci/intel810.c:105
+#, fuzzy, c-format
+msgid "intel810.c:init_i2c_bus: Malloc error."
+msgstr "i810_open: ошибка malloc.\n"
 
 #: src/ddcpci/intel810.c:162
 #, c-format
 msgid "i810_open: Malloc error.\n"
 msgstr "i810_open: ошибка malloc.\n"
 
-#: src/ddcpci/intel810.c:183
+#: src/ddcpci/intel810.c:200
 #, c-format
-msgid "i810_open: Error: mmap failed\n"
+msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
+msgstr ""
+
+#: src/ddcpci/intel810.c:207
+#, fuzzy
+msgid "i810_open: Error: mmap failed"
 msgstr "i810_open: Ошибка: mmap не выполнена\n"
