@@ -247,8 +247,10 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 	
 		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0 )
 		{
-			perror("ioctl()");
-			fprintf(stderr,_("ioctl returned %d\n"),i);
+			if (!mon->probing || verbosity) {
+				perror("ioctl()");
+				fprintf(stderr,_("ioctl returned %d\n"),i);
+			}
 			return -1;
 		}
 	
@@ -264,14 +266,18 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		memcpy(qdata.buffer, buf, len);
 		
 		if (msgsnd(msqid, &qdata, QUERY_SIZE + len, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending write message"));
+			if (!mon->probing || verbosity) {
+				perror(_("Error while sending write message"));
+			}
 			return -3;
 		}
 		
 		struct answer adata;
 		
 		if (ddcpci_read(&adata) < 0) {
-			perror(_("Error while reading write message answer"));
+			if (!mon->probing || verbosity) {
+				perror(_("Error while reading write message answer"));
+			}
 			return -1;
 		}
 		return adata.status;
@@ -301,8 +307,10 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 	
 		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0)
 		{
-			perror("ioctl()");
-			fprintf(stderr,_("ioctl returned %d\n"),i);
+			if (!mon->probing || verbosity) {
+				perror("ioctl()");
+				fprintf(stderr,_("ioctl returned %d\n"),i);
+			}
 			return -1;
 		}
 	
@@ -319,14 +327,18 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		qdata.len = len;
 		
 		if (msgsnd(msqid, &qdata, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending read message"));
+			if (!mon->probing || verbosity) {
+				perror(_("Error while sending read message"));
+			}
 			return -3;
 		}
 		
 		struct answer adata;
 		
 		if ((ret = ddcpci_read(&adata)) < 0) {
-			perror(_("Error while reading read message answer"));
+			if (!mon->probing || verbosity) {
+				perror(_("Error while reading read message answer"));
+			}
 			return -1;
 		}
 		
@@ -415,7 +427,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	
 	/* validate answer */
 	if (_buf[0] != mon->addr * 2) { /* busy ??? */
-		if (verbosity) {
+		if (!mon->probing || verbosity) {
 			fprintf(stderr, _("Invalid response, first byte is 0x%02x, should be 0x%02x\n"),
 				_buf[0], mon->addr * 2);
 			dumphex(stderr, _buf, len + 3);
@@ -424,14 +436,18 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 
 	if ((_buf[1] & MAGIC_2) == 0) {
-		fprintf(stderr, _("Invalid response, magic is 0x%02x\n"), _buf[1]);
+		if (!mon->probing || verbosity) {
+			fprintf(stderr, _("Invalid response, magic is 0x%02x\n"), _buf[1]);
+		}
 		return -1;
 	}
 
 	_len = _buf[1] & ~MAGIC_2;
 	if (_len > len || _len > sizeof(_buf)) {
-		fprintf(stderr, _("Invalid response, length is %d, should be %d at most\n"),
-			_len, len);
+		if (!mon->probing || verbosity) {
+			fprintf(stderr, _("Invalid response, length is %d, should be %d at most\n"),
+				_len, len);
+		}
 		return -1;
 	}
 
@@ -441,8 +457,10 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 	
 	if (xor != 0) {
-		fprintf(stderr, _("Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"), xor, _len);
-		dumphex(stderr, _buf, len + 3);
+		if (!mon->probing || verbosity) {
+			fprintf(stderr, _("Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"), xor, _len);
+			dumphex(stderr, _buf, len + 3);
+		}
 		
 		return -1;
 	}
@@ -551,7 +569,9 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 		
 		if (len < 3 || buf[0] != DDCCI_REPLY_CAPS || (buf[1] * 256 + buf[2]) != offset) 
 		{
-			fprintf(stderr, _("Invalid sequence in caps.\n"));
+			if (!mon->probing || verbosity) {
+				fprintf(stderr, _("Invalid sequence in caps.\n"));
+			}
 			retries--;
 			continue;
 		}
@@ -559,7 +579,9 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 		for (i = 3; i < len; i++) {
 			buffer[bufferpos++] = buf[i];
 			if (bufferpos >= buflen) {
-				fprintf(stderr, _("Buffer too small to contain caps.\n"));
+				if (!mon->probing || verbosity) {
+					fprintf(stderr, _("Buffer too small to contain caps.\n"));
+				}
 				return -1;
 			}
 		}
@@ -599,7 +621,9 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 		if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
 		    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
 		{
-			fprintf(stderr, _("Corrupted EDID at 0x%02x.\n"), addr);
+			if (!mon->probing || verbosity) {
+				fprintf(stderr, _("Corrupted EDID at 0x%02x.\n"), addr);
+			}
 			return -1;
 		}
 		
@@ -608,7 +632,7 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 			((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
 			(buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
 		
-		if (verbosity) {
+		if (!mon->probing && verbosity) {
 			int sn = buf[0xc] + (buf[0xd]<<8) + (buf[0xe]<<16) + (buf[0xf]<<24);
 			printf("Serial number: %d\n", sn);
 			int week = buf[0x10];
@@ -629,32 +653,38 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 		return 0;
 	} 
 	else {
-		fprintf(stderr, _("Reading EDID 0x%02x failed.\n"), addr);
+		if (!mon->probing || verbosity) {
+			fprintf(stderr, _("Reading EDID 0x%02x failed.\n"), addr);
+		}
 		return -1;
 	}
 }
 
-/* Returns :
+/* Param probing indicates if we are probing for available devices (so we must be much less verbose)
+   Returns :
   - 0 if OK
   - -1 if DDC/CI is not available
   - -2 if EDID is not available
   - -3 if file can't be opened 
 */
-static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid) 
+static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid, int probing) 
 {
 	memset(mon, 0, sizeof(struct monitor));
 	
+	mon->probing = probing;
+	
 	if (strncmp(filename, "dev:", 4) == 0) {
 		if ((mon->fd = open(filename+4, O_RDWR)) < 0) {
-			perror(filename);
-			//fprintf(stderr, _("Be sure you've modprobed i2c-dev and correct framebuffer device.\n"));
+			if ((!probing) || verbosity)
+				perror(filename);
 			return -3;
 		}
 		mon->type = dev;
 	}
 #ifdef HAVE_DDCPCI
 	else if (strncmp(filename, "pci:", 4) == 0) {
-		printf(_("Device: %s\n"), filename);
+		if (verbosity)
+			printf(_("Device: %s\n"), filename);
 		
 		struct query qopen;
 		qopen.mtype = 1;
@@ -730,9 +760,9 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	return 0;
 }
 
-int ddcci_open(struct monitor* mon, const char* filename) 
+int ddcci_open(struct monitor* mon, const char* filename, int probing) 
 {
-	return ddcci_open_with_addr(mon, filename, DEFAULT_DDCCI_ADDR, DEFAULT_EDID_ADDR);
+	return ddcci_open_with_addr(mon, filename, DEFAULT_DDCCI_ADDR, DEFAULT_EDID_ADDR, probing);
 }
 
 int ddcci_save(struct monitor* mon) 
@@ -774,7 +804,7 @@ int ddcci_close(struct monitor* mon)
 
 void ddcci_probe_device(char* filename, struct monitorlist** current, struct monitorlist*** last) {
 	struct monitor mon;
-	int ret = ddcci_open(&mon, filename);
+	int ret = ddcci_open(&mon, filename, 1);
 	
 	if (verbosity) {
 		printf(_("ddcci_open returned %d\n"), ret);
@@ -810,6 +840,11 @@ struct monitorlist* ddcci_probe() {
 	struct monitorlist* list = NULL;
 	struct monitorlist* current = NULL;
 	struct monitorlist** last = &list;
+	
+	printf(_("Probing for available monitors"));
+	if (verbosity)
+		printf("...\n");
+	fflush(stdout);
 	
 #ifdef HAVE_DDCPCI
 	/* Fetch bus list from ddcpci */
@@ -854,6 +889,10 @@ struct monitorlist* ddcci_probe() {
 			
 			for (i = 0; i < len; i++) {
 				ddcci_probe_device(filelist[i], &current, &last);
+				if (!verbosity) {
+					printf(".");
+					fflush(stdout);
+				}
 			}
 			free(filelist);
 		}
@@ -879,10 +918,17 @@ struct monitorlist* ddcci_probe() {
 			}
 			
 			ddcci_probe_device(filename, &current, &last);
+			if (!verbosity) {
+				printf(".");
+				fflush(stdout);
+			}
 		}
 	}
 	
 	closedir(dirp);
+	
+	if (!verbosity)
+		printf("\n");
 	
 	return list;
 }

@@ -414,7 +414,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	
 	mon = malloc(sizeof(struct monitor));
 	
-	ddcci_open(mon, monitor->filename);
+	ddcci_open(mon, monitor->filename, 0);
 	
 	GtkWidget *notebook = gtk_notebook_new();
 	

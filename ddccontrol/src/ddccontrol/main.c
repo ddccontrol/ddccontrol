@@ -292,7 +292,7 @@ int main(int argc, char **argv)
 	
 	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 	
-	if ((ret = ddcci_open(&mon, fn)) < 0) {
+	if ((ret = ddcci_open(&mon, fn, 0)) < 0) {
 		fprintf(stderr, _(
 			"\nDDC/CI at %s is unusable (%d).\n"
 			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"

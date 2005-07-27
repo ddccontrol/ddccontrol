@@ -46,6 +46,7 @@ struct monitor {
 		,pci
 #endif
 	} type;
+	int probing; /* are we probing? */
 };
 
 /* Struct used to return monitor data probed by ddcci_probe */
@@ -62,7 +63,7 @@ struct monitorlist {
 struct monitorlist* ddcci_probe();
 void ddcci_free_list(struct monitorlist* list);
 
-int ddcci_open(struct monitor* mon, const char* filename);
+int ddcci_open(struct monitor* mon, const char* filename, int probing);
 int ddcci_save(struct monitor* mon);
 int ddcci_close(struct monitor* mon);
 
