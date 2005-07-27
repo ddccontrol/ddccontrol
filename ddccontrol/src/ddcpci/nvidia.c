@@ -160,6 +160,13 @@ struct card* nvidia_open(struct pci_dev *dev)
 	nvidia_card->data = data;
 	
 	data->fd = open("/dev/mem", O_RDWR);
+	
+	if (data->fd < 0) {
+		perror(_("nvidia_open: Error: cannot open /dev/mem"));
+		nvidia_close(nvidia_card);
+		return 0;
+	}
+	
 	data->length = 0x00001000;
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0] + 0x00601000);
 	

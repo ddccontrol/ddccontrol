@@ -167,6 +167,13 @@ struct card* i810_open(struct pci_dev *dev)
 	i810_card->data = data;
 	
 	data->fd = open("/dev/mem", O_RDWR);
+	
+	if (data->fd < 0) {
+		perror(_("i810_open: Error: cannot open /dev/mem"));
+		i810_close(i810_card);
+		return 0;
+	}
+	
 	data->length = 512*1024; //MMIO_SIZE
 	data->memory = 0;
 	
