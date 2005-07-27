@@ -608,7 +608,23 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 			((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
 			(buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
 		
-		mon->digital = (buf[20] & 0x80);
+		if (verbosity) {
+			int sn = buf[0xc] + (buf[0xd]<<8) + (buf[0xe]<<16) + (buf[0xf]<<24);
+			printf("Serial number: %d\n", sn);
+			int week = buf[0x10];
+			int year = buf[0x11] + 1990;
+			printf("Manufactured: Week %d, %d\n", week, year);
+			int ver = buf[0x12];
+			int rev = buf[0x13];
+			printf("EDID version: %d.%d\n", ver, rev);
+			int maxwidth = buf[0x15];
+			int maxheight = buf[0x16];
+			printf("Maximum size: %d x %d (cm)\n", maxwidth, maxheight);
+			
+			/* Parse more infos... */
+		}
+		
+		mon->digital = (buf[0x14] & 0x80);
 		
 		return 0;
 	} 
@@ -829,7 +845,7 @@ struct monitorlist* ddcci_probe() {
 						alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
 					
 					if (verbosity) {
-						printf(_("Found I2C device (%s)\n"), filelist[len]);
+						printf(_("Found PCI device (%s)\n"), filelist[len]);
 					}
 					
 					len++;

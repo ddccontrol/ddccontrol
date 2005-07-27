@@ -46,6 +46,9 @@ SyncMaster 173T (VGA input only)
 <listitem>
 SyncMaster 193P (VGA and DVI inputs)
 </listitem>
+<listitem>
+SyncMaster 712N (at least VGA input)
+</listitem>
 </itemizedlist>
 </sect3>
 <sect2>
