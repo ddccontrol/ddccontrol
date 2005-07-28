@@ -35,9 +35,9 @@
 		<control id="brpurity" address="0xEB"/>
 		
 		<control id="degauss" address="0x00"/>
-		<control id="defaults" address="0x04"/>
-		<control id="defaultgeom" address="0x06"/>
-		<control id="defaultcolor" address="0x08"/>
+		<control id="defaults" address="0x04" delay="1000"/>
+		<control id="defaultsizepos" address="0x06" delay="1000"/>
+		<control id="defaultluma" address="0x08" delay="1000"/>
 		
 		<control id="language" type="list" address="0x68">
 			<value id="english" value="0"/>

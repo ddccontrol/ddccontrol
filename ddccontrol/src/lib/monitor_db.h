@@ -24,12 +24,17 @@
 #include <libxml/xmlstring.h>
 
 /* Current database version */
-#define DBVERSION 1
+#define DBVERSION 2
 
 enum control_type {
 value = 0,
 command = 1,
 list = 2
+};
+
+enum refresh_type {
+none = 0,
+all = 1
 };
 
 enum init_type {
@@ -51,6 +56,7 @@ struct control_db {
 	unsigned char address;
 	int delay; /* -1 indicate default value */
 	enum control_type type;
+	enum refresh_type refresh;
 	
 	struct control_db* next;
 	struct value_db* value_list;

@@ -268,6 +268,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
+	enum refresh_type options_refresh;
 	xmlChar *tmp;
 	char *endptr;
 	int i;
@@ -284,6 +285,23 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 			DDCCI_RETURN_IF(options_ctrlid == NULL, 0, _("Can't find id property."), control);
 			options_ctrlname = xmlGetProp(control, "name");
 			DDCCI_RETURN_IF(options_ctrlname == NULL, 0, _("Can't find name property."), control);
+			
+			tmp = xmlGetProp(control, "refresh");
+			if (tmp) {
+				if (!xmlStrcmp(tmp, "none")) {
+					options_refresh = none;
+				}
+				else if (!xmlStrcmp(tmp, "all")) {
+					options_refresh = all;
+				}
+				else {
+					DDCCI_RETURN_IF(1, 0, _("Invalid refresh type (!= none, != all)."), control);
+				}
+				xmlFree(tmp);
+			}
+			else {
+				options_refresh = none;
+			}
 			
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
 			
@@ -322,11 +340,12 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						
 						current_control->id   = options_ctrlid;
 						current_control->name = _D(options_ctrlname);
+						current_control->refresh = options_refresh;
 						
 						tmp = xmlGetProp(cur, "delay");
 						if (tmp) {
 							current_control->delay = strtol(tmp, &endptr, 10);
-							DDCCI_RETURN_IF(endptr != NULL, 0, _("Can't convert delay to int."), cur);
+							DDCCI_RETURN_IF(*endptr != 0, 0, _("Can't convert delay to int."), cur);
 							xmlFree(tmp);
 						}
 						else {

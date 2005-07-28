@@ -99,6 +99,7 @@ printf(_("Restore Factory Default Geometry"));
 printf(_("Restore Factory Default Color"));
 printf(_("Restore Factory Default Position"));
 printf(_("Restore Factory Default Size"));
+printf(_("Restore Factory Default Size and Position"));
 printf(_("Settings"));
 printf(_("Save Current Settings"));
 printf(_("Restore Factory Settings"));
