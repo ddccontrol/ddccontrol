@@ -80,14 +80,16 @@ static void combo_change(GtkWidget *widget, gpointer data)
 {
 	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 	if (!g_mutex_trylock(combo_change_mutex)) {
-		printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
+		if (get_verbosity())
+			printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
 		return;
 	}
 	
 	gtk_widget_set_sensitive(widget, FALSE);
 	
 	while (currentid != nextid) {
-		printf("currentid(%d) != nextid(%d), trying...\n", currentid, nextid);
+		if (get_verbosity())
+			printf("currentid(%d) != nextid(%d), trying...\n", currentid, nextid);
 		currentid = nextid;
 		int i = 0;
 	
@@ -109,7 +111,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
 				notebook = createNotebook(current);
 				gtk_widget_show(notebook);
-				//gtk_label_set_text(GTK_LABEL(moninfo), buffer);
+				gtk_widget_set_sensitive(refresh_button, TRUE);
 				break;
 			}
 			i++;
@@ -121,7 +123,8 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			gtk_main_iteration ();
 	}
 	
-	printf("currentid == nextid (%d)\n", currentid);
+	if (get_verbosity())
+		printf("currentid == nextid (%d)\n", currentid);
 	
 	gtk_widget_set_sensitive(widget, TRUE);
 	g_mutex_unlock(combo_change_mutex);
@@ -159,7 +162,8 @@ static gboolean window_changed(GtkWidget *widget,
 			   ) {
 				if (xineramacurrent != i) {
 					int k = nextid;
-					printf(_("Monitor changed (%d %d).\n"), i, k);
+					if (get_verbosity())
+						printf(_("Monitor changed (%d %d).\n"), i, k);
 					k = (k == 0) ? 1 : 0;
 					xineramacurrent = k;
 					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
@@ -182,10 +186,14 @@ void setStatus(char* message)
 		if (notebook) {
 			gtk_widget_show(notebook);
 		}
+		gtk_widget_set_sensitive(combo_box, TRUE);
+		gtk_widget_set_sensitive(refresh_button, TRUE);
 		gtk_widget_set_sensitive(close_button, TRUE);
 		return;
 	}
 	
+	gtk_widget_set_sensitive(combo_box, FALSE);
+	gtk_widget_set_sensitive(refresh_button, FALSE);
 	gtk_widget_set_sensitive(close_button, FALSE);
 	gtk_label_set_text(GTK_LABEL(messagelabel), message);
 	gtk_widget_show(messagelabel);
@@ -193,11 +201,12 @@ void setStatus(char* message)
 		gtk_widget_hide(notebook);
 	}
 	
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
+	while (gtk_events_pending())
+		gtk_main_iteration();
 }
 
-static gboolean heartbeat(gpointer data) {
+static gboolean heartbeat(gpointer data)
+{
 	ddcpci_send_heartbeat();
 	return TRUE;
 }
@@ -266,11 +275,23 @@ int main( int   argc, char *argv[] )
 	gtk_widget_show (table);
 	
 	GtkWidget* align = gtk_alignment_new(1,1,0,0);
+	GtkWidget* hbox = gtk_hbox_new(FALSE, 50);
+	
+	refresh_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
+	g_signal_connect(G_OBJECT(refresh_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
+
+	gtk_box_pack_start(GTK_BOX(hbox),refresh_button,0,0,0);
+	gtk_widget_show (refresh_button);
+	gtk_widget_set_sensitive(refresh_button, FALSE);
+	
 	close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 
-	gtk_container_add(GTK_CONTAINER(align),close_button);
+	gtk_box_pack_start(GTK_BOX(hbox),close_button,0,0,0);
 	gtk_widget_show (close_button);
+	
+	gtk_container_add(GTK_CONTAINER(align),hbox);
+	gtk_widget_show (hbox);
 	gtk_widget_show (align);
 	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
 	
@@ -285,7 +306,8 @@ int main( int   argc, char *argv[] )
 	#ifdef HAVE_XINERAMA
 	if (XineramaQueryExtension(GDK_DISPLAY(), &event_base, &error_base)) {
 		if (XineramaIsActive(GDK_DISPLAY())) {
-			printf(_("Xinerama supported and active\n"));
+			if (get_verbosity())
+				printf(_("Xinerama supported and active\n"));
 			
 			xineramainfo = XineramaQueryScreens(GDK_DISPLAY(), &xineramanumber);
 			int i;
@@ -296,13 +318,17 @@ int main( int   argc, char *argv[] )
 			}
 		}
 		else {
-			printf(_("Xinerama supported but inactive.\n"));
+			if (get_verbosity())
+				printf(_("Xinerama supported but inactive.\n"));
 		}
 	}
 	else {
-		printf(_("Xinerama not supported\n"));
+		if (get_verbosity())
+			printf(_("Xinerama not supported\n"));
 	}
 	#endif
+	
+	combo_box = gtk_combo_box_new_text();
 	
 	setStatus(_(
 	"Probing for available monitors..."
@@ -311,8 +337,6 @@ int main( int   argc, char *argv[] )
 	monlist = ddcci_probe();
 	
 	struct monitorlist* current;
-	
-	combo_box = gtk_combo_box_new_text();
 	
 	char buffer[256];
 	

@@ -32,4 +32,8 @@ void deleteNotebook();
 /* Defined in main.c, set status message. */
 void setStatus(char* message);
 
+GtkWidget* refresh_button;
+
+void refresh_all_controls(GtkWidget *widget, gpointer nval);
+
 #endif

@@ -324,7 +324,7 @@ int main(int argc, char **argv)
 			if (value >= 0) {
 				fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"),
 					ctrl, value, value);
-				ddcci_writectrl(&mon, ctrl, value);
+				ddcci_writectrl(&mon, ctrl, value, 0);
 			} else {
 				fprintf(stdout, _("\nReading 0x%02x...\n"), ctrl);
 			}
