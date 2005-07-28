@@ -1,3 +1,27 @@
+2005-07-28 18:20  nboichat
+
+	* doc/supportedgc.xml, src/gddccontrol/notebook.c: Restore buttons
+	  added (back) to gddccontrol.
+
+2005-07-27 18:41  nboichat
+
+	* src/: ddccontrol/main.c, gddccontrol/notebook.c, lib/ddcci.c,
+	  lib/ddcci.h: Display less error messages when probing.
+
+2005-07-27 18:37  nboichat
+
+	* src/ddcpci/: intel810.c, nvidia.c: Check if /dev/mem is correctly
+	  opened.
+
+2005-07-27 10:13  nboichat
+
+	* doc/supportedmonitors.xml, src/lib/ddcci.c: Read more EDID infos.
+
+2005-07-25 16:34  nboichat
+
+	* src/ddcpci/intel810.c: Add support for i865G DVI daughter card
+	  (thanks to William Hollingworth).
+
 2005-07-25 16:12  nboichat
 
 	* po/ddccontrol.pot, po/fr.gmo, po/fr.po, po/ru.gmo, po/ru.po,

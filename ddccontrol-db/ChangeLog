@@ -1,3 +1,7 @@
+2005-07-28 18:17  nboichat
+
+	* db/monitor/MEL4513.xml: Fix Mitsubishi Diamond Pro 2060u.
+
 2005-07-25 16:52  nboichat
 
 	* db/monitor/: SAM00D3.xml, SAM0124.xml: Add support for Samsung
