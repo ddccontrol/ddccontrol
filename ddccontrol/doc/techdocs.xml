@@ -38,7 +38,7 @@ current database (YYYYMMDD format).
 </listitem>
 <listitem>
 <sgmltag class="attribute">dbversion</sgmltag>: indicates which version of
-database format is used (must be set to 1).
+database format is used (must be set to 2).
 </listitem>
 </itemizedlist></para>
 
@@ -70,6 +70,19 @@ element in a command control, the default value
 <listitem>
 <sgmltag class="attvalue">list</sgmltag>: The control accepts a list of values
 (e.g. OSD language).
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<sgmltag class="attribute">refresh</sgmltag> (only for list and command controls):
+Set whether other controls must be refreshed after changing list value or running
+the command associated with the control (optional). Possible values:
+<itemizedlist mark='opencircle'>
+<listitem>
+<sgmltag class="attvalue">none</sgmltag>: Do not refresh anything. (default)
+</listitem>
+<listitem>
+<sgmltag class="attvalue">all</sgmltag>: Refresh all controls.
 </listitem>
 </itemizedlist>
 </listitem>
