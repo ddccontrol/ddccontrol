@@ -1,3 +1,10 @@
+2005-07-28 23:43  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/MEL4513.xml: New db version (add refresh parameter).
+
+2005-07-28 18:17  tag Before_dbversion_2
+
 2005-07-28 18:17  nboichat
 
 	* db/monitor/MEL4513.xml: Fix Mitsubishi Diamond Pro 2060u.
