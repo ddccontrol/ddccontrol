@@ -1,3 +1,26 @@
+2005-07-28 23:52  nboichat
+
+	* configure, configure.ac, doc/main.xml, doc/techdocs.xml: Update
+	  version number (next release will be 0.2).
+
+2005-07-28 23:48  nboichat
+
+	* src/: ddccontrol/main.c, gddccontrol/main.c,
+	  gddccontrol/notebook.c, gddccontrol/notebook.h: Implement refresh
+	  in gddccontrol (on demand with a button, or if a control want
+	  it).
+
+2005-07-28 23:46  nboichat
+
+	* src/lib/: monitor_db.c, monitor_db.h: New db version (add refresh
+	  parameter).
+
+2005-07-28 23:44  nboichat
+
+	* src/lib/: ddcci.c, ddcci.h: Implement delay parameter.
+
+2005-07-28 18:20  tag Before_dbversion_2
+
 2005-07-28 18:20  nboichat
 
 	* doc/supportedgc.xml, src/gddccontrol/notebook.c: Restore buttons
