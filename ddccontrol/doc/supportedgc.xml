@@ -228,6 +228,11 @@ mailing lists (see <xref linkend="report"/>).</para>
 </thead>
 <tbody>
 <row>
+  <entry>Intel i915G (82915G)</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
   <entry>Intel i865G (82865G)</entry>
   <entry class="no">No</entry>
   <entry class="yes">Yes</entry>
