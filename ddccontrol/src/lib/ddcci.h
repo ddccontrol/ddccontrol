@@ -67,7 +67,7 @@ int ddcci_open(struct monitor* mon, const char* filename, int probing);
 int ddcci_save(struct monitor* mon);
 int ddcci_close(struct monitor* mon);
 
-int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value);
+int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value, int delay);
 
 /* return values: < 0 - failure, 0 - contron not supported, > 0 - supported */
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 

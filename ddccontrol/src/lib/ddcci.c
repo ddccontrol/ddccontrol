@@ -477,7 +477,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 }
 
 /* write value to register ctrl of ddc/ci at address addr */
-int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value)
+int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value, int delay)
 {
 	unsigned char buf[4];
 
@@ -486,7 +486,14 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 	buf[2] = (value >> 8);
 	buf[3] = (value & 255);
 
-	return ddcci_write(mon, buf, sizeof(buf));
+	int ret = ddcci_write(mon, buf, sizeof(buf));
+	
+	/* Do the delay */
+	if (delay > 0) {
+		usleep(1000*delay);
+	}
+	
+	return ret;
 }
 
 /* read register ctrl raw data of ddc/ci at address addr */
@@ -734,7 +741,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	
 	if (mon->db) {
 		if (mon->db->init == samsung) {
-			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE) < 0) {
+			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
 				return -1;
 			}
 		}
@@ -746,7 +753,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	}
 	else { /* Alternate way of init mode detecting for unsupported monitors */
 		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
-			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE) < 0) {
+			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
 				return -1;
 			}
 		}
@@ -780,7 +787,7 @@ int ddcci_close(struct monitor* mon)
 	if (mon->db)
 	{
 		if (mon->db->init == samsung) {
-			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
+			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE, 0)) < 0) {
 				return -1;
 			}
 		}
@@ -789,7 +796,7 @@ int ddcci_close(struct monitor* mon)
 	else
 	{ /* Alternate way of init mode detecting for unsupported monitors */
 		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
-			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE)) < 0) {
+			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE, 0)) < 0) {
 				return -1;
 			}
 		}
