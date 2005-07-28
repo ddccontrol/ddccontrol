@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<monitor name="Mitsubishi Diamond Pro 2060u" init="standard">
+<monitor name="Mitsubishi Diamond Pro 2060u" init="standard" caps="">
+<!--- language is not in caps... -->
 	<controls>
 		<control id="brightness" address="0x10"/>
 		<control id="contrast" address="0x12"/>
@@ -15,10 +16,6 @@
 		<control id="hpincushion" address="0x24"/>
 		<control id="hpincushionbalance" address="0x26"/>
 		<control id="hmisconvergence" address="0x28"/>
-		<control id="hlinearity" address="0x2A"/>
-		<control id="hlinearitybalance" address="0x2C"/>
-		<control id="vpincushion" address="0x34"/>
-		<control id="vpincushionbalance" address="0x36"/>
 		<control id="vmisconvergence" address="0x38"/>
 		<control id="vlinearity"  address="0x3A"/>
 		<control id="vlinearitybalance" address="0x3C"/>
