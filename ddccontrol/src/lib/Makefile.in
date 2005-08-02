@@ -52,7 +52,8 @@ AR = ar
 ARFLAGS = cru
 libddcci_a_AR = $(AR) $(ARFLAGS)
 libddcci_a_LIBADD =
-am_libddcci_a_OBJECTS = ddcci.$(OBJEXT) monitor_db.$(OBJEXT)
+am_libddcci_a_OBJECTS = ddcci.$(OBJEXT) monitor_db.$(OBJEXT) \
+	profile.$(OBJEXT)
 libddcci_a_OBJECTS = $(am_libddcci_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -192,7 +193,7 @@ localedir = $(datadir)/locale
 INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
 noinst_LIBRARIES = libddcci.a
 libddcci_a_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
-   ddcpci-ipc.h i2c-dev.h
+   ddcpci-ipc.h i2c-dev.h profile.c profile.h
 
 AM_CFLAGS = $(LIBXML2_CFLAGS)
 all: all-am
@@ -244,6 +245,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ddcci.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/monitor_db.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/profile.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

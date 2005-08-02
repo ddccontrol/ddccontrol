@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Nicolas Boichat                                 *
+ *   Copyright (C) 2004-2005 by Nicolas Boichat                            *
  *   nicolas@boichat.ch                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -32,9 +32,7 @@
 	
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
-#define RETRYS 3 // number of read retrys
-
-struct monitor* mon = NULL;
+#define RETRYS 5 // number of read retrys
 
 enum
 {
@@ -46,7 +44,7 @@ enum
 
 // Protos
 ////////////////////
-void change_control_value(GtkWidget *widget, gpointer nval);
+static void change_control_value(GtkWidget *widget, gpointer nval);
 
 // Globals
 ////////////////////
@@ -59,7 +57,7 @@ int refreshing = 0;
 // Helpers
 ////////////////////
 	
-void get_value_and_max(struct control_db *control,unsigned short *currentValue, unsigned short *currentMaximum)
+static void get_value_and_max(struct control_db *control,unsigned short *currentValue, unsigned short *currentMaximum)
 {
 	int retry = 1;
 	if (control->type != command)
@@ -70,6 +68,7 @@ void get_value_and_max(struct control_db *control,unsigned short *currentValue, 
 			{
 				break;
 			}
+			usleep(20000);
 		}
 	}
 	if(!retry)
@@ -87,7 +86,7 @@ void get_value_and_max(struct control_db *control,unsigned short *currentValue, 
 // Callbacks
 ////////////////////
 
-void refresh_all_controls(GtkWidget *widget, gpointer nval)
+void refresh_all_controls(GtkWidget *widget, gpointer data)
 {
 	/* Maybe we could lock a Mutex here, but I don't think it is really necessary... */
 	
@@ -99,7 +98,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer nval)
 	unsigned short currentValue = 1;
 	unsigned short currentMaximum = 1;
 	
-	setStatus(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+	set_status(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
 	
 	refreshing = 1; /* Tell callbacks not to write values back to the monitor. */
 	while (list) {
@@ -109,7 +108,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer nval)
 				get_value_and_max(control, &currentValue, &currentMaximum);
 				change_control_value(list->data, (gpointer)(long)currentValue);
 			}
-			setStatus(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+			set_status(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
 		}
 		else {
 			g_warning("Could not get the control_db struct related to some control.");
@@ -119,12 +118,12 @@ void refresh_all_controls(GtkWidget *widget, gpointer nval)
 	}
 	refreshing = 0;
 	
-	setStatus("");
+	set_status("");
 	
 	gtk_widget_set_sensitive(refresh_button, TRUE);
 }
 
-void change_control_value(GtkWidget *widget, gpointer nval)
+static void change_control_value(GtkWidget *widget, gpointer nval)
 {
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddc_control");
 	
@@ -292,8 +291,45 @@ static void tree_selection_changed_callback(GtkTreeSelection *selection, gpointe
 
 // Initializers
 ////////////////////
+
+void show_profile_checks(gboolean show) {
+	GSList* list = all_controls;
 	
-void createControl(GtkWidget *parent,struct control_db *control)
+	while (list) {
+		GtkWidget* check_frame = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check_frame");
+		if (check_frame) {
+			if (show)
+				gtk_widget_show(check_frame);
+			else
+				gtk_widget_hide(check_frame);
+		}
+		list = g_slist_next(list);
+	}
+}
+
+/* returns: Number of selected controls */
+int get_profile_checked_controls(char* controls) {
+	int current = 0;
+	
+	GSList* list = all_controls;
+	struct control_db *control;
+	
+	while (list) {
+		GtkWidget* check = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check");
+		if (check) {
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(check))) {
+				control = (struct control_db*)g_object_get_data(G_OBJECT(list->data), "ddc_control");
+				controls[current] = control->address;
+				current++;
+			}
+		}
+		list = g_slist_next(list);
+	}
+	
+	return current;
+}
+
+static void createControl(GtkWidget *parent,struct control_db *control)
 {
 	unsigned short currentDefault = 1;
 	unsigned short currentMaximum = 1;
@@ -301,7 +337,10 @@ void createControl(GtkWidget *parent,struct control_db *control)
 		get_value_and_max(control,&currentDefault,&currentMaximum);
 	
 	GtkWidget* hbox = gtk_hbox_new(FALSE,0);
-	GtkWidget *widget, *button;
+	GtkWidget *widget = NULL;
+	GtkWidget *button = NULL;
+	GtkWidget *check_frame = NULL; /* Frame around the check */
+	GtkWidget *check = NULL;
 	
 	switch (control->type)
 	{
@@ -312,6 +351,14 @@ void createControl(GtkWidget *parent,struct control_db *control)
 			gtk_widget_show(image);
 			gtk_container_add(GTK_CONTAINER(button), image);
 			gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
+			
+			check_frame = gtk_frame_new(NULL);
+			check = gtk_check_button_new();
+			image = gtk_image_new_from_stock(GTK_STOCK_SAVE, GTK_ICON_SIZE_LARGE_TOOLBAR);
+			gtk_widget_show(image);
+			gtk_container_add(GTK_CONTAINER(check), image);
+			gtk_widget_show(check);
+			gtk_container_add(GTK_CONTAINER(check_frame),check);
 			break;
 		default:
 			button = NULL;
@@ -327,6 +374,8 @@ void createControl(GtkWidget *parent,struct control_db *control)
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
 				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);
 				g_object_set_data(G_OBJECT(widget), "restore_button", button);
+				g_object_set_data(G_OBJECT(widget), "check_frame", check_frame);
+				g_object_set_data(G_OBJECT(widget), "check", check);
 				
 				gtk_range_set_increments(GTK_RANGE(widget),
 						100.0/(double)currentMaximum,
@@ -369,29 +418,36 @@ void createControl(GtkWidget *parent,struct control_db *control)
 				
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
 				g_object_set_data(G_OBJECT(widget), "restore_button", button);
+				g_object_set_data(G_OBJECT(widget), "check_frame", check_frame);
+				g_object_set_data(G_OBJECT(widget), "check", check);
 				
 				break;
 			}
 		default:
 			return;
 	}
+	if (check) {
+		//gtk_widget_show(check_frame);
+		gtk_box_pack_start(GTK_BOX(hbox), check_frame, 0, 0, 0);
+	}
+	
 	all_controls = g_slist_append(all_controls,widget);
 	g_object_set_data(G_OBJECT(widget), "ddc_control", control);
 	/*g_print("%i - %i\n",all_controls,g_slist_length(all_controls));*/
 	gtk_widget_show(widget);
-	gtk_box_pack_start(GTK_BOX(hbox),widget,1,1,0);
+	gtk_box_pack_start(GTK_BOX(hbox), widget, 1, 1, 0);
 	
 	if (button) {
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(restore_callback), widget);
 		gtk_widget_show(button);
-		gtk_box_pack_start(GTK_BOX(hbox),button,0,0,0);
+		gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
 	}
 	
 	gtk_widget_show(hbox);
 	gtk_container_add(GTK_CONTAINER(parent),hbox);
 }
 	
-void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
+static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 {
 	int i=0;
 	GtkWidget* vbox = gtk_vbox_new(FALSE,10);
@@ -416,7 +472,7 @@ void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 }
 
 	
-GtkWidget* createTree(GtkWidget *notebook)
+static GtkWidget* createTree(GtkWidget *notebook)
 {
 	GtkTreeStore *store = gtk_tree_store_new(N_COLS,G_TYPE_STRING,G_TYPE_INT,G_TYPE_POINTER);
 	
@@ -465,22 +521,23 @@ GtkWidget* createTree(GtkWidget *notebook)
 	
 	return tree;
 }
-	
-GtkWidget* createNotebook(struct monitorlist* monitor)
+
+void create_monitor_manager(struct monitorlist* monitor)
 {
 	modified = 0;
 	all_controls = NULL;
 	
 	if (!monitor->supported) {
-		setStatus(_(
+		set_status(_(
 			"The current monitor is in the database but does not supports "
 			"DDC/CI.\n\nThis often occurs when you connect the VGA/DVI cable "
 			"on the wrong input of monitors supporting DDC/CI only on one of "
 			"its two inputs."));
-		return NULL;
+		monitor_manager = NULL;
+		return;
 	}
 	
-	setStatus(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
+	set_status(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
 	
 	mon = malloc(sizeof(struct monitor));
 	
@@ -515,7 +572,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 				count++;
 		}
 		
-		setStatus(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+		set_status(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
@@ -524,7 +581,7 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
 				createPage(notebook, subgroup);
 				current++;
-				setStatus(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+				set_status(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
 			}
 		}
 	}
@@ -533,18 +590,24 @@ GtkWidget* createNotebook(struct monitorlist* monitor)
 	gtk_widget_show (tree);
 	gtk_table_attach(GTK_TABLE(table), tree, 0, 1, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (notebook);
-	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
+	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (table);
 	
-	setStatus("");
+	set_status(_("Loading profiles..."));
 	
-	return table;
+	get_all_profiles(mon);
+	
+	create_profile_manager();
+	
+	set_status("");
+	
+	monitor_manager = table;
 }
 
 // Cleanup
 ////////////////////
 	
-void deleteNotebook()
+void delete_monitor_manager()
 {
 	if (mon) {
 		if (modified)
@@ -553,5 +616,10 @@ void deleteNotebook()
 		ddcci_close(mon);
 		free(mon);
 		g_slist_free(all_controls);
+	}
+	
+	if (profile_manager) {
+		gtk_widget_destroy(profile_manager);
+		profile_manager = NULL;
 	}
 }

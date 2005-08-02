@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Nicolas Boichat                                 *
+ *   Copyright (C) 2004-2005 by Nicolas Boichat                            *
  *   nicolas@boichat.ch                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,23 +17,57 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
+
 #ifndef NOTEBOOK_H
 #define NOTEBOOK_H
- 
+
 #include <gtk/gtk.h>
 
 #include "ddcci.h"
 #include "monitor_db.h"
+#include "profile.h"
 
-GtkWidget* createNotebook(struct monitorlist* monitor);
-void deleteNotebook();
+/* constants */
+#define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
-/* Defined in main.c, set status message. */
-void setStatus(char* message);
+/* globals */
+struct monitor* mon;
 
-GtkWidget* refresh_button;
+GtkWidget* monitor_manager;
+GtkWidget* profile_manager;
+
+/* notebook.c */
+
+void create_monitor_manager(struct monitorlist* monitor);
+void delete_monitor_manager();
+
+void show_profile_checks(gboolean show);
+int get_profile_checked_controls(char* controls);
 
 void refresh_all_controls(GtkWidget *widget, gpointer nval);
+
+/* gprofile.c */
+void create_profile_manager();
+
+void saveprofile_callback(GtkWidget *widget, gpointer data);
+void cancelprofile_callback(GtkWidget *widget, gpointer data);
+
+/* main.c */
+
+/* Set what is now displayed at the center of the main window:
+ *  0 - Monitor manager
+ *  1 - Profile manager
+ */
+void set_current_main_component(int component);
+
+/* Set status message. */
+void set_status(char* message);
+
+GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text);
+
+GtkWidget* profile_manager_button;
+GtkWidget* saveprofile_button;
+GtkWidget* cancelprofile_button;
+GtkWidget* refresh_button;
 
 #endif

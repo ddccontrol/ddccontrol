@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Nicolas Boichat                                 *
+ *   Copyright (C) 2004-2005 by Nicolas Boichat                            *
  *   nicolas@boichat.ch                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,18 +30,13 @@
 #include <X11/extensions/Xinerama.h>
 #endif
 
-#include "ddcci.h"
 #include "ddcpci-ipc.h"
-#include "monitor_db.h"
 
 #include "notebook.h"
-
-#define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
 GtkWidget *window;
 
 GtkWidget* table;
-GtkWidget* notebook = NULL;
 
 GtkWidget *combo_box;
 
@@ -49,7 +44,19 @@ GtkWidget *messagelabel = NULL;
 
 GtkWidget* close_button = NULL;
 
+GtkWidget* choice_hbox = NULL;
+GtkWidget* profile_hbox = NULL;
+GtkWidget* bottom_hbox = NULL;
+
 struct monitorlist* monlist;
+
+int mainrow = 0; /* Main center row in the table widget */
+
+/* Indicate what is now displayed at the center of the main window:
+ *  0 - Monitor manager
+ *  1 - Profile manager
+ */
+int current_main_component = 0;
 
 #ifdef HAVE_XINERAMA
 int xineramacurrent = 0; //Arbitrary, should be read from the user
@@ -76,6 +83,11 @@ static void destroy( GtkWidget *widget,
     gtk_main_quit ();
 }
 
+static void loadprofile_callback(GtkWidget *widget, gpointer data)
+{
+	set_current_main_component(1);
+}
+
 static void combo_change(GtkWidget *widget, gpointer data)
 {
 	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
@@ -93,10 +105,10 @@ static void combo_change(GtkWidget *widget, gpointer data)
 		currentid = nextid;
 		int i = 0;
 	
-		if (notebook != NULL) {
-			deleteNotebook();
-			gtk_widget_destroy(notebook);
-			notebook = NULL;
+		if (monitor_manager != NULL) {
+			delete_monitor_manager();
+			gtk_widget_destroy(monitor_manager);
+			monitor_manager = NULL;
 		}
 	
 		char buffer[256];
@@ -109,15 +121,16 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			if (i == currentid)
 			{
 				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
-				notebook = createNotebook(current);
-				gtk_widget_show(notebook);
+				create_monitor_manager(current);
+				gtk_widget_show(monitor_manager);
 				gtk_widget_set_sensitive(refresh_button, TRUE);
 				break;
 			}
 			i++;
 		}
 		
-		gtk_table_attach(GTK_TABLE(table), notebook, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+		gtk_table_attach(GTK_TABLE(table), monitor_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+		gtk_table_attach(GTK_TABLE(table), profile_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
 		
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
@@ -179,26 +192,58 @@ static gboolean window_changed(GtkWidget *widget,
 }
 #endif
 
-void setStatus(char* message)
+/* Enable or disable widgets (monitor choice, close/refresh button) */
+static void widgets_set_sensitive(gboolean sensitive)
+{
+	gtk_widget_set_sensitive(choice_hbox, sensitive);
+	gtk_widget_set_sensitive(refresh_button, sensitive && (current_main_component == 0));
+	gtk_widget_set_sensitive(close_button, sensitive);
+	gtk_widget_set_sensitive(profile_manager_button, sensitive && (current_main_component == 0));
+	gtk_widget_set_sensitive(saveprofile_button, sensitive);
+	gtk_widget_set_sensitive(cancelprofile_button, sensitive);
+}
+
+void set_current_main_component(int component) {
+	g_assert((component == 0) || (component == 1));
+	
+	current_main_component = component;
+	
+	if (!monitor_manager)
+		return;
+	
+	if (current_main_component == 0) {
+		gtk_widget_show(monitor_manager);
+		gtk_widget_hide(profile_manager);
+		gtk_widget_set_sensitive(refresh_button, TRUE);
+		gtk_widget_set_sensitive(profile_manager_button, TRUE);
+	}
+	else if (current_main_component == 1) {
+		gtk_widget_hide(monitor_manager);
+		gtk_widget_show(profile_manager);
+		gtk_widget_set_sensitive(refresh_button, FALSE);
+		gtk_widget_set_sensitive(profile_manager_button, FALSE);
+	}
+}
+
+void set_status(char* message)
 {
 	if (!message[0]) {
 		gtk_widget_hide(messagelabel);
-		if (notebook) {
-			gtk_widget_show(notebook);
+		if (monitor_manager) {
+			set_current_main_component(current_main_component);
 		}
-		gtk_widget_set_sensitive(combo_box, TRUE);
-		gtk_widget_set_sensitive(refresh_button, TRUE);
-		gtk_widget_set_sensitive(close_button, TRUE);
+		
+		widgets_set_sensitive(TRUE);
+		
 		return;
 	}
 	
-	gtk_widget_set_sensitive(combo_box, FALSE);
-	gtk_widget_set_sensitive(refresh_button, FALSE);
-	gtk_widget_set_sensitive(close_button, FALSE);
+	widgets_set_sensitive(FALSE);
 	gtk_label_set_text(GTK_LABEL(messagelabel), message);
 	gtk_widget_show(messagelabel);
-	if (notebook) {
-		gtk_widget_hide(notebook);
+	if (monitor_manager) {
+		gtk_widget_hide(monitor_manager);
+		gtk_widget_hide(profile_manager);
 	}
 	
 	while (gtk_events_pending())
@@ -211,10 +256,49 @@ static gboolean heartbeat(gpointer data)
 	return TRUE;
 }
 
+/* Create a new button with an image and a label packed into it
+ * and return the button. */
+GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text)
+{
+	GtkWidget *box;
+	GtkWidget *label;
+	GtkWidget *image;
+	GtkWidget *button;
+
+	button = gtk_button_new();
+
+	/* Create box for image and label */
+	box = gtk_hbox_new(FALSE, 0);
+	gtk_container_set_border_width(GTK_CONTAINER (box), 1);
+
+	/* Now on to the image stuff */
+	image = gtk_image_new_from_stock(stockid, GTK_ICON_SIZE_BUTTON);
+
+	/* Create a label for the button */
+	label = gtk_label_new(label_text);
+
+	/* Pack the image and label into the box */
+	gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 3);
+	gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 3);
+
+	gtk_widget_show(image);
+	gtk_widget_show(label);
+	gtk_widget_show(box);
+
+	gtk_container_add (GTK_CONTAINER(button), box);
+	
+	g_object_set_data(G_OBJECT(button), "button_label", label);
+
+	return button;
+}
+
 int main( int   argc, char *argv[] )
 { 
 	int i, verbosity = 0;
 	int event_base, error_base;
+	
+	mon = NULL;
+	monitor_manager = NULL;
 	
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -271,35 +355,99 @@ int main( int   argc, char *argv[] )
 	
 	gtk_container_set_border_width (GTK_CONTAINER (window), 4);
 	
-	table = gtk_table_new(3, 1, FALSE);
+	table = gtk_table_new(5, 1, FALSE);
 	gtk_widget_show (table);
+	int crow = 0; /* Current row */
 	
+	/* Monitor choice combo box */
+	choice_hbox = gtk_hbox_new(FALSE, 10);
+	
+	GtkWidget* label = gtk_label_new(_("Current monitor: "));
+	gtk_widget_show(label);
+	gtk_box_pack_start(GTK_BOX(choice_hbox),label, 0, 0, 0);
+	
+	combo_box = gtk_combo_box_new_text();
+	
+	gtk_widget_show(combo_box);
+
+	gtk_box_pack_start(GTK_BOX(choice_hbox),combo_box, 1, 1, 0);
+
+	gtk_table_attach(GTK_TABLE(table), choice_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, 0, 5, 5);
+	crow++;
+	gtk_widget_show(choice_hbox);
+	
+	GtkWidget* hsep = gtk_hseparator_new();
+	gtk_widget_show (hsep);
+	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	crow++;
+	
+	/* Toolbar (profile...) */
+	profile_hbox = gtk_hbox_new(FALSE, 10);
+	
+	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"));
+	g_signal_connect(G_OBJECT(profile_manager_button), "clicked", G_CALLBACK(loadprofile_callback), NULL);
+
+	gtk_box_pack_start(GTK_BOX(profile_hbox), profile_manager_button, 0, 0, 0);
+	gtk_widget_show (profile_manager_button);
+	gtk_widget_set_sensitive(profile_manager_button, FALSE);
+	
+	saveprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Save profile"));
+	g_signal_connect(G_OBJECT(saveprofile_button), "clicked", G_CALLBACK(saveprofile_callback), NULL);
+
+	gtk_box_pack_start(GTK_BOX(profile_hbox), saveprofile_button, 0, 0, 0);
+	gtk_widget_set_sensitive(saveprofile_button, FALSE);
+	
+	cancelprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Cancel profile creation"));
+	g_signal_connect(G_OBJECT(cancelprofile_button), "clicked", G_CALLBACK(cancelprofile_callback), NULL);
+
+	gtk_box_pack_start(GTK_BOX(profile_hbox), cancelprofile_button, 0, 0, 0);
+	gtk_widget_set_sensitive(cancelprofile_button, FALSE);
+	
+	gtk_widget_show (profile_hbox);
+	gtk_table_attach(GTK_TABLE(table), profile_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	crow++;
+	
+	hsep = gtk_hseparator_new();
+	gtk_widget_show (hsep);
+	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	crow++;
+	
+	/* Status message label (used when loading or refreshing) */
+	messagelabel = gtk_label_new ("");
+	gtk_label_set_line_wrap(GTK_LABEL(messagelabel), TRUE);
+	gtk_table_attach(GTK_TABLE(table), messagelabel, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	mainrow = crow;
+	crow++;
+	
+	hsep = gtk_hseparator_new();
+	gtk_widget_show (hsep);
+	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	crow++;
+	
+	/* Refresh and close buttons */
 	GtkWidget* align = gtk_alignment_new(1,1,0,0);
-	GtkWidget* hbox = gtk_hbox_new(FALSE, 50);
+	bottom_hbox = gtk_hbox_new(FALSE, 50);
 	
 	refresh_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
 	g_signal_connect(G_OBJECT(refresh_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
 
-	gtk_box_pack_start(GTK_BOX(hbox),refresh_button,0,0,0);
+	gtk_box_pack_start(GTK_BOX(bottom_hbox),refresh_button,0,0,0);
 	gtk_widget_show (refresh_button);
 	gtk_widget_set_sensitive(refresh_button, FALSE);
 	
 	close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 
-	gtk_box_pack_start(GTK_BOX(hbox),close_button,0,0,0);
+	gtk_box_pack_start(GTK_BOX(bottom_hbox),close_button,0,0,0);
 	gtk_widget_show (close_button);
 	
-	gtk_container_add(GTK_CONTAINER(align),hbox);
-	gtk_widget_show (hbox);
+	gtk_container_add(GTK_CONTAINER(align),bottom_hbox);
+	gtk_widget_show (bottom_hbox);
 	gtk_widget_show (align);
-	gtk_table_attach(GTK_TABLE(table), align, 0, 1, 2, 3, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	gtk_table_attach(GTK_TABLE(table), align, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	crow++;
 	
 	gtk_container_add (GTK_CONTAINER (window), table);
-	
-	messagelabel = gtk_label_new ("");
-	gtk_label_set_line_wrap(GTK_LABEL(messagelabel), TRUE);
-	gtk_table_attach(GTK_TABLE(table), messagelabel, 0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
 	
 	gtk_widget_show (window);
 	
@@ -328,9 +476,7 @@ int main( int   argc, char *argv[] )
 	}
 	#endif
 	
-	combo_box = gtk_combo_box_new_text();
-	
-	setStatus(_(
+	set_status(_(
 	"Probing for available monitors..."
 		   ));
 	
@@ -347,9 +493,7 @@ int main( int   argc, char *argv[] )
 		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
 	}
 	
-	g_signal_connect (G_OBJECT (combo_box), "changed", G_CALLBACK (combo_change), NULL);
-	
-	gtk_table_attach(GTK_TABLE(table), combo_box, 0, 1, 0, 1, GTK_FILL_EXPAND, 0, 5, 5);
+	g_signal_connect (G_OBJECT(combo_box), "changed", G_CALLBACK (combo_change), NULL);
 	
 /*	moninfo = gtk_label_new ();
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
@@ -357,21 +501,21 @@ int main( int   argc, char *argv[] )
 	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);*/
 	
 	if (monlist) {
-		gtk_widget_show (combo_box);
+		widgets_set_sensitive(TRUE);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
 	}
 	else {
-		setStatus(_(
+		widgets_set_sensitive(FALSE);
+		gtk_widget_set_sensitive(close_button, TRUE);
+		set_status(_(
 			"No monitor supporting DDC/CI available.\n\n"
 			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
 			   ));
 	}
 	
-//	gtk_widget_show (moninfo);
-	
 	gtk_main();
 	
-	deleteNotebook();
+	delete_monitor_manager();
 	
 	ddcci_free_list(monlist);
 	

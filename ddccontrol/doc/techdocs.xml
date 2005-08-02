@@ -1,6 +1,6 @@
 <appendix id="techdocs">
 <title>Documents for developers</title>
-<sect1 id="xmlstruct">
+<sect1 id="dbstruct">
 <title>Monitor database structure</title>
 <para>The monitor database is written in XML, it can be found in the
 <filename>db</filename> directory of <filename>ddccontrol-db</filename>
@@ -51,7 +51,7 @@ database format is used (must be set to 2).
 <sgmltag class="attribute">name</sgmltag>: full English control name.
 </listitem>
 <listitem>
-<sgmltag class="attribute">address</sgmltag>: DDC address (optional).
+<sgmltag class="attribute">address</sgmltag>: DDC/CI address (optional).
 </listitem>
 <listitem>
 <sgmltag class="attribute">type</sgmltag>: one of these values:
@@ -97,14 +97,14 @@ the command associated with the control (optional). Possible values:
 needed if there is only one value for command controls).
 </listitem>
 <listitem>
-<sgmltag class="attribute">value</sgmltag>: DDC control value (optional).
+<sgmltag class="attribute">value</sgmltag>: DDC/CI control value (optional).
 </listitem>
 </itemizedlist></para>
 
 <para>File format:</para>
 <screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
-<options date="%date%" dbversion="1">
+<options date="%date%" dbversion="2">
   <group name="%groupname%">
     <subgroup name="%subgroupname%">
       <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
@@ -210,4 +210,43 @@ define it as shown:</para>
 ]]></screen>
 </sect2>
 </sect1>
+
+<sect1 id="profilestruct">
+<title>Profile file structure</title>
+<para>Profile files are used to save the value of some controls.</para>
+<para><sgmltag class="element">profile</sgmltag> attributes:
+	<itemizedlist mark='bullet'>
+		<listitem>
+			<sgmltag class="attribute">pnpid</sgmltag>: indicates the PNP id of the
+			monitor that this profile applies to.
+		</listitem>
+		<listitem>
+			<sgmltag class="attribute">name</sgmltag>: profile name.
+		</listitem>
+		<listitem>
+			<sgmltag class="attribute">version</sgmltag>: indicates which version of
+			profile format is used (must be set to 1).
+		</listitem>
+	</itemizedlist>
+</para>
+<para><sgmltag class="element">control</sgmltag> attributes:
+	<itemizedlist mark='bullet'>
+		<listitem>
+			<sgmltag class="attribute">address</sgmltag>: DDC/CI address of the control.
+		</listitem>
+		<listitem>
+			<sgmltag class="attribute">value</sgmltag>: DDC/CI control value.
+		</listitem>
+	</itemizedlist>
+</para>
+<para>File format:</para>
+<screen format='linespecific'>
+<![CDATA[<?xml version="1.0"?>
+<profile pnpid="%pnp_id%" name="%profile_name%" version="1">
+  <control address="%hex_address%" value="%control_value%"/>
+  <control...>
+</profile>
+]]></screen>
+</sect1>
+
 </appendix>

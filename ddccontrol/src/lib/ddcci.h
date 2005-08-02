@@ -1,7 +1,7 @@
 /*
     ddc/ci interface functions header
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
-    Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2005 Nicolas Boichat (nicolas@boichat.ch)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
 
 #include "monitor_db.h"
 
+struct profile;
+
 struct monitor {
 	int fd;
 	unsigned int addr;
@@ -40,6 +42,9 @@ struct monitor {
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
 	struct monitor_db* db;
+	
+	struct profile* profiles; /* profiles available for this monitor. Filled by get_all_profiles. */
+	
 	enum {
 		dev
 #ifdef HAVE_DDCPCI
@@ -85,5 +90,20 @@ int ddcci_init(char* usedatadir);
 void ddcci_release();
 
 void ddcpci_send_heartbeat();
+
+/* Macros */
+#define DDCCI_RETURN_IF_RUN(cond, value, message, node, run) \
+	if (cond) { \
+		if (node) \
+			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, \
+				((xmlNodePtr)node)->doc->name, XML_GET_LINE(node)); \
+		else \
+			fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
+		run \
+		return value; \
+	}
+
+#define DDCCI_RETURN_IF(cond, value, message, node) \
+	DDCCI_RETURN_IF_RUN(cond, value, message, node, {})
 
 #endif //DDCCI_H

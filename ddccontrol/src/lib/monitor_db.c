@@ -1,6 +1,6 @@
 /*
     ddc/ci interface functions
-    Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2005 Nicolas Boichat (nicolas@boichat.ch)
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
 
     This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 #include <libintl.h>
 
 #include "monitor_db.h"
+#include "ddcci.h"
 
 #define DBPACKAGE "ddccontrol-db"
 
@@ -40,17 +41,6 @@
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
-
-#define DDCCI_RETURN_IF(cond, value, message, node) \
-	if (cond) { \
-		if (node) \
-			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, \
-				((xmlNodePtr)node)->doc->name, XML_GET_LINE(node)); \
-		else \
-			fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
-		return value; \
-	}
-
 
 char* datadir = NULL;
 

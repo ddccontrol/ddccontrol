@@ -51,7 +51,8 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_gddccontrol_OBJECTS = main.$(OBJEXT) notebook.$(OBJEXT)
+am_gddccontrol_OBJECTS = main.$(OBJEXT) notebook.$(OBJEXT) \
+	gprofile.$(OBJEXT)
 gddccontrol_OBJECTS = $(am_gddccontrol_OBJECTS)
 gddccontrol_LDADD = $(LDADD)
 gddccontrol_DEPENDENCIES = ../lib/libddcci.a
@@ -192,7 +193,7 @@ target_alias = @target_alias@
 localedir = $(datadir)/locale
 INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 LDADD = ../lib/libddcci.a
-gddccontrol_SOURCES = main.c notebook.c notebook.h
+gddccontrol_SOURCES = main.c notebook.c notebook.h gprofile.c
 gddccontrol_LDFLAGS = $(GNOME_LDFLAGS)
 AM_CFLAGS = $(GNOME_CFLAGS)
 all: all-am
@@ -261,6 +262,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gprofile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notebook.Po@am__quote@
 

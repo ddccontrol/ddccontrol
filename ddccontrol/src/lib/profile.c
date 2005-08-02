@@ -1,0 +1,392 @@
+/*
+    Monitor profile functions.
+    Copyright(c) 2005 Nicolas Boichat (nicolas@boichat.ch)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+/*
+ *  Profiles are stored in HOME_DIR/.ddccontrol
+ */
+
+#include <errno.h>
+#include <stdio.h>
+
+#include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
+#include <libxml/encoding.h>
+#include <libxml/xmlwriter.h>
+
+#include <libintl.h>
+
+#include "profile.h"
+
+/* Localize, and alloc in libxml */
+#define _D(text) xmlCharStrdup(dgettext(DBPACKAGE, text))
+#include <libintl.h>
+#define _(String) gettext (String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+
+#define PROFILE_RETURN_IF_RUN(cond, value, message, run) \
+	if (cond) { \
+		fprintf(stderr, "Error: %s @%s:%d\n", message, __FILE__, __LINE__); \
+		run \
+		return value; \
+	}
+
+#define PROFILE_RETURN_IF(cond, value, message) \
+	PROFILE_RETURN_IF_RUN(cond, value, message, {})
+
+#define RETRYS 3 // number of read retrys
+
+struct profile* create_profile(struct monitor* mon, char* address, int size, char* name)
+{
+	int retry, i;
+	
+	struct profile* profile = malloc(sizeof(struct profile));
+	memset(profile, 0, sizeof(struct profile));
+	
+	profile->size = size;
+	
+	for (i = 0; i < size; i++) {
+		profile->address[i] = address[i];
+		for(retry = RETRYS; retry; retry--)
+		{
+			if (ddcci_readctrl(mon, address[i], &profile->value[i], NULL) >= 0)
+			{
+				break;
+			}
+		}
+		PROFILE_RETURN_IF_RUN(!retry, 0, _("Cannot read control value\n"), {free(profile);})
+	}
+	
+	profile->pnpid = xmlCharStrdup(mon->pnpid);
+	/* FIXME: Should we convert the name to UTF-8? */
+	profile->name = xmlCharStrdup(name);
+	
+	char date[32];
+	int len, ret;
+	char* home;
+	int trailing;
+	
+	time_t tm = time(NULL);
+	len      = strftime(&date[0], 32, "%Y%m%d-%H%M%S", localtime(&tm));
+	home     = getenv("HOME");
+	trailing = (home[strlen(home)-1] == '/');
+	
+	len += strlen(home) + 32;
+	
+	profile->filename = malloc(len);
+	ret = snprintf(profile->filename, len, "%s%s.ddccontrol/profiles/%s.xml", home, trailing ? "" : "/", date);
+	PROFILE_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free_profile(profile);})
+	
+	return profile;
+}
+
+int apply_profile(struct profile* profile, struct monitor* mon) {
+	int retry, i;
+	
+	for (i = 0; i < profile->size; i++) {
+		for(retry = RETRYS; retry; retry--)
+		{
+			if (ddcci_writectrl(mon, profile->address[i], profile->value[i], -1) >= 0)
+			{
+				break;
+			}
+		}
+		PROFILE_RETURN_IF(!retry, 0, _("Cannot write control value\n"))
+	}
+	
+	return 1;
+}
+
+/* Get all profiles available for a given monitor */
+int get_all_profiles(struct monitor* mon) {
+	int len, ret, pos;
+	char* home;
+	char* dirname;
+	char* filename;
+	int trailing;
+	DIR* dir;
+	struct dirent* entry;
+	struct stat buf;
+	
+	struct profile** next = &mon->profiles;
+	struct profile* profile;
+	
+	home     = getenv("HOME");
+	trailing = (home[strlen(home)-1] == '/');
+	
+	len = strlen(home) + 64;
+	
+	dirname = malloc(len);
+	ret = snprintf(dirname, len, "%s%s.ddccontrol/profiles/", home, trailing ? "" : "/");
+	PROFILE_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free(dirname);})
+	
+	dir = opendir(dirname);
+	
+	if (!dir) {
+		perror(_("Error while opening ddccontrol home directory."));
+		return 0;
+	}
+	
+	filename = malloc(len);
+	strcpy(filename, dirname);
+	pos = strlen(filename);
+	while ((entry = readdir(dir))) {
+		strcpy(filename+pos, entry->d_name);
+		if (!stat(filename, &buf)) {
+			if (S_ISREG(buf.st_mode)) { /* Is a regular file ? */
+				profile = load_profile(filename);
+				if (!xmlStrcmp(profile->pnpid, BAD_CAST mon->pnpid)) {
+					*next = profile;
+					next = &profile->next;
+				}
+				else {
+					free_profile(profile);
+				}
+			}
+		}
+	}
+	
+	if (errno) {
+		perror(_("Error while reading ddccontrol home directory."));
+		free(filename);
+		closedir(dir);
+		return 0;
+	}
+	
+	closedir(dir);
+	free(dirname);
+	free(filename);
+	
+	return 1;
+}
+
+struct profile* load_profile(char* filename) {
+	xmlNodePtr cur, root;
+	xmlDocPtr profile_doc;
+	
+	xmlChar *tmp;
+	char *endptr;
+	int itmp;
+	
+	struct profile* profile = malloc(sizeof(struct profile));
+	memset(profile, 0, sizeof(struct profile));
+	
+	profile_doc = xmlParseFile(filename);
+	if (profile_doc == NULL) {
+		fprintf(stderr, _("Document not parsed successfully.\n"));
+		return 0;
+	}
+	
+	root = xmlDocGetRootElement(profile_doc);
+	
+	if (root == NULL) {
+		fprintf(stderr,  _("empty profile file\n"));
+		xmlFreeDoc(profile_doc);
+		return 0;
+	}
+	
+	if (xmlStrcmp(root->name, (const xmlChar *) "profile")) {
+		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
+		xmlFreeDoc(profile_doc);
+		return 0;
+	}
+	
+	profile->pnpid = xmlGetProp(root, "pnpid");
+	DDCCI_RETURN_IF_RUN(profile->pnpid == NULL, 0, _("Can't find pnpid property."), root, {free(profile); xmlFreeDoc(profile_doc);});
+	
+	profile->name = xmlGetProp(root, "name");
+	DDCCI_RETURN_IF_RUN(profile->name == NULL, 0, _("Can't find name property."), root, {free(profile); xmlFreeDoc(profile_doc);});
+	
+	tmp = xmlGetProp(root, "version");
+	DDCCI_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
+	itmp = strtol(tmp, &endptr, 0);
+	DDCCI_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert version to int."), root, {free(profile); xmlFreeDoc(profile_doc);});
+	DDCCI_RETURN_IF_RUN(itmp != PROFILEVERSION, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
+	if (itmp > PROFILEVERSION) {
+		fprintf(stderr,  _("profile dbversion (%d) is not supported (should be %d).\n"), itmp, PROFILEVERSION);
+		xmlFreeDoc(profile_doc);
+		return 0;
+	}
+	xmlFree(tmp);
+	
+	cur = root->xmlChildrenNode;
+	while (1)
+	{
+		if (cur == NULL) {
+			break;
+		}
+		if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
+			tmp = xmlGetProp(cur, "address");
+			DDCCI_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find address property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
+			profile->address[profile->size] = strtol(tmp, &endptr, 0);
+			DDCCI_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert address to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
+			xmlFree(tmp);
+			
+			tmp = xmlGetProp(cur, "value");
+			DDCCI_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find value property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
+			profile->value[profile->size] = strtol(tmp, &endptr, 0);
+			DDCCI_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert value to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
+			xmlFree(tmp);
+			
+			profile->size++;
+		}
+		cur = cur->next;
+	}
+	
+	return profile;
+}
+
+/* Create $HOME/.ddccontrol if necessary */
+int create_profiledir() {
+	int len, ret;
+	char* home;
+	char* filename;
+	int trailing;
+	struct stat buf;
+	
+	home     = getenv("HOME");
+	trailing = (home[strlen(home)-1] == '/');
+	
+	len = strlen(home) + 32;
+	
+	filename = malloc(len);
+	ret = snprintf(filename, len, "%s%s.ddccontrol", home, trailing ? "" : "/");
+	PROFILE_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free(filename);})
+	
+	if (stat(filename, &buf) < 0) {
+		if (errno != ENOENT) {
+			perror(_("Error while getting informations about ddccontrol home directory."));
+			return 0;
+		}
+		
+		if (mkdir(filename, 0750) < 0) {
+			perror(_("Error while creating ddccontrol home directory."));
+			return 0;
+		}
+		
+		if (stat(filename, &buf) < 0) {
+			perror(_("Error while getting informations about ddccontrol home directory after creating it."));
+			return 0;
+		}
+	}
+	
+	if (!S_ISDIR(buf.st_mode)) {
+		errno = ENOTDIR;
+		perror(_("Error: '.ddccontrol' in your home directory is not a directory."));
+		return 0;
+	}
+	
+	strcat(filename, "/profiles");
+	
+	if (stat(filename, &buf) < 0) {
+		if (errno != ENOENT) {
+			perror(_("Error while getting informations about ddccontrol profile directory."));
+			return 0;
+		}
+		
+		if (mkdir(filename, 0750) < 0) {
+			perror(_("Error while creating ddccontrol profile directory."));
+			return 0;
+		}
+		
+		if (stat(filename, &buf) < 0) {
+			perror(_("Error while getting informations about ddccontrol profile directory after creating it."));
+			return 0;
+		}
+	}
+	
+	if (!S_ISDIR(buf.st_mode)) {
+		errno = ENOTDIR;
+		perror(_("Error: '.ddccontrol/profiles' in your home directory is not a directory."));
+		return 0;
+	}
+	
+	free(filename);
+	
+	return 1;
+}
+
+int save_profile(struct profile* profile) {
+	int rc;
+	xmlTextWriterPtr writer;
+	int i;
+
+	create_profiledir();
+
+	writer = xmlNewTextWriterFilename(profile->filename, 0);
+	PROFILE_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
+
+	xmlTextWriterSetIndent(writer, 1);
+
+	rc = xmlTextWriterStartDocument(writer, NULL, NULL, NULL);
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartDocument\n", {xmlFreeTextWriter(writer);})
+
+	rc = xmlTextWriterStartElement(writer, BAD_CAST "profile");
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement profile\n", {xmlFreeTextWriter(writer);})
+
+	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "name", profile->name);
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute name\n", {xmlFreeTextWriter(writer);})
+
+	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "pnpid", profile->pnpid);
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute pnpid\n", {xmlFreeTextWriter(writer);})
+
+	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "version", BAD_CAST "1");
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute version\n", {xmlFreeTextWriter(writer);})
+
+	/*rc = xmlTextWriterWriteComment(writer, BAD_CAST "My comment");
+	PROFILE_RETURN_IF(rc < 0, 0, "xmlTextWriterWriteComment\n")*/
+
+	for (i = 0; i < profile->size; i++) {
+		rc = xmlTextWriterStartElement(writer, BAD_CAST "control");
+		PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement control\n", {xmlFreeTextWriter(writer);})
+
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "address", BAD_CAST "%#x", profile->address[i]);
+		PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute version\n", {xmlFreeTextWriter(writer);})
+
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "value", BAD_CAST "%#x", profile->value[i]);
+		PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute version\n", {xmlFreeTextWriter(writer);})
+
+		rc = xmlTextWriterEndElement(writer);
+		PROFILE_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterEndElement\n", {xmlFreeTextWriter(writer);})
+	}
+
+	rc = xmlTextWriterEndDocument(writer);
+	PROFILE_RETURN_IF_RUN(rc < 0, 0, "testXmlwriterFilename\n", {xmlFreeTextWriter(writer);})
+
+	xmlFreeTextWriter(writer);
+	
+	return 1;
+}
+
+void free_profile(struct profile* profile) {
+	if (profile->next)
+		free_profile(profile->next);
+	
+	free(profile->filename);
+	xmlFree(profile->pnpid);
+	xmlFree(profile->name);
+	free(profile);
+}
