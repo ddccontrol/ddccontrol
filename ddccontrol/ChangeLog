@@ -1,3 +1,18 @@
+2005-08-04 14:49  nboichat
+
+	* src/: gddccontrol/gprofile.c, gddccontrol/main.c,
+	  gddccontrol/notebook.c, gddccontrol/notebook.h, lib/profile.c,
+	  lib/profile.h: Improve profile manager.
+
+2005-08-02 16:04  nboichat
+
+	* doc/techdocs.xml, src/gddccontrol/Makefile.am,
+	  src/gddccontrol/Makefile.in, src/gddccontrol/gprofile.c,
+	  src/gddccontrol/main.c, src/gddccontrol/notebook.c,
+	  src/gddccontrol/notebook.h, src/lib/Makefile.am,
+	  src/lib/Makefile.in, src/lib/ddcci.h, src/lib/monitor_db.c,
+	  src/lib/profile.c, src/lib/profile.h: Initial profile support.
+
 2005-07-28 23:52  nboichat
 
 	* configure, configure.ac, doc/main.xml, doc/techdocs.xml: Update
