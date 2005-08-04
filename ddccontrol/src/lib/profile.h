@@ -38,14 +38,18 @@ struct profile {
 	struct profile* next; /* Next profile in the list (used by get_all_profiles) */
 };
 
-struct profile* create_profile(struct monitor* mon, char* address, int size, char* name);
-int apply_profile(struct profile* profile, struct monitor* mon);
+struct profile* ddcci_create_profile(struct monitor* mon, const char* address, int size);
+int ddcci_apply_profile(struct profile* profile, struct monitor* mon);
 
-int get_all_profiles(struct monitor* mon);
+void ddcci_set_profile_name(struct profile* profile, const char* name);
 
-struct profile* load_profile(char* filename);
-int save_profile(struct profile* profile);
+int ddcci_get_all_profiles(struct monitor* mon);
 
-void free_profile(struct profile* profile);
+struct profile* ddcci_load_profile(const char* filename);
+int ddcci_save_profile(struct profile* profile, struct monitor* monitor);
+
+void ddcci_delete_profile(struct profile* profile, struct monitor* monitor);
+
+void ddcci_free_profile(struct profile* profile);
 
 #endif //PROFILE_H

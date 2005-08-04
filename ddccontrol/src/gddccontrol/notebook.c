@@ -73,7 +73,8 @@ static void get_value_and_max(struct control_db *control,unsigned short *current
 	}
 	if(!retry)
 	{
-		GtkWidget* dialog = gtk_message_dialog_new (NULL,
+		GtkWidget* dialog = gtk_message_dialog_new(
+				GTK_WINDOW(main_app_window),
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_CLOSE,
@@ -595,7 +596,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	set_status(_("Loading profiles..."));
 	
-	get_all_profiles(mon);
+	ddcci_get_all_profiles(mon);
 	
 	create_profile_manager();
 	

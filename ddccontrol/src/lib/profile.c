@@ -59,7 +59,7 @@
 
 #define RETRYS 3 // number of read retrys
 
-struct profile* create_profile(struct monitor* mon, char* address, int size, char* name)
+struct profile* ddcci_create_profile(struct monitor* mon, const char* address, int size)
 {
 	int retry, i;
 	
@@ -81,8 +81,6 @@ struct profile* create_profile(struct monitor* mon, char* address, int size, cha
 	}
 	
 	profile->pnpid = xmlCharStrdup(mon->pnpid);
-	/* FIXME: Should we convert the name to UTF-8? */
-	profile->name = xmlCharStrdup(name);
 	
 	char date[32];
 	int len, ret;
@@ -98,12 +96,14 @@ struct profile* create_profile(struct monitor* mon, char* address, int size, cha
 	
 	profile->filename = malloc(len);
 	ret = snprintf(profile->filename, len, "%s%s.ddccontrol/profiles/%s.xml", home, trailing ? "" : "/", date);
-	PROFILE_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free_profile(profile);})
+	PROFILE_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {ddcci_free_profile(profile);})
+	
+	profile->name = xmlCharStrdup(date);
 	
 	return profile;
 }
 
-int apply_profile(struct profile* profile, struct monitor* mon) {
+int ddcci_apply_profile(struct profile* profile, struct monitor* mon) {
 	int retry, i;
 	
 	for (i = 0; i < profile->size; i++) {
@@ -120,8 +120,13 @@ int apply_profile(struct profile* profile, struct monitor* mon) {
 	return 1;
 }
 
+void ddcci_set_profile_name(struct profile* profile, const char* name) {
+	/* FIXME: What happens if the profile name contains chars like '"<>'? */
+	profile->name = xmlCharStrdup(name);
+}
+
 /* Get all profiles available for a given monitor */
-int get_all_profiles(struct monitor* mon) {
+int ddcci_get_all_profiles(struct monitor* mon) {
 	int len, ret, pos;
 	char* home;
 	char* dirname;
@@ -157,13 +162,13 @@ int get_all_profiles(struct monitor* mon) {
 		strcpy(filename+pos, entry->d_name);
 		if (!stat(filename, &buf)) {
 			if (S_ISREG(buf.st_mode)) { /* Is a regular file ? */
-				profile = load_profile(filename);
+				profile = ddcci_load_profile(filename);
 				if (!xmlStrcmp(profile->pnpid, BAD_CAST mon->pnpid)) {
 					*next = profile;
 					next = &profile->next;
 				}
 				else {
-					free_profile(profile);
+					ddcci_free_profile(profile);
 				}
 			}
 		}
@@ -183,7 +188,7 @@ int get_all_profiles(struct monitor* mon) {
 	return 1;
 }
 
-struct profile* load_profile(char* filename) {
+struct profile* ddcci_load_profile(const char* filename) {
 	xmlNodePtr cur, root;
 	xmlDocPtr profile_doc;
 	
@@ -256,11 +261,13 @@ struct profile* load_profile(char* filename) {
 		cur = cur->next;
 	}
 	
+	profile->filename = strdup(filename);
+	
 	return profile;
 }
 
 /* Create $HOME/.ddccontrol if necessary */
-int create_profiledir() {
+static int ddcci_create_profiledir() {
 	int len, ret;
 	char* home;
 	char* filename;
@@ -329,12 +336,13 @@ int create_profiledir() {
 	return 1;
 }
 
-int save_profile(struct profile* profile) {
+/* Save profile and add it to the profiles list of the given monitor if necessary */
+int ddcci_save_profile(struct profile* profile, struct monitor* monitor) {
 	int rc;
 	xmlTextWriterPtr writer;
 	int i;
 
-	create_profiledir();
+	ddcci_create_profiledir();
 
 	writer = xmlNewTextWriterFilename(profile->filename, 0);
 	PROFILE_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
@@ -378,12 +386,51 @@ int save_profile(struct profile* profile) {
 
 	xmlFreeTextWriter(writer);
 	
+	/* Update database */
+	struct profile** profileptr = &monitor->profiles;
+	
+	while (*profileptr) {
+		if (*profileptr == profile) /* We are already in the database... */
+			return 1;
+		profileptr = &((*profileptr)->next);
+	}
+	
+	*profileptr = profile;
+	
 	return 1;
 }
 
-void free_profile(struct profile* profile) {
+/* Deletes the profile file, and remove it from the monitor database. */
+void ddcci_delete_profile(struct profile* profile, struct monitor* monitor) {
+	/* Delete the file */
+	
+	if (unlink(profile->filename) < 0) {
+		perror(_("ddcci_delete_profile: Error, cannot delete profile.\n"));
+		return;
+	}
+	
+	/* Delete the database entry */
+	struct profile** profileptr = &monitor->profiles;
+	
+	while (*profileptr) {
+		if (*profileptr == profile) { /* We found the profile to delete. */
+			*profileptr = profile->next;
+			
+			ddcci_free_profile(profile);
+			
+			return;
+		}
+		profileptr = &((*profileptr)->next);
+	}
+	
+	*profileptr = profile;
+	
+	fprintf(stderr, "ddcci_delete_profile: Error, could not find the profile to delete.\n");
+}
+
+void ddcci_free_profile(struct profile* profile) {
 	if (profile->next)
-		free_profile(profile->next);
+		ddcci_free_profile(profile->next);
 	
 	free(profile->filename);
 	xmlFree(profile->pnpid);

@@ -33,6 +33,8 @@
 /* globals */
 struct monitor* mon;
 
+GtkWidget* main_app_window;
+
 GtkWidget* monitor_manager;
 GtkWidget* profile_manager;
 
@@ -52,6 +54,8 @@ void create_profile_manager();
 void saveprofile_callback(GtkWidget *widget, gpointer data);
 void cancelprofile_callback(GtkWidget *widget, gpointer data);
 
+void show_profile_information(struct profile* profile, gboolean new_profile);
+
 /* main.c */
 
 /* Set what is now displayed at the center of the main window:
@@ -63,7 +67,7 @@ void set_current_main_component(int component);
 /* Set status message. */
 void set_status(char* message);
 
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text);
+GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
 
 GtkWidget* profile_manager_button;
 GtkWidget* saveprofile_button;

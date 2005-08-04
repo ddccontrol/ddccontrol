@@ -34,8 +34,6 @@
 
 #include "notebook.h"
 
-GtkWidget *window;
-
 GtkWidget* table;
 
 GtkWidget *combo_box;
@@ -49,6 +47,8 @@ GtkWidget* profile_hbox = NULL;
 GtkWidget* bottom_hbox = NULL;
 
 struct monitorlist* monlist;
+
+GtkTooltips *tooltips;
 
 int mainrow = 0; /* Main center row in the table widget */
 
@@ -258,37 +258,44 @@ static gboolean heartbeat(gpointer data)
 
 /* Create a new button with an image and a label packed into it
  * and return the button. */
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text)
+GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip)
 {
 	GtkWidget *box;
-	GtkWidget *label;
+	GtkWidget *label = NULL;
 	GtkWidget *image;
 	GtkWidget *button;
-
+	
 	button = gtk_button_new();
-
+	
 	/* Create box for image and label */
 	box = gtk_hbox_new(FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER (box), 1);
-
+	
 	/* Now on to the image stuff */
 	image = gtk_image_new_from_stock(stockid, GTK_ICON_SIZE_BUTTON);
-
-	/* Create a label for the button */
-	label = gtk_label_new(label_text);
-
-	/* Pack the image and label into the box */
 	gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 3);
-	gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 3);
-
 	gtk_widget_show(image);
-	gtk_widget_show(label);
-	gtk_widget_show(box);
 
+	if (label_text) {
+		/* Create a label for the button */
+		label = gtk_label_new(label_text);
+		
+		/* Pack the image and label into the box */
+		gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 3);
+		
+		gtk_widget_show(label);
+	}
+	
+	gtk_widget_show(box);
+	
 	gtk_container_add (GTK_CONTAINER(button), box);
 	
 	g_object_set_data(G_OBJECT(button), "button_label", label);
-
+	
+	if (tool_tip) {
+		gtk_tooltips_set_tip(GTK_TOOLTIPS(tooltips), button, tool_tip, NULL);
+	}
+	
 	return button;
 }
 
@@ -323,9 +330,12 @@ int main( int   argc, char *argv[] )
 	g_thread_init(NULL);
 	combo_change_mutex = g_mutex_new();
 	
+	tooltips = gtk_tooltips_new();
+	
 	if (!ddcci_init(NULL)) {
 		printf(_("Unable to initialize ddcci library.\n"));
-		GtkWidget* dialog = gtk_message_dialog_new (NULL,
+		GtkWidget* dialog = gtk_message_dialog_new(
+				GTK_WINDOW(main_app_window),
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_CLOSE,
@@ -337,23 +347,23 @@ int main( int   argc, char *argv[] )
 	
 	g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
 	
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window),_("Monitor settings"));
+	main_app_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(main_app_window),_("Monitor settings"));
 	
-	gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
+	gtk_window_set_default_size(GTK_WINDOW(main_app_window), 500, 500);
 	
-	g_signal_connect (G_OBJECT (window), "delete_event",
+	g_signal_connect (G_OBJECT (main_app_window), "delete_event",
 				G_CALLBACK (delete_event), NULL);
 	
-	g_signal_connect (G_OBJECT (window), "destroy",
+	g_signal_connect (G_OBJECT (main_app_window), "destroy",
 				G_CALLBACK (destroy), NULL);
 
 	#ifdef HAVE_XINERAMA
-	g_signal_connect (G_OBJECT (window), "configure-event",
+	g_signal_connect (G_OBJECT (main_app_window), "configure-event",
 				G_CALLBACK (window_changed), NULL);
 	#endif
 	
-	gtk_container_set_border_width (GTK_CONTAINER (window), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (main_app_window), 4);
 	
 	table = gtk_table_new(5, 1, FALSE);
 	gtk_widget_show (table);
@@ -384,20 +394,20 @@ int main( int   argc, char *argv[] )
 	/* Toolbar (profile...) */
 	profile_hbox = gtk_hbox_new(FALSE, 10);
 	
-	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"));
+	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"), NULL);
 	g_signal_connect(G_OBJECT(profile_manager_button), "clicked", G_CALLBACK(loadprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), profile_manager_button, 0, 0, 0);
 	gtk_widget_show (profile_manager_button);
 	gtk_widget_set_sensitive(profile_manager_button, FALSE);
 	
-	saveprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Save profile"));
+	saveprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Save profile"), NULL);
 	g_signal_connect(G_OBJECT(saveprofile_button), "clicked", G_CALLBACK(saveprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), saveprofile_button, 0, 0, 0);
 	gtk_widget_set_sensitive(saveprofile_button, FALSE);
 	
-	cancelprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Cancel profile creation"));
+	cancelprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Cancel profile creation"), NULL);
 	g_signal_connect(G_OBJECT(cancelprofile_button), "clicked", G_CALLBACK(cancelprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), cancelprofile_button, 0, 0, 0);
@@ -447,9 +457,9 @@ int main( int   argc, char *argv[] )
 	gtk_table_attach(GTK_TABLE(table), align, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
 	crow++;
 	
-	gtk_container_add (GTK_CONTAINER (window), table);
+	gtk_container_add (GTK_CONTAINER(main_app_window), table);
 	
-	gtk_widget_show (window);
+	gtk_widget_show(main_app_window);
 	
 	#ifdef HAVE_XINERAMA
 	if (XineramaQueryExtension(GDK_DISPLAY(), &event_base, &error_base)) {
