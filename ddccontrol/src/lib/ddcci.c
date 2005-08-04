@@ -34,6 +34,8 @@
 
 #include "ddcci.h"
 
+#include "profile.h"
+
 /* ddc/ci defines */
 #define DEFAULT_DDCCI_ADDR	0x37	/* ddc/ci logic sits at 0x37 */
 #define DEFAULT_EDID_ADDR	0x50	/* edid sits at 0x50 */
@@ -800,6 +802,10 @@ int ddcci_close(struct monitor* mon)
 				return -1;
 			}
 		}
+	}
+	
+	if (mon->profiles) {
+		ddcci_free_profile(mon->profiles);
 	}
 	
 	if ((mon->fd > -1) && (close(mon->fd) < 0)) {

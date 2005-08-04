@@ -48,6 +48,8 @@ int get_profile_checked_controls(char* controls);
 
 void refresh_all_controls(GtkWidget *widget, gpointer nval);
 
+short get_control_max(struct control_db *control);
+
 /* gprofile.c */
 void create_profile_manager();
 

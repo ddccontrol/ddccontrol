@@ -57,7 +57,7 @@ int refreshing = 0;
 // Helpers
 ////////////////////
 	
-static void get_value_and_max(struct control_db *control,unsigned short *currentValue, unsigned short *currentMaximum)
+static void get_value_and_max(struct control_db *control, unsigned short *currentValue, unsigned short *currentMaximum)
 {
 	int retry = 1;
 	if (control->type != command)
@@ -82,6 +82,20 @@ static void get_value_and_max(struct control_db *control,unsigned short *current
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 	}
+}
+
+short get_control_max(struct control_db *control) {
+	GSList* list = all_controls;
+	
+	while (list) {
+		struct control_db *control_db = (struct control_db*)g_object_get_data(G_OBJECT(list->data), "ddc_control");
+		if (control == control_db) {
+			return (short)(long)g_object_get_data(G_OBJECT(list->data), "ddc_max");
+		}
+		list = g_slist_next(list);
+	}
+	
+	return 0;
 }
 
 // Callbacks
@@ -158,7 +172,6 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 	}
 }
 
-	
 static void range_callback(GtkWidget *widget, gpointer data)
 {
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddc_control");

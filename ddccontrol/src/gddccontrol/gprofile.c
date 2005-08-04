@@ -20,6 +20,8 @@
 
 #include "notebook.h"
 
+#include <string.h>
+
 /* Protos */
 void refresh_profile_manager();
 
@@ -65,8 +67,6 @@ void saveprofile_callback(GtkWidget *widget, gpointer data)
 	show_profile_information(profile, TRUE);
 		
 	set_status("");
-	
-	ddcci_free_profile(profile);
 }
 
 /* Callbacks */
@@ -255,6 +255,146 @@ void refresh_profile_manager()
 
 /* Profile information dialog */
 
+enum
+{
+	TITLE_COL,
+	VALUE_COL,
+	ADDRESS_COL,
+	RAW_VALUE_COL,
+	N_COLS,
+};
+
+static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
+{
+	gchar* tmp;
+	gchar* tmp2;
+	gchar* tmp3;
+	short max;
+	GValue val;
+	
+	GtkTreeStore *store = gtk_tree_store_new(N_COLS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	
+	GtkWidget *tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+	g_object_unref(G_OBJECT(store));
+	
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	renderer = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes(_("Control name"),renderer,"text",TITLE_COL,NULL);
+	gtk_tree_view_column_set_expand(column, TRUE);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
+	
+	renderer = gtk_cell_renderer_text_new();
+	
+	memset(&val, 0, sizeof(val));
+	g_value_init (&val, G_TYPE_FLOAT);
+	g_value_set_float (&val, 1.0);	
+	g_object_set_property(G_OBJECT(renderer), "xalign", &val);
+	
+	column = gtk_tree_view_column_new_with_attributes(_("Value"),renderer,"text",VALUE_COL,NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
+	
+	column = gtk_tree_view_column_new_with_attributes(_("Address"),renderer,"text",ADDRESS_COL,NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
+	
+	column = gtk_tree_view_column_new_with_attributes(_("Raw value"),renderer,"text",RAW_VALUE_COL,NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
+	
+	GtkTreeIter top_iter;
+	GtkTreeIter sub_iter;
+	GtkTreeIter con_iter;
+	
+	struct group_db* group;
+	struct subgroup_db* subgroup;
+	struct control_db* control;
+	struct value_db* value_db;
+	
+	gboolean group_created, subgroup_created;
+	
+	int i;
+	
+	for (group = mon->db->group_list; group != NULL; group = group->next)
+	{
+		group_created = FALSE;
+		for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+		{
+			subgroup_created = FALSE;
+			for (control = subgroup->control_list; control != NULL; control = control->next)
+			{
+				for (i = 0; i < profile->size; i++)
+				{
+					if (profile->address[i] == control->address) {
+						if (!group_created) {
+							gtk_tree_store_append(store,&top_iter,NULL);
+							gtk_tree_store_set(store,&top_iter,TITLE_COL,group->name,-1);
+							group_created = TRUE;
+						}
+						if (!subgroup_created) {
+							gtk_tree_store_append(store,&sub_iter,&top_iter);
+							gtk_tree_store_set(store,&sub_iter,TITLE_COL,subgroup->name,-1);
+							subgroup_created = TRUE;
+						}
+						gtk_tree_store_append(store,&con_iter,&sub_iter);
+						
+						tmp = g_strdup_printf("%#x", control->address);
+						tmp2 = g_strdup_printf("%u", profile->value[i]);
+						
+						switch (control->type) {
+						case value:
+							/* Try to get the control maximum */
+							max = get_control_max(control);
+							if (max) {
+								tmp3 = g_strdup_printf("%.1f %%", (double)profile->value[i]*100.0/(double)max);
+							}
+							else {
+								tmp3 = g_strdup("??%");
+							}
+							break;
+						case list:
+							tmp3 = NULL;
+							for (value_db = control->value_list; value_db != NULL; value_db = value_db->next)
+							{
+								if (value_db->value == profile->value[i])
+								{
+									tmp3 = g_strdup(value_db->name);
+								}
+							}
+							if (!tmp)
+								tmp3 = g_strdup("???");
+							break;
+						default:
+							tmp3 = g_strdup("");
+						}
+						
+						gtk_tree_store_set(
+							store, &con_iter, 
+							TITLE_COL, control->name,
+							VALUE_COL, tmp3,
+							ADDRESS_COL, tmp,
+							RAW_VALUE_COL, tmp2,-1);
+						
+						g_free(tmp);
+						g_free(tmp2);
+						g_free(tmp3);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree),1);
+	// gtk_container_set_border_width(GTK_CONTAINER(tree),1);
+	
+	GtkTreeSelection *select;
+	
+	select = gtk_tree_view_get_selection(GTK_TREE_VIEW (tree));
+	gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
+	
+	return tree;
+}
+
 static void entry_modified_callback(GtkWidget* entry, GtkWidget* dialog) {
 	GtkWidget* ok_button = g_object_get_data(G_OBJECT(dialog), "ok_button");
 	
@@ -327,6 +467,11 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, FALSE, FALSE, 5);
 	gtk_widget_show(hbox);
+	
+	GtkWidget* tree = create_info_tree(profile, dialog);
+	
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), tree, FALSE, FALSE, 5);
+	gtk_widget_show(tree);
 	
 	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 	switch (result)
