@@ -12,6 +12,13 @@
 <!-- Replace the text in these templates with whatever you want -->
 <!-- to appear in the respective location on the home page. -->
 
+<xsl:attribute-set name="table.properties">
+  <xsl:attribute name="border">0</xsl:attribute>
+  <xsl:attribute name="cellpadding">8</xsl:attribute>
+  <xsl:attribute name="cellspacing">0</xsl:attribute>
+  <xsl:attribute name="width">100%</xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:template name="home.navhead">
 </xsl:template>
 
