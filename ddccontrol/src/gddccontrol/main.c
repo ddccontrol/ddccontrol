@@ -122,15 +122,23 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			{
 				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
 				create_monitor_manager(current);
-				gtk_widget_show(monitor_manager);
-				gtk_widget_set_sensitive(refresh_button, TRUE);
+				if (monitor_manager) {
+					gtk_widget_show(monitor_manager);
+					gtk_widget_set_sensitive(refresh_button, TRUE);
+				}
+				else {
+					gtk_widget_set_sensitive(close_button, TRUE);
+					gtk_widget_set_sensitive(choice_hbox, TRUE);
+				}
 				break;
 			}
 			i++;
 		}
 		
-		gtk_table_attach(GTK_TABLE(table), monitor_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
-		gtk_table_attach(GTK_TABLE(table), profile_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+		if (monitor_manager) {
+			gtk_table_attach(GTK_TABLE(table), monitor_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+			gtk_table_attach(GTK_TABLE(table), profile_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+		}
 		
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
