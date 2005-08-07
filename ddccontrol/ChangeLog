@@ -1,3 +1,17 @@
+2005-08-07 22:44  nboichat
+
+	* TODO, doc/techdocs.xml, src/gddccontrol/Makefile.am,
+	  src/gddccontrol/Makefile.in, src/gddccontrol/fspatterns.c,
+	  src/gddccontrol/gprofile.c, src/gddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/gddccontrol/notebook.h,
+	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add basic fullscreen
+	  patterns support.
+
+2005-08-05 23:05  nboichat
+
+	* src/gddccontrol/main.c: Fix segfault when the connected monitor
+	  is in the database, but not supported.
+
 2005-08-04 16:25  nboichat
 
 	* src/: gddccontrol/gprofile.c, gddccontrol/notebook.c,
