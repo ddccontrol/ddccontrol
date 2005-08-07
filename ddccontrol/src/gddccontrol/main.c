@@ -18,17 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "config.h"
-
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <unistd.h>
-
-#ifdef HAVE_XINERAMA
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#include <X11/extensions/Xinerama.h>
-#endif
 
 #include "ddcpci-ipc.h"
 
@@ -57,12 +49,6 @@ int mainrow = 0; /* Main center row in the table widget */
  *  1 - Profile manager
  */
 int current_main_component = 0;
-
-#ifdef HAVE_XINERAMA
-int xineramacurrent = 0; //Arbitrary, should be read from the user
-int xineramanumber;
-XineramaScreenInfo* xineramainfo;
-#endif
 
 /* Current monitor id, and next one. */
 int currentid = -1;
@@ -315,6 +301,8 @@ int main( int   argc, char *argv[] )
 	mon = NULL;
 	monitor_manager = NULL;
 	
+	xineramacurrent = 0; //Arbitrary, should be read from the user
+	
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bindtextdomain("ddccontrol-db", LOCALEDIR);
@@ -340,6 +328,11 @@ int main( int   argc, char *argv[] )
 	
 	tooltips = gtk_tooltips_new();
 	
+	/* Full screen patterns test */
+	/*create_fullscreen_patterns_window();
+	show_pattern();
+	gtk_main();*/
+	
 	if (!ddcci_init(NULL)) {
 		printf(_("Unable to initialize ddcci library.\n"));
 		GtkWidget* dialog = gtk_message_dialog_new(
@@ -356,6 +349,7 @@ int main( int   argc, char *argv[] )
 	g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
 	
 	main_app_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	
 	gtk_window_set_title(GTK_WINDOW(main_app_window),_("Monitor settings"));
 	
 	gtk_window_set_default_size(GTK_WINDOW(main_app_window), 500, 500);
@@ -486,11 +480,13 @@ int main( int   argc, char *argv[] )
 		else {
 			if (get_verbosity())
 				printf(_("Xinerama supported but inactive.\n"));
+			xineramainfo = NULL;
 		}
 	}
 	else {
 		if (get_verbosity())
 			printf(_("Xinerama not supported\n"));
+		xineramainfo = NULL;
 	}
 	#endif
 	

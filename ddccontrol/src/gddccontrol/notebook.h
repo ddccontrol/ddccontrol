@@ -21,6 +21,14 @@
 #ifndef NOTEBOOK_H
 #define NOTEBOOK_H
 
+#include "config.h"
+
+#ifdef HAVE_XINERAMA
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+#include <X11/extensions/Xinerama.h>
+#endif
+
 #include <gtk/gtk.h>
 
 #include "ddcci.h"
@@ -58,6 +66,10 @@ void cancelprofile_callback(GtkWidget *widget, gpointer data);
 
 void show_profile_information(struct profile* profile, gboolean new_profile);
 
+/* fspatterns.c */
+
+void fullscreen_callback(GtkWidget *widget, gpointer data);
+
 /* main.c */
 
 /* Set what is now displayed at the center of the main window:
@@ -76,4 +88,10 @@ GtkWidget* saveprofile_button;
 GtkWidget* cancelprofile_button;
 GtkWidget* refresh_button;
 
+#ifdef HAVE_XINERAMA
+int xineramacurrent;
+int xineramanumber;
+XineramaScreenInfo* xineramainfo;
 #endif
+
+#endif //NOTEBOOK_H

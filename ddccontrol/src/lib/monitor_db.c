@@ -556,8 +556,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			}
 			
 			options_subgroupname = xmlGetProp(subgroup, "name");
-			//printf("*group name=%s\n", options_groupname);
-		
+			
 			control = subgroup->xmlChildrenNode;
 			
 			DDCCI_RETURN_IF(
@@ -566,6 +565,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			
 			if (current_subgroup->control_list) {
 				current_subgroup->name = _D(options_subgroupname);
+				current_subgroup->pattern = xmlGetProp(subgroup, "pattern");
 				*last_subgroup_ref = current_subgroup;
 				last_subgroup_ref = &current_subgroup->next;
 				current_subgroup = malloc(sizeof(struct subgroup_db));

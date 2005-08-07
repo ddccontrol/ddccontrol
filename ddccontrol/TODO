@@ -1,9 +1,10 @@
 Nicolas:
- - Work on Gnome tool
- - Add translations in ddcpci
- - Support for multi-screen (Xinerama)
- - Problem with 173p Magic-bright mode (brightness/contrast adjusted)
  - Read EDID info
- 
-General:
+ - Use this instead of Xinerama ?
+   http://developer.gnome.org/doc/API/2.0/gdk/multihead.html
+ - Add support for more than 2 monitors
  - See what to do with engineering VCP.
+
+BUGS:
+ - When changing a control value quickly (moving the mouse outside the control),
+   the value on the scale does not correspond to the real value.

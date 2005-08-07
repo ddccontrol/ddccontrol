@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Nicolas Boichat                            *
+ *   Copyright (C) 2005 by Nicolas Boichat                                 *
  *   nicolas@boichat.ch                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

@@ -42,6 +42,26 @@ database format is used (must be set to 2).
 </listitem>
 </itemizedlist></para>
 
+<para><sgmltag class="element">group</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">name</sgmltag>: full English group name.
+</listitem>
+</itemizedlist></para>
+
+<para><sgmltag class="element">subgroup</sgmltag> attributes:
+<itemizedlist mark='bullet'>
+<listitem>
+<sgmltag class="attribute">name</sgmltag>: full English subgroup name.
+</listitem>
+<listitem>
+<sgmltag class="attribute">pattern</sgmltag>: name of the fullscreen
+pattern <filename>gddccontrol</filename> must display to help the
+user to adjust subgroup's controls (optional). For possible values, see
+<filename>ddccontrol/src/gddccontrol/fspatterns.c</filename>.
+</listitem>
+</itemizedlist></para>
+
 <para><sgmltag class="element">control</sgmltag> attributes:
 <itemizedlist mark='bullet'>
 <listitem>
@@ -106,7 +126,7 @@ needed if there is only one value for command controls).
 <![CDATA[<?xml version="1.0"?>
 <options date="%date%" dbversion="2">
   <group name="%groupname%">
-    <subgroup name="%subgroupname%">
+    <subgroup name="%subgroupname%" pattern="%patternname%">
       <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
         <!-- Command using the default 0x01 address -->
       <control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/>

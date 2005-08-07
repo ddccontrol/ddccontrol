@@ -64,6 +64,7 @@ struct control_db {
 
 struct subgroup_db {
 	xmlChar* name;
+	xmlChar* pattern;
 	
 	struct subgroup_db* next;
 	struct control_db* control_list;

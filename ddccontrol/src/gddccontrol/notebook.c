@@ -464,6 +464,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 {
 	int i=0;
+	GtkWidget* mainvbox = gtk_vbox_new(FALSE,10);
 	GtkWidget* vbox = gtk_vbox_new(FALSE,10);
 	GtkWidget* frame;
 	
@@ -478,11 +479,34 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 		i++;
 	}
 	
+	if (subgroup->pattern) {
+		
+#if GTK_CHECK_VERSION(2,7,0)
+		gchar* stockitem = GTK_STOCK_FULLSCREEN;
+#else
+		gchar* stockitem = GTK_STOCK_EXECUTE;
+#endif
+		GtkWidget* align = gtk_alignment_new(0.5, 0, 0, 0);
+		
+		GtkWidget* button = stock_label_button(stockitem, _("Show fullscreen patterns"), NULL);
+		gtk_widget_show(button);
+		gtk_container_add(GTK_CONTAINER(align), button);
+		gtk_widget_show(align);
+		gtk_box_pack_end(GTK_BOX(mainvbox), align, TRUE, 5, 5);
+		g_object_set_data(G_OBJECT(button), "pattern", subgroup->pattern);
+		g_object_set_data(G_OBJECT(button), "mainvbox", mainvbox);
+		g_object_set_data(G_OBJECT(button), "vbox", vbox);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(fullscreen_callback), value);
+	}
+	
+	gtk_box_pack_start(GTK_BOX(mainvbox), vbox, 0, 5, 5);
+	gtk_widget_show(vbox);
+	
 	GtkWidget* label;
 	label = gtk_label_new(subgroup->name);
-	gtk_widget_show (label);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, label);
-	gtk_widget_show (vbox);
+	gtk_widget_show(label);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), mainvbox, label);
+	gtk_widget_show(mainvbox);
 }
 
 	
