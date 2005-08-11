@@ -1,3 +1,7 @@
+2005-08-11 12:38  nboichat
+
+	* db/monitor/SAM011F.xml: Add support for Samsung SyncMaster 912N.
+
 2005-08-07 22:44  nboichat
 
 	* db/: options.xml, options.xml.in: Add basic fullscreen patterns
