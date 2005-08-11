@@ -1,3 +1,29 @@
+2005-08-11 18:42  nboichat
+
+	* src/gddccontrol/: notebook.c, notebook.h: Fix GTK+-2.4
+	  compatibility.
+
+2005-08-11 16:10  nboichat
+
+	* CheckList, TODO, configure, configure.ac, po/Makefile.in.in,
+	  po/Makevars, po/POTFILES.in, po/ddccontrol.pot, po/fr.gmo,
+	  po/fr.po, po/ru.gmo, po/ru.po, src/ddccontrol/main.c,
+	  src/ddcpci/ddcpci.h, src/ddcpci/i2c-algo-bit.c,
+	  src/ddcpci/intel740.c, src/ddcpci/intel810.c, src/ddcpci/main.c,
+	  src/ddcpci/nvidia.c, src/gddccontrol/fspatterns.c,
+	  src/gddccontrol/gprofile.c, src/gddccontrol/main.c,
+	  src/gddccontrol/notebook.c, src/lib/ddcci.c, src/lib/ddcci.h,
+	  src/lib/monitor_db.c, src/lib/profile.c: Add translation marks
+	  (_(...), N_(...), D_(...)).
+
+2005-08-11 14:57  nboichat
+
+	* src/gddccontrol/: fspatterns.c, gprofile.c, main.c, notebook.c,
+	  notebook.h: - Check if a profile is empty before saving it.  -
+	  Tell the user what to do when creating a profile (i.e. select the
+	  checkboxes).	- Add text for brightness/contrast fullscreen
+	  pattern.
+
 2005-08-07 22:44  nboichat
 
 	* TODO, doc/techdocs.xml, src/gddccontrol/Makefile.am,
