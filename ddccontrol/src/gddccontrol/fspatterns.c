@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "notebook.h"
+#include <string.h>
 
 static GtkWidget* fs_patterns_window = NULL;
 
@@ -31,8 +32,23 @@ static GtkWidget* vbox; /* GtkVBox containing controls */
 
 static GtkWidget* images[4] = {NULL, NULL, NULL, NULL}; /* top-bottom-left-right images */
 
+//static GdkColor* oldvboxbg = NULL;
+
+/*static void set_vbox_bg_color(GdkColor* bg)
+{
+	GList* list = gtk_container_get_children(GTK_CONTAINER(vbox));
+	
+	while (list) {
+		gtk_widget_modify_bg(list->data, GTK_STATE_NORMAL, bg);
+		list = g_list_next(list);
+	}
+}*/
+
 static void destroy(GtkWidget *widget, gpointer data)
 {
+	/*set_vbox_bg_color(oldvboxbg);
+	g_free(oldvboxbg);*/
+	
 	gtk_widget_ref(vbox);
 	gtk_container_remove(GTK_CONTAINER(centervbox), vbox);
 	gtk_box_pack_start(GTK_BOX(monmainvbox), vbox, 0, 5, 5);
@@ -64,6 +80,11 @@ static void create_fullscreen_patterns_window()
 	gtk_widget_show(centervbox);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), centervbox);
+	
+	/*GdkColor color;
+	color.red = color.green = color.blue = 0x5000;
+	gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(scrolled_window)), GTK_STATE_NORMAL, &color);*/
+	
 	gtk_widget_show(scrolled_window);
 }
 
@@ -142,11 +163,28 @@ static void show_pattern(gchar* patternname)
 	GdkDrawable* pixmap = gdk_pixmap_new(0, width, height, gdk_colormap_get_visual(gdk_colormap_get_system())->depth);
 	gdk_drawable_set_colormap(pixmap, gdk_colormap_get_system());
 	
+	int w, h;
 	GdkColor color;
 	GdkGC* gc = gdk_gc_new(pixmap);
+	color.red = color.green = color.blue = 0x0000;
+	gdk_gc_set_rgb_fg_color(gc, &color);
+	gdk_gc_set_rgb_bg_color(gc, &color);
+	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, width, height);
 	if (g_str_equal(patternname, "brightnesscontrast")) {
 		drawShade(pixmap, height/8, height/8, 21);
-		//drawShade(pixmap, 3*height/8, height/8, 17);
+		
+		color.red = color.green = color.blue = 0xFFFF;
+		gdk_gc_set_rgb_fg_color(gc, &color);
+		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
+		pango_layout_set_markup(layout,
+			_("Adjust brightness and contrast following these rules:\n"
+			  " - Black must be as dark as possible.\n"
+			  " - White should be as bright as possible.\n"
+			  " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
+			  )
+			  , -1);
+		pango_layout_get_pixel_size(layout, &w, &h);
+		gdk_draw_layout(pixmap, gc, (width-w)/2, 3*height/8, layout);
 		
 		/* Fujitsu-Siemens blank lines for auto level (0xfe). */
 		color.red = color.green = color.blue = 0xFFFF;
@@ -155,10 +193,9 @@ static void show_pattern(gchar* patternname)
 		gdk_draw_line(pixmap, gc, 0, (23*height)/24, width, (23*height)/24);
 	}
 	else {
-		int w, h;
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_gc_set_rgb_fg_color(gc, &color);
-		gchar* tmp = g_strdup_printf(_("<span size=\"large\">Unknown fullscreen pattern name: %s</span>"), patternname);
+		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s</span>"), patternname);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 		pango_layout_set_markup(layout, tmp, -1);
 		g_free(tmp);
@@ -211,6 +248,13 @@ void fullscreen_callback(GtkWidget *widget, gpointer data) {
 	gtk_container_remove(GTK_CONTAINER(monmainvbox), vbox);
 	gtk_box_pack_start(GTK_BOX(centervbox), vbox, 0, 5, 5);
 	gtk_widget_unref(vbox);
+	
+	/*oldvboxbg = g_malloc(sizeof(GdkColor));
+	memcpy(oldvboxbg, &gtk_widget_get_style(vbox)->bg[GTK_STATE_NORMAL], sizeof(GdkColor));
+	
+	GdkColor black;
+	black.red = black.green = black.blue = 0x5000;
+	set_vbox_bg_color(&black);*/
 	
 	show_pattern(g_object_get_data(G_OBJECT(widget),"pattern"));
 }

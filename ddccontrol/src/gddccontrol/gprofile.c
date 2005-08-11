@@ -32,6 +32,7 @@ void cancelprofile_callback(GtkWidget *widget, gpointer data)
 	gtk_widget_hide(cancelprofile_button);
 	gtk_widget_show(profile_manager_button);
 	show_profile_checks(FALSE);
+	set_status("");
 }
 
 void saveprofile_callback(GtkWidget *widget, gpointer data)
@@ -40,14 +41,28 @@ void saveprofile_callback(GtkWidget *widget, gpointer data)
 	int size;
 	struct profile* profile;
 	
+	size = get_profile_checked_controls(&controls[0]);
+	
+	if (!size) {
+		GtkWidget* dialog = gtk_message_dialog_new(
+				GTK_WINDOW(main_app_window),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				_("You must select at least one control to be saved in the profile."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+	
+	set_status("");
+	
+	set_message(_("Creating profile..."));
+	
 	gtk_widget_hide(saveprofile_button);
 	gtk_widget_hide(cancelprofile_button);
 	gtk_widget_show(profile_manager_button);
 	show_profile_checks(FALSE);
-	
-	size = get_profile_checked_controls(&controls[0]);
-	
-	set_status(_("Creating profile..."));
 	
 	profile = ddcci_create_profile(mon, controls, size);
 	
@@ -60,13 +75,13 @@ void saveprofile_callback(GtkWidget *widget, gpointer data)
 				_("Error while creating profile."));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
-		set_status("");
+		set_message("");
 		return;
 	}
 	
 	show_profile_information(profile, TRUE);
 		
-	set_status("");
+	set_message("");
 }
 
 /* Callbacks */
@@ -74,7 +89,7 @@ static void apply_callback(GtkWidget *widget, gpointer data)
 {
 	struct profile* profile = (struct profile*)data;
 	
-	set_status(_("Applying profile..."));
+	set_message(_("Applying profile..."));
 	
 	ddcci_apply_profile(profile, mon);
 	
@@ -122,6 +137,8 @@ static void create_callback(GtkWidget *widget, gpointer data)
 	gtk_widget_hide(profile_manager_button);
 	gtk_widget_show(saveprofile_button);
 	gtk_widget_show(cancelprofile_button);
+	
+	set_status(_("Please select the controls you want to save in the profile using the checkboxes to the left of each control."));
 }
 
 static void close_profile_manager(GtkWidget *widget, gpointer data)
@@ -477,7 +494,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	switch (result)
 	{
 	case GTK_RESPONSE_OK: /* Save */
-		set_status(_("Saving profile..."));
+		set_message(_("Saving profile..."));
 		ddcci_set_profile_name(profile, gtk_entry_get_text(GTK_ENTRY(entry)));
 		rc = ddcci_save_profile(profile, mon);
 		if (!rc) {
@@ -489,11 +506,11 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 					_("Error while saving profile."));
 			gtk_dialog_run(GTK_DIALOG(dialog));
 			gtk_widget_destroy(dialog);
-			set_status("");
+			set_message("");
 			return;
 		}
 		refresh_profile_manager();
-		set_status("");
+		set_message("");
 		break;
 	case GTK_RESPONSE_ACCEPT: /* Ok */
 	case GTK_RESPONSE_CANCEL: /* Cancel */

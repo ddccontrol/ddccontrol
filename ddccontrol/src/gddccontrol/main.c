@@ -31,6 +31,7 @@ GtkWidget* table;
 GtkWidget *combo_box;
 
 GtkWidget *messagelabel = NULL;
+GtkWidget *statuslabel = NULL;
 
 GtkWidget* close_button = NULL;
 
@@ -219,7 +220,13 @@ void set_current_main_component(int component) {
 	}
 }
 
-void set_status(char* message)
+/* Set the status message */
+void set_status(char* message) {
+	gtk_label_set_text(GTK_LABEL(statuslabel), message);
+}
+
+/* Show a message on top of every other controls. */
+void set_message(char* message)
 {
 	if (!message[0]) {
 		gtk_widget_hide(messagelabel);
@@ -437,26 +444,36 @@ int main( int   argc, char *argv[] )
 	crow++;
 	
 	/* Refresh and close buttons */
-	GtkWidget* align = gtk_alignment_new(1,1,0,0);
-	bottom_hbox = gtk_hbox_new(FALSE, 50);
+	bottom_hbox = gtk_hbox_new(FALSE, 10);
 	
-	refresh_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
+	statuslabel = gtk_label_new("");
+	gtk_label_set_line_wrap(GTK_LABEL(statuslabel), TRUE);
+	gtk_box_pack_start(GTK_BOX(bottom_hbox),statuslabel, TRUE, TRUE, 0);
+	gtk_widget_show(statuslabel);
+	
+	GtkWidget* align = gtk_alignment_new(1, 0.5, 0, 0);
+	GtkWidget* br_hbox = gtk_hbox_new(FALSE, 30);
+	
+	refresh_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
 	g_signal_connect(G_OBJECT(refresh_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
 
-	gtk_box_pack_start(GTK_BOX(bottom_hbox),refresh_button,0,0,0);
+	gtk_box_pack_start(GTK_BOX(br_hbox),refresh_button,0,0,0);
 	gtk_widget_show (refresh_button);
 	gtk_widget_set_sensitive(refresh_button, FALSE);
 	
-	close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	close_button = stock_label_button(GTK_STOCK_CLOSE, _("Close"), NULL);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 
-	gtk_box_pack_start(GTK_BOX(bottom_hbox),close_button,0,0,0);
+	gtk_box_pack_start(GTK_BOX(br_hbox),close_button,0,0,0);
 	gtk_widget_show (close_button);
 	
-	gtk_container_add(GTK_CONTAINER(align),bottom_hbox);
-	gtk_widget_show (bottom_hbox);
+	gtk_container_add(GTK_CONTAINER(align),br_hbox);
+	gtk_widget_show (br_hbox);
 	gtk_widget_show (align);
-	gtk_table_attach(GTK_TABLE(table), align, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	
+	gtk_box_pack_start(GTK_BOX(bottom_hbox),align, TRUE, TRUE,0);
+	gtk_widget_show (bottom_hbox);
+	gtk_table_attach(GTK_TABLE(table), bottom_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
 	crow++;
 	
 	gtk_container_add (GTK_CONTAINER(main_app_window), table);
@@ -490,7 +507,7 @@ int main( int   argc, char *argv[] )
 	}
 	#endif
 	
-	set_status(_(
+	set_message(_(
 	"Probing for available monitors..."
 		   ));
 	
@@ -521,11 +538,15 @@ int main( int   argc, char *argv[] )
 	else {
 		widgets_set_sensitive(FALSE);
 		gtk_widget_set_sensitive(close_button, TRUE);
-		set_status(_(
+		set_message(_(
 			"No monitor supporting DDC/CI available.\n\n"
 			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
 			   ));
 	}
+	
+	gchar* tmp = g_strdup_printf(_("Welcome to gddccontrol %s."), VERSION);
+	set_status(tmp);
+	g_free(tmp);
 	
 	gtk_main();
 	

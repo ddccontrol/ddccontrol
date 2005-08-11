@@ -113,7 +113,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 	unsigned short currentValue = 1;
 	unsigned short currentMaximum = 1;
 	
-	set_status(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+	set_message(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
 	
 	refreshing = 1; /* Tell callbacks not to write values back to the monitor. */
 	while (list) {
@@ -123,7 +123,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 				get_value_and_max(control, &currentValue, &currentMaximum);
 				change_control_value(list->data, (gpointer)(long)currentValue);
 			}
-			set_status(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+			set_message(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
 		}
 		else {
 			g_warning("Could not get the control_db struct related to some control.");
@@ -133,7 +133,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 	}
 	refreshing = 0;
 	
-	set_status("");
+	set_message("");
 	
 	gtk_widget_set_sensitive(refresh_button, TRUE);
 }
@@ -311,11 +311,15 @@ void show_profile_checks(gboolean show) {
 	
 	while (list) {
 		GtkWidget* check_frame = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check_frame");
+		GtkWidget* check = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check");
 		if (check_frame) {
 			if (show)
 				gtk_widget_show(check_frame);
 			else
 				gtk_widget_hide(check_frame);
+		}
+		if (check && show) {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), FALSE);
 		}
 		list = g_slist_next(list);
 	}
@@ -566,7 +570,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	all_controls = NULL;
 	
 	if (!monitor->supported) {
-		set_status(_(
+		set_message(_(
 			"The current monitor is in the database but does not supports "
 			"DDC/CI.\n\nThis often occurs when you connect the VGA/DVI cable "
 			"on the wrong input of monitors supporting DDC/CI only on one of "
@@ -575,7 +579,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 		return;
 	}
 	
-	set_status(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
+	set_message(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
 	
 	mon = malloc(sizeof(struct monitor));
 	
@@ -591,7 +595,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	//////////////////////////////	
 	GtkWidget* none = gtk_table_new(1, 1, TRUE);
 	
-	GtkWidget *valuelabel = gtk_label_new (_("Please click on a parameter on the left to change it."));
+	GtkWidget *valuelabel = gtk_label_new (_("Please click on a group name."));
 	gtk_table_attach(GTK_TABLE(none), valuelabel, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
 	
 	GtkWidget *label = gtk_label_new("zero");
@@ -610,7 +614,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 				count++;
 		}
 		
-		set_status(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+		set_message(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
@@ -619,7 +623,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
 				createPage(notebook, subgroup);
 				current++;
-				set_status(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+				set_message(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
 			}
 		}
 	}
@@ -631,13 +635,13 @@ void create_monitor_manager(struct monitorlist* monitor)
 	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 3, 0);
 	gtk_widget_show (table);
 	
-	set_status(_("Loading profiles..."));
+	set_message(_("Loading profiles..."));
 	
 	ddcci_get_all_profiles(mon);
 	
 	create_profile_manager();
 	
-	set_status("");
+	set_message("");
 	
 	monitor_manager = table;
 }

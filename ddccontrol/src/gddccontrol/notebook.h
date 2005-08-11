@@ -78,8 +78,11 @@ void fullscreen_callback(GtkWidget *widget, gpointer data);
  */
 void set_current_main_component(int component);
 
-/* Set status message. */
+/* Set the status message */
 void set_status(char* message);
+
+/* Show a message on top of every other controls. */
+void set_message(char* message);
 
 GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
 
