@@ -37,6 +37,8 @@
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
+/* debugging strings, no need to translate them */
+#define D_(String) gettext_noop (String)
 
 /* ----- global defines ----------------------------------------------- */
 #define DEB(x) if (i2c_debug>=1) x;
@@ -120,7 +122,7 @@ static inline int sclhi(struct i2c_algo_bit_data *adap)
 			return -1;
 		}
 	}
-	DEBSTAT(printf("waited %ld usecs\n", ((newtv.tv_usec - lasttv.tv_usec) + ((newtv.tv_sec - lasttv.tv_sec)*1000000))));
+	DEBSTAT(printf(D_("waited %ld usecs\n"), ((newtv.tv_usec - lasttv.tv_usec) + ((newtv.tv_sec - lasttv.tv_sec)*1000000))));
 	ssleep(adap->udelay);
 	return 0;
 } 
@@ -130,7 +132,7 @@ static inline int sclhi(struct i2c_algo_bit_data *adap)
 static void i2c_start(struct i2c_algo_bit_data *adap) 
 {
 	/* assert: scl, sda are high */
-	DEBPROTO(printf("S "));
+	DEBPROTO(printf(D_("S ")));
 	sdalo(adap);
 	scllo(adap);
 }
@@ -138,7 +140,7 @@ static void i2c_start(struct i2c_algo_bit_data *adap)
 static void i2c_repstart(struct i2c_algo_bit_data *adap) 
 {
 	/* scl, sda may not be high */
-	DEBPROTO(printf(" Sr "));
+	DEBPROTO(printf(D_(" Sr ")));
 	setsda(adap,1);
 	sclhi(adap);
 	ssleep(adap->udelay);
@@ -150,7 +152,7 @@ static void i2c_repstart(struct i2c_algo_bit_data *adap)
 
 static void i2c_stop(struct i2c_algo_bit_data *adap) 
 {
-	DEBPROTO(printf("P\n"));
+	DEBPROTO(printf(D_("P\n")));
 	/* assert: scl is low */
 	sdalo(adap);
 	sclhi(adap); 
@@ -177,10 +179,10 @@ static int i2c_outb(struct i2c_algo_bit_data *adap, char c)
 		sb = c & ( 1 << i );
 		setsda(adap,sb);
 		ssleep(adap->udelay);
-		DEBPROTO(printf("%d",sb!=0));
+		DEBPROTO(printf(D_("%d"),sb!=0));
 		if (sclhi(adap)<0) { /* timed out */
 			sdahi(adap); /* we don't want to block the net */
-			DEB2(printf(" i2c_outb: 0x%02x, timeout at bit #%d\n", c&0xff, i));
+			DEB2(printf(D_(" i2c_outb: 0x%02x, timeout at bit #%d\n"), c&0xff, i));
 			return -1;
 		};
 		/* do arbitration here: 
@@ -191,15 +193,15 @@ static int i2c_outb(struct i2c_algo_bit_data *adap, char c)
 	}
 	sdahi(adap);
 	if (sclhi(adap)<0){ /* timeout */
-	    DEB2(printf(" i2c_outb: 0x%02x, timeout at ack\n", c&0xff));
+	    DEB2(printf(D_(" i2c_outb: 0x%02x, timeout at ack\n"), c&0xff));
 	    return -1;
 	};
 	/* read ack: SDA should be pulled down by slave */
 	ack=getsda(adap);	/* ack: sda is pulled low ->success.	 */
-	DEB2(printf(" i2c_outb: 0x%02x , getsda() = %d\n", c & 0xff, ack));
+	DEB2(printf(D_(" i2c_outb: 0x%02x , getsda() = %d\n"), c & 0xff, ack));
 
-	DEBPROTO( printf("[%2.2x]",c&0xff) );
-	DEBPROTO(if (0==ack){ printf(" A ");} else printf(" NA ") );
+	DEBPROTO( printf(D_("[%2.2x]"),c&0xff) );
+	DEBPROTO(if (0==ack){ printf(D_(" A "));} else printf(D_(" NA ")) );
 	scllo(adap);
 	return 0==ack;		/* return 1 if device acked	 */
 	/* assert: scl is low (sda undef) */
@@ -217,7 +219,7 @@ static int i2c_inb(struct i2c_algo_bit_data *adap)
 	sdahi(adap);
 	for (i=0;i<8;i++) {
 		if (sclhi(adap)<0) { /* timeout */
-			DEB2(printf(" i2c_inb: timeout at bit #%d\n", 7-i));
+			DEB2(printf(D_(" i2c_inb: timeout at bit #%d\n"), 7-i));
 			return -1;
 		};
 		indata *= 2;
@@ -226,9 +228,9 @@ static int i2c_inb(struct i2c_algo_bit_data *adap)
 		scllo(adap);
 	}
 	/* assert: scl is low */
-	DEB2(printf("i2c_inb: 0x%02x\n", indata & 0xff));
+	DEB2(printf(D_("i2c_inb: 0x%02x\n"), indata & 0xff));
 
-	DEBPROTO(printf(" 0x%02x", indata & 0xff));
+	DEBPROTO(printf(D_(" 0x%02x"), indata & 0xff));
 	return (int) (indata & 0xff);
 }
 
@@ -240,73 +242,73 @@ int test_bus(struct i2c_algo_bit_data *adap, char* name) {
 	int scl,sda;
 
 	if (adap->getscl==NULL)
-		printf("i2c-algo-bit.o: Testing SDA only, "
-			"SCL is not readable.\n");
+		printf(D_("i2c-algo-bit.o: Testing SDA only, "
+			"SCL is not readable.\n"));
 
 	sda=getsda(adap);
 	scl=(adap->getscl==NULL?1:getscl(adap));
-	printf("i2c-algo-bit.o: (0) scl=%d, sda=%d\n",scl,sda);
+	printf(D_("i2c-algo-bit.o: (0) scl=%d, sda=%d\n"),scl,sda);
 	if (!scl || !sda ) {
-		printf("i2c-algo-bit.o: %s seems to be busy.\n", name);
+		printf(D_("i2c-algo-bit.o: %s seems to be busy.\n"), name);
 		goto bailout;
 	}
 
 	sdalo(adap);
 	sda=getsda(adap);
 	scl=(adap->getscl==NULL?1:getscl(adap));
-	printf("i2c-algo-bit.o: (1) scl=%d, sda=%d\n",scl,sda);
+	printf(D_("i2c-algo-bit.o: (1) scl=%d, sda=%d\n"),scl,sda);
 	if ( 0 != sda ) {
-		printf("i2c-algo-bit.o: SDA stuck high!\n");
+		printf(D_("i2c-algo-bit.o: SDA stuck high!\n"));
 		goto bailout;
 	}
 	if ( 0 == scl ) {
-		printf("i2c-algo-bit.o: SCL unexpected low "
-			"while pulling SDA low!\n");
+		printf(D_("i2c-algo-bit.o: SCL unexpected low "
+			"while pulling SDA low!\n"));
 		goto bailout;
 	}		
 
 	sdahi(adap);
 	sda=getsda(adap);
 	scl=(adap->getscl==NULL?1:getscl(adap));
-	printf("i2c-algo-bit.o: (2) scl=%d, sda=%d\n",scl,sda);
+	printf(D_("i2c-algo-bit.o: (2) scl=%d, sda=%d\n"),scl,sda);
 	if ( 0 == sda ) {
-		printf("i2c-algo-bit.o: SDA stuck low!\n");
+		printf(D_("i2c-algo-bit.o: SDA stuck low!\n"));
 		goto bailout;
 	}
 	if ( 0 == scl ) {
-		printf("i2c-algo-bit.o: SCL unexpected low "
-			"while pulling SDA high!\n");
+		printf(D_("i2c-algo-bit.o: SCL unexpected low "
+			"while pulling SDA high!\n"));
 		goto bailout;
 	}
 
 	scllo(adap);
 	sda=getsda(adap);
 	scl=(adap->getscl==NULL?0:getscl(adap));
-	printf("i2c-algo-bit.o: (3) scl=%d, sda=%d\n",scl,sda);
+	printf(D_("i2c-algo-bit.o: (3) scl=%d, sda=%d\n"),scl,sda);
 	if ( 0 != scl ) {
-		printf("i2c-algo-bit.o: SCL stuck high!\n");
+		printf(D_("i2c-algo-bit.o: SCL stuck high!\n"));
 		goto bailout;
 	}
 	if ( 0 == sda ) {
-		printf("i2c-algo-bit.o: SDA unexpected low "
-			"while pulling SCL low!\n");
+		printf(D_("i2c-algo-bit.o: SDA unexpected low "
+			"while pulling SCL low!\n"));
 		goto bailout;
 	}
 	
 	sclhi(adap);
 	sda=getsda(adap);
 	scl=(adap->getscl==NULL?1:getscl(adap));
-	printf("i2c-algo-bit.o: (4) scl=%d, sda=%d\n",scl,sda);
+	printf(D_("i2c-algo-bit.o: (4) scl=%d, sda=%d\n"),scl,sda);
 	if ( 0 == scl ) {
-		printf("i2c-algo-bit.o: SCL stuck low!\n");
+		printf(D_("i2c-algo-bit.o: SCL stuck low!\n"));
 		goto bailout;
 	}
 	if ( 0 == sda ) {
-		printf("i2c-algo-bit.o: SDA unexpected low "
-			"while pulling SCL high!\n");
+		printf(D_("i2c-algo-bit.o: SDA unexpected low "
+			"while pulling SCL high!\n"));
 		goto bailout;
 	}
-	printf("i2c-algo-bit.o: %s passed test.\n",name);
+	printf(D_("i2c-algo-bit.o: %s passed test.\n"),name);
 	return 0;
 bailout:
 	sdahi(adap);
@@ -339,9 +341,9 @@ static inline int try_address(struct i2c_algo_bit_data *adap, unsigned char addr
 		ssleep(adap->udelay);
 	}
 	DEB2(if (i)
-	     printf("i2c-algo-bit.o: Used %d tries to %s client at 0x%02x : %s\n",
-		    i+1, addr & 1 ? "read" : "write", addr>>1,
-		    ret==1 ? "success" : ret==0 ? "no ack" : "failed, timeout?" )
+	     printf(D_("i2c-algo-bit.o: Used %d tries to %s client at 0x%02x : %s\n"),
+		    i+1, addr & 1 ? D_("read") : D_("write"), addr>>1,
+		    ret==1 ? D_("success") : ret==0 ? D_("no ack") : D_("failed, timeout?") )
 	    );
 	return ret;
 }
@@ -357,14 +359,14 @@ int sendbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 
 	while (count > 0) {
 		c = *temp;
-		DEB2(printf("sendbytes: writing %2.2X\n", c&0xff));
+		DEB2(printf(D_("sendbytes: writing %2.2X\n"), c&0xff));
 		retval = i2c_outb(adap,c);
 		if ((retval>0) || (nak_ok && (retval==0)))  { /* ok or ignored NAK */
 			count--; 
 			temp++;
 			wrcount++;
 		} else { /* arbitration or no acknowledge */
-			printf("sendbytes: error - bailout.\n");
+			printf(_("sendbytes: error - bailout.\n"));
 			i2c_stop(adap);
 			return (retval<0)? retval : -EFAULT;
 			        /* got a better one ?? */
@@ -403,10 +405,10 @@ inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 
 		if ( count > 0 ) {		/* send ack */
 			sdalo(adap);
-			DEBPROTO(printf(" Am "));
+			DEBPROTO(printf(D_(" Am ")));
 		} else {
 			sdahi(adap);	/* neg. ack on last byte */
-			DEBPROTO(printf(" NAm "));
+			DEBPROTO(printf(D_(" NAm ")));
 		}
 		if (sclhi(adap)<0) {	/* timeout */
 			sdahi(adap);
@@ -438,20 +440,20 @@ static inline int bit_doAddress(struct i2c_algo_bit_data *adap, struct i2c_msg *
 	retries = nak_ok ? 0 : RETRIES;
 	
 	if ( (flags & I2C_M_TEN)  ) { 
-		/* a ten bit address */
+		/* a ten bit address, never happen in ddccontrol */
 		addr = 0xf0 | (( msg->addr >> 7) & 0x03);
-		DEB2(printf("addr0: %d\n",addr));
+		DEB2(printf(D_("addr0: %d\n"),addr));
 		/* try extended address code...*/
 		ret = try_address(adap, addr, retries);
 		if ((ret != 1) && !nak_ok)  {
-			printf("died at extended address code.\n");
+			printf(D_("died at extended address code.\n"));
 			return -EREMOTEIO;
 		}
 		/* the remaining 8 bit address */
 		ret = i2c_outb(adap,msg->addr & 0x7f);
 		if ((ret != 1) && !nak_ok) {
 			/* the chip did not ack / xmission error occurred */
-			printf("died at 2nd address code.\n");
+			printf(D_("died at 2nd address code.\n"));
 			return -EREMOTEIO;
 		}
 		if ( flags & I2C_M_RD ) {
@@ -460,7 +462,7 @@ static inline int bit_doAddress(struct i2c_algo_bit_data *adap, struct i2c_msg *
 			addr |= 0x01;
 			ret = try_address(adap, addr, retries);
 			if ((ret!=1) && !nak_ok) {
-				printf("died at extended address code.\n");
+				printf(D_("died at extended address code.\n"));
 				return -EREMOTEIO;
 			}
 		}
@@ -496,7 +498,7 @@ int bit_xfer(struct i2c_algo_bit_data *adap,
 			}
 			ret = bit_doAddress(adap, pmsg);
 			if ((ret != 0) && !nak_ok) {
-			    DEB2(printf("i2c-algo-bit.o: NAK from device addr %2.2x msg #%d\n"
+			    DEB2(printf(D_("i2c-algo-bit.o: NAK from device addr %2.2x msg #%d\n")
 					,msgs[i].addr,i));
 			    return (ret<0) ? ret : -EREMOTEIO;
 			}
@@ -504,14 +506,14 @@ int bit_xfer(struct i2c_algo_bit_data *adap,
 		if (pmsg->flags & I2C_M_RD ) {
 			/* read bytes into buffer*/
 			ret = readbytes(adap, pmsg);
-			DEB2(printf("i2c-algo-bit.o: read %d bytes.\n",ret));
+			DEB2(printf(D_("i2c-algo-bit.o: read %d bytes.\n"),ret));
 			if (ret < pmsg->len ) {
 				return (ret<0)? ret : -EREMOTEIO;
 			}
 		} else {
 			/* write bytes from buffer */
 			ret = sendbytes(adap, pmsg);
-			DEB2(printf("i2c-algo-bit.o: wrote %d bytes.\n",ret));
+			DEB2(printf(D_("i2c-algo-bit.o: wrote %d bytes.\n"),ret));
 			if (ret < pmsg->len ) {
 				return (ret<0) ? ret : -EREMOTEIO;
 			}

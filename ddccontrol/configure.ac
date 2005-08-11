@@ -1,5 +1,5 @@
 AC_INIT([DDC/CI control tool], [0.2],
-        [Nicolas Boichat <nicolas@boichat.ch>],
+        [DDCControl users list <ddccontrol-users@lists.sourceforge.net>],
         [ddccontrol])
 AM_CONFIG_HEADER(src/config.h)
 AM_INIT_AUTOMAKE

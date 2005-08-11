@@ -92,8 +92,8 @@ int get_verbosity() {
 
 static void open_card(struct i2c_bus* bus) {
 	if (verbosity == 2) {
-		printf("==>Opening...\n");
-		printf("==>%02x:%02x.%d-%d\n",
+		printf(D_("==>Opening...\n"));
+		printf(D_("==>%02x:%02x.%d-%d\n"),
 			bus->bus, bus->dev, bus->func, bus->i2cbus);
 	}
 	
@@ -125,7 +125,7 @@ static void open_card(struct i2c_bus* bus) {
 						current_algo = &current_card->i2c_busses[bus->i2cbus];
 						aopen.status = 0;
 						if (verbosity == 2) {
-							printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
+							printf(D_("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n"),
 								dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
 								c, dev->irq, (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
 						}
@@ -140,7 +140,7 @@ static void open_card(struct i2c_bus* bus) {
 	}
 	
 	if (verbosity == 2) {
-		printf("==>Opened (status=%d)...\n", aopen.status);
+		printf(D_("==>Opened (status=%d)...\n"), aopen.status);
 	}
 	
 	if (msgsnd(msqid, &aopen, ANSWER_SIZE, IPC_NOWAIT) < 0) {
@@ -150,7 +150,7 @@ static void open_card(struct i2c_bus* bus) {
 
 static void data(struct query* mquery, int len) {
 	if (verbosity == 2) {
-		printf("==>Data, mquery->flags = %d\n", mquery->flags);
+		printf(D_("==>Data, mquery->flags = %d\n"), mquery->flags);
 	}
 	if (mquery->flags & I2C_M_RD) {
 		struct answer adata;
@@ -198,7 +198,7 @@ static void data(struct query* mquery, int len) {
 static void list()
 {
 	if (verbosity == 2) {
-		printf("==>Listing...\n");
+		printf(D_("==>Listing...\n"));
 	}
 	struct pci_dev *dev;
 	
@@ -214,7 +214,7 @@ static void list()
 		if (c == 0x0300) // VGA
 		{
 			if (verbosity == 2) {
-				printf("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n",
+				printf(D_("==>%02x:%02x.%d vendor=%04x device=%04x class=%04x irq=%d base0=%lx size0=%lx\n"),
 					dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id,
 					c, dev->irq, (long unsigned int)dev->base_addr[0], (long unsigned int)dev->size[0]);
 			}
@@ -222,7 +222,7 @@ static void list()
 			{
 				if ((thecard = cards_open[i](dev))) {
 					if (verbosity == 2) {
-						printf("==>Supported\n");
+						printf(D_("==>Supported\n"));
 					}
 					for (j = 0; j < thecard->nbusses; j++) {
 						struct answer alist;
@@ -234,7 +234,7 @@ static void list()
 						alist.bus.func   = dev->func;
 						alist.bus.i2cbus = j;
 						if (verbosity == 2) {
-							printf("==>%02x:%02x.%d-%d\n",
+							printf(D_("==>%02x:%02x.%d-%d\n"),
 								alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
 						}
 						if (msgsnd(msqid, &alist, ANSWER_SIZE, IPC_NOWAIT) < 0) {
@@ -255,7 +255,7 @@ static void list()
 		perror(_("==>Error while sending list message"));
 	}
 	if (verbosity == 2) {
-		printf("==>EOL\n");
+		printf(D_("==>EOL\n"));
 	}
 }
 
@@ -289,7 +289,7 @@ int main(int argc, char **argv)
 	
 	if ((msqid = msgget(key, 0666)) < 0) {
 		fprintf(stderr, _("==>Can't open key %u\n"), key);
-		perror("msgget");
+		perror(N_("msgget"));
 		exit(1);
 	}
 	
@@ -315,7 +315,7 @@ int main(int argc, char **argv)
 		}
 		
 		if (verbosity == 2) {
-			printf("==>Received!\n");
+			printf(D_("==>Received!\n"));
 		}
 		
 		last = time(NULL);
@@ -332,12 +332,12 @@ int main(int argc, char **argv)
 			break;
 		case QUERY_HEARTBEAT:
 			if (verbosity == 2) {
-				printf("==>Heartbeat received.\n");
+				printf(D_("==>Heartbeat received.\n"));
 			}
 			break;
 		case QUERY_QUIT:
 			if (verbosity == 2) {
-				printf("==>Quitting...\n");
+				printf(D_("==>Quitting...\n"));
 			}
 			if (current_card && current_card_close) {
 				current_card_close(current_card);
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 	}
 
 	if (verbosity) {
-		printf("==>ddcpci is quitting.\n");
+		printf(D_("==>ddcpci is quitting.\n"));
 	}
 	
 	pci_cleanup(pacc);

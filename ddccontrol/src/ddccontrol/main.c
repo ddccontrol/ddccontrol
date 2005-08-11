@@ -117,22 +117,22 @@ static void usage(char *name)
 static void check_integrity(char* datadir, char* pnpname) {
 	struct monitor_db* mon_db;
 	
-	printf("Checking options.xml integrity...\n");
+	printf(_("Checking %s integrity...\n"), "options.xml");
 	if (!ddcci_init_db(datadir)) {
-		printf("[ FAILED ]\n");
+		printf(_("[ FAILED ]\n"));
 		exit(1);
 	}
 
-	printf("[ OK ]\n");
+	printf(_("[ OK ]\n"));
 	
-	printf("Checking %s integrity...\n", pnpname);
+	printf(_("Checking %s integrity...\n"), pnpname);
 	if (!(mon_db = ddcci_create_db(pnpname, "", 0))) {
-		printf("[ FAILED ]\n");
+		printf(_("[ FAILED ]\n"));
 		ddcci_release_db();
 		exit(1);
 	}
 	
-	printf("[ OK ]\n");
+	printf(_("[ OK ]\n"));
 	
 	ddcci_free_db(mon_db);
 	
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
 		VERSION);
 	
-	while ((i=getopt(argc,argv,"hdr:w:csfvpb:i:")) >= 0)
+	while ((i=getopt(argc,argv, N_("hdr:w:csfvpb:i:"))) >= 0)
 	{
 		switch(i) {
 		case 'h':

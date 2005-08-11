@@ -27,6 +27,8 @@
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
+/* debugging strings, no need to translate them */
+#define D_(String) gettext_noop (String)
 
 #include <time.h>
 #include <sys/time.h>
@@ -95,10 +97,10 @@ void ddcpci_send_heartbeat();
 #define DDCCI_RETURN_IF_RUN(cond, value, message, node, run) \
 	if (cond) { \
 		if (node) \
-			fprintf(stderr, "Error %s @%s:%d (%s:%ld)\n", message, __FILE__, __LINE__, \
+			fprintf(stderr, _("Error: %s @%s:%d (%s:%ld)\n"), message, __FILE__, __LINE__, \
 				((xmlNodePtr)node)->doc->name, XML_GET_LINE(node)); \
 		else \
-			fprintf(stderr, "Error %s @%s:%d\n", message, __FILE__, __LINE__); \
+			fprintf(stderr, _("Error: %s @%s:%d\n"), message, __FILE__, __LINE__); \
 		run \
 		return value; \
 	}

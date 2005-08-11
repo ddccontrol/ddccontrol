@@ -341,12 +341,18 @@ $(DUMMYPOFILES):
 update-gmo: Makefile $(GMOFILES)
 	@:
 
-Makefile: Makefile.in.in $(top_builddir)/config.status @POMAKEFILEDEPS@
+Makefile: Makevars Makefile.in.in $(top_builddir)/config.status @POMAKEFILEDEPS@
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@.in CONFIG_HEADERS= \
 	       $(SHELL) ./config.status
 
 force:
+
+gen-potfiles:
+	echo "# List of source files containing translatable strings." > POTFILES.in
+	echo "# To generate this file, type 'make gen-potfiles'" >> POTFILES.in
+	cd .. && find -name "*.c" >> po/POTFILES.in
+	cd .. && find -name "*.h" >> po/POTFILES.in
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

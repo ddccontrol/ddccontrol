@@ -152,17 +152,17 @@ struct card* nvidia_open(struct pci_dev *dev)
 	struct card* nvidia_card = malloc(sizeof(struct card));
 	struct mem_data* data = malloc(sizeof(struct mem_data));
 	if ((!nvidia_card) || (!data)) {
-		fprintf(stderr, _("nvidia_open: Malloc error.\n"));
+		fprintf(stderr, _("%s: Malloc error.\n"), N_("nvidia_open"));
 		exit(-1);
 	}
 	memset(nvidia_card, 0, sizeof(struct card));
 	
 	nvidia_card->data = data;
 	
-	data->fd = open("/dev/mem", O_RDWR);
+	data->fd = open(N_("/dev/mem"), O_RDWR);
 	
 	if (data->fd < 0) {
-		perror(_("nvidia_open: Error: cannot open /dev/mem"));
+		perror(_("nvidia_open: cannot open /dev/mem"));
 		nvidia_close(nvidia_card);
 		return 0;
 	}
@@ -171,7 +171,7 @@ struct card* nvidia_open(struct pci_dev *dev)
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0] + 0x00601000);
 	
 	if (data->memory == MAP_FAILED) {
-		perror(_("nvidia_open: Error: mmap failed"));
+		perror(_("nvidia_open: mmap failed"));
 		nvidia_close(nvidia_card);
 		return 0;
 	}

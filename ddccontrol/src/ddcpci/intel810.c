@@ -102,7 +102,7 @@ static int init_i2c_bus(struct i2c_algo_bit_data* algo, char* mmio, int gpio)
 	//fprintf(stderr, "init_i2c_bus: (ddc_base: %#x)\n", ddc_base);
 	struct i2c_data* data = malloc(sizeof(struct i2c_data));
 	if (!data) {
-		fprintf(stderr, _("intel810.c:init_i2c_bus: Malloc error."));
+		fprintf(stderr, _("%s: Malloc error."), N_("intel810.c:init_i2c_bus"));
 		exit(-1);
 	}
 	data->mmio = mmio;
@@ -154,22 +154,21 @@ struct card* i810_open(struct pci_dev *dev)
 		return 0;
 	}
 	
-	printf("i810_open: ok\n");
 	
 	struct card* i810_card = malloc(sizeof(struct card));
 	struct mem_data* data = malloc(sizeof(struct mem_data));
 	if ((!i810_card) || (!data)) {
-		fprintf(stderr, _("i810_open: Malloc error.\n"));
+		fprintf(stderr, _("%s: Malloc error.\n"), N_("i810_open"));
 		exit(-1);
 	}
 	memset(i810_card, 0, sizeof(struct card));
 	
 	i810_card->data = data;
 	
-	data->fd = open("/dev/mem", O_RDWR);
+	data->fd = open(N_("/dev/mem"), O_RDWR);
 	
 	if (data->fd < 0) {
-		perror(_("i810_open: Error: cannot open /dev/mem"));
+		perror(_("i810_open: cannot open /dev/mem"));
 		i810_close(i810_card);
 		return 0;
 	}
@@ -184,7 +183,7 @@ struct card* i810_open(struct pci_dev *dev)
 		if (dev->size[reg] == data->length) {
 			data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[reg]);
 			if (get_verbosity())
-				printf("i810_open: Using region %d (%lx, %lx)\n", reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
+				printf(D_("i810_open: Using region %d (%lx, %lx)\n"), reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
 			found = 1;
 			break;
 		}
@@ -192,12 +191,12 @@ struct card* i810_open(struct pci_dev *dev)
 	
 	if (!found) { /* We did not find a region with a valid size, so we take the first one with a zero size (915G) */
 		if (get_verbosity())
-			printf("i810_open: Cannot find any 512k region, searching for a 0 one.\n");
+			printf(D_("i810_open: Cannot find any 512k region, searching for a 0 one.\n"));
 		for (reg = 0; reg < 6; reg++) {
 			if (dev->size[reg] == 0) {
 				data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[reg]);
 				if (get_verbosity())
-					printf("i810_open: Using region %d (%lx, %lx)\n", reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
+					printf(D_("i810_open: Using region %d (%lx, %lx)\n"), reg, (long unsigned int)dev->base_addr[reg], (long unsigned int)dev->size[reg]);
 				found = 1;
 				break;
 			}
@@ -211,7 +210,7 @@ struct card* i810_open(struct pci_dev *dev)
 	}
 	
 	if (data->memory == MAP_FAILED) {
-		perror(_("i810_open: Error: mmap failed"));
+		perror(_("i810_open: mmap failed"));
 		i810_close(i810_card);
 		return 0;
 	}

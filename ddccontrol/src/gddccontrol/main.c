@@ -80,7 +80,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 	if (!g_mutex_trylock(combo_change_mutex)) {
 		if (get_verbosity())
-			printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
+			printf(D_("Tried to change to %d, but mutex locked.\n"), gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
 		return;
 	}
 	
@@ -88,7 +88,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	
 	while (currentid != nextid) {
 		if (get_verbosity())
-			printf("currentid(%d) != nextid(%d), trying...\n", currentid, nextid);
+			printf(D_("currentid(%d) != nextid(%d), trying...\n"), currentid, nextid);
 		currentid = nextid;
 		int i = 0;
 	
@@ -107,7 +107,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			g_assert(current != NULL);
 			if (i == currentid)
 			{
-				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
+				snprintf(buffer, 256, N_("%s: %s"), current->filename, current->name);
 				create_monitor_manager(current);
 				if (monitor_manager) {
 					gtk_widget_show(monitor_manager);
@@ -132,7 +132,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	}
 	
 	if (get_verbosity())
-		printf("currentid == nextid (%d)\n", currentid);
+		printf(D_("currentid == nextid (%d)\n"), currentid);
 	
 	gtk_widget_set_sensitive(widget, TRUE);
 	g_mutex_unlock(combo_change_mutex);
@@ -148,7 +148,8 @@ static gboolean window_changed(GtkWidget *widget,
 		struct monitorlist* current;
 		
 		if (monlist == NULL) {
-			printf("monlist == NULL\n");
+			if (get_verbosity())
+				printf(D_("monlist == NULL\n"));
 			return FALSE;
 		}
 		
@@ -291,7 +292,7 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 	
 	gtk_container_add (GTK_CONTAINER(button), box);
 	
-	g_object_set_data(G_OBJECT(button), "button_label", label);
+	g_object_set_data(G_OBJECT(button), N_("button_label"), label);
 	
 	if (tool_tip) {
 		gtk_tooltips_set_tip(GTK_TOOLTIPS(tooltips), button, tool_tip, NULL);
@@ -317,7 +318,7 @@ int main( int   argc, char *argv[] )
 	bind_textdomain_codeset("ddccontrol-db", "UTF-8");
 	textdomain(PACKAGE);
 	
-	while ((i=getopt(argc,argv,"v")) >= 0)
+	while ((i=getopt(argc,argv,N_("v"))) >= 0)
 	{
 		switch(i) {
 		case 'v':
@@ -361,14 +362,14 @@ int main( int   argc, char *argv[] )
 	
 	gtk_window_set_default_size(GTK_WINDOW(main_app_window), 500, 500);
 	
-	g_signal_connect (G_OBJECT (main_app_window), "delete_event",
+	g_signal_connect (G_OBJECT (main_app_window), N_("delete_event"),
 				G_CALLBACK (delete_event), NULL);
 	
-	g_signal_connect (G_OBJECT (main_app_window), "destroy",
+	g_signal_connect (G_OBJECT (main_app_window), N_("destroy"),
 				G_CALLBACK (destroy), NULL);
 
 	#ifdef HAVE_XINERAMA
-	g_signal_connect (G_OBJECT (main_app_window), "configure-event",
+	g_signal_connect (G_OBJECT (main_app_window), N_("configure-event"),
 				G_CALLBACK (window_changed), NULL);
 	#endif
 	
@@ -404,20 +405,20 @@ int main( int   argc, char *argv[] )
 	profile_hbox = gtk_hbox_new(FALSE, 10);
 	
 	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"), NULL);
-	g_signal_connect(G_OBJECT(profile_manager_button), "clicked", G_CALLBACK(loadprofile_callback), NULL);
+	g_signal_connect(G_OBJECT(profile_manager_button), N_("clicked"), G_CALLBACK(loadprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), profile_manager_button, 0, 0, 0);
 	gtk_widget_show (profile_manager_button);
 	gtk_widget_set_sensitive(profile_manager_button, FALSE);
 	
 	saveprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Save profile"), NULL);
-	g_signal_connect(G_OBJECT(saveprofile_button), "clicked", G_CALLBACK(saveprofile_callback), NULL);
+	g_signal_connect(G_OBJECT(saveprofile_button), N_("clicked"), G_CALLBACK(saveprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), saveprofile_button, 0, 0, 0);
 	gtk_widget_set_sensitive(saveprofile_button, FALSE);
 	
 	cancelprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Cancel profile creation"), NULL);
-	g_signal_connect(G_OBJECT(cancelprofile_button), "clicked", G_CALLBACK(cancelprofile_callback), NULL);
+	g_signal_connect(G_OBJECT(cancelprofile_button), N_("clicked"), G_CALLBACK(cancelprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), cancelprofile_button, 0, 0, 0);
 	gtk_widget_set_sensitive(cancelprofile_button, FALSE);
@@ -455,14 +456,14 @@ int main( int   argc, char *argv[] )
 	GtkWidget* br_hbox = gtk_hbox_new(FALSE, 30);
 	
 	refresh_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
-	g_signal_connect(G_OBJECT(refresh_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
+	g_signal_connect(G_OBJECT(refresh_button),N_("clicked"),G_CALLBACK (refresh_all_controls), NULL);
 
 	gtk_box_pack_start(GTK_BOX(br_hbox),refresh_button,0,0,0);
 	gtk_widget_show (refresh_button);
 	gtk_widget_set_sensitive(refresh_button, FALSE);
 	
 	close_button = stock_label_button(GTK_STOCK_CLOSE, _("Close"), NULL);
-	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
+	g_signal_connect(G_OBJECT(close_button),N_("clicked"),G_CALLBACK (destroy), NULL);
 
 	gtk_box_pack_start(GTK_BOX(br_hbox),close_button,0,0,0);
 	gtk_widget_show (close_button);
@@ -519,12 +520,12 @@ int main( int   argc, char *argv[] )
 	
 	for (current = monlist; current != NULL; current = current->next)
 	{
-		snprintf(buffer, 256, "%s: %s", 
+		snprintf(buffer, 256, N_("%s: %s"),
 			current->filename, current->name);
 		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
 	}
 	
-	g_signal_connect (G_OBJECT(combo_box), "changed", G_CALLBACK (combo_change), NULL);
+	g_signal_connect (G_OBJECT(combo_box), N_("changed"), G_CALLBACK (combo_change), NULL);
 	
 /*	moninfo = gtk_label_new ();
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
