@@ -484,15 +484,9 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	}
 	
 	if (subgroup->pattern) {
-		
-#if GTK_CHECK_VERSION(2,7,0)
-		gchar* stockitem = GTK_STOCK_FULLSCREEN;
-#else
-		gchar* stockitem = GTK_STOCK_EXECUTE;
-#endif
 		GtkWidget* align = gtk_alignment_new(0.5, 0, 0, 0);
 		
-		GtkWidget* button = stock_label_button(stockitem, _("Show fullscreen patterns"), NULL);
+		GtkWidget* button = stock_label_button(GTK_STOCK_FULLSCREEN, _("Show fullscreen patterns"), NULL);
 		gtk_widget_show(button);
 		gtk_container_add(GTK_CONTAINER(align), button);
 		gtk_widget_show(align);

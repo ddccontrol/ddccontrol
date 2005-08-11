@@ -38,6 +38,14 @@
 /* constants */
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
+#ifndef GTK_STOCK_EDIT /* GTK <2.6 */
+#define GTK_STOCK_EDIT GTK_STOCK_PREFERENCES
+#endif
+
+#ifndef GTK_STOCK_FULLSCREEN /* GTK <2.8 */
+#define GTK_STOCK_FULLSCREEN GTK_STOCK_EXECUTE
+#endif
+
 /* globals */
 struct monitor* mon;
 
