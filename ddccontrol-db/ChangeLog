@@ -1,3 +1,8 @@
+2005-08-12 22:17  nboichat
+
+	* po/: ddccontrol-db.pot, fr.gmo, fr.po, ru.gmo, ru.po: Update
+	  Russian and French translations.
+
 2005-08-11 12:38  nboichat
 
 	* db/monitor/SAM011F.xml: Add support for Samsung SyncMaster 912N.

@@ -1,3 +1,9 @@
+2005-08-12 22:17  nboichat
+
+	* po/ddccontrol.pot, po/fr.gmo, po/fr.po, po/ru.gmo, po/ru.po,
+	  src/gddccontrol/fspatterns.c, src/lib/profile.c: Update Russian
+	  and French translations.
+
 2005-08-11 18:42  nboichat
 
 	* src/gddccontrol/: notebook.c, notebook.h: Fix GTK+-2.4
