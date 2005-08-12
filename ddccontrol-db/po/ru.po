@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-07-14 10:23+0200\n"
-"PO-Revision-Date: 2005-07-19 13:32+0300\n"
+"POT-Creation-Date: 2005-08-11 20:27+0200\n"
+"PO-Revision-Date: 2005-08-12 13:32+0300\n"
 "Last-Translator: SergeiEpiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -125,7 +125,7 @@ msgstr "Настрока кривой цвета"
 msgid "Color Preset"
 msgstr "Предустановки цвета"
 
-#: db/options.xml.h:25 db/options.xml.h:110
+#: db/options.xml.h:25 db/options.xml.h:111
 #, c-format
 msgid "Normal"
 msgstr "Нормально"
@@ -250,12 +250,12 @@ msgstr "Автоматическая настройка"
 msgid "Auto Size Center"
 msgstr "Автоматические размеры центра"
 
-#: db/options.xml.h:50 db/options.xml.h:117
+#: db/options.xml.h:50 db/options.xml.h:118
 #, c-format
 msgid "Enable"
 msgstr "Вкл"
 
-#: db/options.xml.h:51 db/options.xml.h:116
+#: db/options.xml.h:51 db/options.xml.h:117
 #, c-format
 msgid "Disable"
 msgstr "Выкл"
@@ -512,180 +512,185 @@ msgstr "Восстановить начальный размер"
 
 #: db/options.xml.h:102
 #, c-format
+msgid "Restore Factory Default Size and Position"
+msgstr "Восстановить заводские установки размера и положения экрана"
+
+#: db/options.xml.h:103
+#, c-format
 msgid "Settings"
 msgstr "Настройки"
 
-#: db/options.xml.h:103
+#: db/options.xml.h:104
 #, c-format
 msgid "Save Current Settings"
 msgstr "Сохранить текущие настройки"
 
-#: db/options.xml.h:104
+#: db/options.xml.h:105
 #, c-format
 msgid "Restore Factory Settings"
 msgstr "Восстановить заводские установки"
 
-#: db/options.xml.h:105
+#: db/options.xml.h:106
 #, c-format
 msgid "Audio"
 msgstr "Звук"
 
-#: db/options.xml.h:106
+#: db/options.xml.h:107
 #, c-format
 msgid "Audio Speaker Volume Adjust"
 msgstr "Настройка уровня динамиков"
 
-#: db/options.xml.h:107
+#: db/options.xml.h:108
 #, c-format
 msgid "Audio Microphone Volume Adjust"
 msgstr "Автоматическая настройка уровня микрофона"
 
-#: db/options.xml.h:108 db/options.xml.h:109
+#: db/options.xml.h:109 db/options.xml.h:110
 #, c-format
 msgid "Mute"
 msgstr "Отключить звук"
 
-#: db/options.xml.h:111 db/options.xml.h:112
+#: db/options.xml.h:112 db/options.xml.h:113
 #, c-format
 msgid "Degauss"
 msgstr "Размагничивание"
 
-#: db/options.xml.h:113
+#: db/options.xml.h:114
 #, c-format
 msgid "Secondary Degauss"
 msgstr "Вторичное размагничивание"
 
-#: db/options.xml.h:114
+#: db/options.xml.h:115
 #, c-format
 msgid "OSD"
 msgstr "OSD"
 
-#: db/options.xml.h:115
+#: db/options.xml.h:116
 #, c-format
 msgid "On Screen Display"
 msgstr "Экранное меню"
 
-#: db/options.xml.h:118
+#: db/options.xml.h:119
 #, c-format
 msgid "Enable only brightness/contrast settings"
 msgstr "Разрешить настройку только яркости/контрастности"
 
-#: db/options.xml.h:119
+#: db/options.xml.h:120
 #, c-format
 msgid "OSD Orientation"
 msgstr "Положение экранного меню"
 
-#: db/options.xml.h:120
+#: db/options.xml.h:121
 #, c-format
 msgid "Landscape"
 msgstr "Пейзажное"
 
-#: db/options.xml.h:121
+#: db/options.xml.h:122
 #, c-format
 msgid "Portrait"
 msgstr "Портретное"
 
-#: db/options.xml.h:122
+#: db/options.xml.h:123
 #, c-format
 msgid "Language select"
 msgstr "Выбор языка"
 
-#: db/options.xml.h:123
+#: db/options.xml.h:124
 #, c-format
 msgid "English"
 msgstr "Английский"
 
-#: db/options.xml.h:124
+#: db/options.xml.h:125
 #, c-format
 msgid "French"
 msgstr "Французский"
 
-#: db/options.xml.h:125
+#: db/options.xml.h:126
 #, c-format
 msgid "German"
 msgstr "Немецкий"
 
-#: db/options.xml.h:126
+#: db/options.xml.h:127
 #, c-format
 msgid "Italian"
 msgstr "Итальянский"
 
-#: db/options.xml.h:127
+#: db/options.xml.h:128
 #, c-format
 msgid "Russian"
 msgstr "Русский"
 
-#: db/options.xml.h:128
+#: db/options.xml.h:129
 #, c-format
 msgid "Spanish"
 msgstr "Испанский"
 
-#: db/options.xml.h:129
+#: db/options.xml.h:130
 #, c-format
 msgid "Swedish"
 msgstr "Шведский"
 
-#: db/options.xml.h:130
+#: db/options.xml.h:131
 #, c-format
 msgid "Chinese"
 msgstr "Китайский"
 
-#: db/options.xml.h:131
+#: db/options.xml.h:132
 #, c-format
 msgid "Dutch"
 msgstr "Датский"
 
-#: db/options.xml.h:132
+#: db/options.xml.h:133
 #, c-format
 msgid "Input settings"
 msgstr "Настройки входов"
 
-#: db/options.xml.h:133
+#: db/options.xml.h:134
 #, c-format
 msgid "Input level Select"
 msgstr "Выбор уровень сигнала входа"
 
-#: db/options.xml.h:134
+#: db/options.xml.h:135
 #, c-format
 msgid "Display Resolution Notifier"
 msgstr "Информация о разрешении экрана"
 
-#: db/options.xml.h:135 db/options.xml.h:142 db/options.xml.h:146
+#: db/options.xml.h:136 db/options.xml.h:143 db/options.xml.h:147
 #, c-format
 msgid "On"
 msgstr "Вкл"
 
-#: db/options.xml.h:136 db/options.xml.h:145
+#: db/options.xml.h:137 db/options.xml.h:146
 #, c-format
 msgid "Off"
 msgstr "Выкл"
 
-#: db/options.xml.h:137
+#: db/options.xml.h:138
 #, c-format
 msgid "Input Source Select"
 msgstr "Выбор типа входа"
 
-#: db/options.xml.h:138
+#: db/options.xml.h:139
 #, c-format
 msgid "Analog"
 msgstr "Аналоговый"
 
-#: db/options.xml.h:139
+#: db/options.xml.h:140
 #, c-format
 msgid "Digital"
 msgstr "Цифровой"
 
-#: db/options.xml.h:140 db/options.xml.h:144
+#: db/options.xml.h:141 db/options.xml.h:145
 #, c-format
 msgid "Power control"
 msgstr "Управление питанием"
 
-#: db/options.xml.h:141
+#: db/options.xml.h:142
 #, c-format
 msgid "DPMS Control"
 msgstr "Управление энергосбережением (DPMS)"
 
-#: db/options.xml.h:143
+#: db/options.xml.h:144
 #, c-format
 msgid "Standby"
 msgstr "Ожидание"

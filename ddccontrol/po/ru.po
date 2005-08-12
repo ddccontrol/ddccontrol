@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-11 17:59+0200\n"
-"PO-Revision-Date: 2005-07-19 13:32+0300\n"
+"POT-Creation-Date: 2005-08-12 23:52+0200\n"
+"PO-Revision-Date: 2005-08-12 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -51,17 +51,17 @@ msgstr ""
 #: src/ddccontrol/main.c:120 src/ddccontrol/main.c:128
 #, c-format
 msgid "Checking %s integrity...\n"
-msgstr ""
+msgstr "Проверка целостности %s...\n"
 
 #: src/ddccontrol/main.c:122 src/ddccontrol/main.c:130
 #, c-format
 msgid "[ FAILED ]\n"
-msgstr ""
+msgstr "[ ОШИБКА ]\n"
 
 #: src/ddccontrol/main.c:126 src/ddccontrol/main.c:135
 #, c-format
 msgid "[ OK ]\n"
-msgstr ""
+msgstr "[ OK ]\n"
 
 #: src/ddccontrol/main.c:171
 #, c-format
@@ -278,11 +278,15 @@ msgid ""
 " - White should be as bright as possible.\n"
 " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
 msgstr ""
+"Настройте яркость и контрастность согласно этих правил:\n"
+" - Чёрный должен быть максимально чёрным.\n"
+" - Белый должен быть максимально ярким.\n"
+" - Вы должны различать каждый уровень серого (в частности 0 и 12).\n"
 
 #: src/gddccontrol/fspatterns.c:198
 #, c-format
-msgid "Unknown fullscreen pattern name: %s</span>"
-msgstr ""
+msgid "Unknown fullscreen pattern name: %s"
+msgstr "Неизвестное имя полноэкранного шаблона: %s"
 
 #: src/gddccontrol/main.c:175
 #, c-format
@@ -301,31 +305,31 @@ msgstr "Установки монитора"
 
 #: src/gddccontrol/main.c:385
 msgid "Current monitor: "
-msgstr ""
+msgstr "Текущий монитор: "
 
 #: src/gddccontrol/main.c:407
 msgid "Profile manager"
-msgstr ""
+msgstr "Менеджер профилей"
 
 #: src/gddccontrol/main.c:414
 msgid "Save profile"
-msgstr ""
+msgstr "Сохранить профиль"
 
 #: src/gddccontrol/main.c:420
 msgid "Cancel profile creation"
-msgstr ""
+msgstr "Отменить создание профиля"
 
 #: src/gddccontrol/main.c:458
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
 #: src/gddccontrol/main.c:458
 msgid "Refresh all controls"
-msgstr ""
+msgstr "Обновить все регистры"
 
 #: src/gddccontrol/main.c:465
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: src/gddccontrol/main.c:488
 #, c-format
@@ -366,30 +370,30 @@ msgstr ""
 #: src/gddccontrol/main.c:548
 #, c-format
 msgid "Welcome to gddccontrol %s."
-msgstr ""
+msgstr "Добро пожаловать в gddccontrol %s."
 
 #: src/gddccontrol/notebook.c:81
 msgid "Error while getting value"
 msgstr "Ошибка при получении значения"
 
 #: src/gddccontrol/notebook.c:116 src/gddccontrol/notebook.c:126
-#, fuzzy, c-format
+#, c-format
 msgid "Refreshing controls values (%d%%)..."
-msgstr "Получаю значения регистров (%d%%)..."
+msgstr "Обновляю значения регистров (%d%%)..."
 
 #: src/gddccontrol/notebook.c:129
 msgid "Could not get the control_db struct related to a control."
-msgstr ""
+msgstr "Не могу получить структуру control_db, связанную с регистром."
 
-#: src/gddccontrol/notebook.c:495
+#: src/gddccontrol/notebook.c:489
 msgid "Show fullscreen patterns"
-msgstr ""
+msgstr "Показать полноэкранные шаблоны"
 
-#: src/gddccontrol/notebook.c:527
+#: src/gddccontrol/notebook.c:521
 msgid "Section"
 msgstr "Секция"
 
-#: src/gddccontrol/notebook.c:574
+#: src/gddccontrol/notebook.c:568
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -401,114 +405,113 @@ msgstr ""
 "Часто это происходит при подключении кабеля VGA/DVI в неправльный вход "
 "монитора, поддерживающего DDC/CI только по одному из двух входов."
 
-#: src/gddccontrol/notebook.c:582
+#: src/gddccontrol/notebook.c:576
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "Открываю устройство монитора (%s)..."
 
-#: src/gddccontrol/notebook.c:598
+#: src/gddccontrol/notebook.c:592
 msgid "Please click on a group name."
-msgstr ""
+msgstr "Пожалуйста, щёлкните на имени группы."
 
-#: src/gddccontrol/notebook.c:617 src/gddccontrol/notebook.c:626
+#: src/gddccontrol/notebook.c:611 src/gddccontrol/notebook.c:620
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr "Получаю значения регистров (%d%%)..."
 
-#: src/gddccontrol/notebook.c:638
+#: src/gddccontrol/notebook.c:632
 msgid "Loading profiles..."
-msgstr ""
+msgstr "Загружаю профили..."
 
 #: src/gddccontrol/gprofile.c:52
 msgid "You must select at least one control to be saved in the profile."
-msgstr ""
+msgstr "Вы должны выбрать хотя бы один регистр для сохранения в профиле."
 
 #: src/gddccontrol/gprofile.c:60
 msgid "Creating profile..."
-msgstr ""
+msgstr "Создаю профиль..."
 
 #: src/gddccontrol/gprofile.c:75
-#, fuzzy
 msgid "Error while creating profile."
-msgstr "Ошибка при получении значения"
+msgstr "Ошибка при создании профиля"
 
 #: src/gddccontrol/gprofile.c:92
 msgid "Applying profile..."
-msgstr ""
+msgstr "Примененяю профиль..."
 
 #: src/gddccontrol/gprofile.c:115
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
-msgstr ""
+msgstr "Вы уверены в удалении профиля '%s'?"
 
 #: src/gddccontrol/gprofile.c:141
 msgid ""
 "Please select the controls you want to save in the profile using the "
 "checkboxes to the left of each control."
 msgstr ""
+"Пожалуйста, выберите регистры, которые хотите сохранить в профиле, отметив "
+"слева от каждого регистра."
 
 #: src/gddccontrol/gprofile.c:177
 msgid "Profile Manager"
-msgstr ""
+msgstr "Менеджер профилей"
 
 #: src/gddccontrol/gprofile.c:194
 msgid "Apply profile"
-msgstr ""
+msgstr "Применить профиль"
 
 #: src/gddccontrol/gprofile.c:199
 msgid "Show profile details / Rename profile"
-msgstr ""
+msgstr "Показать профиль детально / Переименовать профиль"
 
 #: src/gddccontrol/gprofile.c:204
 msgid "Delete profile"
-msgstr ""
+msgstr "Удалить профиль"
 
 #: src/gddccontrol/gprofile.c:230
 msgid "Create profile"
-msgstr ""
+msgstr "Создать профиль"
 
 #: src/gddccontrol/gprofile.c:236
 msgid "Close profile manager"
-msgstr ""
+msgstr "Закрыть менеждер профилей"
 
 #: src/gddccontrol/gprofile.c:300
-#, fuzzy
 msgid "Control name"
-msgstr "Управление"
+msgstr "Имя регистра"
 
 #: src/gddccontrol/gprofile.c:311
 msgid "Value"
-msgstr ""
+msgstr "Значение"
 
 #: src/gddccontrol/gprofile.c:314
 msgid "Address"
-msgstr ""
+msgstr "Адрес"
 
 #: src/gddccontrol/gprofile.c:317
 msgid "Raw value"
-msgstr ""
+msgstr "Необр. значение"
 
 #: src/gddccontrol/gprofile.c:435 src/gddccontrol/gprofile.c:455
 msgid "Profile information:"
-msgstr ""
+msgstr "Информация о профиле:"
 
 #: src/gddccontrol/gprofile.c:464
 #, c-format
 msgid "File name: %s"
-msgstr ""
+msgstr "Имя файла: %s"
 
 #: src/gddccontrol/gprofile.c:475
 msgid "Profile name:"
-msgstr ""
+msgstr "Имя профиля:"
 
 #: src/gddccontrol/gprofile.c:497
 msgid "Saving profile..."
-msgstr ""
+msgstr "Сохраняю профиль..."
 
 #: src/gddccontrol/gprofile.c:506
-#, fuzzy
 msgid "Error while saving profile."
-msgstr "Ошибка при получении значения"
+msgstr "Ошибка при сохранении профиля."
 
 #: src/lib/ddcci.c:130
 msgid "Error while initialisating the message queue"
@@ -587,22 +590,22 @@ msgstr "Разрушен EDID в 0x%02x.\n"
 #: src/lib/ddcci.c:646
 #, c-format
 msgid "Serial number: %d\n"
-msgstr ""
+msgstr "Серийный номер: %d\n"
 
 #: src/lib/ddcci.c:649
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
-msgstr ""
+msgstr "Произведён: %d неделя, %d\n"
 
 #: src/lib/ddcci.c:652
 #, c-format
 msgid "EDID version: %d.%d\n"
-msgstr ""
+msgstr "Версия EDID: %d.%d\n"
 
 #: src/lib/ddcci.c:655
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
-msgstr ""
+msgstr "Максимальный размер: %d x %d (см)\n"
 
 #: src/lib/ddcci.c:666
 #, c-format
@@ -638,23 +641,22 @@ msgid "Unknown monitor (%s)"
 msgstr "Неизвестный монитор (%s)"
 
 #: src/lib/ddcci.c:857
-#, fuzzy, c-format
+#, c-format
 msgid "Probing for available monitors"
-msgstr "Поиск доступных мониторов..."
+msgstr "Поиск доступных мониторов"
 
 #: src/lib/ddcci.c:870
 msgid "Error while sending list message"
 msgstr "Ошибка при отправке сообщения списка"
 
 #: src/lib/ddcci.c:879
-#, fuzzy
 msgid "Error while reading list entry"
-msgstr "Ошибка при отправке сообщения списка"
+msgstr "Ошибка при чтении элемента списка"
 
 #: src/lib/ddcci.c:896
-#, fuzzy, c-format
+#, c-format
 msgid "Found PCI device (%s)\n"
-msgstr "Найдено устройство I2C (%s)\n"
+msgstr "Найдено устройство PCI (%s)\n"
 
 #: src/lib/ddcci.c:930
 #, c-format
@@ -689,7 +691,7 @@ msgstr "Элемент %s (id=%s) не найден (строка %ld).\n"
 
 #: src/lib/monitor_db.c:288
 msgid "Invalid refresh type (!= none, != all)."
-msgstr ""
+msgstr "Неверный тип обновления (!= none, != all)."
 
 #: src/lib/monitor_db.c:314 src/lib/profile.c:248
 msgid "Can't find address property."
@@ -806,138 +808,135 @@ msgstr "Пожалуйста, обновите базу данных ddccontrol.
 #: src/lib/profile.c:52 src/lib/ddcci.h:103
 #, c-format
 msgid "Error: %s @%s:%d\n"
-msgstr ""
+msgstr "Ошибка: %s @%s:%d\n"
 
 #: src/lib/profile.c:80
-#, fuzzy
 msgid "Cannot read control value\n"
-msgstr "Не могу найти текущее значение регистра в списке значений."
+msgstr "Не могу прочесть значение регистра\n"
 
 #: src/lib/profile.c:99 src/lib/profile.c:149 src/lib/profile.c:284
 msgid "Cannot create filename (buffer too small)\n"
-msgstr ""
+msgstr "Не могу создать имя файла (буфер слишком мал)\n"
 
 #: src/lib/profile.c:117
-#, fuzzy
 msgid "Cannot write control value\n"
-msgstr "Не могу найти текущее значение регистра в списке значений."
+msgstr "Не могу записать значение регистра\n"
 
 #: src/lib/profile.c:154
-#, fuzzy
 msgid "Error while opening ddccontrol home directory."
-msgstr "Ошибка при отправке сообщения открытия"
+msgstr "Ошибка при открытии домашнего каталога ddccontrol."
 
 #: src/lib/profile.c:178
-#, fuzzy
 msgid "Error while reading ddccontrol home directory."
-msgstr "Ошибка при получении ответа на сообщение открытия"
+msgstr "Ошибка при чтении домашнего каталога ddccontrol."
 
 #: src/lib/profile.c:211
 #, c-format
 msgid "empty profile file\n"
-msgstr ""
+msgstr "пустой файл профиля\n"
 
 #: src/lib/profile.c:217
-#, fuzzy, c-format
+#, c-format
 msgid "profile of the wrong type, root node %s != profile"
-msgstr "options.xml неверного типа, root node %s != options"
+msgstr "неверный тип профиля, корень %s != profile"
 
 #: src/lib/profile.c:223
-#, fuzzy
 msgid "Can't find pnpid property."
-msgstr "Не могу найти элемент id."
+msgstr "Не могу найти свойство pnpid."
 
 #: src/lib/profile.c:229 src/lib/profile.c:232
-#, fuzzy
 msgid "Can't find version property."
-msgstr "Не могу найти свойство init."
+msgstr "Не могу найти свойство version."
 
 #: src/lib/profile.c:234
-#, fuzzy, c-format
-msgid "profile dbversion (%d) is not supported (should be %d).\n"
-msgstr "В options.xml dbversion (%d) меньше, чем поддерживаемая (%d).\n"
+#, c-format
+msgid "profile version (%d) is not supported (should be %d).\n"
+msgstr "профиль version (%d) не поддерживается (должно быть %d).\n"
 
 #: src/lib/profile.c:288
 msgid "Error while getting informations about ddccontrol home directory."
-msgstr ""
+msgstr "Ошибка при получении информации о домашнем каталоге ddccontrol."
 
 #: src/lib/profile.c:293
-#, fuzzy
 msgid "Error while creating ddccontrol home directory."
-msgstr "Ошибка при получении ответа на сообщение открытия"
+msgstr "Ошибка при создании домашнего каталога ddccontrol."
 
 #: src/lib/profile.c:298
 msgid ""
 "Error while getting informations about ddccontrol home directory after "
 "creating it."
 msgstr ""
+"Ошибка при при получении информации о домашнем каталоге ddccontrol после его "
+"создания."
 
 #: src/lib/profile.c:305
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
-msgstr ""
+msgstr "Ошибка: '.ddccontrol' в Вашем домашнем каталоге не является каталогом."
 
 #: src/lib/profile.c:313
 msgid "Error while getting informations about ddccontrol profile directory."
-msgstr ""
+msgstr "Ошибка при получении информации о каталоге профилей ddccontrol."
 
 #: src/lib/profile.c:318
-#, fuzzy
 msgid "Error while creating ddccontrol profile directory."
-msgstr "Ошибка при перечислении регистров в группе."
+msgstr "Ошибка при создании каталога профилей ddccontrol."
 
 #: src/lib/profile.c:323
 msgid ""
 "Error while getting informations about ddccontrol profile directory after "
 "creating it."
 msgstr ""
+"Ошибка при при получении информации о каталоге профилей ddccontrol после его "
+"создания."
 
 #: src/lib/profile.c:330
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr ""
+"Ошибка: '.ddccontrol/profiles' в Вашем домашнем каталоге не является "
+"каталогом."
 
 #: src/lib/profile.c:348
 msgid "Cannot create the xml writer\n"
-msgstr ""
+msgstr "Не могу создать модуль записи xml\n"
 
 #: src/lib/profile.c:408
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
-msgstr ""
+msgstr "ddcci_delete_profile: Ошибка, не могу удалить профиль.\n"
 
 #: src/lib/profile.c:428
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
-msgstr ""
+msgstr "ddcci_delete_profile: Ошибка, не могу найти профиль для удаления.\n"
 
 #: src/ddcpci/intel810.c:105
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Malloc error."
-msgstr "i810_open: ошибка malloc.\n"
+msgstr "%s: ошибка malloc."
 
 #: src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155 src/ddcpci/intel740.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Malloc error.\n"
-msgstr "i810_open: ошибка malloc.\n"
+msgstr "%s: ошибка malloc.\n"
 
 #: src/ddcpci/intel810.c:171
-#, fuzzy
 msgid "i810_open: cannot open /dev/mem"
-msgstr "i810_open: Ошибка: mmap не выполнена\n"
+msgstr "i810_open: не могу открыть /dev/mem"
 
 #: src/ddcpci/intel810.c:206
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr ""
+"i810_open: Ошибка: не могу найти ни одной правильной области MMIO PCI.\n"
 
 #: src/ddcpci/intel810.c:213
-#, fuzzy
 msgid "i810_open: mmap failed"
-msgstr "i810_open: Ошибка: mmap не выполнена\n"
+msgstr "i810_open: Ошибка: mmap не выполнена"
 
 #: src/ddcpci/i2c-algo-bit.c:369
 #, c-format
 msgid "sendbytes: error - bailout.\n"
-msgstr ""
+msgstr "sendbytes: ошибка - отключаюсь.\n"
 
 #: src/ddcpci/i2c-algo-bit.c:396
 #, c-format
@@ -996,34 +995,32 @@ msgid "==>Invalid query...\n"
 msgstr "==>Неверная очередь...\n"
 
 #: src/ddcpci/nvidia.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
-msgstr "nvidia_open: ошибка malloc.\n"
+msgstr "nvidia.c:init_i2c_bus: ошибка malloc."
 
 #: src/ddcpci/nvidia.c:165
-#, fuzzy
 msgid "nvidia_open: cannot open /dev/mem"
-msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
+msgstr "nvidia_open: не могу открыть /dev/mem"
 
 #: src/ddcpci/nvidia.c:174
-#, fuzzy
 msgid "nvidia_open: mmap failed"
-msgstr "nvidia_open: Ошибка: mmap не выполнена\n"
+msgstr "nvidia_open: mmap не выполнена"
 
 #: src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
-msgstr ""
+msgstr "%s: ioperm не выполнена"
 
 #: src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
-msgstr ""
+msgstr "%s: Ошибка: неизвестный тип карты (%#x)\n"
 
 #: src/lib/ddcci.h:100
 #, c-format
 msgid "Error: %s @%s:%d (%s:%ld)\n"
-msgstr ""
+msgstr "Ошибка: %s @%s:%d (%s:%ld)\n"
 
 #, fuzzy
 #~ msgid "ddc_control"

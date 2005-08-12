@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-11 17:59+0200\n"
-"PO-Revision-Date: 2005-07-15 17:39+0100\n"
+"POT-Creation-Date: 2005-08-12 23:52+0200\n"
+"PO-Revision-Date: 2005-08-13 00:16+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/ddccontrol/main.c:82 src/ddccontrol/main.c:86 src/ddccontrol/main.c:90
+#: src/ddccontrol/main.c:82
+#: src/ddccontrol/main.c:86
+#: src/ddccontrol/main.c:90
 msgid "Control"
 msgstr "Contrôle"
 
@@ -50,38 +52,37 @@ msgstr ""
 "\t-v : verbosité (utiliser ce paramètre plusieurs fois l'augmente)\n"
 "\t-b : répertoire contenant ddccontrol-db (si autre que %s)\n"
 
-#: src/ddccontrol/main.c:120 src/ddccontrol/main.c:128
+#: src/ddccontrol/main.c:120
+#: src/ddccontrol/main.c:128
 #, c-format
 msgid "Checking %s integrity...\n"
-msgstr ""
+msgstr "Vérification de l'intégrité de %s...\n"
 
-#: src/ddccontrol/main.c:122 src/ddccontrol/main.c:130
+#: src/ddccontrol/main.c:122
+#: src/ddccontrol/main.c:130
 #, c-format
 msgid "[ FAILED ]\n"
-msgstr ""
+msgstr "[ ÉCHEC ]\n"
 
-#: src/ddccontrol/main.c:126 src/ddccontrol/main.c:135
+#: src/ddccontrol/main.c:126
+#: src/ddccontrol/main.c:135
 #, c-format
 msgid "[ OK ]\n"
-msgstr ""
+msgstr "[ OK ]\n"
 
 #: src/ddccontrol/main.c:171
 #, c-format
 msgid ""
 "ddccontrol version %s\n"
-"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) and Nicolas Boichat "
-"(nicolas@boichat.ch)\n"
+"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) and Nicolas Boichat (nicolas@boichat.ch)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
-"You may redistribute copies of this program under the terms of the GNU "
-"General Public License.\n"
+"You may redistribute copies of this program under the terms of the GNU General Public License.\n"
 "\n"
 msgstr ""
 "ddccontrol, version %s\n"
-"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) et Nicolas Boichat "
-"(nicolas@boichat.ch)\n"
+"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) et Nicolas Boichat (nicolas@boichat.ch)\n"
 "Ce programme est livré SANS AUCUNE GARANTIE.\n"
-"Vous pouvez redistribuer des copies de ce programme sous les termes de la "
-"licence générale publique de GNU (GNU General Public License).\n"
+"Vous pouvez redistribuer des copies de ce programme sous les termes de la licence générale publique de GNU (GNU General Public License).\n"
 "\n"
 
 #: src/ddccontrol/main.c:190
@@ -99,7 +100,8 @@ msgstr "Vous ne pouvez pas utiliser le paramètre -w sans -r.\n"
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' ne semble pas être une valeur valide\n"
 
-#: src/ddccontrol/main.c:246 src/gddccontrol/main.c:345
+#: src/ddccontrol/main.c:246
+#: src/gddccontrol/main.c:345
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Impossible d'initialiser la librairie ddcci.\n"
@@ -137,11 +139,13 @@ msgstr "   Nom du moniteur : %s\n"
 msgid "   Input type: %s\n"
 msgstr "   Type d'entrée : %s\n"
 
-#: src/ddccontrol/main.c:266 src/ddccontrol/main.c:304
+#: src/ddccontrol/main.c:266
+#: src/ddccontrol/main.c:304
 msgid "Digital"
 msgstr "digitale"
 
-#: src/ddccontrol/main.c:266 src/ddccontrol/main.c:304
+#: src/ddccontrol/main.c:266
+#: src/ddccontrol/main.c:304
 msgid "Analog"
 msgstr "analogique"
 
@@ -154,12 +158,10 @@ msgstr "  (Choisi automatiquement)\n"
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
-"If your graphics card need it, please check all the required kernel modules "
-"are loaded (i2c-dev, and your framebuffer driver).\n"
+"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
 msgstr ""
 "Pas de moniteur supportant le DDC/CI disponible.\n"
-"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de "
-"\"framebuffer\"), si votre carte graphique en a besoin.\n"
+"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de \"framebuffer\"), si votre carte graphique en a besoin.\n"
 
 #: src/ddccontrol/main.c:293
 #, c-format
@@ -171,13 +173,11 @@ msgstr "Lecture de l'EDID et initialisation du DDC/CI sur le bus %s...\n"
 msgid ""
 "\n"
 "DDC/CI at %s is unusable (%d).\n"
-"If your graphics card need it, please check all the required kernel modules "
-"are loaded (i2c-dev, and your framebuffer driver).\n"
+"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
 msgstr ""
 "\n"
 "Le protocole DDC/CI est inutilisable sur %s (%d).\n"
-"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de "
-"\"framebuffer\"), si votre carte graphique en a besoin.\n"
+"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de \"framebuffer\"), si votre carte graphique en a besoin.\n"
 
 #: src/ddccontrol/main.c:301
 #, c-format
@@ -280,11 +280,15 @@ msgid ""
 " - White should be as bright as possible.\n"
 " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
 msgstr ""
+"Modifier la luminosité et le contraste en suivant ces règles :\n"
+" - Le noir doit être aussi sombre que possible.\n"
+" - Le blanc devrait être aussi clair que possible.\n"
+" - Chaque niveau de gris doit pouvoir être distingué (particulièrement les niveaux 0 et 12).\n"
 
 #: src/gddccontrol/fspatterns.c:198
 #, c-format
-msgid "Unknown fullscreen pattern name: %s</span>"
-msgstr ""
+msgid "Unknown fullscreen pattern name: %s"
+msgstr "Motif plein écran inconnu : %s"
 
 #: src/gddccontrol/main.c:175
 #, c-format
@@ -293,9 +297,7 @@ msgstr "Moniteur changé (%d %d).\n"
 
 #: src/gddccontrol/main.c:351
 msgid "Unable to initialize ddcci library, see console for more details.\n"
-msgstr ""
-"Impossible d'initialiser la librairie ddcci, voir la console pour plus de "
-"détails.\n"
+msgstr "Impossible d'initialiser la librairie ddcci, voir la console pour plus de détails.\n"
 
 #: src/gddccontrol/main.c:361
 msgid "Monitor settings"
@@ -303,31 +305,31 @@ msgstr "Paramètres du moniteur"
 
 #: src/gddccontrol/main.c:385
 msgid "Current monitor: "
-msgstr ""
+msgstr "Moniteur actuel :"
 
 #: src/gddccontrol/main.c:407
 msgid "Profile manager"
-msgstr ""
+msgstr "Gestion des profils"
 
 #: src/gddccontrol/main.c:414
 msgid "Save profile"
-msgstr ""
+msgstr "Sauver le profil"
 
 #: src/gddccontrol/main.c:420
 msgid "Cancel profile creation"
-msgstr ""
+msgstr "Annuler la création du profil"
 
 #: src/gddccontrol/main.c:458
 msgid "Refresh"
-msgstr ""
+msgstr "Rafraîchir"
 
 #: src/gddccontrol/main.c:458
 msgid "Refresh all controls"
-msgstr ""
+msgstr "Rafraîchir tous les contrôles"
 
 #: src/gddccontrol/main.c:465
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #: src/gddccontrol/main.c:488
 #, c-format
@@ -357,162 +359,154 @@ msgstr "Recherche des moniteurs disponibles..."
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
-"If your graphics card need it, please check all the required kernel modules "
-"are loaded (i2c-dev, and your framebuffer driver)."
+"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
 msgstr ""
 "Pas de moniteur supportant le DDC/CI accessible.\n"
 "\n"
-"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de "
-"\"framebuffer\"), si votre carte graphique en a besoin."
+"Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de \"framebuffer\"), si votre carte graphique en a besoin."
 
 #: src/gddccontrol/main.c:548
 #, c-format
 msgid "Welcome to gddccontrol %s."
-msgstr ""
+msgstr "Bienvenue dans gddccontrol %s."
 
 #: src/gddccontrol/notebook.c:81
 msgid "Error while getting value"
 msgstr "Erreur lors de la lecture de la valeur"
 
-#: src/gddccontrol/notebook.c:116 src/gddccontrol/notebook.c:126
-#, fuzzy, c-format
+#: src/gddccontrol/notebook.c:116
+#: src/gddccontrol/notebook.c:126
+#, c-format
 msgid "Refreshing controls values (%d%%)..."
-msgstr "Lecture des valeurs des contrôles (%d%%)..."
+msgstr "Rafraîchissement de la valeur des contrôles (%d%%)..."
 
 #: src/gddccontrol/notebook.c:129
 msgid "Could not get the control_db struct related to a control."
-msgstr ""
+msgstr "Impossible d'obtenir la structure control_db associée au contrôle."
 
-#: src/gddccontrol/notebook.c:495
+#: src/gddccontrol/notebook.c:489
 msgid "Show fullscreen patterns"
-msgstr ""
+msgstr "Voir le motif plein écran"
 
-#: src/gddccontrol/notebook.c:527
+#: src/gddccontrol/notebook.c:521
 msgid "Section"
 msgstr "Section"
 
-#: src/gddccontrol/notebook.c:574
+#: src/gddccontrol/notebook.c:568
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
-"This often occurs when you connect the VGA/DVI cable on the wrong input of "
-"monitors supporting DDC/CI only on one of its two inputs."
+"This often occurs when you connect the VGA/DVI cable on the wrong input of monitors supporting DDC/CI only on one of its two inputs."
 msgstr ""
-"Le moniteur actuel est dans la base de données mais ne supporte pas le "
-"protocole DDC/CI.\n"
+"Le moniteur actuel est dans la base de données mais ne supporte pas le protocole DDC/CI.\n"
 "\n"
-"Cela arrive souvent lorsqu'on connecte le câble VGA/DVI sur la mauvaise "
-"prise d'un moniteur ne supportant le protocole DDC/CI que sur une des "
-"entrées."
+"Cela arrive souvent lorsqu'on connecte le câble VGA/DVI sur la mauvaise prise d'un moniteur ne supportant le protocole DDC/CI que sur une des entrées."
 
-#: src/gddccontrol/notebook.c:582
+#: src/gddccontrol/notebook.c:576
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "Ouverture du périphérique du moniteur (%s)..."
 
-#: src/gddccontrol/notebook.c:598
+#: src/gddccontrol/notebook.c:592
 msgid "Please click on a group name."
-msgstr ""
+msgstr "Veuillez cliquer sur un nom de groupe."
 
-#: src/gddccontrol/notebook.c:617 src/gddccontrol/notebook.c:626
+#: src/gddccontrol/notebook.c:611
+#: src/gddccontrol/notebook.c:620
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr "Lecture des valeurs des contrôles (%d%%)..."
 
-#: src/gddccontrol/notebook.c:638
+#: src/gddccontrol/notebook.c:632
 msgid "Loading profiles..."
-msgstr ""
+msgstr "Chargement des profils..."
 
 #: src/gddccontrol/gprofile.c:52
 msgid "You must select at least one control to be saved in the profile."
-msgstr ""
+msgstr "Au moins un contrôle doit être sélectionné pour être sauver dans le profil."
 
 #: src/gddccontrol/gprofile.c:60
 msgid "Creating profile..."
-msgstr ""
+msgstr "Création du profil..."
 
 #: src/gddccontrol/gprofile.c:75
-#, fuzzy
 msgid "Error while creating profile."
-msgstr "Erreur lors de la lecture de la valeur"
+msgstr "Erreur lors de la création du profil."
 
 #: src/gddccontrol/gprofile.c:92
 msgid "Applying profile..."
-msgstr ""
+msgstr "Application du profil..."
 
 #: src/gddccontrol/gprofile.c:115
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer le profil '%s' ?"
 
 #: src/gddccontrol/gprofile.c:141
-msgid ""
-"Please select the controls you want to save in the profile using the "
-"checkboxes to the left of each control."
-msgstr ""
+msgid "Please select the controls you want to save in the profile using the checkboxes to the left of each control."
+msgstr "Veuillez sélectionner les contrôles que vous souhaitez sauver dans le profile en utilisant les cases à cocher à gauche de chaque contrôle."
 
 #: src/gddccontrol/gprofile.c:177
 msgid "Profile Manager"
-msgstr ""
+msgstr "Gérer les profils"
 
 #: src/gddccontrol/gprofile.c:194
 msgid "Apply profile"
-msgstr ""
+msgstr "Appliquer le profil"
 
 #: src/gddccontrol/gprofile.c:199
 msgid "Show profile details / Rename profile"
-msgstr ""
+msgstr "Voir les détails / Renommer"
 
 #: src/gddccontrol/gprofile.c:204
 msgid "Delete profile"
-msgstr ""
+msgstr "Supprimer le profil"
 
 #: src/gddccontrol/gprofile.c:230
 msgid "Create profile"
-msgstr ""
+msgstr "Créer un profil"
 
 #: src/gddccontrol/gprofile.c:236
 msgid "Close profile manager"
-msgstr ""
+msgstr "Fermer"
 
 #: src/gddccontrol/gprofile.c:300
-#, fuzzy
 msgid "Control name"
-msgstr "Contrôle"
+msgstr "Nom du contrôle"
 
 #: src/gddccontrol/gprofile.c:311
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: src/gddccontrol/gprofile.c:314
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 #: src/gddccontrol/gprofile.c:317
 msgid "Raw value"
-msgstr ""
+msgstr "Valeur brute"
 
-#: src/gddccontrol/gprofile.c:435 src/gddccontrol/gprofile.c:455
+#: src/gddccontrol/gprofile.c:435
+#: src/gddccontrol/gprofile.c:455
 msgid "Profile information:"
-msgstr ""
+msgstr "Informations au sujet du profile :"
 
 #: src/gddccontrol/gprofile.c:464
 #, c-format
 msgid "File name: %s"
-msgstr ""
+msgstr "Nom du fichier : %s"
 
 #: src/gddccontrol/gprofile.c:475
 msgid "Profile name:"
-msgstr ""
+msgstr "Nom du profile :"
 
 #: src/gddccontrol/gprofile.c:497
 msgid "Saving profile..."
-msgstr ""
+msgstr "Sauvegarde du profil..."
 
 #: src/gddccontrol/gprofile.c:506
-#, fuzzy
 msgid "Error while saving profile."
-msgstr "Erreur lors de la lecture de la valeur"
+msgstr "Erreur lors de la sauvegarde du profil."
 
 #: src/lib/ddcci.c:130
 msgid "Error while initialisating the message queue"
@@ -531,7 +525,8 @@ msgstr "Erreur lors de l'envoi du message de type \"heartbeat\"."
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr "Impossible d'initialiser la base de donnée ddccontrol.\n"
 
-#: src/lib/ddcci.c:254 src/lib/ddcci.c:314
+#: src/lib/ddcci.c:254
+#: src/lib/ddcci.c:314
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr "ioctl a renvoyé %d\n"
@@ -555,8 +550,7 @@ msgstr "Erreur lors de la lecture de la réponse du message de lecture."
 #: src/lib/ddcci.c:433
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
-msgstr ""
-"Réponse invalide, le premier caractère est 0x%02x, mais devrait être 0x%02x\n"
+msgstr "Réponse invalide, le premier caractère est 0x%02x, mais devrait être 0x%02x\n"
 
 #: src/lib/ddcci.c:442
 #, c-format
@@ -571,9 +565,7 @@ msgstr "Réponse invalide, la longueur est %d, et devrait être de %d au moins\n"
 #: src/lib/ddcci.c:463
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
-msgstr ""
-"Réponse invalide, données corrompues - le xor est 0x%02x, la longueur 0x%"
-"02x\n"
+msgstr "Réponse invalide, données corrompues - le xor est 0x%02x, la longueur 0x%02x\n"
 
 #: src/lib/ddcci.c:582
 #, c-format
@@ -593,22 +585,22 @@ msgstr "EDID corrompu à 0x%02x.\n"
 #: src/lib/ddcci.c:646
 #, c-format
 msgid "Serial number: %d\n"
-msgstr ""
+msgstr "Numéro de série : %d\n"
 
 #: src/lib/ddcci.c:649
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
-msgstr ""
+msgstr "Manufacturé : Semaine %d, %d\n"
 
 #: src/lib/ddcci.c:652
 #, c-format
 msgid "EDID version: %d.%d\n"
-msgstr ""
+msgstr "Version de l'EDID : %d.%d\n"
 
 #: src/lib/ddcci.c:655
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
-msgstr ""
+msgstr "Taille maximale : %d x %d (cm)\n"
 
 #: src/lib/ddcci.c:666
 #, c-format
@@ -644,64 +636,72 @@ msgid "Unknown monitor (%s)"
 msgstr "Moniteur inconnu (%s)"
 
 #: src/lib/ddcci.c:857
-#, fuzzy, c-format
+#, c-format
 msgid "Probing for available monitors"
-msgstr "Recherche des moniteurs disponibles..."
+msgstr "Recherche des moniteurs disponibles"
 
 #: src/lib/ddcci.c:870
 msgid "Error while sending list message"
 msgstr "Erreur lors de l'envoi du message de type \"list\"."
 
 #: src/lib/ddcci.c:879
-#, fuzzy
 msgid "Error while reading list entry"
-msgstr "Erreur lors de l'envoi du message de type \"list\"."
+msgstr "Erreur lors de la lecture d'une entrée de la liste."
 
 #: src/lib/ddcci.c:896
-#, fuzzy, c-format
+#, c-format
 msgid "Found PCI device (%s)\n"
-msgstr "Périphérique I2C trouvé (%s)\n"
+msgstr "Périphérique PCI trouvé (%s)\n"
 
 #: src/lib/ddcci.c:930
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr "Périphérique I2C trouvé (%s)\n"
 
-#: src/lib/monitor_db.c:102 src/lib/monitor_db.c:116
+#: src/lib/monitor_db.c:102
+#: src/lib/monitor_db.c:116
 msgid "Can't convert value to int, invalid CAPS."
 msgstr "Ne peut convertir la valeur en entier, CAPS invalide."
 
-#: src/lib/monitor_db.c:174 src/lib/monitor_db.c:275
+#: src/lib/monitor_db.c:174
+#: src/lib/monitor_db.c:275
 msgid "Can't find id property."
 msgstr "Ne peut trouver la propriété id."
 
-#: src/lib/monitor_db.c:182 src/lib/monitor_db.c:277 src/lib/monitor_db.c:443
+#: src/lib/monitor_db.c:182
+#: src/lib/monitor_db.c:277
+#: src/lib/monitor_db.c:443
 #: src/lib/profile.c:226
 msgid "Can't find name property."
 msgstr "Ne peut trouver la propriété name."
 
-#: src/lib/monitor_db.c:206 src/lib/profile.c:254
+#: src/lib/monitor_db.c:206
+#: src/lib/profile.c:254
 msgid "Can't find value property."
 msgstr "Ne peut trouver la propriété value."
 
-#: src/lib/monitor_db.c:208 src/lib/profile.c:256
+#: src/lib/monitor_db.c:208
+#: src/lib/profile.c:256
 msgid "Can't convert value to int."
 msgstr "Ne peut convertir la valeur en entier."
 
-#: src/lib/monitor_db.c:242 src/lib/monitor_db.c:603
+#: src/lib/monitor_db.c:242
+#: src/lib/monitor_db.c:603
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr "L'élement %s (id=%s) n'a pas été trouvé (ligne %ld).\n"
 
 #: src/lib/monitor_db.c:288
 msgid "Invalid refresh type (!= none, != all)."
-msgstr ""
+msgstr "Type de refresh invalide (!= none, != all)."
 
-#: src/lib/monitor_db.c:314 src/lib/profile.c:248
+#: src/lib/monitor_db.c:314
+#: src/lib/profile.c:248
 msgid "Can't find address property."
 msgstr "Ne peut trouver la propriété address."
 
-#: src/lib/monitor_db.c:316 src/lib/profile.c:250
+#: src/lib/monitor_db.c:316
+#: src/lib/profile.c:250
 msgid "Can't convert address to int."
 msgstr "Ne peut convertir l'adresse en entier."
 
@@ -718,17 +718,19 @@ msgstr "Ne peut convertir le délai en entier."
 msgid "Can't find type property."
 msgstr "Ne peut trouver la propriété type."
 
-#: src/lib/monitor_db.c:371 src/lib/monitor_db.c:480
+#: src/lib/monitor_db.c:371
+#: src/lib/monitor_db.c:480
 msgid "Invalid type."
 msgstr "Type invalide."
 
 #: src/lib/monitor_db.c:417
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
-msgstr ""
-"La base de donnée doit être initialisée avant de lire un fichier moniteur.\n"
+msgstr "La base de donnée doit être initialisée avant de lire un fichier moniteur.\n"
 
-#: src/lib/monitor_db.c:424 src/lib/monitor_db.c:717 src/lib/profile.c:204
+#: src/lib/monitor_db.c:424
+#: src/lib/monitor_db.c:717
+#: src/lib/profile.c:204
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "Le document n'a pas été traité avec succès.\n"
@@ -774,28 +776,22 @@ msgstr "options.xml de mauvais type, élement racine %s != monitor"
 #: src/lib/monitor_db.c:739
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
-msgstr ""
-"L'attribut dbversion dans options.xml est absent, veuillez mettre à jour "
-"votre base de données.\n"
+msgstr "L'attribut dbversion dans options.xml est absent, veuillez mettre à jour votre base de données.\n"
 
 #: src/lib/monitor_db.c:745
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
-msgstr ""
-"L'attribut date dans options.xml est absent, veuillez mettre à jour votre "
-"base de données.\n"
+msgstr "L'attribut date dans options.xml est absent, veuillez mettre à jour votre base de données.\n"
 
-#: src/lib/monitor_db.c:751 src/lib/profile.c:231
+#: src/lib/monitor_db.c:751
+#: src/lib/profile.c:231
 msgid "Can't convert version to int."
 msgstr "Ne peut convertir la version en entier."
 
 #: src/lib/monitor_db.c:754
 #, c-format
-msgid ""
-"options.xml dbversion (%d) is greater than the supported version (%d).\n"
-msgstr ""
-"La version de options.xml (%d) est plus grande que la version supportée (%"
-"d).\n"
+msgid "options.xml dbversion (%d) is greater than the supported version (%d).\n"
+msgstr "La version de options.xml (%d) est plus grande que la version supportée (%d).\n"
 
 #: src/lib/monitor_db.c:755
 #, c-format
@@ -805,154 +801,139 @@ msgstr "Veuillez mettre à jour le programme ddccontrol.\n"
 #: src/lib/monitor_db.c:761
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
-msgstr ""
-"La version de options.xml (%d) est plus petite que la version supportée (%"
-"d).\n"
+msgstr "La version de options.xml (%d) est plus petite que la version supportée (%d).\n"
 
 #: src/lib/monitor_db.c:762
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Veuillez mettre à jour la base de données ddccontrol.\n"
 
-#: src/lib/profile.c:52 src/lib/ddcci.h:103
+#: src/lib/profile.c:52
+#: src/lib/ddcci.h:103
 #, c-format
 msgid "Error: %s @%s:%d\n"
-msgstr ""
+msgstr "Erreur : %s @%s:%d\n"
 
 #: src/lib/profile.c:80
-#, fuzzy
 msgid "Cannot read control value\n"
-msgstr ""
-"Impossible de trouver la valeur du contrôle actuel dans la liste des valeurs."
+msgstr "Impossible de lire la valeur du contrôle\n"
 
-#: src/lib/profile.c:99 src/lib/profile.c:149 src/lib/profile.c:284
+#: src/lib/profile.c:99
+#: src/lib/profile.c:149
+#: src/lib/profile.c:284
 msgid "Cannot create filename (buffer too small)\n"
-msgstr ""
+msgstr "Ne peut créer le nom du fichier (tampon trop petit)\n"
 
 #: src/lib/profile.c:117
-#, fuzzy
 msgid "Cannot write control value\n"
-msgstr ""
-"Impossible de trouver la valeur du contrôle actuel dans la liste des valeurs."
+msgstr "Impossible d'écrire la valeur du contrôle\n"
 
 #: src/lib/profile.c:154
-#, fuzzy
 msgid "Error while opening ddccontrol home directory."
-msgstr "Erreur lors de l'envoi du message de l'ouverture."
+msgstr "Erreur lors de l'ouverture du dossier de ddccontrol dans le répertoire personnel."
 
 #: src/lib/profile.c:178
-#, fuzzy
 msgid "Error while reading ddccontrol home directory."
-msgstr "Erreur lors de la lecture de la réponse du message d'ouverture."
+msgstr "Erreur lors de la lecture du dossier de ddccontrol dans le répertoire personnel."
 
 #: src/lib/profile.c:211
 #, c-format
 msgid "empty profile file\n"
-msgstr ""
+msgstr "fichier de profil vide\n"
 
 #: src/lib/profile.c:217
-#, fuzzy, c-format
+#, c-format
 msgid "profile of the wrong type, root node %s != profile"
-msgstr "options.xml de mauvais type, élement racine %s != monitor"
+msgstr "profil de mauvais type, élement racine %s != profile"
 
 #: src/lib/profile.c:223
-#, fuzzy
 msgid "Can't find pnpid property."
-msgstr "Ne peut trouver la propriété id."
+msgstr "Ne peut trouver la propriété pnpid."
 
-#: src/lib/profile.c:229 src/lib/profile.c:232
-#, fuzzy
+#: src/lib/profile.c:229
+#: src/lib/profile.c:232
 msgid "Can't find version property."
-msgstr "Ne peut trouver la propriété init."
+msgstr "Ne peut trouver la propriété version."
 
 #: src/lib/profile.c:234
-#, fuzzy, c-format
-msgid "profile dbversion (%d) is not supported (should be %d).\n"
-msgstr ""
-"La version de options.xml (%d) est plus petite que la version supportée (%"
-"d).\n"
+#, c-format
+msgid "profile version (%d) is not supported (should be %d).\n"
+msgstr "La version du profile (%d) n'est pas supportée (devrait être %d).\n"
 
 #: src/lib/profile.c:288
 msgid "Error while getting informations about ddccontrol home directory."
-msgstr ""
+msgstr "Erreur lors de l'obtention d'informations au sujet du dossier de ddccontrol dans le répertoire personnel."
 
 #: src/lib/profile.c:293
-#, fuzzy
 msgid "Error while creating ddccontrol home directory."
-msgstr "Erreur lors de la lecture de la réponse du message d'ouverture."
+msgstr "Erreur lors de la création du dossier de ddccontrol dans le répertoire personnel."
 
 #: src/lib/profile.c:298
-msgid ""
-"Error while getting informations about ddccontrol home directory after "
-"creating it."
-msgstr ""
+msgid "Error while getting informations about ddccontrol home directory after creating it."
+msgstr "Erreur lors de l'obtention d'informations au sujet du dossier de ddccontrol dans le répertoire personnel après l'avoir créé."
 
 #: src/lib/profile.c:305
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
-msgstr ""
+msgstr "Erreur : '.ddccontrol' dans votre répertoire personnel n'est pas un répertoire."
 
 #: src/lib/profile.c:313
 msgid "Error while getting informations about ddccontrol profile directory."
-msgstr ""
+msgstr "Erreur lors de l'obtention d'informations au sujet du dossier des profils dans le répertoire personnel."
 
 #: src/lib/profile.c:318
-#, fuzzy
 msgid "Error while creating ddccontrol profile directory."
-msgstr "Erreur lors de l'énumération des contrôles dans un groupe."
+msgstr "Erreur lors de la création du dossier des profiles dans le répertoire personnel."
 
 #: src/lib/profile.c:323
-msgid ""
-"Error while getting informations about ddccontrol profile directory after "
-"creating it."
-msgstr ""
+msgid "Error while getting informations about ddccontrol profile directory after creating it."
+msgstr "Erreur lors de l'obtention d'informations au sujet du dossier des profils dans le répertoire personnel après l'avoir créé."
 
 #: src/lib/profile.c:330
-msgid ""
-"Error: '.ddccontrol/profiles' in your home directory is not a directory."
-msgstr ""
+msgid "Error: '.ddccontrol/profiles' in your home directory is not a directory."
+msgstr "Erreur : '.ddccontrol/profiles' dans votre répertoire personnel n'est pas un répertoire."
 
 #: src/lib/profile.c:348
 msgid "Cannot create the xml writer\n"
-msgstr ""
+msgstr "Ne peut créer la structure écrivant les fichiers xml.\n"
 
 #: src/lib/profile.c:408
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
-msgstr ""
+msgstr "ddcci_delete_profile: Erreur, impossible de supprimer le profil.\n"
 
 #: src/lib/profile.c:428
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
-msgstr ""
+msgstr "ddcci_delete_profile: Erreur, ne peut trouver le profile à supprimer.\n"
 
 #: src/ddcpci/intel810.c:105
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Malloc error."
-msgstr "i810_open: Erreur lors de malloc.\n"
+msgstr "%s: Erreur lors de malloc."
 
-#: src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155 src/ddcpci/intel740.c:103
-#, fuzzy, c-format
+#: src/ddcpci/intel810.c:161
+#: src/ddcpci/nvidia.c:155
+#: src/ddcpci/intel740.c:103
+#, c-format
 msgid "%s: Malloc error.\n"
-msgstr "i810_open: Erreur lors de malloc.\n"
+msgstr "%s: Erreur lors de malloc.\n"
 
 #: src/ddcpci/intel810.c:171
-#, fuzzy
 msgid "i810_open: cannot open /dev/mem"
-msgstr "i810_open: Erreur lors de mmap.\n"
+msgstr "i810_open: Ne peut ouvrir /dev/mem."
 
 #: src/ddcpci/intel810.c:206
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
-msgstr ""
+msgstr "i810_open: Erreur: impossible de trouver une région MMIO PCI valide.\n"
 
 #: src/ddcpci/intel810.c:213
-#, fuzzy
 msgid "i810_open: mmap failed"
-msgstr "i810_open: Erreur lors de mmap.\n"
+msgstr "i810_open: Erreur lors de mmap."
 
 #: src/ddcpci/i2c-algo-bit.c:369
 #, c-format
 msgid "sendbytes: error - bailout.\n"
-msgstr ""
+msgstr "sendbytes: erreur - abandon.\n"
 
 #: src/ddcpci/i2c-algo-bit.c:396
 #, c-format
@@ -968,11 +949,14 @@ msgstr "i2c-algo-bit.o: readbytes: temps dépassé au moment du \"ack\".\n"
 msgid "==>Error while sending open message"
 msgstr "==>Erreur lors de l'envoi du message d'ouverture"
 
-#: src/ddcpci/main.c:170 src/ddcpci/main.c:176 src/ddcpci/main.c:193
+#: src/ddcpci/main.c:170
+#: src/ddcpci/main.c:176
+#: src/ddcpci/main.c:193
 msgid "==>Error while sending data answer message"
 msgstr "==>Erreur lors de l'envoi de la réponse du message de donnée"
 
-#: src/ddcpci/main.c:241 src/ddcpci/main.c:255
+#: src/ddcpci/main.c:241
+#: src/ddcpci/main.c:255
 msgid "==>Error while sending list message"
 msgstr "==>Erreur lors de l'envoi du message de type \"list\""
 
@@ -1011,34 +995,32 @@ msgid "==>Invalid query...\n"
 msgstr "==>Requête invalide...\n"
 
 #: src/ddcpci/nvidia.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
-msgstr "nvidia_open: Erreur lors de malloc.\n"
+msgstr "nvidia.c:init_i2c_bus: Erreur lors de malloc."
 
 #: src/ddcpci/nvidia.c:165
-#, fuzzy
 msgid "nvidia_open: cannot open /dev/mem"
-msgstr "nvidia_open: Erreur lors de mmap.\n"
+msgstr "nvidia_open: Ne peut ouvrir /dev/mem."
 
 #: src/ddcpci/nvidia.c:174
-#, fuzzy
 msgid "nvidia_open: mmap failed"
-msgstr "nvidia_open: Erreur lors de mmap.\n"
+msgstr "nvidia_open: Erreur lors de mmap."
 
 #: src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
-msgstr ""
+msgstr "%s: échec de ioperm"
 
 #: src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
-msgstr ""
+msgstr "%s: Erreur: type de carte inconnu (%#x)\n"
 
 #: src/lib/ddcci.h:100
 #, c-format
 msgid "Error: %s @%s:%d (%s:%ld)\n"
-msgstr ""
+msgstr "Erreur: %s @%s:%d (%s:%ld)\n"
 
 #, fuzzy
 #~ msgid "ddc_control"
@@ -1079,14 +1061,12 @@ msgstr ""
 #, fuzzy
 #~ msgid "nvidia_open"
 #~ msgstr "nvidia_open: Erreur lors de mmap.\n"
-
 #~ msgid "nvidia_open: Malloc error.\n"
 #~ msgstr "nvidia_open: Erreur lors de malloc.\n"
-
 #~ msgid "Please click on a parameter on the left to change it."
 #~ msgstr "Cliquez sur un paramètre à gauche pour le changer."
-
 #~ msgid "restore_callback should not be called for command controls."
 #~ msgstr ""
 #~ "restore_callback ne devrait pas être appelé pour des contrôles de type "
 #~ "\"commande\"."
+

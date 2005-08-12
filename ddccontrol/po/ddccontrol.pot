@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-11 17:59+0200\n"
+"POT-Creation-Date: 2005-08-12 23:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -244,7 +244,7 @@ msgstr ""
 
 #: src/gddccontrol/fspatterns.c:198
 #, c-format
-msgid "Unknown fullscreen pattern name: %s</span>"
+msgid "Unknown fullscreen pattern name: %s"
 msgstr ""
 
 #: src/gddccontrol/main.c:175
@@ -338,15 +338,15 @@ msgstr ""
 msgid "Could not get the control_db struct related to a control."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:495
+#: src/gddccontrol/notebook.c:489
 msgid "Show fullscreen patterns"
 msgstr ""
 
-#: src/gddccontrol/notebook.c:527
+#: src/gddccontrol/notebook.c:521
 msgid "Section"
 msgstr ""
 
-#: src/gddccontrol/notebook.c:574
+#: src/gddccontrol/notebook.c:568
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -354,21 +354,21 @@ msgid ""
 "monitors supporting DDC/CI only on one of its two inputs."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:582
+#: src/gddccontrol/notebook.c:576
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:598
+#: src/gddccontrol/notebook.c:592
 msgid "Please click on a group name."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:617 src/gddccontrol/notebook.c:626
+#: src/gddccontrol/notebook.c:611 src/gddccontrol/notebook.c:620
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:638
+#: src/gddccontrol/notebook.c:632
 msgid "Loading profiles..."
 msgstr ""
 
@@ -792,7 +792,7 @@ msgstr ""
 
 #: src/lib/profile.c:234
 #, c-format
-msgid "profile dbversion (%d) is not supported (should be %d).\n"
+msgid "profile version (%d) is not supported (should be %d).\n"
 msgstr ""
 
 #: src/lib/profile.c:288

@@ -231,7 +231,7 @@ struct profile* ddcci_load_profile(const char* filename) {
 	DDCCI_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert version to int."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	DDCCI_RETURN_IF_RUN(itmp != PROFILEVERSION, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	if (itmp > PROFILEVERSION) {
-		fprintf(stderr,  _("profile dbversion (%d) is not supported (should be %d).\n"), itmp, PROFILEVERSION);
+		fprintf(stderr,  _("profile version (%d) is not supported (should be %d).\n"), itmp, PROFILEVERSION);
 		xmlFreeDoc(profile_doc);
 		return 0;
 	}

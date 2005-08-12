@@ -195,7 +195,7 @@ static void show_pattern(gchar* patternname)
 	else {
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_gc_set_rgb_fg_color(gc, &color);
-		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s</span>"), patternname);
+		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s"), patternname);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 		pango_layout_set_markup(layout, tmp, -1);
 		g_free(tmp);
