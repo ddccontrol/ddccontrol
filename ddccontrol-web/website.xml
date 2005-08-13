@@ -22,6 +22,36 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+	<varlistentry><term>13 Aug 2005: Version 0.2 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>Major changes in gddccontrol:
+						<itemizedlist mark='opencircle'>
+							<listitem>Add restore button for each control.</listitem>
+							<listitem>Add refresh button, and refresh all controls when needed.</listitem>
+							<listitem>Add support for profiles to save some controls values and restore them later.</listitem>
+							<listitem>Add a fullscreen pattern to adjust brightness and contrast.</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>New database version, please upgrade ddccontrol-db.</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>13 Aug 2005: Database version 20050813 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>Add support for Samsung SyncMaster 912N and 712N.</listitem>
+					<listitem>Add basic fullscreen patterns support.</listitem>
+					<listitem>New db version (add refresh parameter).</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
 <varlistentry><term>15 Jul 2005: Version 0.1.3 released.</term>
 <listitem>
 <para>
