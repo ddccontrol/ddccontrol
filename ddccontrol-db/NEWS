@@ -1,3 +1,8 @@
+Version 20050813:
+ - Add support for Samsung SyncMaster 912N and 712N.
+ - Add basic fullscreen patterns support.
+ - New db version (add refresh parameter).
+
 Version 20050715:
  - Add Samsung SyncMaster 173P Plus support.
  - Add support for the Fujitsu Siemens P17-2, P19-2 and P20-2

@@ -1,5 +1,5 @@
-AC_INIT([DDC/CI control tool database], [20050715],
-        [Nicolas Boichat <nicolas@boichat.ch>],
+AC_INIT([DDC/CI control tool database], [20050813],
+        [DDCControl users list <ddccontrol-users@lists.sourceforge.net>],
         [ddccontrol-db])
 AM_INIT_AUTOMAKE
 AC_PROG_INSTALL
