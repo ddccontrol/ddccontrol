@@ -1,3 +1,8 @@
+2005-08-13 12:45  nboichat
+
+	* NEWS, configure, configure.ac, db/options.xml: Prepare release
+	  20050813
+
 2005-08-12 22:17  nboichat
 
 	* po/: ddccontrol-db.pot, fr.gmo, fr.po, ru.gmo, ru.po: Update
