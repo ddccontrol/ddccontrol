@@ -179,6 +179,11 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
   <entry class="yes">Yes</entry>
 </row>
 <row>
+  <entry>GeForce FX 5700 LE</entry>
+  <entry class="unknown">???</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
   <entry>GeForce 6200 TC</entry>
   <entry class="unknown">???</entry>
   <entry class="yes">Yes</entry>
