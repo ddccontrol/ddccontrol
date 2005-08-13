@@ -28,14 +28,13 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
-#include <libintl.h>
-
 #include "monitor_db.h"
 #include "ddcci.h"
 
 /* Localize, and alloc in libxml */
 #define _D(text) xmlCharStrdup(dgettext(DBPACKAGE, text))
 #include <libintl.h>
+#include <locale.h>
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)

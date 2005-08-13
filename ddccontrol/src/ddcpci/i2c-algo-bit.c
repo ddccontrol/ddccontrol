@@ -34,6 +34,7 @@
 #include "i2c-algo-bit.h"
 
 #include <libintl.h>
+#include <locale.h>
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
