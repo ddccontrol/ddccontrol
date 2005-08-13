@@ -1,3 +1,24 @@
+2005-08-13 12:37  nboichat
+
+	* NEWS, po/ddccontrol.pot, po/fr.gmo, po/fr.po, po/ru.gmo,
+	  po/ru.po: Prepare release 0.2
+
+2005-08-13 12:21  nboichat
+
+	* doc/: supportedgc.xml, supportedmonitors.xml: Add Samsung 912N
+	  and GeForce FX 5700 LE to the list of supported hardware.
+
+2005-08-13 12:20  nboichat
+
+	* src/: ddcpci/ddcpci.h, ddcpci/i2c-algo-bit.c, lib/ddcci.h,
+	  lib/monitor_db.c, lib/profile.c: Fix a compilation error when gcc
+	  flag -O2 is not set (libintl.h).
+
+2005-08-13 12:19  nboichat
+
+	* src/gddccontrol/gprofile.c: Fix a bug when no profile has been
+	  saved.
+
 2005-08-12 22:17  nboichat
 
 	* po/ddccontrol.pot, po/fr.gmo, po/fr.po, po/ru.gmo, po/ru.po,
