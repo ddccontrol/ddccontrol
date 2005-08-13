@@ -1,3 +1,11 @@
+Version 0.2 - 2005-08-13
+ - Major changes in gddccontrol:
+  + Add restore button for each control.
+  + Add refresh button, and refresh all controls when needed.
+  + Add support for profiles to save some controls values and restore them later.
+  + Add a fullscreen pattern to adjust brightness and contrast.
+ - New database version, please upgrade ddccontrol-db.
+
 Version 0.1.3 - 2005-07-15
  - Add support for i810/i815/i830/i845/i855/i865/i915/i945 chipsets,
     thanks to Chernyavskyy Valentin for his tests.

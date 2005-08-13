@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-12 23:52+0200\n"
+"POT-Creation-Date: 2005-08-13 14:14+0200\n"
 "PO-Revision-Date: 2005-08-12 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -452,64 +452,64 @@ msgstr ""
 "Пожалуйста, выберите регистры, которые хотите сохранить в профиле, отметив "
 "слева от каждого регистра."
 
-#: src/gddccontrol/gprofile.c:177
+#: src/gddccontrol/gprofile.c:172
 msgid "Profile Manager"
 msgstr "Менеджер профилей"
 
-#: src/gddccontrol/gprofile.c:194
+#: src/gddccontrol/gprofile.c:189
 msgid "Apply profile"
 msgstr "Применить профиль"
 
-#: src/gddccontrol/gprofile.c:199
+#: src/gddccontrol/gprofile.c:194
 msgid "Show profile details / Rename profile"
 msgstr "Показать профиль детально / Переименовать профиль"
 
-#: src/gddccontrol/gprofile.c:204
+#: src/gddccontrol/gprofile.c:199
 msgid "Delete profile"
 msgstr "Удалить профиль"
 
-#: src/gddccontrol/gprofile.c:230
+#: src/gddccontrol/gprofile.c:225
 msgid "Create profile"
 msgstr "Создать профиль"
 
-#: src/gddccontrol/gprofile.c:236
+#: src/gddccontrol/gprofile.c:231
 msgid "Close profile manager"
 msgstr "Закрыть менеждер профилей"
 
-#: src/gddccontrol/gprofile.c:300
+#: src/gddccontrol/gprofile.c:295
 msgid "Control name"
 msgstr "Имя регистра"
 
-#: src/gddccontrol/gprofile.c:311
+#: src/gddccontrol/gprofile.c:306
 msgid "Value"
 msgstr "Значение"
 
-#: src/gddccontrol/gprofile.c:314
+#: src/gddccontrol/gprofile.c:309
 msgid "Address"
 msgstr "Адрес"
 
-#: src/gddccontrol/gprofile.c:317
+#: src/gddccontrol/gprofile.c:312
 msgid "Raw value"
 msgstr "Необр. значение"
 
-#: src/gddccontrol/gprofile.c:435 src/gddccontrol/gprofile.c:455
+#: src/gddccontrol/gprofile.c:430 src/gddccontrol/gprofile.c:450
 msgid "Profile information:"
 msgstr "Информация о профиле:"
 
-#: src/gddccontrol/gprofile.c:464
+#: src/gddccontrol/gprofile.c:459
 #, c-format
 msgid "File name: %s"
 msgstr "Имя файла: %s"
 
-#: src/gddccontrol/gprofile.c:475
+#: src/gddccontrol/gprofile.c:470
 msgid "Profile name:"
 msgstr "Имя профиля:"
 
-#: src/gddccontrol/gprofile.c:497
+#: src/gddccontrol/gprofile.c:492
 msgid "Saving profile..."
 msgstr "Сохраняю профиль..."
 
-#: src/gddccontrol/gprofile.c:506
+#: src/gddccontrol/gprofile.c:501
 msgid "Error while saving profile."
 msgstr "Ошибка при сохранении профиля."
 
@@ -663,205 +663,205 @@ msgstr "Найдено устройство PCI (%s)\n"
 msgid "Found I2C device (%s)\n"
 msgstr "Найдено устройство I2C (%s)\n"
 
-#: src/lib/monitor_db.c:102 src/lib/monitor_db.c:116
+#: src/lib/monitor_db.c:101 src/lib/monitor_db.c:115
 msgid "Can't convert value to int, invalid CAPS."
 msgstr "Не могу преобразовать значение в int, неверный заголовок."
 
-#: src/lib/monitor_db.c:174 src/lib/monitor_db.c:275
+#: src/lib/monitor_db.c:173 src/lib/monitor_db.c:274
 msgid "Can't find id property."
 msgstr "Не могу найти элемент id."
 
-#: src/lib/monitor_db.c:182 src/lib/monitor_db.c:277 src/lib/monitor_db.c:443
-#: src/lib/profile.c:226
+#: src/lib/monitor_db.c:181 src/lib/monitor_db.c:276 src/lib/monitor_db.c:442
+#: src/lib/profile.c:225
 msgid "Can't find name property."
 msgstr "Не могу найти элемент name."
 
-#: src/lib/monitor_db.c:206 src/lib/profile.c:254
+#: src/lib/monitor_db.c:205 src/lib/profile.c:253
 msgid "Can't find value property."
 msgstr "Не могу найти элемент value."
 
-#: src/lib/monitor_db.c:208 src/lib/profile.c:256
+#: src/lib/monitor_db.c:207 src/lib/profile.c:255
 msgid "Can't convert value to int."
 msgstr "Не могу пребразовать значение в int."
 
-#: src/lib/monitor_db.c:242 src/lib/monitor_db.c:603
+#: src/lib/monitor_db.c:241 src/lib/monitor_db.c:602
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr "Элемент %s (id=%s) не найден (строка %ld).\n"
 
-#: src/lib/monitor_db.c:288
+#: src/lib/monitor_db.c:287
 msgid "Invalid refresh type (!= none, != all)."
 msgstr "Неверный тип обновления (!= none, != all)."
 
-#: src/lib/monitor_db.c:314 src/lib/profile.c:248
+#: src/lib/monitor_db.c:313 src/lib/profile.c:247
 msgid "Can't find address property."
 msgstr "Не могу найти элемент address."
 
-#: src/lib/monitor_db.c:316 src/lib/profile.c:250
+#: src/lib/monitor_db.c:315 src/lib/profile.c:249
 msgid "Can't convert address to int."
 msgstr "Не могу преобразовать адрес в int."
 
-#: src/lib/monitor_db.c:323
+#: src/lib/monitor_db.c:322
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
 msgstr "Управление %s отключено согласно строке заголовка.\n"
 
-#: src/lib/monitor_db.c:338
+#: src/lib/monitor_db.c:337
 msgid "Can't convert delay to int."
 msgstr "Не могу преобразовать задержку в int."
 
-#: src/lib/monitor_db.c:346
+#: src/lib/monitor_db.c:345
 msgid "Can't find type property."
 msgstr "Не могу найти элемент type."
 
-#: src/lib/monitor_db.c:371 src/lib/monitor_db.c:480
+#: src/lib/monitor_db.c:370 src/lib/monitor_db.c:479
 msgid "Invalid type."
 msgstr "Неверный тип."
 
-#: src/lib/monitor_db.c:417
+#: src/lib/monitor_db.c:416
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr "База данных должна быть инициализирована до чтения файла монитора.\n"
 
-#: src/lib/monitor_db.c:424 src/lib/monitor_db.c:717 src/lib/profile.c:204
+#: src/lib/monitor_db.c:423 src/lib/monitor_db.c:716 src/lib/profile.c:203
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "Документ обработан неправльно.\n"
 
-#: src/lib/monitor_db.c:431
+#: src/lib/monitor_db.c:430
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr "Пустой файл monitor/%s.xml\n"
 
-#: src/lib/monitor_db.c:437
+#: src/lib/monitor_db.c:436
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr "monitor/%s.xml неверного типа, root node %s != monitor"
 
-#: src/lib/monitor_db.c:451
+#: src/lib/monitor_db.c:450
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr "Ошибка, найдена глубина рекурсии > 15 (файл: %s).\n"
 
-#: src/lib/monitor_db.c:472
+#: src/lib/monitor_db.c:471
 msgid "Can't find init property."
 msgstr "Не могу найти свойство init."
 
-#: src/lib/monitor_db.c:496
+#: src/lib/monitor_db.c:495
 #, c-format
 msgid "document of the wrong type, can't find controls.\n"
 msgstr "документ неверного типа, не могу найти регистры.\n"
 
-#: src/lib/monitor_db.c:564
+#: src/lib/monitor_db.c:563
 msgid "Error enumerating controls in group."
 msgstr "Ошибка при перечислении регистров в группе."
 
-#: src/lib/monitor_db.c:724
+#: src/lib/monitor_db.c:723
 #, c-format
 msgid "empty options.xml\n"
 msgstr "пустой options.xml\n"
 
-#: src/lib/monitor_db.c:730
+#: src/lib/monitor_db.c:729
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr "options.xml неверного типа, root node %s != options"
 
-#: src/lib/monitor_db.c:739
+#: src/lib/monitor_db.c:738
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут dbversion, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:745
+#: src/lib/monitor_db.c:744
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr ""
 "В options.xml отсутствует атрибут date, пожалуйста, обновите Вашу базу "
 "данных.\n"
 
-#: src/lib/monitor_db.c:751 src/lib/profile.c:231
+#: src/lib/monitor_db.c:750 src/lib/profile.c:230
 msgid "Can't convert version to int."
 msgstr "Не могу преобразовать версию в int"
 
-#: src/lib/monitor_db.c:754
+#: src/lib/monitor_db.c:753
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) больше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:755
+#: src/lib/monitor_db.c:754
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr "Пожалуйста, обновите программу ddccontrol.\n"
 
-#: src/lib/monitor_db.c:761
+#: src/lib/monitor_db.c:760
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr "В options.xml dbversion (%d) меньше, чем поддерживаемая (%d).\n"
 
-#: src/lib/monitor_db.c:762
+#: src/lib/monitor_db.c:761
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
 
-#: src/lib/profile.c:52 src/lib/ddcci.h:103
+#: src/lib/profile.c:51 src/lib/ddcci.h:104
 #, c-format
 msgid "Error: %s @%s:%d\n"
 msgstr "Ошибка: %s @%s:%d\n"
 
-#: src/lib/profile.c:80
+#: src/lib/profile.c:79
 msgid "Cannot read control value\n"
 msgstr "Не могу прочесть значение регистра\n"
 
-#: src/lib/profile.c:99 src/lib/profile.c:149 src/lib/profile.c:284
+#: src/lib/profile.c:98 src/lib/profile.c:148 src/lib/profile.c:283
 msgid "Cannot create filename (buffer too small)\n"
 msgstr "Не могу создать имя файла (буфер слишком мал)\n"
 
-#: src/lib/profile.c:117
+#: src/lib/profile.c:116
 msgid "Cannot write control value\n"
 msgstr "Не могу записать значение регистра\n"
 
-#: src/lib/profile.c:154
+#: src/lib/profile.c:153
 msgid "Error while opening ddccontrol home directory."
 msgstr "Ошибка при открытии домашнего каталога ddccontrol."
 
-#: src/lib/profile.c:178
+#: src/lib/profile.c:177
 msgid "Error while reading ddccontrol home directory."
 msgstr "Ошибка при чтении домашнего каталога ddccontrol."
 
-#: src/lib/profile.c:211
+#: src/lib/profile.c:210
 #, c-format
 msgid "empty profile file\n"
 msgstr "пустой файл профиля\n"
 
-#: src/lib/profile.c:217
+#: src/lib/profile.c:216
 #, c-format
 msgid "profile of the wrong type, root node %s != profile"
 msgstr "неверный тип профиля, корень %s != profile"
 
-#: src/lib/profile.c:223
+#: src/lib/profile.c:222
 msgid "Can't find pnpid property."
 msgstr "Не могу найти свойство pnpid."
 
-#: src/lib/profile.c:229 src/lib/profile.c:232
+#: src/lib/profile.c:228 src/lib/profile.c:231
 msgid "Can't find version property."
 msgstr "Не могу найти свойство version."
 
-#: src/lib/profile.c:234
+#: src/lib/profile.c:233
 #, c-format
 msgid "profile version (%d) is not supported (should be %d).\n"
 msgstr "профиль version (%d) не поддерживается (должно быть %d).\n"
 
-#: src/lib/profile.c:288
+#: src/lib/profile.c:287
 msgid "Error while getting informations about ddccontrol home directory."
 msgstr "Ошибка при получении информации о домашнем каталоге ddccontrol."
 
-#: src/lib/profile.c:293
+#: src/lib/profile.c:292
 msgid "Error while creating ddccontrol home directory."
 msgstr "Ошибка при создании домашнего каталога ddccontrol."
 
-#: src/lib/profile.c:298
+#: src/lib/profile.c:297
 msgid ""
 "Error while getting informations about ddccontrol home directory after "
 "creating it."
@@ -869,19 +869,19 @@ msgstr ""
 "Ошибка при при получении информации о домашнем каталоге ddccontrol после его "
 "создания."
 
-#: src/lib/profile.c:305
+#: src/lib/profile.c:304
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "Ошибка: '.ddccontrol' в Вашем домашнем каталоге не является каталогом."
 
-#: src/lib/profile.c:313
+#: src/lib/profile.c:312
 msgid "Error while getting informations about ddccontrol profile directory."
 msgstr "Ошибка при получении информации о каталоге профилей ddccontrol."
 
-#: src/lib/profile.c:318
+#: src/lib/profile.c:317
 msgid "Error while creating ddccontrol profile directory."
 msgstr "Ошибка при создании каталога профилей ddccontrol."
 
-#: src/lib/profile.c:323
+#: src/lib/profile.c:322
 msgid ""
 "Error while getting informations about ddccontrol profile directory after "
 "creating it."
@@ -889,22 +889,22 @@ msgstr ""
 "Ошибка при при получении информации о каталоге профилей ddccontrol после его "
 "создания."
 
-#: src/lib/profile.c:330
+#: src/lib/profile.c:329
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr ""
 "Ошибка: '.ddccontrol/profiles' в Вашем домашнем каталоге не является "
 "каталогом."
 
-#: src/lib/profile.c:348
+#: src/lib/profile.c:347
 msgid "Cannot create the xml writer\n"
 msgstr "Не могу создать модуль записи xml\n"
 
-#: src/lib/profile.c:408
+#: src/lib/profile.c:407
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
 msgstr "ddcci_delete_profile: Ошибка, не могу удалить профиль.\n"
 
-#: src/lib/profile.c:428
+#: src/lib/profile.c:427
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
 msgstr "ddcci_delete_profile: Ошибка, не могу найти профиль для удаления.\n"
@@ -933,17 +933,17 @@ msgstr ""
 msgid "i810_open: mmap failed"
 msgstr "i810_open: Ошибка: mmap не выполнена"
 
-#: src/ddcpci/i2c-algo-bit.c:369
+#: src/ddcpci/i2c-algo-bit.c:370
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr "sendbytes: ошибка - отключаюсь.\n"
 
-#: src/ddcpci/i2c-algo-bit.c:396
+#: src/ddcpci/i2c-algo-bit.c:397
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr "i2c-algo-bit.o: readbytes: тайм-аут i2c_inb .\n"
 
-#: src/ddcpci/i2c-algo-bit.c:415
+#: src/ddcpci/i2c-algo-bit.c:416
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: тайм-аут при подтверждении\n"
@@ -1017,7 +1017,7 @@ msgstr "%s: ioperm не выполнена"
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr "%s: Ошибка: неизвестный тип карты (%#x)\n"
 
-#: src/lib/ddcci.h:100
+#: src/lib/ddcci.h:101
 #, c-format
 msgid "Error: %s @%s:%d (%s:%ld)\n"
 msgstr "Ошибка: %s @%s:%d (%s:%ld)\n"
