@@ -166,11 +166,6 @@ void fill_profile_manager() {
 		profile = profile->next;
 	}
 	
-	if (count == 0) {
-		profile_manager = NULL;
-		return;
-	}
-	
 	profile = mon->profiles;
 	
 	label = gtk_label_new(NULL);
@@ -184,7 +179,7 @@ void fill_profile_manager() {
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 	
-	table = gtk_table_new((count*2)-1, 5, FALSE);
+	table = gtk_table_new(count == 0 ? 1 : (count*2)-1, 5, FALSE);
 	
 	while (profile != NULL) {
 		label = gtk_label_new(profile->name);
@@ -209,10 +204,10 @@ void fill_profile_manager() {
 		crow++;
 		
 		if (profile->next) {
-			hsep = gtk_hseparator_new();
-			gtk_table_attach(GTK_TABLE(table), hsep, 0, 3, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 5);
-			crow++;
-			gtk_widget_show(hsep);
+				hsep = gtk_hseparator_new();
+				gtk_table_attach(GTK_TABLE(table), hsep, 0, 3, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 5);
+				crow++;
+				gtk_widget_show(hsep);
 		}
 		
 		profile = profile->next;
