@@ -81,7 +81,7 @@
 			<control id="vlinearity" type="value" name="Vertical Linearity" address="0x3A"/>
 			<control id="vlinearitybalance" type="value" name="Vertical Linearity Balance" address="0x3C"/>
 		</subgroup>
-		<subgroup name="Misconvergence">
+		<subgroup name="Misconvergence" pattern="misconvergence">
 			<control id="hmisconvergence" type="value" name="Horizontal Misconvergence" address="0x28"/>
 			<control id="vmisconvergence" type="value" name="Vertical Misconvergence" address="0x38"/>
 		</subgroup>
@@ -100,9 +100,13 @@
 		</subgroup>
 	</group>
 	<group name="Screen purity">
-		<subgroup name="Moire">
+		<subgroup name="Moire" pattern="moire">
 			<control id="hmoire" type="value" name="Horizontal Moire" address="0x54"/>
 			<control id="vmoire" type="value" name="Vertical Moire" address="0x56"/>
+		</subgroup>
+		<subgroup name="Image setup" pattern="clock">
+			<control id="coarse" type="value" name="Image Lock Coarse (Clock)" address="0x0e"/>
+			<control id="fine" type="value" name="Image Lock Fine (Clock Phase)" address="0x3e"/>
 		</subgroup>
 		<subgroup name="Corners purity">
 		<!--- vendor specific controls -->
@@ -113,8 +117,6 @@
 		</subgroup>
 		<subgroup name="Various">
 			<control id="focus" type="value" name="Focus" address="0x1C"/>
-			<control id="coarse" type="value" name="Image Lock Coarse (Clock)" address="0x0e"/>
-			<control id="fine" type="value" name="Image Lock Fine (Clock Phase)" address="0x3e"/>
 			<control id="landing" type="value" name="Landing Adjust (RGB alignment)" address="0x5C"/>
 			<control id="sharpness" type="value" name="Sharpness" address="0x8c"/>
 		</subgroup>

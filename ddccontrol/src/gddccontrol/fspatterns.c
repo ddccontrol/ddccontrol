@@ -128,6 +128,34 @@ static void drawShade(GdkDrawable* pixmap, int ry, int rh, int number) {
 	gdk_draw_line(pixmap, gcwhite, rx, ry-5, rx, ry);
 }
 
+static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text) {
+	int w, h;
+	GdkGC* gc = gdk_gc_new(pixmap);
+	GdkColor color;
+	color.red = color.green = color.blue = 0xFFFF;
+	gdk_gc_set_rgb_fg_color(gc, &color);
+	
+	int x, y;
+	for (x = 0; x < width; x += 1) {
+		for (y = x%2; y < height; y += 2) {
+			gdk_draw_point(pixmap, gc, x, y);
+		}
+	}
+	
+	PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
+	pango_layout_set_markup(layout, text, -1);
+	pango_layout_get_pixel_size(layout, &w, &h);
+	
+	color.red = color.green = color.blue = 0x8000;
+	gdk_gc_set_rgb_fg_color(gc, &color);
+	gdk_gc_set_rgb_bg_color(gc, &color);
+	gdk_draw_rectangle(pixmap, gc, TRUE, (width-w)/2-5, 3*height/8-5, w+10, h+10);
+	
+	color.red = color.green = color.blue = 0x0000;
+	gdk_gc_set_rgb_fg_color(gc, &color);
+	gdk_draw_layout(pixmap, gc, (width-w)/2, 3*height/8, layout);
+}
+
 static void show_pattern(gchar* patternname)
 {
 	int x, y, width, height;
@@ -191,6 +219,47 @@ static void show_pattern(gchar* patternname)
 		gdk_gc_set_rgb_fg_color(gc, &color);
 		gdk_draw_line(pixmap, gc, 0, (height)/24, width, (height)/24);
 		gdk_draw_line(pixmap, gc, 0, (23*height)/24, width, (23*height)/24);
+	}
+	else if (g_str_equal(patternname, N_("moire"))) {
+		drawchecker(pixmap, width, height, _("Try to make moire patterns disappear."));
+	}
+	else if (g_str_equal(patternname, N_("clock"))) {
+		drawchecker(pixmap, width, height,
+			_("Adjust Image Lock Coarse to make the vertical band disappear.\n"
+			  "Adjust Image Lock Fine to minimize movement on the screen."));
+	}
+	else if (g_str_equal(patternname, N_("misconvergence"))) {
+		const int csize = 51;
+		const int dsize = 25;
+		int x, y, c = 0, d = 0;
+		for (x = 0; x < width; x += csize) {
+			c = d;
+			for (y = 0; y < height; y += csize) {
+				color.red = 0x0000;
+				color.green = 0x0000;
+				color.blue = 0x0000;
+				switch (c % 4) {
+				case 0:
+					color.red = 0xFFFF;
+					break;
+				case 1:
+					color.green = 0xFFFF;
+					break;
+				case 2:
+					color.blue = 0xFFFF;
+					break;
+				default:
+					color.red = 0xFFFF;
+					color.green = 0xFFFF;
+					color.blue = 0xFFFF;
+				}
+				gdk_gc_set_rgb_fg_color(gc, &color);
+				gdk_draw_line(pixmap, gc, x+dsize, y, x+dsize, y+csize);
+				gdk_draw_line(pixmap, gc, x, y+dsize, x+csize, y+dsize);
+				c++;
+			}
+			d++;
+		}
 	}
 	else {
 		color.red = color.green = color.blue = 0xFFFF;
