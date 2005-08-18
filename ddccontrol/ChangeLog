@@ -1,3 +1,19 @@
+2005-08-18 15:14  nboichat
+
+	* src/: gddccontrol/main.c, gddccontrol/notebook.c,
+	  gddccontrol/notebook.h, lib/Makefile.am, lib/Makefile.in,
+	  lib/conf.c, lib/conf.h, lib/ddcci.c, lib/ddcci.h,
+	  lib/monitor_db.c, lib/profile.c, lib/profile.h: Speed up
+	  gddccontrol loading by caching monitor list.
+
+2005-08-17 17:49  nboichat
+
+	* configure, configure.ac, doc/main.xml,
+	  src/gddccontrol/fspatterns.c: Add moire, clock and misconvergence
+	  patterns.
+
+2005-08-13 12:37  tag Release-0_2
+
 2005-08-13 12:37  nboichat
 
 	* NEWS, po/ddccontrol.pot, po/fr.gmo, po/fr.po, po/ru.gmo,
