@@ -29,6 +29,7 @@
 GtkWidget* table;
 
 GtkWidget *combo_box;
+GtkWidget* refresh_monitors_button;
 
 GtkWidget *messagelabel = NULL;
 GtkWidget *statuslabel = NULL;
@@ -42,6 +43,8 @@ GtkWidget* bottom_hbox = NULL;
 struct monitorlist* monlist;
 
 GtkTooltips *tooltips;
+
+gulong combo_box_changed_handler_id = 0;
 
 int mainrow = 0; /* Main center row in the table widget */
 
@@ -111,7 +114,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 				create_monitor_manager(current);
 				if (monitor_manager) {
 					gtk_widget_show(monitor_manager);
-					gtk_widget_set_sensitive(refresh_button, TRUE);
+					gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 				}
 				else {
 					gtk_widget_set_sensitive(close_button, TRUE);
@@ -192,7 +195,7 @@ static gboolean window_changed(GtkWidget *widget,
 static void widgets_set_sensitive(gboolean sensitive)
 {
 	gtk_widget_set_sensitive(choice_hbox, sensitive);
-	gtk_widget_set_sensitive(refresh_button, sensitive && (current_main_component == 0));
+	gtk_widget_set_sensitive(refresh_controls_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(close_button, sensitive);
 	gtk_widget_set_sensitive(profile_manager_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(saveprofile_button, sensitive);
@@ -210,13 +213,13 @@ void set_current_main_component(int component) {
 	if (current_main_component == 0) {
 		gtk_widget_show(monitor_manager);
 		gtk_widget_hide(profile_manager);
-		gtk_widget_set_sensitive(refresh_button, TRUE);
+		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		gtk_widget_set_sensitive(profile_manager_button, TRUE);
 	}
 	else if (current_main_component == 1) {
 		gtk_widget_hide(monitor_manager);
 		gtk_widget_show(profile_manager);
-		gtk_widget_set_sensitive(refresh_button, FALSE);
+		gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 		gtk_widget_set_sensitive(profile_manager_button, FALSE);
 	}
 }
@@ -299,6 +302,58 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 	}
 	
 	return button;
+}
+
+static void probe_monitors(GtkWidget *widget, gpointer data) {
+	if (combo_box_changed_handler_id)
+		g_signal_handler_disconnect(G_OBJECT(combo_box), combo_box_changed_handler_id);
+	
+	gtk_list_store_clear(GTK_LIST_STORE(gtk_combo_box_get_model(GTK_COMBO_BOX(combo_box))));
+	
+	set_message(_(
+	"Probing for available monitors..."
+		   ));
+	
+	if (widget == NULL)
+		monlist = ddcci_load_list();
+	else
+		monlist = NULL;
+		
+	if (!monlist) {
+		monlist = ddcci_probe();
+	
+		ddcci_save_list(monlist);
+	}
+	
+	struct monitorlist* current;
+	
+	char buffer[256];
+	
+	for (current = monlist; current != NULL; current = current->next)
+	{
+		snprintf(buffer, 256, N_("%s: %s"),
+			current->filename, current->name);
+		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
+	}
+	
+	combo_box_changed_handler_id = g_signal_connect(G_OBJECT(combo_box), N_("changed"), G_CALLBACK(combo_change), NULL);
+	
+	currentid = -1;
+	nextid = -1;
+	
+	if (monlist) {
+		widgets_set_sensitive(TRUE);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+	}
+	else {
+		widgets_set_sensitive(FALSE);
+		gtk_widget_set_sensitive(close_button, TRUE);
+		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
+		set_message(_(
+			"No monitor supporting DDC/CI available.\n\n"
+			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+			   ));
+	}
 }
 
 int main( int   argc, char *argv[] )
@@ -391,7 +446,12 @@ int main( int   argc, char *argv[] )
 	gtk_widget_show(combo_box);
 
 	gtk_box_pack_start(GTK_BOX(choice_hbox),combo_box, 1, 1, 0);
-
+	
+	refresh_monitors_button = stock_label_button(GTK_STOCK_REFRESH, NULL, _("Refresh monitor list"));
+	g_signal_connect(G_OBJECT(refresh_monitors_button), N_("clicked"), G_CALLBACK(probe_monitors), NULL);
+	gtk_widget_show(refresh_monitors_button);
+	gtk_box_pack_start(GTK_BOX(choice_hbox),refresh_monitors_button, 0, 0, 0);
+	
 	gtk_table_attach(GTK_TABLE(table), choice_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, 0, 5, 5);
 	crow++;
 	gtk_widget_show(choice_hbox);
@@ -455,12 +515,12 @@ int main( int   argc, char *argv[] )
 	GtkWidget* align = gtk_alignment_new(1, 0.5, 0, 0);
 	GtkWidget* br_hbox = gtk_hbox_new(FALSE, 30);
 	
-	refresh_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
-	g_signal_connect(G_OBJECT(refresh_button),N_("clicked"),G_CALLBACK (refresh_all_controls), NULL);
+	refresh_controls_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
+	g_signal_connect(G_OBJECT(refresh_controls_button),N_("clicked"),G_CALLBACK (refresh_all_controls), NULL);
 
-	gtk_box_pack_start(GTK_BOX(br_hbox),refresh_button,0,0,0);
-	gtk_widget_show (refresh_button);
-	gtk_widget_set_sensitive(refresh_button, FALSE);
+	gtk_box_pack_start(GTK_BOX(br_hbox),refresh_controls_button,0,0,0);
+	gtk_widget_show (refresh_controls_button);
+	gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 	
 	close_button = stock_label_button(GTK_STOCK_CLOSE, _("Close"), NULL);
 	g_signal_connect(G_OBJECT(close_button),N_("clicked"),G_CALLBACK (destroy), NULL);
@@ -508,42 +568,12 @@ int main( int   argc, char *argv[] )
 	}
 	#endif
 	
-	set_message(_(
-	"Probing for available monitors..."
-		   ));
-	
-	monlist = ddcci_probe();
-	
-	struct monitorlist* current;
-	
-	char buffer[256];
-	
-	for (current = monlist; current != NULL; current = current->next)
-	{
-		snprintf(buffer, 256, N_("%s: %s"),
-			current->filename, current->name);
-		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
-	}
-	
-	g_signal_connect (G_OBJECT(combo_box), N_("changed"), G_CALLBACK (combo_change), NULL);
+	probe_monitors(NULL, NULL);
 	
 /*	moninfo = gtk_label_new ();
 	gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
 	
 	gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);*/
-	
-	if (monlist) {
-		widgets_set_sensitive(TRUE);
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-	}
-	else {
-		widgets_set_sensitive(FALSE);
-		gtk_widget_set_sensitive(close_button, TRUE);
-		set_message(_(
-			"No monitor supporting DDC/CI available.\n\n"
-			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
-			   ));
-	}
 	
 	gchar* tmp = g_strdup_printf(_("Welcome to gddccontrol %s."), VERSION);
 	set_status(tmp);

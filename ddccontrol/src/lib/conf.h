@@ -1,5 +1,5 @@
 /*
-    Monitor profile functions.
+    read/write configuration files in ~/.ddccontrol (profiles, cached monitor list)
     Copyright(c) 2005 Nicolas Boichat (nicolas@boichat.ch)
 
     This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,13 @@
 #define PROFILE_H
 
 #include "ddcci.h"
+
+/* Read/write monitor list */
+
+struct monitorlist* ddcci_load_list();
+int ddcci_save_list(struct monitorlist* monlist);
+
+/* Profile structures and functions */
 
 /* Current profile format version */
 #define PROFILEVERSION 1

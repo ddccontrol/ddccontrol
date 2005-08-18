@@ -34,7 +34,7 @@
 
 #include "ddcci.h"
 
-#include "profile.h"
+#include "conf.h"
 
 /* ddc/ci defines */
 #define DEFAULT_DDCCI_ADDR	0x37	/* ddc/ci logic sits at 0x37 */
@@ -954,4 +954,75 @@ void ddcci_free_list(struct monitorlist* list) {
 	free(list->name);
 	ddcci_free_list(list->next);
 	free(list);
+}
+
+/* Create $HOME/.ddccontrol and subdirectories if necessary */
+int ddcci_create_config_dir()
+{
+	int len, ret;
+	char* home;
+	char* filename;
+	int trailing;
+	struct stat buf;
+	
+	home     = getenv(N_("HOME"));
+	trailing = (home[strlen(home)-1] == '/');
+	
+	len = strlen(home) + 32;
+	
+	filename = malloc(len);
+	ret = snprintf(filename, len, N_("%s%s.ddccontrol"), home, trailing ? "" : N_("/"));
+	DDCCI_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free(filename);})
+	
+	if (stat(filename, &buf) < 0) {
+		if (errno != ENOENT) {
+			perror(_("Error while getting informations about ddccontrol home directory."));
+			return 0;
+		}
+		
+		if (mkdir(filename, 0750) < 0) {
+			perror(_("Error while creating ddccontrol home directory."));
+			return 0;
+		}
+		
+		if (stat(filename, &buf) < 0) {
+			perror(_("Error while getting informations about ddccontrol home directory after creating it."));
+			return 0;
+		}
+	}
+	
+	if (!S_ISDIR(buf.st_mode)) {
+		errno = ENOTDIR;
+		perror(_("Error: '.ddccontrol' in your home directory is not a directory."));
+		return 0;
+	}
+	
+	strcat(filename, N_("/profiles"));
+	
+	if (stat(filename, &buf) < 0) {
+		if (errno != ENOENT) {
+			perror(_("Error while getting informations about ddccontrol profile directory."));
+			return 0;
+		}
+		
+		if (mkdir(filename, 0750) < 0) {
+			perror(_("Error while creating ddccontrol profile directory."));
+			return 0;
+		}
+		
+		if (stat(filename, &buf) < 0) {
+			perror(_("Error while getting informations about ddccontrol profile directory after creating it."));
+			return 0;
+		}
+	}
+	
+	if (!S_ISDIR(buf.st_mode)) {
+		errno = ENOTDIR;
+		perror(_("Error: '.ddccontrol/profiles' in your home directory is not a directory."));
+		return 0;
+	}
+	
+	free(filename);
+	
+	return 1;
 }

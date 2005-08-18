@@ -94,8 +94,11 @@ void ddcci_release();
 
 void ddcpci_send_heartbeat();
 
+/* Create $HOME/.ddccontrol and subdirectories if necessary */
+int ddcci_create_config_dir();
+
 /* Macros */
-#define DDCCI_RETURN_IF_RUN(cond, value, message, node, run) \
+#define DDCCI_DB_RETURN_IF_RUN(cond, value, message, node, run) \
 	if (cond) { \
 		if (node) \
 			fprintf(stderr, _("Error: %s @%s:%d (%s:%ld)\n"), message, __FILE__, __LINE__, \
@@ -106,7 +109,17 @@ void ddcpci_send_heartbeat();
 		return value; \
 	}
 
-#define DDCCI_RETURN_IF(cond, value, message, node) \
-	DDCCI_RETURN_IF_RUN(cond, value, message, node, {})
+#define DDCCI_DB_RETURN_IF(cond, value, message, node) \
+	DDCCI_DB_RETURN_IF_RUN(cond, value, message, node, {})
+	
+#define DDCCI_RETURN_IF_RUN(cond, value, message, run) \
+	if (cond) { \
+		fprintf(stderr, _("Error: %s @%s:%d\n"), message, __FILE__, __LINE__); \
+		run \
+		return value; \
+	}
+
+#define DDCCI_RETURN_IF(cond, value, message) \
+	DDCCI_RETURN_IF_RUN(cond, value, message, {})
 
 #endif //DDCCI_H

@@ -33,7 +33,7 @@
 
 #include "ddcci.h"
 #include "monitor_db.h"
-#include "profile.h"
+#include "conf.h"
 
 /* constants */
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
@@ -97,7 +97,7 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 GtkWidget* profile_manager_button;
 GtkWidget* saveprofile_button;
 GtkWidget* cancelprofile_button;
-GtkWidget* refresh_button;
+GtkWidget* refresh_controls_button;
 
 #ifdef HAVE_XINERAMA
 int xineramacurrent;

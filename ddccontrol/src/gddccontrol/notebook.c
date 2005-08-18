@@ -105,7 +105,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 {
 	/* Maybe we could lock a Mutex here, but I don't think it is really necessary... */
 	
-	gtk_widget_set_sensitive(refresh_button, FALSE);
+	gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 	
 	int current = 0;
 	int count = g_slist_length(all_controls);
@@ -135,7 +135,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 	
 	set_message("");
 	
-	gtk_widget_set_sensitive(refresh_button, TRUE);
+	gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 }
 
 static void change_control_value(GtkWidget *widget, gpointer nval)
@@ -568,7 +568,10 @@ void create_monitor_manager(struct monitorlist* monitor)
 			"The current monitor is in the database but does not supports "
 			"DDC/CI.\n\nThis often occurs when you connect the VGA/DVI cable "
 			"on the wrong input of monitors supporting DDC/CI only on one of "
-			"its two inputs."));
+			"its two inputs.\n\n"
+			"If your monitor has two inputs, please try to connect the cable "
+			"to the other input, and then click on the refresh button near "
+			"the monitor list."));
 		monitor_manager = NULL;
 		return;
 	}
@@ -577,7 +580,14 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	mon = malloc(sizeof(struct monitor));
 	
-	ddcci_open(mon, monitor->filename, 0);
+	if (ddcci_open(mon, monitor->filename, 0) < 0) {
+		set_message(_(
+			"An error occured while opening the monitor device.\n"
+			"Maybe this monitor was disconnected, please click on "
+			"the refresh button near the monitor list."));
+		monitor_manager = NULL;
+		return;
+	}
 	
 	GtkWidget *notebook = gtk_notebook_new();
 	
