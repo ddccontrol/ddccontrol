@@ -1,7 +1,7 @@
 localedir = $(datadir)/locale
 INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 
-LDADD = ../lib/libddcci.a
+LDADD = ../lib/libddccontrol.la
 
 bin_PROGRAMS = gddccontrol
 gddccontrol_SOURCES = main.c notebook.c notebook.h gprofile.c fspatterns.c
