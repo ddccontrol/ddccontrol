@@ -21,7 +21,7 @@
 #ifndef DDCCI_H
 #define DDCCI_H
 
-#include "config.h"
+//#include "config.h"
 
 #include <libintl.h>
 #include <locale.h>

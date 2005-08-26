@@ -20,6 +20,7 @@
  *  Profiles are stored in HOME_DIR/.ddccontrol
  */
 
+#include "config.h"
 #include <errno.h>
 #include <stdio.h>
 

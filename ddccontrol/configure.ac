@@ -122,9 +122,25 @@ if test x$support_gnome = xyes; then
    fi
 fi
 
+support_gnome_applet=yes
+AC_ARG_ENABLE(	gnome-applet,
+		[  --disable-gnome-applet	disable build of gnome panel applet (enabled)],
+		[if test x$enableval = xno; then
+			support_gnome_applet=no
+		fi])
+
+
+GDDCCONTROL=
+if test x$support_gnome_applet = xyes; then
+	GNOME_APPLET="gnome-ddcc-applet"
+	PKG_CHECK_MODULES(GNOME, libpanelapplet-2.0 >= 2.10,,GNOME_APPLET="")
+fi
+
+
 AC_SUBST([GNOME_LDFLAGS])
 AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
+AC_SUBST([GNOME_APPLET])
 
 # Doc check
 support_doc=no
@@ -197,5 +213,6 @@ AC_CONFIG_FILES([
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile
+	src/gnome-ddcc-applet/Makefile
 	doc/Makefile])
 AC_OUTPUT

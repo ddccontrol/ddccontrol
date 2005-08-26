@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB EGREP LN_S ECHO AR ac_ct_AR CPP CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL XML2_CONFIG LIBXML2_LDFLAGS LIBXML2_CFLAGS DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_LDFLAGS GNOME_CFLAGS GDDCCONTROL BUILD_DOC_TRUE BUILD_DOC_FALSE XSLTPROC SSH SCP ASPELL FOP TIDY XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT DOC LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT MKINSTALLDIRS USE_NLS MSGFMT GMSGFMT XGETTEXT MSGMERGE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB RANLIB ac_ct_RANLIB EGREP LN_S ECHO AR ac_ct_AR CPP CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL XML2_CONFIG LIBXML2_LDFLAGS LIBXML2_CFLAGS DDCPCI PKG_CONFIG X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS XINERAMA_LIBS GNOME_CFLAGS GNOME_LIBS GNOME_LDFLAGS GDDCCONTROL GNOME_APPLET BUILD_DOC_TRUE BUILD_DOC_FALSE XSLTPROC SSH SCP ASPELL FOP TIDY XML_CATALOG XSLTPROC_FLAGS DOCBOOK_ROOT DOC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1045,6 +1045,7 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-ddcpci	  enable direct PCI memory access (enabled)
   --disable-gnome	  disable build of gnome-console GUI (enabled)
+  --disable-gnome-applet	disable build of gnome panel applet (enabled)
   --enable-doc	  enable build of the documentation (disabled)
 
 Optional Packages:
@@ -6401,7 +6402,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6404 "configure"' > conftest.$ac_ext
+  echo '#line 6405 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7965,7 +7966,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:7968:" \
+echo "$as_me:7969:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -8997,11 +8998,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9000: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9001: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9004: \$? = $ac_status" >&5
+   echo "$as_me:9005: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -9230,11 +9231,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9233: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9234: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9237: \$? = $ac_status" >&5
+   echo "$as_me:9238: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -9290,11 +9291,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9293: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9294: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9297: \$? = $ac_status" >&5
+   echo "$as_me:9298: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11478,7 +11479,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11481 "configure"
+#line 11482 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11576,7 +11577,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11579 "configure"
+#line 11580 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13753,11 +13754,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13756: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13757: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13760: \$? = $ac_status" >&5
+   echo "$as_me:13761: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -13813,11 +13814,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13816: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13817: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13820: \$? = $ac_status" >&5
+   echo "$as_me:13821: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -15182,7 +15183,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 15185 "configure"
+#line 15186 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -15280,7 +15281,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 15283 "configure"
+#line 15284 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -16107,11 +16108,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16110: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16111: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16114: \$? = $ac_status" >&5
+   echo "$as_me:16115: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -16167,11 +16168,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16170: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16171: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:16174: \$? = $ac_status" >&5
+   echo "$as_me:16175: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -18212,11 +18213,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18215: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18216: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:18219: \$? = $ac_status" >&5
+   echo "$as_me:18220: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -18445,11 +18446,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18448: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18449: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:18452: \$? = $ac_status" >&5
+   echo "$as_me:18453: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -18505,11 +18506,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18508: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18509: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:18512: \$? = $ac_status" >&5
+   echo "$as_me:18513: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -20693,7 +20694,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 20696 "configure"
+#line 20697 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -20791,7 +20792,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 20794 "configure"
+#line 20795 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -24239,6 +24240,119 @@ echo "$as_me: error: gtk+>=2.4 development packages not found" >&2;}
    fi
 fi
 
+support_gnome_applet=yes
+# Check whether --enable-gnome-applet or --disable-gnome-applet was given.
+if test "${enable_gnome_applet+set}" = set; then
+  enableval="$enable_gnome_applet"
+  if test x$enableval = xno; then
+			support_gnome_applet=no
+		fi
+fi;
+
+
+GDDCCONTROL=
+if test x$support_gnome_applet = xyes; then
+	GNOME_APPLET="gnome-ddcc-applet"
+
+  succeeded=no
+
+  if test -z "$PKG_CONFIG"; then
+    # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_PKG_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_PKG_CONFIG" && ac_cv_path_PKG_CONFIG="no"
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+
+if test -n "$PKG_CONFIG"; then
+  echo "$as_me:$LINENO: result: $PKG_CONFIG" >&5
+echo "${ECHO_T}$PKG_CONFIG" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  fi
+
+  if test "$PKG_CONFIG" = "no" ; then
+     echo "*** The pkg-config script could not be found. Make sure it is"
+     echo "*** in your path, or set the PKG_CONFIG environment variable"
+     echo "*** to the full path to pkg-config."
+     echo "*** Or see http://www.freedesktop.org/software/pkgconfig to get pkg-config."
+  else
+     PKG_CONFIG_MIN_VERSION=0.9.0
+     if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+        echo "$as_me:$LINENO: checking for libpanelapplet-2.0 >= 2.10" >&5
+echo $ECHO_N "checking for libpanelapplet-2.0 >= 2.10... $ECHO_C" >&6
+
+        if $PKG_CONFIG --exists "libpanelapplet-2.0 >= 2.10" ; then
+            echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+            succeeded=yes
+
+            echo "$as_me:$LINENO: checking GNOME_CFLAGS" >&5
+echo $ECHO_N "checking GNOME_CFLAGS... $ECHO_C" >&6
+            GNOME_CFLAGS=`$PKG_CONFIG --cflags "libpanelapplet-2.0 >= 2.10"`
+            echo "$as_me:$LINENO: result: $GNOME_CFLAGS" >&5
+echo "${ECHO_T}$GNOME_CFLAGS" >&6
+
+            echo "$as_me:$LINENO: checking GNOME_LIBS" >&5
+echo $ECHO_N "checking GNOME_LIBS... $ECHO_C" >&6
+            GNOME_LIBS=`$PKG_CONFIG --libs "libpanelapplet-2.0 >= 2.10"`
+            echo "$as_me:$LINENO: result: $GNOME_LIBS" >&5
+echo "${ECHO_T}$GNOME_LIBS" >&6
+        else
+            GNOME_CFLAGS=""
+            GNOME_LIBS=""
+            ## If we have a custom action on failure, don't print errors, but
+            ## do set a variable so people can do so.
+            GNOME_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libpanelapplet-2.0 >= 2.10"`
+
+        fi
+
+
+
+     else
+        echo "*** Your version of pkg-config is too old. You need version $PKG_CONFIG_MIN_VERSION or newer."
+        echo "*** See http://www.freedesktop.org/software/pkgconfig"
+     fi
+  fi
+
+  if test $succeeded = yes; then
+     :
+  else
+     GNOME_APPLET=""
+  fi
+
+fi
+
+
+
 
 
 
@@ -24563,7 +24677,7 @@ fi
 
 
 
-                                                                                ac_config_files="$ac_config_files po/Makefile.in Makefile src/Makefile src/lib/Makefile src/ddccontrol/Makefile src/gddccontrol/Makefile src/ddcpci/Makefile doc/Makefile"
+                                                                                          ac_config_files="$ac_config_files po/Makefile.in Makefile src/Makefile src/lib/Makefile src/ddccontrol/Makefile src/gddccontrol/Makefile src/ddcpci/Makefile src/gnome-ddcc-applet/Makefile doc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -25156,6 +25270,7 @@ do
   "src/ddccontrol/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/ddccontrol/Makefile" ;;
   "src/gddccontrol/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/gddccontrol/Makefile" ;;
   "src/ddcpci/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/ddcpci/Makefile" ;;
+  "src/gnome-ddcc-applet/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/gnome-ddcc-applet/Makefile" ;;
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
@@ -25335,9 +25450,11 @@ s,@X_PRE_LIBS@,$X_PRE_LIBS,;t t
 s,@X_LIBS@,$X_LIBS,;t t
 s,@X_EXTRA_LIBS@,$X_EXTRA_LIBS,;t t
 s,@XINERAMA_LIBS@,$XINERAMA_LIBS,;t t
-s,@GNOME_LDFLAGS@,$GNOME_LDFLAGS,;t t
 s,@GNOME_CFLAGS@,$GNOME_CFLAGS,;t t
+s,@GNOME_LIBS@,$GNOME_LIBS,;t t
+s,@GNOME_LDFLAGS@,$GNOME_LDFLAGS,;t t
 s,@GDDCCONTROL@,$GDDCCONTROL,;t t
+s,@GNOME_APPLET@,$GNOME_APPLET,;t t
 s,@BUILD_DOC_TRUE@,$BUILD_DOC_TRUE,;t t
 s,@BUILD_DOC_FALSE@,$BUILD_DOC_FALSE,;t t
 s,@XSLTPROC@,$XSLTPROC,;t t
