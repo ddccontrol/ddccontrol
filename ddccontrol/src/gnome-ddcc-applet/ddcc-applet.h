@@ -23,6 +23,22 @@
 
 
 /* ****************
+ * Constants
+ * ****************/
+
+typedef enum
+_DdccError
+{
+	ERR_OK = 0,
+	ERR_GET_PROFILES,
+	ERR_DDCCI_OPEN,
+	ERR_GET_MONITOR_NAME,
+	ERR_DDCCI_INIT,
+	ERR_NO_INIT,
+} DdccError;
+
+
+/* ****************
  * Datatypes
  * ****************/
 
@@ -35,12 +51,18 @@ _DdccApplet
 
 	struct monitor* monitor;
 	char monitor_name[256];
+	struct profile* profile;
+	
+	DdccError error;
 } DdccApplet;
 
 
 /* ****************
  * Protoypes
  * ****************/
+
+static void
+ddcc_applet_init (DdccApplet* applet);
 
 void
 build_profiles_menu (DdccApplet *applet);

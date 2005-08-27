@@ -28,6 +28,7 @@
 
 /* libc */
 #include <string.h>
+#include <stdlib.h>
 
 /* GNOME */
 #include <panel-applet.h>
@@ -64,11 +65,8 @@ get_monitor_name (char *buffer)
 	struct monitorlist* monlist;
 	struct monitorlist* current;
 	
-	if (!(monlist = ddcci_load_list ())) {
-		error_message (_("No monitor configuration found."
-				" Plase run gddccontrol first\n"));
+	if (!(monlist = ddcci_load_list ()))
 		return NULL;
-	}
 	
 	for (current = monlist; current; current = current->next)
 		snprintf (buffer, 256, "%s", current->filename);
@@ -146,6 +144,11 @@ applet_button_cb (GtkWidget	*widget,
 		GdkEventButton	*event,
 		DdccApplet	*applet)
 {
+	if (applet->error) {
+		ddcc_applet_init(applet);
+		return FALSE;
+	}
+
 	if (event->button == 1)
 	{
 		build_profiles_menu (applet);
@@ -171,6 +174,8 @@ change_profile_cb (GtkMenuItem*	item,
 	profile = g_object_get_data (G_OBJECT (item), "ddcc_profile");
 	ddcci_apply_profile (profile, applet->monitor);
 
+	applet->profile = profile;
+		
 	gtk_label_set_label (GTK_LABEL (applet->w_label), profile->name);
 
 	return FALSE;
@@ -181,11 +186,15 @@ change_profile_cb (GtkMenuItem*	item,
  * Cleanup
  * ****************/
 
+/* called when the main widget is destroyed
+ * (user removes applet from pannel) */
 static void
 destroy_cb (GtkObject* object, DdccApplet* applet)
 {
+	ddcci_close (applet->monitor);
 	ddcci_release ();
-	g_free (applet->monitor);
+	if (applet->monitor)
+		free (applet->monitor);
 	g_free (applet);
 }
 
@@ -208,7 +217,6 @@ build_profiles_menu (DdccApplet *applet)
 	applet->w_profiles_menu = gtk_menu_new ();
 	
 
-	ddcci_get_all_profiles (applet->monitor);
 	for (profile=applet->monitor->profiles;profile;profile=profile->next) {
 		item = gtk_menu_item_new_with_label (profile->name);
 		g_object_set_data (G_OBJECT (item), "ddcc_profile", profile);
@@ -220,35 +228,80 @@ build_profiles_menu (DdccApplet *applet)
 	}
 }
 
+/* initializes the ddccontrol library, if initialisation is already
+ * partly done it's just completed */
+static void
+ddcc_applet_init (DdccApplet* applet)
+{
+	switch(applet->error) {
+		case ERR_NO_INIT:
+			
+		case ERR_DDCCI_INIT:
+			if (!ddcci_init (NULL)) {
+				error_message (_("Unable to initialize ddcci library\n"));
+				applet->error = ERR_DDCCI_INIT;
+				break;
+			}
+		
+		case ERR_GET_MONITOR_NAME:
+			if (!get_monitor_name (applet->monitor_name)) {
+				error_message (_("No monitor configuration found."
+						 " Plase run gddccontrol first\n"));
+				applet->error = ERR_GET_MONITOR_NAME;
+				break;
+			}
+			
+		case ERR_DDCCI_OPEN:
+			if (ddcci_open (applet->monitor,
+					get_monitor_name (applet->monitor_name), 0) < 0) {
+				error_message (_("An error occured while "
+						 "opening the monitor device.\n"));
+				applet->error = ERR_DDCCI_OPEN;
+				break;
+			}
+			
+		case ERR_GET_PROFILES:
+			if (!ddcci_get_all_profiles (applet->monitor)) {
+				error_message(_("Can't find any profiles\n"));
+				applet->error = ERR_GET_PROFILES;
+				break;
+			}
+			
+			applet->error = ERR_OK;
+
+		case ERR_OK:
+			if (applet->profile)
+				gtk_label_set_label (GTK_LABEL(applet->w_label),
+						     applet->profile->name);
+			else 
+				gtk_label_set_label (GTK_LABEL(applet->w_label),
+						     "ddcc");
+			return;
+	}
+	
+	gtk_label_set_label(GTK_LABEL(applet->w_label),_("error"));
+}
+
 /* main entrance point for the applet */
 static int
-ddcc_applet_init (GtkWidget* root_applet)
+ddcc_applet_main (GtkWidget* root_applet)
 {
 	DdccApplet* applet;
-	applet = g_malloc (sizeof (DdccApplet));
-	
+	applet = g_malloc0 (sizeof (DdccApplet));
+
+	applet->error = ERR_NO_INIT;
 	applet->monitor = g_malloc (sizeof (struct monitor));
 	applet->w_applet = root_applet;
 	applet->w_label = gtk_label_new ("ddcc");
 
 	gtk_container_add ( GTK_CONTAINER (applet->w_applet), applet->w_label);
 
-	if (!ddcci_init (NULL)) {
-		error_message (_("Unable to initialize ddcci library\n"));
-		return 0;
-	}
+	ddcc_applet_init(applet);
 	
-	if (ddcci_open (applet->monitor,
-			get_monitor_name (applet->monitor_name), 0) < 0) {
-		error_message (_("An error occured while "
-				"opening the monitor device.\n"));
-		return 0;
-	}
-	
-	g_signal_connect (G_OBJECT (root_applet), "destroy",
-			G_CALLBACK (destroy_cb), applet);
 	g_signal_connect (G_OBJECT (applet->w_applet), "button-press-event",
 			G_CALLBACK (applet_button_cb), applet);
+	g_signal_connect (G_OBJECT (root_applet), "destroy",
+			G_CALLBACK (destroy_cb), applet);
 	
 	gtk_widget_show_all (GTK_WIDGET (applet->w_applet));
 
@@ -264,7 +317,7 @@ ddcc_applet_factory (	PanelApplet *applet,
 	if (strcmp (iid, "OAFIID:GNOME_ddcc-applet"))
 		return FALSE;
 
-	return ddcc_applet_init (GTK_WIDGET (applet));
+	return ddcc_applet_main (GTK_WIDGET (applet));
 }
 PANEL_APPLET_BONOBO_FACTORY ("OAFIID:GNOME_ddcc-applet_Factory",
                              PANEL_TYPE_APPLET,
