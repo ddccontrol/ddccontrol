@@ -1,3 +1,4 @@
+
 localedir = $(datadir)/locale
 INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 

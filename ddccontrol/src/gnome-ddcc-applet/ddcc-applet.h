@@ -48,6 +48,8 @@ _DdccApplet
 	GtkWidget* w_applet;
 	GtkWidget* w_label;
 	GtkWidget* w_profiles_menu;
+	GtkWidget* w_properties_dialog;
+	GtkWidget* w_properties_monitor;
 
 	struct monitor* monitor;
 	char monitor_name[256];
@@ -67,5 +69,14 @@ ddcc_applet_init (DdccApplet* applet);
 void
 build_profiles_menu (DdccApplet *applet);
 
+void
+menu_properties_cb(BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname);
+
+void
+menu_about_cb(BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname);
 
 #endif /* __DDCC_APPLET_H__ */

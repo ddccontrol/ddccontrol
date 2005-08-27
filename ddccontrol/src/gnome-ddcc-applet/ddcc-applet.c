@@ -38,6 +38,17 @@
 /* private */
 #include "ddcc-applet.h"
 
+/* config */
+#include "config.h"
+
+/* Popup menu on the applet */
+static const BonoboUIVerb ddccapplet_applet_menu_verbs[] = 
+{
+        BONOBO_UI_UNSAFE_VERB ("DdccAppletProperties", menu_properties_cb),
+        BONOBO_UI_UNSAFE_VERB ("DdccAppletAbout", menu_about_cb),
+        BONOBO_UI_VERB_END
+};
+
 
 /* ****************
  * Helpers
@@ -138,19 +149,50 @@ position_menu (	GtkMenu *menu, gint *x, gint *y,
  * Callbacks
  * ****************/
 
+void
+menu_properties_cb(BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname)
+{
+
+	gtk_widget_show(applet->w_properties_dialog);
+}
+
+void
+menu_about_cb(BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname)
+{
+	static const gchar *authors[] = {
+		"Christian Schilling <cschilling@gmx.de>",
+		NULL
+	};
+	
+	gtk_show_about_dialog (NULL,
+			"name",		_("Ddcc Applet"),
+			"version",	VERSION,
+			"copyright",	"\xC2\xA9 2005 Christian Schilling",
+			"comments",	_("An applet for quick switching of monitor profiles\n"
+				"based on libddccontrol and part of the ddccontrol project\n"
+				"(http://ddccontrol.sourceforge.net)"),
+			"authors",	authors,
+			NULL);
+}
+
 /* called when the user klicks on the applet */
 gboolean
 applet_button_cb (GtkWidget	*widget,
 		GdkEventButton	*event,
 		DdccApplet	*applet)
 {
-	if (applet->error) {
-		ddcc_applet_init(applet);
-		return FALSE;
-	}
 
 	if (event->button == 1)
 	{
+		if (applet->error) {
+			ddcc_applet_init(applet);
+			return FALSE;
+		}
+		
 		build_profiles_menu (applet);
 		if (applet->w_profiles_menu)
 		{
@@ -180,6 +222,16 @@ change_profile_cb (GtkMenuItem*	item,
 
 	return FALSE;
 }
+
+gboolean
+dialog_delete_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	gtk_widget_hide(widget);
+
+	return TRUE;
+}
+
+
 
 
 /* ****************
@@ -292,19 +344,39 @@ ddcc_applet_main (GtkWidget* root_applet)
 	applet->error = ERR_NO_INIT;
 	applet->monitor = g_malloc (sizeof (struct monitor));
 	applet->w_applet = root_applet;
+	
+	/* create the label */
 	applet->w_label = gtk_label_new ("ddcc");
-
 	gtk_container_add ( GTK_CONTAINER (applet->w_applet), applet->w_label);
 
+	/* add the popup menu */
+	panel_applet_setup_menu_from_file(applet->w_applet,
+			PKGDATADIR, "GNOME_ddcc-applet.xml",
+			NULL, ddccapplet_applet_menu_verbs,
+			applet);
+
+	/* create the properties dialog */
+	applet->w_properties_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	applet->w_properties_monitor = gtk_combo_box_new_text ();
+	gtk_container_add (GTK_CONTAINER (applet->w_properties_dialog),
+			applet->w_properties_monitor);
+	gtk_widget_show (applet->w_properties_monitor);
+	gtk_combo_box_append_text ( GTK_COMBO_BOX (applet->w_properties_monitor), "sdfsdfsd");
+
+
+	/* initialize ddcci lib */
 	ddcc_applet_init(applet);
-	
+
+	/* connect all callbacks */
 	g_signal_connect (G_OBJECT (applet->w_applet), "button-press-event",
 			G_CALLBACK (applet_button_cb), applet);
 	g_signal_connect (G_OBJECT (root_applet), "destroy",
 			G_CALLBACK (destroy_cb), applet);
+	g_signal_connect(G_OBJECT (applet->w_properties_dialog),"delete-event",
+			G_CALLBACK (dialog_delete_cb), applet);
+	
 	
 	gtk_widget_show_all (GTK_WIDGET (applet->w_applet));
-
 	return TRUE;
 }
 

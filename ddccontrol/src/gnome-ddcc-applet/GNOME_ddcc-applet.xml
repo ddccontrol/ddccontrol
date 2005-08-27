@@ -1,0 +1,10 @@
+<Root>
+  <popups>
+    <popup name="button3">
+      <menuitem name="DdccApplet Properties Item" verb="DdccAppletProperties"
+                _label="_Properties..." pixtype="stock" pixname="gtk-properties"/>
+      <menuitem name="DdccApplet About Item" verb="DdccAppletAbout" _label="_About..."
+                pixtype="stock" pixname="gnome-stock-about"/>
+    </popup>
+  </popups>
+</Root>
