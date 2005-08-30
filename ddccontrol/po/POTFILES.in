@@ -7,7 +7,7 @@
 ./src/gddccontrol/gprofile.c
 ./src/lib/ddcci.c
 ./src/lib/monitor_db.c
-./src/lib/profile.c
+./src/lib/conf.c
 ./src/ddcpci/intel810.c
 ./src/ddcpci/i2c-algo-bit.c
 ./src/ddcpci/main.c
@@ -17,7 +17,7 @@
 ./src/gddccontrol/notebook.h
 ./src/lib/ddcci.h
 ./src/lib/monitor_db.h
-./src/lib/profile.h
+./src/lib/conf.h
 ./src/lib/ddcpci-ipc.h
 ./src/lib/i2c-dev.h
 ./src/ddcpci/ddcpci.h

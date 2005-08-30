@@ -26,13 +26,15 @@
  * Constants
  * ****************/
 
+/* Errorlevels to indicate how far the initialisation has succeded
+ * and what still needs to be done */
 typedef enum
 _DdccError
 {
 	ERR_OK = 0,
-	ERR_GET_PROFILES,
+	ERR_FILL_PROFILES_MENU,
 	ERR_DDCCI_OPEN,
-	ERR_GET_MONITOR_NAME,
+	ERR_FILL_MONITOR_COMBO,
 	ERR_DDCCI_INIT,
 	ERR_NO_INIT,
 } DdccError;
@@ -42,10 +44,12 @@ _DdccError
  * Datatypes
  * ****************/
 
+/* groups all data the applet together, a pointer to an
+ * instance of this is passed to most funktions of the applet */
 typedef struct
 _DdccApplet
 {
-	GtkWidget* w_applet;
+	PanelApplet* w_applet;
 	GtkWidget* w_label;
 	GtkWidget* w_profiles_menu;
 	GtkWidget* w_properties_dialog;
@@ -65,9 +69,6 @@ _DdccApplet
 
 static void
 ddcc_applet_init (DdccApplet* applet);
-
-void
-build_profiles_menu (DdccApplet *applet);
 
 void
 menu_properties_cb(BonoboUIComponent *uic,

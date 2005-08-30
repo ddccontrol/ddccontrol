@@ -68,25 +68,6 @@ error_message (char *msg)
 	gtk_widget_destroy (dialog);
 }
 
-/* writes device name of the current monitor into [buffer] 
- * returns [buffer] on success, NULL on failure */
-char*
-get_monitor_name (char *buffer)
-{
-	struct monitorlist* monlist;
-	struct monitorlist* current;
-	
-	if (!(monlist = ddcci_load_list ()))
-		return NULL;
-	
-	for (current = monlist; current; current = current->next)
-		snprintf (buffer, 256, "%s", current->filename);
-
-	ddcci_free_list (monlist);
-	
-	return buffer;
-}
-
 /* makes the menu appear next to the widget [user_data]
  * instead off right under the cursor */
 void
@@ -149,15 +130,18 @@ position_menu (	GtkMenu *menu, gint *x, gint *y,
  * Callbacks
  * ****************/
 
+/* called when the user selects the "Properties..." entry from the menu
+ * shows (not creates!) the properties dialog */
 void
 menu_properties_cb(BonoboUIComponent *uic,
 		DdccApplet *applet,
 	       	const gchar *verbname)
 {
-
 	gtk_widget_show(applet->w_properties_dialog);
 }
 
+/* shows the about dialog, when the user selects the coresponding
+ * menu entry */
 void
 menu_about_cb(BonoboUIComponent *uic,
 		DdccApplet *applet,
@@ -169,13 +153,18 @@ menu_about_cb(BonoboUIComponent *uic,
 	};
 	
 	gtk_show_about_dialog (NULL,
-			"name",		_("Ddcc Applet"),
-			"version",	VERSION,
-			"copyright",	"\xC2\xA9 2005 Christian Schilling",
-			"comments",	_("An applet for quick switching of monitor profiles\n"
-				"based on libddccontrol and part of the ddccontrol project\n"
-				"(http://ddccontrol.sourceforge.net)"),
-			"authors",	authors,
+			"name", _("Ddcc Applet"),
+			"version", VERSION,
+			"copyright", "\xC2\xA9 2005 Christian Schilling",
+			"comments",
+			_(
+				"An applet for quick switching of"
+				" monitor profiles.\n"
+				"Based on libddccontrol"
+				" and part of the ddccontrol project.\n"
+				"(http://ddccontrol.sourceforge.net)"
+			 ),
+			"authors", authors,
 			NULL);
 }
 
@@ -185,15 +174,13 @@ applet_button_cb (GtkWidget	*widget,
 		GdkEventButton	*event,
 		DdccApplet	*applet)
 {
-
 	if (event->button == 1)
 	{
-		if (applet->error) {
+		if (applet->error)
 			ddcc_applet_init(applet);
+		if (applet->error)
 			return FALSE;
-		}
 		
-		build_profiles_menu (applet);
 		if (applet->w_profiles_menu)
 		{
 			gtk_menu_popup (GTK_MENU (applet->w_profiles_menu),
@@ -223,15 +210,34 @@ change_profile_cb (GtkMenuItem*	item,
 	return FALSE;
 }
 
+/* called when properties window should be closed
+ * in fact, it prevents it from being closed and just hides it */
 gboolean
-dialog_delete_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
+dialog_delete_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
 	gtk_widget_hide(widget);
 
 	return TRUE;
 }
 
+/* called when the user selects a different monitor, causes some
+ * reinitialisation */
+void
+monitor_combo_cb (GtkComboBox* widget, DdccApplet* applet)
+{
+	char buffer[256];
 
+	strncpy (buffer, gtk_combo_box_get_active_text (widget), 256);
+	
+	/* FIXME: filename never contains spaces?? */
+	memset(applet->monitor_name,0,256);
+	strncpy (applet->monitor_name, buffer, strcspn(buffer, " ")-1);
+
+	if(applet->error < ERR_DDCCI_OPEN) {
+		ddcci_close(applet->monitor);
+		applet->error = ERR_DDCCI_OPEN;
+	}
+}
 
 
 /* ****************
@@ -257,17 +263,14 @@ destroy_cb (GtkObject* object, DdccApplet* applet)
 
 /* returns a GtkMenu containing all available profiles for
  * monitor [mon] */
-void
-build_profiles_menu (DdccApplet *applet)
+int
+fill_profiles_menu (DdccApplet *applet)
 {
 	struct profile* profile;
 	GtkWidget* item;
-
-	if (applet->w_profiles_menu)
-		return;
-	
-	applet->w_profiles_menu = gtk_menu_new ();
-	
+			
+	if (!ddcci_get_all_profiles (applet->monitor))
+		return 0;
 
 	for (profile=applet->monitor->profiles;profile;profile=profile->next) {
 		item = gtk_menu_item_new_with_label (profile->name);
@@ -278,6 +281,41 @@ build_profiles_menu (DdccApplet *applet)
 		gtk_container_add (	GTK_CONTAINER (applet->w_profiles_menu),
 					item);
 	}
+
+	return 1;
+}
+
+/* fills [applet->w_monitor] with entrys for each monitor */
+int
+fill_monitor_combo (DdccApplet *applet)
+{
+	struct monitorlist* monlist;
+	struct monitorlist* current;
+	char buffer[256];
+	
+	if (!(monlist = ddcci_load_list ()))
+		return 0;
+	
+	gtk_list_store_clear ( GTK_LIST_STORE ( gtk_combo_box_get_model (
+			GTK_COMBO_BOX (applet->w_properties_monitor))));
+	
+	for (current = monlist; current; current = current->next) {
+		snprintf (buffer,
+			256,
+			"%s: %s",
+			current->filename,
+			current->name);
+		gtk_combo_box_append_text (GTK_COMBO_BOX (
+						applet->w_properties_monitor),
+					   buffer);
+	}
+
+	gtk_combo_box_set_active (
+			GTK_COMBO_BOX (applet->w_properties_monitor), 0);
+
+	ddcci_free_list (monlist);
+
+	return 1;
 }
 
 /* initializes the ddccontrol library, if initialisation is already
@@ -295,27 +333,27 @@ ddcc_applet_init (DdccApplet* applet)
 				break;
 			}
 		
-		case ERR_GET_MONITOR_NAME:
-			if (!get_monitor_name (applet->monitor_name)) {
+		case ERR_FILL_MONITOR_COMBO:
+			if (!fill_monitor_combo (applet)) {
 				error_message (_("No monitor configuration found."
 						 " Plase run gddccontrol first\n"));
-				applet->error = ERR_GET_MONITOR_NAME;
+				applet->error = ERR_FILL_MONITOR_COMBO;
 				break;
 			}
 			
 		case ERR_DDCCI_OPEN:
 			if (ddcci_open (applet->monitor,
-					get_monitor_name (applet->monitor_name), 0) < 0) {
+					applet->monitor_name, 0) < 0) {
 				error_message (_("An error occured while "
 						 "opening the monitor device.\n"));
 				applet->error = ERR_DDCCI_OPEN;
 				break;
 			}
 			
-		case ERR_GET_PROFILES:
-			if (!ddcci_get_all_profiles (applet->monitor)) {
+		case ERR_FILL_PROFILES_MENU:
+			if (!fill_profiles_menu (applet)) {
 				error_message(_("Can't find any profiles\n"));
-				applet->error = ERR_GET_PROFILES;
+				applet->error = ERR_FILL_PROFILES_MENU;
 				break;
 			}
 			
@@ -336,7 +374,7 @@ ddcc_applet_init (DdccApplet* applet)
 
 /* main entrance point for the applet */
 static int
-ddcc_applet_main (GtkWidget* root_applet)
+ddcc_applet_main (PanelApplet* root_applet)
 {
 	DdccApplet* applet;
 	applet = g_malloc0 (sizeof (DdccApplet));
@@ -355,26 +393,32 @@ ddcc_applet_main (GtkWidget* root_applet)
 			NULL, ddccapplet_applet_menu_verbs,
 			applet);
 
+	/* create the profiles menu (its filled later by
+	 * fill_profiles_menu ()) */
+	applet->w_profiles_menu = gtk_menu_new ();
+	
 	/* create the properties dialog */
 	applet->w_properties_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	applet->w_properties_monitor = gtk_combo_box_new_text ();
 	gtk_container_add (GTK_CONTAINER (applet->w_properties_dialog),
 			applet->w_properties_monitor);
 	gtk_widget_show (applet->w_properties_monitor);
-	gtk_combo_box_append_text ( GTK_COMBO_BOX (applet->w_properties_monitor), "sdfsdfsd");
 
-
-	/* initialize ddcci lib */
-	ddcc_applet_init(applet);
-
+	
 	/* connect all callbacks */
 	g_signal_connect (G_OBJECT (applet->w_applet), "button-press-event",
 			G_CALLBACK (applet_button_cb), applet);
 	g_signal_connect (G_OBJECT (root_applet), "destroy",
 			G_CALLBACK (destroy_cb), applet);
-	g_signal_connect(G_OBJECT (applet->w_properties_dialog),"delete-event",
+	g_signal_connect (G_OBJECT (applet->w_properties_dialog),"delete-event",
 			G_CALLBACK (dialog_delete_cb), applet);
+	g_signal_connect (G_OBJECT (applet->w_properties_monitor), "changed",
+			G_CALLBACK (monitor_combo_cb), applet);
 	
+
+	/* initialize ddcci lib */
+	ddcc_applet_init(applet);
+
 	
 	gtk_widget_show_all (GTK_WIDGET (applet->w_applet));
 	return TRUE;
@@ -389,7 +433,7 @@ ddcc_applet_factory (	PanelApplet *applet,
 	if (strcmp (iid, "OAFIID:GNOME_ddcc-applet"))
 		return FALSE;
 
-	return ddcc_applet_main (GTK_WIDGET (applet));
+	return ddcc_applet_main (applet);
 }
 PANEL_APPLET_BONOBO_FACTORY ("OAFIID:GNOME_ddcc-applet_Factory",
                              PANEL_TYPE_APPLET,
