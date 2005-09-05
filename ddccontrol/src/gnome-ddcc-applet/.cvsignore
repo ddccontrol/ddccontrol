@@ -1,0 +1,6 @@
+Makefile
+.deps
+GNOME_ddcc-applet.server
+GNOME_ddcc-applet.server.in
+ddcc-applet
+.libs

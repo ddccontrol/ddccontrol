@@ -1,2 +1,5 @@
 .deps
 Makefile
+*.lo
+libddccontrol.la
+.libs
