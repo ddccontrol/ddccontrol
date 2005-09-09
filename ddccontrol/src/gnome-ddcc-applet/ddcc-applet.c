@@ -56,7 +56,7 @@ static const BonoboUIVerb ddccapplet_applet_menu_verbs[] =
 
 /* display [msg] as popup errormessage */
 void
-error_message (char *msg)
+error_msg (char *msg)
 {
 	GtkWidget* dialog = 
 		gtk_message_dialog_new (NULL,
@@ -153,7 +153,7 @@ menu_about_cb(BonoboUIComponent *uic,
 	};
 	
 	gtk_show_about_dialog (NULL,
-			"name", _("Ddcc Applet"),
+			"name", _("Monitor Profile Switcher"),
 			"version", VERSION,
 			"copyright", "\xC2\xA9 2005 Christian Schilling",
 			"comments",
@@ -213,9 +213,18 @@ change_profile_cb (GtkMenuItem*	item,
 /* called when properties window should be closed
  * in fact, it prevents it from being closed and just hides it */
 gboolean
-dialog_delete_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+dialog_delete_cb (GtkWidget *widget, GdkEvent *event, DdccApplet* applet)
 {
-	gtk_widget_hide(widget);
+	gtk_widget_hide(applet->w_properties_dialog);
+
+	return TRUE;
+}
+
+/* does the same as above function */
+gboolean
+dialog_close_button_cb (GtkWidget *widget, DdccApplet* applet)
+{
+	gtk_widget_hide(applet->w_properties_dialog);
 
 	return TRUE;
 }
@@ -328,15 +337,18 @@ ddcc_applet_init (DdccApplet* applet)
 			
 		case ERR_DDCCI_INIT:
 			if (!ddcci_init (NULL)) {
-				error_message (_("Unable to initialize ddcci library\n"));
+				error_msg (
+					_("Unable to initialize"
+					 " ddcci library"));
 				applet->error = ERR_DDCCI_INIT;
 				break;
 			}
 		
 		case ERR_FILL_MONITOR_COMBO:
 			if (!fill_monitor_combo (applet)) {
-				error_message (_("No monitor configuration found."
-						 " Plase run gddccontrol first\n"));
+				error_msg (
+					_("No monitor configuration found."
+					 " Plase run gddccontrol first"));
 				applet->error = ERR_FILL_MONITOR_COMBO;
 				break;
 			}
@@ -344,15 +356,16 @@ ddcc_applet_init (DdccApplet* applet)
 		case ERR_DDCCI_OPEN:
 			if (ddcci_open (applet->monitor,
 					applet->monitor_name, 0) < 0) {
-				error_message (_("An error occured while "
-						 "opening the monitor device.\n"));
+				error_msg (
+					_("An error occured while"
+					 " opening the monitor device"));
 				applet->error = ERR_DDCCI_OPEN;
 				break;
 			}
 			
 		case ERR_FILL_PROFILES_MENU:
 			if (!fill_profiles_menu (applet)) {
-				error_message(_("Can't find any profiles\n"));
+				error_msg (_("Can't find any profiles"));
 				applet->error = ERR_FILL_PROFILES_MENU;
 				break;
 			}
@@ -372,20 +385,80 @@ ddcc_applet_init (DdccApplet* applet)
 	gtk_label_set_label(GTK_LABEL(applet->w_label),_("error"));
 }
 
+/* creates the properties dialog */
+static void
+create_properties_dialog (DdccApplet* applet)
+{
+	GtkWidget* top_hbox;
+	GtkWidget* bottom_hbox;
+	GtkWidget* main_vbox;
+	GtkWidget* close_button;
+	GtkWidget* combo_label;
+	
+	applet->w_properties_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	applet->w_properties_monitor = gtk_combo_box_new_text ();
+	close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+	main_vbox = gtk_vbox_new (FALSE,10);
+	top_hbox = gtk_hbox_new (FALSE, 10);
+	bottom_hbox = gtk_hbox_new (FALSE, 10);
+	combo_label = gtk_label_new (_("Monitor:"));
+
+	gtk_window_set_title (GTK_WINDOW (applet->w_properties_dialog),
+		       _("Monitor Profile Switcher Properties"));
+	gtk_window_set_position (GTK_WINDOW (applet->w_properties_dialog),
+			GTK_WIN_POS_CENTER);
+	
+	gtk_box_pack_start(GTK_BOX (main_vbox),
+			top_hbox, 0, 0, 10);
+	gtk_box_pack_start(GTK_BOX (main_vbox),
+			bottom_hbox,0, 0, 10);
+	gtk_box_pack_start(GTK_BOX (top_hbox),
+			combo_label, 0, 0, 10);
+	gtk_box_pack_start(GTK_BOX (top_hbox),
+			applet->w_properties_monitor, 0, 0, 10);
+	gtk_box_pack_end(GTK_BOX (bottom_hbox),
+			close_button,0,0,10);
+	gtk_container_add (GTK_CONTAINER (applet->w_properties_dialog),
+			main_vbox);
+
+	gtk_widget_show (top_hbox);
+	gtk_widget_show (bottom_hbox);
+	gtk_widget_show (main_vbox);
+	gtk_widget_show (close_button);
+	gtk_widget_show (combo_label);
+	gtk_widget_show (applet->w_properties_monitor);
+
+	g_signal_connect (G_OBJECT (close_button), "clicked",
+			G_CALLBACK (dialog_close_button_cb), applet);
+}
+
 /* main entrance point for the applet */
 static int
 ddcc_applet_main (PanelApplet* root_applet)
 {
 	DdccApplet* applet;
+	//GtkPixbuff* pixbuf;
+	GtkIconTheme* icon_theme;
+	GtkWidget* icon;
+	GtkWidget* applet_hbox;
+		
 	applet = g_malloc0 (sizeof (DdccApplet));
-
 	applet->error = ERR_NO_INIT;
 	applet->monitor = g_malloc (sizeof (struct monitor));
 	applet->w_applet = root_applet;
 	
 	/* create the label */
 	applet->w_label = gtk_label_new ("ddcc");
-	gtk_container_add ( GTK_CONTAINER (applet->w_applet), applet->w_label);
+
+	icon_theme = gtk_icon_theme_get_default();
+
+	icon = gtk_image_new_from_stock ("gtk-convert", GTK_ICON_SIZE_BUTTON);
+	applet_hbox = gtk_hbox_new (FALSE,0);
+
+	gtk_box_pack_start (GTK_BOX (applet_hbox), icon, 0, 0, 0);
+	gtk_box_pack_start (GTK_BOX (applet_hbox), applet->w_label, 0, 0, 0);
+
+	gtk_container_add ( GTK_CONTAINER (applet->w_applet), applet_hbox);
 
 	/* add the popup menu */
 	panel_applet_setup_menu_from_file(applet->w_applet,
@@ -398,12 +471,7 @@ ddcc_applet_main (PanelApplet* root_applet)
 	applet->w_profiles_menu = gtk_menu_new ();
 	
 	/* create the properties dialog */
-	applet->w_properties_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	applet->w_properties_monitor = gtk_combo_box_new_text ();
-	gtk_container_add (GTK_CONTAINER (applet->w_properties_dialog),
-			applet->w_properties_monitor);
-	gtk_widget_show (applet->w_properties_monitor);
-
+	create_properties_dialog (applet);
 	
 	/* connect all callbacks */
 	g_signal_connect (G_OBJECT (applet->w_applet), "button-press-event",
