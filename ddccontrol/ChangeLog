@@ -1,3 +1,85 @@
+2005-09-13 21:28  cs123
+
+	* Makefile.in, aclocal.m4, configure, libtool, doc/Makefile.in,
+	  src/Makefile.in, src/ddccontrol/Makefile.in,
+	  src/ddcpci/Makefile.am, src/ddcpci/Makefile.in,
+	  src/ddcpci/ddcpci.h, src/ddcpci/main.c, src/ddcpci/radeon.c,
+	  src/gddccontrol/Makefile.in, src/gnome-ddcc-applet/Makefile.in,
+	  src/gnome-ddcc-applet/ddcc-applet.c, src/lib/Makefile.in,
+	  src/lib/conf.c, src/lib/monitor_db.c: added ATI Radeon support to
+	  ddcpci
+
+2005-09-09 14:55  cs123
+
+	* src/gnome-ddcc-applet/: GNOME_ddcc-applet.server.in.in,
+	  ddcc-applet.c: applet: some cosmetic changes
+
+2005-09-05 14:45  nboichat
+
+	* src/gddccontrol/main.c: Fix compile error when Xinerama is not
+	  available.
+
+2005-09-05 13:58  nboichat
+
+	* Makefile.in, aclocal.m4, config.guess, config.sub, configure,
+	  libtool, ltmain.sh, doc/Makefile.in, doc/supportedgc.xml,
+	  src/Makefile.in, src/config.h.in, src/ddccontrol/.cvsignore,
+	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gnome-ddcc-applet/.cvsignore,
+	  src/gnome-ddcc-applet/Makefile.in, src/lib/.cvsignore,
+	  src/lib/Makefile.in:	- Update libtool to latest version
+	   - Add/update .cvsignore files
+
+2005-08-30 23:24  cs123
+
+	* po/POTFILES.in, po/ddccontrol.pot, po/fr.gmo, po/fr.po,
+	  po/ru.gmo, po/ru.po, src/gnome-ddcc-applet/ddcc-applet.c,
+	  src/gnome-ddcc-applet/ddcc-applet.h: applet: very simple
+	  properties dialog to choose monitor to control.
+
+2005-08-27 21:04  cs123
+
+	* src/gnome-ddcc-applet/: GNOME_ddcc-applet.xml, Makefile.am,
+	  ddcc-applet.c, ddcc-applet.h: applet: added menu items, about box
+	  and started properties dialog
+
+2005-08-27 16:04  cs123
+
+	* libtool, ltmain.sh, src/gnome-ddcc-applet/Makefile.am,
+	  src/gnome-ddcc-applet/ddcc-applet.c,
+	  src/gnome-ddcc-applet/ddcc-applet.h: improved error handling in
+	  gnome applet, added missing build files(libtool)
+
+2005-08-27 15:57  cs123
+
+	* src/gnome-ddcc-applet/Makefile.in: [no log message]
+
+2005-08-26 13:32  cs123
+
+	* Makefile.in, aclocal.m4, configure, configure.ac,
+	  doc/Makefile.in, src/Makefile.am, src/Makefile.in,
+	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c,
+	  src/ddcpci/Makefile.in, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/gprofile.c, src/gddccontrol/main.c,
+	  src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in,
+	  src/gnome-ddcc-applet/Makefile.am,
+	  src/gnome-ddcc-applet/ddcc-applet.c,
+	  src/gnome-ddcc-applet/ddcc-applet.h, src/lib/Makefile.in,
+	  src/lib/conf.c, src/lib/ddcci.h: first version of
+	  gnome-ddcc-applet added
+
+2005-08-26 11:51  cs123
+
+	* Makefile.in, aclocal.m4, config.guess, config.sub, configure,
+	  configure.ac, doc/Makefile.in, src/Makefile.in,
+	  src/ddccontrol/Makefile.am, src/ddccontrol/Makefile.in,
+	  src/ddcpci/Makefile.in, src/gddccontrol/Makefile.am,
+	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
+	  src/lib/Makefile.in: made libddccontrol a shared library
+
+2005-08-18 15:14  tag before_shared_lib
+
 2005-08-18 15:14  nboichat
 
 	* src/: gddccontrol/main.c, gddccontrol/notebook.c,
