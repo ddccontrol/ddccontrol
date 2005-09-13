@@ -1,7 +1,7 @@
 localedir = $(datadir)/locale
 INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
 
-pkginclude_HEADERS = conf.h monitor_db.h ddcci.h
+pkginclude_HEADERS = conf.h monitor_db.h ddcci.h ddcpci-ipc.h
 
 
 lib_LTLIBRARIES = libddccontrol.la

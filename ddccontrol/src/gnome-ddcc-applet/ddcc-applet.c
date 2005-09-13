@@ -22,7 +22,7 @@
  * Includes
  * ****************/
 
-/* libddccontrol */
+/* libddccontrol ipc */
 #include "ddcci.h"
 #include "conf.h"
 
@@ -38,8 +38,11 @@
 /* private */
 #include "ddcc-applet.h"
 
+/* libddccontrol ipc */
+#include "ddcpci-ipc.h"
+
 /* config */
-#include "config.h"
+//#include "config.h"
 
 /* Popup menu on the applet */
 static const BonoboUIVerb ddccapplet_applet_menu_verbs[] = 
@@ -123,6 +126,13 @@ position_menu (	GtkMenu *menu, gint *x, gint *y,
 			MAX (monitor.x, monitor.x + monitor.width - twidth));
 	*y = ty;
 	gtk_menu_set_monitor (menu, monitor_num);
+}
+
+/* sends heartbeat message to ddcpci, so it does not time out */
+static gboolean heartbeat(gpointer data)
+{
+	ddcpci_send_heartbeat();
+	return TRUE;
 }
 
 
@@ -382,8 +392,11 @@ ddcc_applet_init (DdccApplet* applet)
 			gtk_label_set_label (GTK_LABEL (applet->w_label),
 					"ddcc");
 
+		g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
+
 	END_INIT()
-	
+
+	/* only reached, if init was not finished */
 	gtk_label_set_label (GTK_LABEL (applet->w_label), _("error"));
 }
 
