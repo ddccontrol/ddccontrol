@@ -1,3 +1,8 @@
+2005-09-13 22:03  cs123
+
+	* src/: gnome-ddcc-applet/ddcc-applet.c, lib/Makefile.am: applet:
+	  fixed ddcpci timout (added heartbeat)
+
 2005-09-13 21:28  cs123
 
 	* Makefile.in, aclocal.m4, configure, libtool, doc/Makefile.in,
