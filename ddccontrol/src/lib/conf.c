@@ -102,15 +102,15 @@ struct monitorlist* ddcci_load_list() {
 		return 0;
 	}
 	
-	if (xmlStrcmp(root->name, (const xmlChar *) N_("monitorlist"))) {
+	if (xmlStrcmp(root->name, BAD_CAST N_("monitorlist"))) {
 		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
 		xmlFreeDoc(list_doc);
 		return 0;
 	}
 	
-	tmp = xmlGetProp(root, N_("ddccontrolversion"));
+	tmp = xmlGetProp(root, BAD_CAST N_("ddccontrolversion"));
 	DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find ddccontrolversion property."), root, {xmlFreeDoc(list_doc);});
-	if (strcmp(tmp, PACKAGE_VERSION)) {
+	if (strcmp((const char*)tmp, PACKAGE_VERSION)) {
 		fprintf(stderr,  _("ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"), tmp, PACKAGE_VERSION);
 		xmlFreeDoc(list_doc);
 		xmlFree(tmp);
@@ -124,33 +124,33 @@ struct monitorlist* ddcci_load_list() {
 		if (cur == NULL) {
 			break;
 		}
-		if (!(xmlStrcmp(cur->name, (const xmlChar *)N_("monitor")))) {
+		if (!(xmlStrcmp(cur->name, BAD_CAST N_("monitor")))) {
 			current = malloc(sizeof(struct monitorlist));
 			
-			tmp = xmlGetProp(cur, N_("filename"));
+			tmp = xmlGetProp(cur, BAD_CAST N_("filename"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find filename property."), cur,
 					{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->filename = strdup(tmp);
+			current->filename = strdup((const char*)tmp);
 			xmlFree(tmp);
 			
-			tmp = xmlGetProp(cur, N_("supported"));
+			tmp = xmlGetProp(cur, BAD_CAST N_("supported"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find supported property."), cur,
 				{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->supported = strtol(tmp, &endptr, 0);
+			current->supported = strtol((const char*)tmp, &endptr, 0);
 			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert supported property to int."), cur, 
 					{xmlFree(tmp); ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
 			xmlFree(tmp);
 			
-			tmp = xmlGetProp(cur, N_("name"));
+			tmp = xmlGetProp(cur, BAD_CAST N_("name"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find name property."), cur,
 					{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->name = strdup(tmp);
+			current->name = strdup((const char*)tmp);
 			xmlFree(tmp);
 			
-			tmp = xmlGetProp(cur, N_("digital"));
+			tmp = xmlGetProp(cur, BAD_CAST N_("digital"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find digital property."), cur,
 				{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->digital = strtol(tmp, &endptr, 0);
+			current->digital = strtol((const char*)tmp, &endptr, 0);
 			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert digital property to int."), cur, 
 					{xmlFree(tmp); ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
 			xmlFree(tmp);
@@ -189,7 +189,7 @@ int ddcci_save_list(struct monitorlist* monlist) {
 	rc = xmlTextWriterStartElement(writer, BAD_CAST N_("monitorlist"));
 	DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterStartElement monitorlist\n"), {xmlFreeTextWriter(writer);})
 
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST N_("ddccontrolversion"), PACKAGE_VERSION);
+	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST N_("ddccontrolversion"), BAD_CAST PACKAGE_VERSION);
 	DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteAttribute ddccontrolversion\n"), {xmlFreeTextWriter(writer);})
 	
 	for (current = monlist; current != NULL; current = current->next)
@@ -197,16 +197,16 @@ int ddcci_save_list(struct monitorlist* monlist) {
 		rc = xmlTextWriterStartElement(writer, BAD_CAST N_("monitor"));
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterStartElement monitor\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("filename"), BAD_CAST current->filename);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("filename"), current->filename);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute filename\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("supported"), BAD_CAST N_("%d"), current->supported);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("supported"), N_("%d"), current->supported);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute supported\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("name"), BAD_CAST current->name);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("name"), current->name);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute name\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("digital"), BAD_CAST N_("%d"), current->digital);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("digital"), N_("%d"), current->digital);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute digital\n"), {xmlFreeTextWriter(writer);})
 
 		rc = xmlTextWriterEndElement(writer);
@@ -236,7 +236,7 @@ struct profile* ddcci_create_profile(struct monitor* mon, const char* address, i
 		profile->address[i] = address[i];
 		for(retry = RETRYS; retry; retry--)
 		{
-			if (ddcci_readctrl(mon, address[i], &profile->value[i], NULL) >= 0)
+			if (ddcci_readctrl (mon, address[i], &profile->value[i], NULL) >= 0)
 			{
 				break;
 			}
@@ -244,7 +244,7 @@ struct profile* ddcci_create_profile(struct monitor* mon, const char* address, i
 		DDCCI_RETURN_IF_RUN(!retry, 0, _("Cannot read control value\n"), {free(profile);})
 	}
 	
-	profile->pnpid = xmlCharStrdup(mon->pnpid);
+	profile->pnpid = xmlCharStrdup ((const char*) mon->pnpid);
 	
 	char date[32];
 	int len, ret;
@@ -377,21 +377,21 @@ struct profile* ddcci_load_profile(const char* filename) {
 		return 0;
 	}
 	
-	if (xmlStrcmp(root->name, (const xmlChar *) N_("profile"))) {
+	if (xmlStrcmp(root->name, BAD_CAST N_("profile"))) {
 		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
 		xmlFreeDoc(profile_doc);
 		return 0;
 	}
 	
-	profile->pnpid = xmlGetProp(root, N_("pnpid"));
+	profile->pnpid = xmlGetProp(root,BAD_CAST N_("pnpid"));
 	DDCCI_DB_RETURN_IF_RUN(profile->pnpid == NULL, 0, _("Can't find pnpid property."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	
-	profile->name = xmlGetProp(root, N_("name"));
+	profile->name = xmlGetProp(root,BAD_CAST N_("name"));
 	DDCCI_DB_RETURN_IF_RUN(profile->name == NULL, 0, _("Can't find name property."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	
-	tmp = xmlGetProp(root, N_("version"));
+	tmp = xmlGetProp(root,BAD_CAST N_("version"));
 	DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	itmp = strtol(tmp, &endptr, 0);
+	itmp = strtol ((const char*)tmp, &endptr, 0);
 	DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert version to int."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	DDCCI_DB_RETURN_IF_RUN(itmp != PROFILEVERSION, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
 	if (itmp > PROFILEVERSION) {
@@ -407,16 +407,16 @@ struct profile* ddcci_load_profile(const char* filename) {
 		if (cur == NULL) {
 			break;
 		}
-		if (!(xmlStrcmp(cur->name, (const xmlChar *)N_("control")))) {
-			tmp = xmlGetProp(cur, N_("address"));
+		if (!(xmlStrcmp(cur->name, BAD_CAST N_("control")))) {
+			tmp = xmlGetProp (cur, BAD_CAST N_("address"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find address property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
-			profile->address[profile->size] = strtol(tmp, &endptr, 0);
+			profile->address[profile->size] = strtol ((const char*)tmp, &endptr, 0);
 			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert address to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
 			xmlFree(tmp);
 			
-			tmp = xmlGetProp(cur, N_("value"));
+			tmp = xmlGetProp(cur, BAD_CAST N_("value"));
 			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find value property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
-			profile->value[profile->size] = strtol(tmp, &endptr, 0);
+			profile->value[profile->size] = strtol ((const char*)tmp, &endptr, 0);
 			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert value to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
 			xmlFree(tmp);
 			
@@ -465,10 +465,10 @@ int ddcci_save_profile(struct profile* profile, struct monitor* monitor) {
 		rc = xmlTextWriterStartElement(writer, BAD_CAST N_("control"));
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterStartElement control\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("address"), BAD_CAST N_("%#x"), profile->address[i]);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("address"), N_("%#x"), profile->address[i]);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute address\n"), {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("value"), BAD_CAST N_("%#x"), profile->value[i]);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST N_("value"), N_("%#x"), profile->value[i]);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, D_("xmlTextWriterWriteFormatAttribute value\n"), {xmlFreeTextWriter(writer);})
 
 		rc = xmlTextWriterEndElement(writer);

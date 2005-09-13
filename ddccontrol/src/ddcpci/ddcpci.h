@@ -47,6 +47,10 @@ typedef void (*card_close)(struct card*);
 struct card* nvidia_open (struct pci_dev *dev);
 void         nvidia_close(struct card* nvidia_card);
 
+/* nVidia functions */
+struct card* radeon_open (struct pci_dev *dev);
+void         radeon_close(struct card* radeon_card);
+
 /* Intel 810 functions */
 struct card* i810_open (struct pci_dev *dev);
 void         i810_close(struct card* intel810_card);

@@ -169,9 +169,9 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	while (value != NULL)
 	{
 		if (!xmlStrcmp(value->name, (const xmlChar *) N_("value"))) {
-			options_valueid   = xmlGetProp(value, N_("id"));
+			options_valueid   = xmlGetProp(value, BAD_CAST N_("id"));
 			DDCCI_DB_RETURN_IF(options_valueid == NULL, -1, _("Can't find id property."), value);
-			options_valuename = xmlGetProp(value, N_("name"));
+			options_valuename = xmlGetProp(value, BAD_CAST N_("name"));
 			if (command) {
 				if (options_valuename == NULL) {
 					options_valuename = current_control->name;
@@ -195,12 +195,12 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 					break;
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)N_("value")))) {
-					mon_valueid = xmlGetProp(cur, N_("id"));
+					mon_valueid = xmlGetProp(cur, BAD_CAST N_("id"));
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
 						current_value->id   = options_valueid;
 						current_value->name = _D(options_valuename);
 						
-						tmp = xmlGetProp(cur, N_("value"));
+						tmp = xmlGetProp(cur, BAD_CAST N_("value"));
 						
 						DDCCI_DB_RETURN_IF(tmp == NULL, -1, _("Can't find value property."), cur);
 						current_value->value = strtol(tmp, &endptr, 0);
@@ -237,7 +237,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	while (cur) {
 		if (cur->type == XML_ELEMENT_NODE) {
 			if (!matchedvalues[i]) {
-				tmp = xmlGetProp(cur, N_("id"));
+				tmp = xmlGetProp(cur, BAD_CAST N_("id"));
 				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
 				xmlFree(tmp);
 				if (!faulttolerance)
@@ -270,17 +270,17 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 	while (control != NULL)
 	{
 		if (!xmlStrcmp(control->name, (const xmlChar *) N_("control"))) {
-			options_ctrlid   = xmlGetProp(control, N_("id"));
+			options_ctrlid   = xmlGetProp(control, BAD_CAST N_("id"));
 			DDCCI_DB_RETURN_IF(options_ctrlid == NULL, 0, _("Can't find id property."), control);
-			options_ctrlname = xmlGetProp(control, N_("name"));
+			options_ctrlname = xmlGetProp(control, BAD_CAST N_("name"));
 			DDCCI_DB_RETURN_IF(options_ctrlname == NULL, 0, _("Can't find name property."), control);
 			
-			tmp = xmlGetProp(control, N_("refresh"));
+			tmp = xmlGetProp(control, BAD_CAST N_("refresh"));
 			if (tmp) {
-				if (!xmlStrcmp(tmp, N_("none"))) {
+				if (!xmlStrcmp(tmp, BAD_CAST N_("none"))) {
 					options_refresh = none;
 				}
-				else if (!xmlStrcmp(tmp, N_("all"))) {
+				else if (!xmlStrcmp(tmp, BAD_CAST N_("all"))) {
 					options_refresh = all;
 				}
 				else {
@@ -307,9 +307,9 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 					break;
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)N_("control")))) {
-					mon_ctrlid = xmlGetProp(cur, N_("id"));
+					mon_ctrlid = xmlGetProp(cur, BAD_CAST N_("id"));
 					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
-						tmp = xmlGetProp(cur, N_("address"));
+						tmp = xmlGetProp(cur, BAD_CAST N_("address"));
 						DDCCI_DB_RETURN_IF(tmp == NULL, 0, _("Can't find address property."), cur);
 						current_control->address = strtol(tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF(*endptr != 0, 0, _("Can't convert address to int."), cur);
@@ -331,7 +331,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						current_control->name = _D(options_ctrlname);
 						current_control->refresh = options_refresh;
 						
-						tmp = xmlGetProp(cur, N_("delay"));
+						tmp = xmlGetProp(cur, BAD_CAST N_("delay"));
 						if (tmp) {
 							current_control->delay = strtol(tmp, &endptr, 10);
 							DDCCI_DB_RETURN_IF(*endptr != 0, 0, _("Can't convert delay to int."), cur);
@@ -341,7 +341,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 							current_control->delay = -1;
 						}
 						
-						tmp = xmlGetProp(control, N_("type"));
+						tmp = xmlGetProp(control, BAD_CAST N_("type"));
 						DDCCI_DB_RETURN_IF(tmp == NULL, 0, _("Can't find type property."), control);
 						if (!(xmlStrcmp(tmp, (const xmlChar *)N_("value")))) {
 							current_control->type = value;
@@ -438,13 +438,13 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		return NULL;
 	}
 	
-	mon_name = xmlGetProp(cur, N_("name"));
+	mon_name = xmlGetProp(cur, BAD_CAST N_("name"));
 	DDCCI_DB_RETURN_IF(mon_name == NULL, NULL,  _("Can't find name property."), cur);
 	if (prof_caps == NULL) {
-		prof_caps = xmlGetProp(cur, N_("caps"));
+		prof_caps = xmlGetProp(cur, BAD_CAST N_("caps"));
 	}
 	
-	if ((tmp = xmlGetProp(cur, N_("include")))) {
+	if ((tmp = xmlGetProp(cur, BAD_CAST N_("include")))) {
 		recursionlevel++;
 		if (recursionlevel > 15) {
 			fprintf(stderr,  _("Error, include recursion level > 15 (file: %s).\n"), pnpname);
@@ -467,7 +467,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	memset(mon_db, 0, sizeof(struct monitor_db));
 	mon_db->name = mon_name;
 	
-	tmp = xmlGetProp(cur, N_("init"));
+	tmp = xmlGetProp(cur, BAD_CAST N_("init"));
 	DDCCI_DB_RETURN_IF(tmp == NULL, NULL,  _("Can't find init property."), cur);
 	if (!(xmlStrcmp(tmp, (const xmlChar *)N_("standard")))) {
 		mon_db->init = standard;
@@ -539,7 +539,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			continue;
 		}
 		
-		options_groupname = xmlGetProp(group, N_("name"));
+		options_groupname = xmlGetProp(group, BAD_CAST N_("name"));
 		//printf("*group name=%s\n", options_groupname);
 		
 		struct subgroup_db *current_subgroup = malloc(sizeof(struct subgroup_db));
@@ -554,7 +554,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 				continue;
 			}
 			
-			options_subgroupname = xmlGetProp(subgroup, N_("name"));
+			options_subgroupname = xmlGetProp(subgroup, BAD_CAST N_("name"));
 			
 			control = subgroup->xmlChildrenNode;
 			
@@ -564,7 +564,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			
 			if (current_subgroup->control_list) {
 				current_subgroup->name = _D(options_subgroupname);
-				current_subgroup->pattern = xmlGetProp(subgroup, N_("pattern"));
+				current_subgroup->pattern = xmlGetProp(subgroup, BAD_CAST N_("pattern"));
 				*last_subgroup_ref = current_subgroup;
 				last_subgroup_ref = &current_subgroup->next;
 				current_subgroup = malloc(sizeof(struct subgroup_db));
@@ -598,7 +598,7 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 	while (cur) {
 		if (cur->type == XML_ELEMENT_NODE) {
 			if (!matchedcontrols[i]) {
-				tmp = xmlGetProp(cur, N_("id"));
+				tmp = xmlGetProp(cur, BAD_CAST N_("id"));
 				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
 				xmlFree(tmp);
 				if (!faulttolerance)
@@ -731,8 +731,8 @@ int ddcci_init_db(char* usedatadir) {
 		return 0;
 	}
 	
-	version = xmlGetProp(cur, N_("dbversion"));
-	date = xmlGetProp(cur, N_("date"));
+	version = xmlGetProp(cur, BAD_CAST N_("dbversion"));
+	date = xmlGetProp(cur, BAD_CAST N_("date"));
 	
 	if (!version) {
 		fprintf(stderr,  _("options.xml dbversion attribute missing, please update your database.\n"));

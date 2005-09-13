@@ -38,12 +38,14 @@
 /* card list */
 card_open cards_open[] = {
 	&nvidia_open,
+	&radeon_open,
 	&i810_open,
 	NULL
 };
 
 card_close cards_close[] = {
 	&nvidia_close,
+	&radeon_close,
 	&i810_close,
 	NULL
 };

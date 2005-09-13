@@ -205,7 +205,7 @@ change_profile_cb (GtkMenuItem*	item,
 
 	applet->profile = profile;
 		
-	gtk_label_set_label (GTK_LABEL (applet->w_label), profile->name);
+	gtk_label_set_label (GTK_LABEL (applet->w_label), (gchar*)profile->name);
 
 	return FALSE;
 }
@@ -282,7 +282,7 @@ fill_profiles_menu (DdccApplet *applet)
 		return 0;
 
 	for (profile=applet->monitor->profiles;profile;profile=profile->next) {
-		item = gtk_menu_item_new_with_label (profile->name);
+		item = gtk_menu_item_new_with_label ((gchar*)profile->name);
 		g_object_set_data (G_OBJECT (item), "ddcc_profile", profile);
 		g_signal_connect (item, "activate",
 				 G_CALLBACK (change_profile_cb), applet);
@@ -329,60 +329,62 @@ fill_monitor_combo (DdccApplet *applet)
 
 /* initializes the ddccontrol library, if initialisation is already
  * partly done it's just completed */
+
+#define START_INIT()					\
+	switch (applet->error) {			\
+		case ERR_NO_INIT:			\
+
+#define TRY_INIT(call_func,err_val,err_msg)		\
+	case err_val: 					\
+		if (call_func) {			\
+			error_msg (err_msg);		\
+				applet->error = err_val;\
+					break;		\
+		}
+
+#define FINISH_INIT()					\
+	applet->error = ERR_OK;				\
+	case ERR_OK:
+
+#define END_INIT()					\
+	return; }
+
+
 static void
 ddcc_applet_init (DdccApplet* applet)
 {
-	switch(applet->error) {
-		case ERR_NO_INIT:
-			
-		case ERR_DDCCI_INIT:
-			if (!ddcci_init (NULL)) {
-				error_msg (
-					_("Unable to initialize"
-					 " ddcci library"));
-				applet->error = ERR_DDCCI_INIT;
-				break;
-			}
-		
-		case ERR_FILL_MONITOR_COMBO:
-			if (!fill_monitor_combo (applet)) {
-				error_msg (
-					_("No monitor configuration found."
-					 " Plase run gddccontrol first"));
-				applet->error = ERR_FILL_MONITOR_COMBO;
-				break;
-			}
-			
-		case ERR_DDCCI_OPEN:
-			if (ddcci_open (applet->monitor,
-					applet->monitor_name, 0) < 0) {
-				error_msg (
-					_("An error occured while"
-					 " opening the monitor device"));
-				applet->error = ERR_DDCCI_OPEN;
-				break;
-			}
-			
-		case ERR_FILL_PROFILES_MENU:
-			if (!fill_profiles_menu (applet)) {
-				error_msg (_("Can't find any profiles"));
-				applet->error = ERR_FILL_PROFILES_MENU;
-				break;
-			}
-			
-			applet->error = ERR_OK;
+	START_INIT()
 
-		case ERR_OK:
-			if (applet->profile)
-				gtk_label_set_label (GTK_LABEL(applet->w_label),
-						     applet->profile->name);
-			else 
-				gtk_label_set_label (GTK_LABEL(applet->w_label),
-						     "ddcc");
-			return;
-	}
+	TRY_INIT (!ddcci_init (NULL),
+		ERR_DDCCI_INIT,
+		_("Unable to initialize ddcci library"))
+		
+	TRY_INIT (!fill_monitor_combo (applet),
+		ERR_FILL_MONITOR_COMBO,
+		_("No monitor configuration found."
+		 " Plase run gddccontrol first"))
 	
-	gtk_label_set_label(GTK_LABEL(applet->w_label),_("error"));
+	TRY_INIT (ddcci_open (applet->monitor, applet->monitor_name , 0) < 0,
+		ERR_DDCCI_OPEN,
+		_("An error occured while"
+		 " opening the monitor device"))
+
+	TRY_INIT (!fill_profiles_menu (applet),
+		ERR_FILL_PROFILES_MENU,
+		_("Can't find any profiles"))
+
+	FINISH_INIT()
+
+		if (applet->profile)
+			gtk_label_set_label (GTK_LABEL (applet->w_label),
+					(gchar*)applet->profile->name);
+		else 
+			gtk_label_set_label (GTK_LABEL (applet->w_label),
+					"ddcc");
+
+	END_INIT()
+	
+	gtk_label_set_label (GTK_LABEL (applet->w_label), _("error"));
 }
 
 /* creates the properties dialog */
