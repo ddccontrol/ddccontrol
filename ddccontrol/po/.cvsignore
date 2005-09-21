@@ -1,3 +1,5 @@
+*.gmo
+Makevars.template
 Makefile
 Makefile.in
 POTFILES

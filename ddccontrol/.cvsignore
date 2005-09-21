@@ -1,3 +1,12 @@
+install-sh
+libtool
+ltmain.sh
+missing
+aclocal.m4
+depcomp
+config.sub
+config.guess
+config.rpath
 autom4te.cache
 db
 debug
@@ -19,3 +28,5 @@ intltool-update.in
 configure
 Makefile.in
 .exrc
+m4
+mkinstalldirs

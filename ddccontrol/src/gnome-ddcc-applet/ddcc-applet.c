@@ -475,7 +475,7 @@ ddcc_applet_main (PanelApplet* root_applet)
 	GtkIconTheme* icon_theme;
 	GtkWidget* icon;
 	GtkWidget* applet_hbox;
-		
+	
 	applet = g_malloc0 (sizeof (DdccApplet));
 	applet->error = ERR_NO_INIT;
 	applet->monitor = g_malloc (sizeof (struct monitor));
