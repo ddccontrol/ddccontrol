@@ -1,4 +1,5 @@
 Makefile
+Makefile.in
 .deps
 GNOME_ddcc-applet.server
 GNOME_ddcc-applet.server.in
