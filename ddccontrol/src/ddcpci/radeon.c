@@ -150,7 +150,7 @@ struct card* radeon_open(struct pci_dev *dev)
 	struct card* radeon_card = malloc(sizeof(struct card));
 	struct mem_data* data = malloc(sizeof(struct mem_data));
 	if ((!radeon_card) || (!data)) {
-		fprintf(stderr, _("%s: Malloc error.\n"), N_("radeon_open"));
+		fprintf(stderr, _("%s: Malloc error.\n"), "radeon_open");
 		exit(-1);
 	}
 	memset(radeon_card, 0, sizeof(struct card));
@@ -159,7 +159,7 @@ struct card* radeon_open(struct pci_dev *dev)
 	
 	radeon_card->data = data;
 	
-	data->fd = open(N_("/dev/mem"), O_RDWR);
+	data->fd = open("/dev/mem", O_RDWR);
 	
 	if (data->fd < 0) {
 		perror(_("radeon_open: cannot open /dev/mem"));

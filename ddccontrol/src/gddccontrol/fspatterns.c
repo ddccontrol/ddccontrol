@@ -72,7 +72,7 @@ static void create_fullscreen_patterns_window()
 	
 	GtkWidget* align = gtk_alignment_new(0.5, 0, 0, 0);
 	GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	g_signal_connect(G_OBJECT(close_button),N_("clicked"),G_CALLBACK (destroy), NULL);
+	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 	gtk_widget_show(close_button);
 	gtk_container_add(GTK_CONTAINER(align), close_button);
 	gtk_widget_show(align);
@@ -115,7 +115,7 @@ static void drawShade(GdkDrawable* pixmap, int ry, int rh, int number) {
 		gdk_draw_rectangle(pixmap, gc, TRUE, rx, ry, rw, rh);
 		gdk_draw_line(pixmap, gcwhite, rx, ry+rh, rx, ry+rh+5);
 		gdk_draw_line(pixmap, gcwhite, rx, ry-5, rx, ry);
-		tmp = g_strdup_printf(N_("%d"), color.red*0xFF/0xFFFF);
+		tmp = g_strdup_printf("%d", color.red*0xFF/0xFFFF);
 		layout = gtk_widget_create_pango_layout(fs_patterns_window, tmp);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &w, &h);
@@ -198,7 +198,7 @@ static void show_pattern(gchar* patternname)
 	gdk_gc_set_rgb_fg_color(gc, &color);
 	gdk_gc_set_rgb_bg_color(gc, &color);
 	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, width, height);
-	if (g_str_equal(patternname, N_("brightnesscontrast"))) {
+	if (g_str_equal(patternname, "brightnesscontrast")) {
 		drawShade(pixmap, height/8, height/8, 21);
 		
 		color.red = color.green = color.blue = 0xFFFF;
@@ -220,15 +220,15 @@ static void show_pattern(gchar* patternname)
 		gdk_draw_line(pixmap, gc, 0, (height)/24, width, (height)/24);
 		gdk_draw_line(pixmap, gc, 0, (23*height)/24, width, (23*height)/24);
 	}
-	else if (g_str_equal(patternname, N_("moire"))) {
+	else if (g_str_equal(patternname, "moire")) {
 		drawchecker(pixmap, width, height, _("Try to make moire patterns disappear."));
 	}
-	else if (g_str_equal(patternname, N_("clock"))) {
+	else if (g_str_equal(patternname, "clock")) {
 		drawchecker(pixmap, width, height,
 			_("Adjust Image Lock Coarse to make the vertical band disappear.\n"
 			  "Adjust Image Lock Fine to minimize movement on the screen."));
 	}
-	else if (g_str_equal(patternname, N_("misconvergence"))) {
+	else if (g_str_equal(patternname, "misconvergence")) {
 		const int csize = 51;
 		const int dsize = 25;
 		int x, y, c = 0, d = 0;
@@ -307,8 +307,8 @@ static void show_pattern(gchar* patternname)
 }
 
 void fullscreen_callback(GtkWidget *widget, gpointer data) {
-	monmainvbox = g_object_get_data(G_OBJECT(widget),N_("mainvbox"));
-	vbox = g_object_get_data(G_OBJECT(widget),N_("vbox"));
+	monmainvbox = g_object_get_data(G_OBJECT(widget),"mainvbox");
+	vbox = g_object_get_data(G_OBJECT(widget),"vbox");
 	
 	if (!fs_patterns_window)
 		create_fullscreen_patterns_window();
@@ -325,5 +325,5 @@ void fullscreen_callback(GtkWidget *widget, gpointer data) {
 	black.red = black.green = black.blue = 0x5000;
 	set_vbox_bg_color(&black);*/
 	
-	show_pattern(g_object_get_data(G_OBJECT(widget),N_("pattern")));
+	show_pattern(g_object_get_data(G_OBJECT(widget),"pattern"));
 }

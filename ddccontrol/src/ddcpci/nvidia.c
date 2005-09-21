@@ -152,14 +152,14 @@ struct card* nvidia_open(struct pci_dev *dev)
 	struct card* nvidia_card = malloc(sizeof(struct card));
 	struct mem_data* data = malloc(sizeof(struct mem_data));
 	if ((!nvidia_card) || (!data)) {
-		fprintf(stderr, _("%s: Malloc error.\n"), N_("nvidia_open"));
+		fprintf(stderr, _("%s: Malloc error.\n"), "nvidia_open");
 		exit(-1);
 	}
 	memset(nvidia_card, 0, sizeof(struct card));
 	
 	nvidia_card->data = data;
 	
-	data->fd = open(N_("/dev/mem"), O_RDWR);
+	data->fd = open("/dev/mem", O_RDWR);
 	
 	if (data->fd < 0) {
 		perror(_("nvidia_open: cannot open /dev/mem"));

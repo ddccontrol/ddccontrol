@@ -95,23 +95,23 @@ static void dumphex(FILE *f, unsigned char *buf, int len)
 	
 	for (j = 0; j < len; j +=16) {
 		if (len > 16) {
-			fprintf(f, D_("%04x: "), j);
+			fprintf(f, "%04x: ", j);
 		}
 		
 		for (i = 0; i < 16; i++) {
-			if (i + j < len) fprintf(f, D_("%02x "), buf[i + j]);
-			else fprintf(f, D_("   "));
+			if (i + j < len) fprintf(f, "%02x ", buf[i + j]);
+			else fprintf(f, "   ");
 		}
 
-		fprintf(f, D_("| "));
+		fprintf(f, "| ");
 
 		for (i = 0; i < 16; i++) {
-			if (i + j < len) fprintf(f, D_("%c"), 
+			if (i + j < len) fprintf(f, "%c", 
 				buf[i + j] >= ' ' && buf[i + j] < 127 ? buf[i + j] : '.');
-			else fprintf(f, D_(" "));
+			else fprintf(f, " ");
 		}
 		
-		fprintf(f, D_("\n"));
+		fprintf(f, "\n");
 	}
 }
 
@@ -121,10 +121,10 @@ int ddcpci_init()
 {
 	if (msqid == -2) {
 		if (verbosity) {
-			printf(D_("ddcpci initing...\n"));
+			printf("ddcpci initing...\n");
 		}
 		
-		key_t key = ftok(BINDIR N_("/ddcpci"), getpid());
+		key_t key = ftok(BINDIR "/ddcpci", getpid());
 		
 		if ((msqid = msgget(key, IPC_CREAT | 0666)) < 0) {
 			perror(_("Error while initialisating the message queue"));
@@ -133,10 +133,10 @@ int ddcpci_init()
 		
 		char buffer[256];
 		
-		snprintf(buffer, 256, BINDIR N_("/ddcpci %d %d &"), verbosity, key);
+		snprintf(buffer, 256, BINDIR "/ddcpci %d %d &", verbosity, key);
 		
 		if (verbosity) {
-			printf(D_("Starting %s...\n"), buffer);
+			printf("Starting %s...\n", buffer);
 		}
 		
 		system(buffer);
@@ -147,7 +147,7 @@ int ddcpci_init()
 void ddcpci_release()
 {
 	if (verbosity) {
-		printf(D_("ddcpci being released...\n"));
+		printf("ddcpci being released...\n");
 	}
 	if (msqid >= 0) {
 		struct query qlist;
@@ -250,7 +250,7 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0 )
 		{
 			if (!mon->probing || verbosity) {
-				perror(N_("ioctl()"));
+				perror("ioctl()");
 				fprintf(stderr,_("ioctl returned %d\n"),i);
 			}
 			return -1;
@@ -310,7 +310,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0)
 		{
 			if (!mon->probing || verbosity) {
-				perror(N_("ioctl()"));
+				perror("ioctl()");
 				fprintf(stderr,_("ioctl returned %d\n"),i);
 			}
 			return -1;
@@ -390,7 +390,7 @@ static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char le
 	unsigned xor = ((unsigned char)mon->addr << 1);	/* initial xor value */
 
 	if (verbosity > 1) {
-		fprintf(stderr, D_("Send: "));
+		fprintf(stderr, "Send: ");
 		dumphex(stderr, buf, len);
 	}
 
@@ -471,7 +471,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	memcpy(buf, _buf + 2, _len);
 	
 	if (verbosity > 1) {
-		fprintf(stderr, D_("Recv: "));
+		fprintf(stderr, "Recv: ");
 		dumphex(stderr, buf, _len);
 	}
 	
@@ -636,7 +636,7 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 			return -1;
 		}
 		
-		snprintf(mon->pnpid, 8, N_("%c%c%c%02X%02X"), 
+		snprintf(mon->pnpid, 8, "%c%c%c%02X%02X", 
 			((buf[8] >> 2) & 31) + 'A' - 1, 
 			((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
 			(buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
@@ -682,7 +682,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	
 	mon->probing = probing;
 	
-	if (strncmp(filename, N_("dev:"), 4) == 0) {
+	if (strncmp(filename, "dev:", 4) == 0) {
 		if ((mon->fd = open(filename+4, O_RDWR)) < 0) {
 			if ((!probing) || verbosity)
 				perror(filename);
@@ -691,7 +691,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		mon->type = dev;
 	}
 #ifdef HAVE_DDCPCI
-	else if (strncmp(filename, N_("pci:"), 4) == 0) {
+	else if (strncmp(filename, "pci:", 4) == 0) {
 		if (verbosity)
 			printf(_("Device: %s\n"), filename);
 		
@@ -699,7 +699,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		qopen.mtype = 1;
 		qopen.qtype = QUERY_OPEN;
 		
-		sscanf(filename, N_("pci:%02x:%02x.%d-%d\n"), 
+		sscanf(filename, "pci:%02x:%02x.%d-%d\n", 
 			(unsigned int*)&qopen.bus.bus,
 			(unsigned int*)&qopen.bus.dev,
 			(unsigned int*)&qopen.bus.func,
@@ -754,7 +754,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		}
 	}
 	else { /* Alternate way of init mode detecting for unsupported monitors */
-		if (strncmp(mon->pnpid, N_("SAM"), 3) == 0) {
+		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
 			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
 				return -1;
 			}
@@ -797,7 +797,7 @@ int ddcci_close(struct monitor* mon)
 	}
 	else
 	{ /* Alternate way of init mode detecting for unsupported monitors */
-		if (strncmp(mon->pnpid, N_("SAM"), 3) == 0) {
+		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
 			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE, 0)) < 0) {
 				return -1;
 			}
@@ -856,7 +856,7 @@ struct monitorlist* ddcci_probe() {
 	
 	printf(_("Probing for available monitors"));
 	if (verbosity)
-		printf(D_("...\n"));
+		printf("...\n");
 	fflush(stdout);
 	
 #ifdef HAVE_DDCPCI
@@ -889,7 +889,7 @@ struct monitorlist* ddcci_probe() {
 					//printf("<==%02x:%02x.%d-%d\n", alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
 					filelist[len] = malloc(32);
 					
-					snprintf(filelist[len], 32, N_("pci:%02x:%02x.%d-%d"), 
+					snprintf(filelist[len], 32, "pci:%02x:%02x.%d-%d", 
 						alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
 					
 					if (verbosity) {
@@ -903,7 +903,7 @@ struct monitorlist* ddcci_probe() {
 			for (i = 0; i < len; i++) {
 				ddcci_probe_device(filelist[i], &current, &last);
 				if (!verbosity) {
-					printf(N_("."));
+					printf(".");
 					fflush(stdout);
 				}
 			}
@@ -916,15 +916,15 @@ struct monitorlist* ddcci_probe() {
 	DIR *dirp;
 	struct dirent *direntp;
 	
-	dirp = opendir(N_("/dev/"));
+	dirp = opendir("/dev/");
 	
 	while ((direntp = readdir(dirp)) != NULL)
 	{
-		if (!strncmp(direntp->d_name, N_("i2c-"), 4))
+		if (!strncmp(direntp->d_name, "i2c-", 4))
 		{
 			filename = malloc(strlen(direntp->d_name)+12);
 			
-			snprintf(filename, strlen(direntp->d_name)+12, N_("dev:/dev/%s"), direntp->d_name);
+			snprintf(filename, strlen(direntp->d_name)+12, "dev:/dev/%s", direntp->d_name);
 			
 			if (verbosity) {
 				printf(_("Found I2C device (%s)\n"), filename);
@@ -932,7 +932,7 @@ struct monitorlist* ddcci_probe() {
 			
 			ddcci_probe_device(filename, &current, &last);
 			if (!verbosity) {
-				printf(N_("."));
+				printf(".");
 				fflush(stdout);
 			}
 		}
@@ -941,7 +941,7 @@ struct monitorlist* ddcci_probe() {
 	closedir(dirp);
 	
 	if (!verbosity)
-		printf(N_("\n"));
+		printf("\n");
 	
 	return list;
 }
@@ -965,13 +965,13 @@ int ddcci_create_config_dir()
 	int trailing;
 	struct stat buf;
 	
-	home     = getenv(N_("HOME"));
+	home     = getenv("HOME");
 	trailing = (home[strlen(home)-1] == '/');
 	
 	len = strlen(home) + 32;
 	
 	filename = malloc(len);
-	ret = snprintf(filename, len, N_("%s%s.ddccontrol"), home, trailing ? "" : N_("/"));
+	ret = snprintf(filename, len, "%s%s.ddccontrol", home, trailing ? "" : "/");
 	DDCCI_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {free(filename);})
 	
 	if (stat(filename, &buf) < 0) {
@@ -997,7 +997,7 @@ int ddcci_create_config_dir()
 		return 0;
 	}
 	
-	strcat(filename, N_("/profiles"));
+	strcat(filename, "/profiles");
 	
 	if (stat(filename, &buf) < 0) {
 		if (errno != ENOENT) {

@@ -4,6 +4,7 @@ Nicolas:
    http://developer.gnome.org/doc/API/2.0/gdk/multihead.html
  - Add support for more than 2 monitors
  - See what to do with engineering VCP.
+ - Show a nice message when a monitor is not supported and allow at least brightness/contrast to be controlled.
 
 BUGS:
  - When changing a control value quickly (moving the mouse outside the control),

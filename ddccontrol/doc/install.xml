@@ -81,6 +81,12 @@ module by typing, as root:</para>
 card-specific instructions see <xref linkend="supportedgc"/>).</para>
 <para>If you want to automatically load these modules when Linux starts, see 
 your distribution's documentation.</para>
+<para>On systems not using devfs, even after loading framebuffer and i2c-dev modules,
+the devices <filename>/dev/i2c/*</filename> or <filename>/dev/i2c-*</filename> does not
+exists. On Debian, these devices are created using this command :</para>
+<screen format="linespecific">
+# /sbin/MAKEDEV i2c
+</screen>
 <para>To allow standard (i.e. non-root) users to use DDCcontrol, you must change
 permissions on <filename>/dev/i2c-*</filename>. This is done by typing, as 
 root:</para>

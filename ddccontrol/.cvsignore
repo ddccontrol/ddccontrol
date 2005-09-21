@@ -8,9 +8,6 @@ config.sub
 config.guess
 config.rpath
 autom4te.cache
-db
-debug
-kernel-patches
 Doxyfile
 ddccontrol.kdevelop
 ddccontrol.kdevelop.filelist
@@ -30,3 +27,4 @@ Makefile.in
 .exrc
 m4
 mkinstalldirs
+ABOUT-NLS

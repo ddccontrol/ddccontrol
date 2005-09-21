@@ -190,17 +190,17 @@ void fill_profile_manager() {
 		button = stock_label_button(GTK_STOCK_APPLY, NULL, _("Apply profile"));
 		gtk_table_attach(GTK_TABLE(table), button, 1, 2, crow, crow+1, GTK_SHRINK, 0, 5, 5);
 		gtk_widget_show(button);
-		g_signal_connect(G_OBJECT(button), N_("clicked"), G_CALLBACK(apply_callback), profile);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(apply_callback), profile);
 		
 		button = stock_label_button(GTK_STOCK_EDIT, NULL, _("Show profile details / Rename profile"));
 		gtk_table_attach(GTK_TABLE(table), button, 2, 3, crow, crow+1, GTK_SHRINK, 0, 5, 5);
 		gtk_widget_show(button);
-		g_signal_connect(G_OBJECT(button), N_("clicked"), G_CALLBACK(show_info_callback), profile);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_info_callback), profile);
 		
 		button = stock_label_button(GTK_STOCK_DELETE, NULL, _("Delete profile"));
 		gtk_table_attach(GTK_TABLE(table), button, 3, 4, crow, crow+1, GTK_SHRINK, 0, 5, 5);
 		gtk_widget_show(button);
-		g_signal_connect(G_OBJECT(button), N_("clicked"), G_CALLBACK(delete_callback), profile);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(delete_callback), profile);
 		
 		crow++;
 		
@@ -224,13 +224,13 @@ void fill_profile_manager() {
 	hbox = gtk_hbox_new(FALSE, 10);
 	
 	button = stock_label_button(GTK_STOCK_SAVE, _("Create profile"), NULL);
-	g_signal_connect(G_OBJECT(button), N_("clicked"), G_CALLBACK(create_callback), NULL);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(create_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
 	gtk_widget_show(button);
 	
 	button = stock_label_button(GTK_STOCK_CLOSE, _("Close profile manager"), NULL);
-	g_signal_connect(G_OBJECT(button), N_("clicked"), G_CALLBACK(close_profile_manager), NULL);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(close_profile_manager), NULL);
 
 	gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
 	gtk_widget_show(button);
@@ -293,7 +293,7 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	renderer = gtk_cell_renderer_text_new();
-	column = gtk_tree_view_column_new_with_attributes(_("Control name"),renderer,N_("text"),TITLE_COL,NULL);
+	column = gtk_tree_view_column_new_with_attributes(_("Control name"),renderer,"text",TITLE_COL,NULL);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
@@ -302,15 +302,15 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 	memset(&val, 0, sizeof(val));
 	g_value_init (&val, G_TYPE_FLOAT);
 	g_value_set_float (&val, 1.0);	
-	g_object_set_property(G_OBJECT(renderer), N_("xalign"), &val);
+	g_object_set_property(G_OBJECT(renderer), "xalign", &val);
 	
-	column = gtk_tree_view_column_new_with_attributes(_("Value"),renderer,N_("text"),VALUE_COL,NULL);
+	column = gtk_tree_view_column_new_with_attributes(_("Value"),renderer,"text",VALUE_COL,NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
-	column = gtk_tree_view_column_new_with_attributes(_("Address"),renderer,N_("text"),ADDRESS_COL,NULL);
+	column = gtk_tree_view_column_new_with_attributes(_("Address"),renderer,"text",ADDRESS_COL,NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
-	column = gtk_tree_view_column_new_with_attributes(_("Raw value"),renderer,N_("text"),RAW_VALUE_COL,NULL);
+	column = gtk_tree_view_column_new_with_attributes(_("Raw value"),renderer,"text",RAW_VALUE_COL,NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
 	GtkTreeIter top_iter;
@@ -349,18 +349,18 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 						}
 						gtk_tree_store_append(store,&con_iter,&sub_iter);
 						
-						tmp = g_strdup_printf(N_("%#x"), control->address);
-						tmp2 = g_strdup_printf(N_("%u"), profile->value[i]);
+						tmp = g_strdup_printf("%#x", control->address);
+						tmp2 = g_strdup_printf("%u", profile->value[i]);
 						
 						switch (control->type) {
 						case value:
 							/* Try to get the control maximum */
 							max = get_control_max(control);
 							if (max) {
-								tmp3 = g_strdup_printf(N_("%.1f %%"), (double)profile->value[i]*100.0/(double)max);
+								tmp3 = g_strdup_printf("%.1f %%", (double)profile->value[i]*100.0/(double)max);
 							}
 							else {
-								tmp3 = g_strdup(N_("??%"));
+								tmp3 = g_strdup("??%");
 							}
 							break;
 						case list:
@@ -373,7 +373,7 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 								}
 							}
 							if (!tmp)
-								tmp3 = g_strdup(N_("???"));
+								tmp3 = g_strdup("???");
 							break;
 						default:
 							tmp3 = g_strdup("");
@@ -409,13 +409,13 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 }
 
 static void entry_modified_callback(GtkWidget* entry, GtkWidget* dialog) {
-	GtkWidget* ok_button = g_object_get_data(G_OBJECT(dialog), N_("ok_button"));
+	GtkWidget* ok_button = g_object_get_data(G_OBJECT(dialog), "ok_button");
 	
 	if (ok_button) {
 		gtk_container_remove(GTK_CONTAINER(gtk_widget_get_parent(ok_button)), ok_button);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE,   GTK_RESPONSE_OK);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
-		g_object_set_data(G_OBJECT(dialog), N_("ok_button"), NULL);
+		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
 	}
 }
 
@@ -428,7 +428,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	GtkWidget *hbox;
 	int rc;
 	
-	gchar* title = g_strdup_printf(N_("%s %s"), _("Profile information:"), profile->name);
+	gchar* title = g_strdup_printf("%s %s", _("Profile information:"), profile->name);
 	gchar* tmp;
 	
 	GtkWidget *dialog = gtk_dialog_new_with_buttons(
@@ -438,17 +438,17 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 		NULL);
 	
 	if (new_profile) {
-		g_object_set_data(G_OBJECT(dialog), N_("ok_button"), NULL);
+		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE,   GTK_RESPONSE_OK);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 	}
 	else {
 		GtkWidget* ok_button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
-		g_object_set_data(G_OBJECT(dialog), N_("ok_button"), ok_button);
+		g_object_set_data(G_OBJECT(dialog), "ok_button", ok_button);
 	}
 	
 	label = gtk_label_new(NULL);
-	tmp = g_strdup_printf(N_("<span size='large' weight='ultrabold'>%s %s</span>"), _("Profile information:"), profile->name);
+	tmp = g_strdup_printf("<span size='large' weight='ultrabold'>%s %s</span>", _("Profile information:"), profile->name);
 	gtk_label_set_markup(GTK_LABEL(label), tmp);
 	g_free(tmp);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), label, FALSE, FALSE, 5);
@@ -475,7 +475,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	entry = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry), profile->name);
 	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, FALSE, 5);
-	g_signal_connect(GTK_ENTRY(entry), N_("changed"), G_CALLBACK(entry_modified_callback), dialog);
+	g_signal_connect(GTK_ENTRY(entry), "changed", G_CALLBACK(entry_modified_callback), dialog);
 	gtk_widget_show(entry);
 	
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, FALSE, FALSE, 5);

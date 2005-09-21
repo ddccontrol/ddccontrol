@@ -29,8 +29,6 @@
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
-/* debugging strings, no need to translate them */
-#define D_(String) gettext_noop (String)
 
 struct card {
 	void* data;

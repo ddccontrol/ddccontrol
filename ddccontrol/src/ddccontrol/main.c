@@ -175,7 +175,7 @@ int main(int argc, char **argv)
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
 		VERSION);
 	
-	while ((i=getopt(argc,argv, N_("hdr:w:csfvpb:i:"))) >= 0)
+	while ((i=getopt(argc,argv, "hdr:w:csfvpb:i:")) >= 0)
 	{
 		switch(i) {
 		case 'h':

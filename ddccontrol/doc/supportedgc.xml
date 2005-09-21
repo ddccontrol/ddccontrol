@@ -10,11 +10,16 @@ memory (abbreviated by PCI in the tables).</para>
 <para>Depending on your hardware, one method or the other works, or even both.</para>
 </sect2>
 <sect1>
-<title>ATI</title>
+<title>ATI Radeon series</title>
 <sect2>
-<title>Radeon series</title>
-<para>ATI Radeon cards only work with <filename>/dev/i2c-*</filename> devices.
-To use them, you must load the <filename>radeonfb</filename> module by typing,
+<title>Direct PCI memory access support</title>
+<para>Almost every ATI cards should work with direct PCI memory access, even if it has not been very extensively tested.</para>
+<para>To use it, you have nothing special to do, everything is done by DDCcontrol.</para>
+</sect2>
+<sect2>
+<title><filename>/dev/i2c-*</filename> devices support</title>
+<para>ATI Radeon cards also work with <filename>/dev/i2c-*</filename> devices.
+To use <filename>/dev/i2c-*</filename> devices with ATI cards, you must load the <filename>radeonfb</filename> module by typing,
 as root:</para>
 <screen format="linespecific">
 # modprobe radeonfb
@@ -38,6 +43,11 @@ driver and I2C support are:</para>
   <guimenuitem>ATI Radeon display support</guimenuitem>
   <guimenuitem>DDC/I2C for ATI Radeon support</guimenuitem>
 </menuchoice>.
+<warning>
+	<para>The <filename>radeonfb</filename> kernel module may cause system instability (crashes or screen corruption) when used at the same time as used the ATI closed source drivers.</para>
+	<para>This is why we recommend that you use direct PCI memory access with 
+		ATI cards.</para>
+</warning>
 </listitem>
 </itemizedlist>
 </sect2>
@@ -65,37 +75,37 @@ mailing lists (see <xref linkend="report"/>).</para>
 <row>
   <entry>Radeon 7500</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9200</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9500</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9550 SE</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9600 Pro</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9700</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>Radeon 9800 Pro</entry>
   <entry class="yes">Yes</entry>
-  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
 </row>
 </tbody>
 </tgroup>
