@@ -1,3 +1,34 @@
+2005-09-21 20:45  nboichat
+
+	* .cvsignore, ABOUT-NLS, AUTHORS, Makefile.am, TODO,
+	  doc/.cvsignore, doc/Makefile.in, doc/install.xml,
+	  doc/supportedgc.xml, doc/supportedmonitors.xml,
+	  po/ddccontrol.pot, po/de.po, po/fr.po, po/ru.po,
+	  src/ddccontrol/main.c, src/ddcpci/ddcpci.h,
+	  src/ddcpci/i2c-algo-bit.c, src/ddcpci/intel810.c,
+	  src/ddcpci/main.c, src/ddcpci/nvidia.c, src/ddcpci/radeon.c,
+	  src/gddccontrol/fspatterns.c, src/gddccontrol/gprofile.c,
+	  src/gddccontrol/main.c, src/gddccontrol/notebook.c,
+	  src/lib/conf.c, src/lib/ddcci.c, src/lib/ddcci.h,
+	  src/lib/monitor_db.c: Remove N_ and D_ marks. Update
+	  documentation.
+
+2005-09-21 13:09  cs123
+
+	* .cvsignore, Makefile.am, aclocal.m4, autogen.sh, config.guess,
+	  config.rpath, config.sub, configure.ac, depcomp, install-sh,
+	  libtool, ltmain.sh, missing, mkinstalldirs, doc/Makefile.in,
+	  po/.cvsignore, po/LINGUAS, po/Makefile.in.in, po/Makevars,
+	  po/ddccontrol.pot, po/de.po, po/fr.gmo, po/ru.gmo,
+	  src/ddcpci/.cvsignore, src/gddccontrol/.cvsignore,
+	  src/gnome-ddcc-applet/ddcc-applet.c: further build cleanup,
+	  german translation started, please re-run autogen.sh
+
+2005-09-21 09:20  cs123
+
+	* .cvsignore, config.rpath, po/.cvsignore,
+	  src/gddccontrol/.cvsignore: [no log message]
+
 2005-09-21 09:04  cs123
 
 	* po/POTFILES.skip, src/.cvsignore, src/Makefile.in,
@@ -387,7 +418,8 @@
 	  doc/Makefile.in, src/Makefile.in, src/config.h.in,
 	  src/ddccontrol/Makefile.in, src/ddcpci/Makefile.in,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
-	  src/lib/Makefile.in: Fix typo in config.h.
+	  src/gddccontrol/.deps/.cvsignore, src/lib/Makefile.in: Fix typo
+	  in config.h.
 
 2005-06-07 08:39  tag Release-0_1_1
 
@@ -827,6 +859,11 @@
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Add database support.
 
+2004-08-30 21:29  nboichat
+
+	* src/gddccontrol/.deps/: main.Po, notebook.Po: remove .deps
+	  directory
+
 2004-08-30 21:26  nboichat
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
@@ -844,6 +881,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial import.
 
@@ -857,6 +895,7 @@
 	  src/lib/ddcci.c, src/lib/ddcci.h, src/lib/monitor_db.c,
 	  src/lib/monitor_db.h, src/ddccontrol/Makefile.am,
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/.deps/main.Po, src/gddccontrol/.deps/notebook.Po,
 	  doc/xml-design.txt, src/ddccontrol/Makefile.in,
 	  src/ddccontrol/main.c: Initial revision
 
