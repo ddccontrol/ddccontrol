@@ -1,13 +1,23 @@
-# Makefile for PO directory in any package using GNU gettext.
-# Copyright (C) 1995-1997, 2000-2003 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+# Makefile for program source directory in GNU NLS utilities package.
+# Copyright (C) 1995, 1996, 1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 #
-# This file can be copied and used freely without restrictions.  It can
-# be used in projects which are not available under the GNU General Public
-# License but which still want to provide support for the GNU gettext
-# functionality.
-# Please note that the actual code of GNU gettext is covered by the GNU
-# General Public License and is *not* in the public domain.
+# This file file be copied and used freely without restrictions.  It can
+# be used in projects which are not available under the GNU Public License
+# but which still want to provide support for the GNU gettext functionality.
+# Please note that the actual code is *not* freely available.
+#
+# - Modified by Owen Taylor <otaylor@redhat.com> to use GETTEXT_PACKAGE
+#   instead of PACKAGE and to look for po2tbl in ./ not in intl/
+#
+# - Modified by jacob berkman <jacob@ximian.com> to install
+#   Makefile.in.in and po2tbl.sed.in for use with glib-gettextize
+#
+# - Modified by Rodney Dawes <dobey@novell.com> for use with intltool
+#
+# We have the following line for use by intltoolize:
+# INTLTOOL_MAKEFILE
 
+GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
@@ -16,343 +26,237 @@ SHELL = /bin/sh
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
+top_builddir = ..
 VPATH = @srcdir@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = @datadir@
-localedir = $(datadir)/locale
-gettextsrcdir = $(datadir)/gettext/po
+datarootdir = @datarootdir@
+libdir = @libdir@
+localedir = $(libdir)/locale
+gnulocaledir = $(datadir)/locale
+gettextsrcdir = $(datadir)/glib-2.0/gettext/po
+subdir = po
+install_sh = @install_sh@
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
-MKINSTALLDIRS = @MKINSTALLDIRS@
-mkinstalldirs = $(SHELL) $(MKINSTALLDIRS)
 
+CC = @CC@
+GENCAT = @GENCAT@
 GMSGFMT = @GMSGFMT@
 MSGFMT = @MSGFMT@
 XGETTEXT = @XGETTEXT@
-MSGMERGE = msgmerge
-MSGMERGE_UPDATE = @MSGMERGE@ --update
-MSGINIT = msginit
-MSGCONV = msgconv
-MSGFILTER = msgfilter
+INTLTOOL_UPDATE = @INTLTOOL_UPDATE@
+INTLTOOL_EXTRACT = @INTLTOOL_EXTRACT@
+MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
+GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
+DEFS = @DEFS@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+
+INCLUDES = -I.. -I$(top_srcdir)/intl
+
+COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
+
+SOURCES = 
 POFILES = @POFILES@
 GMOFILES = @GMOFILES@
-UPDATEPOFILES = @UPDATEPOFILES@
-DUMMYPOFILES = @DUMMYPOFILES@
-DISTFILES.common = Makefile.in.in remove-potcdate.sin \
-$(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
-DISTFILES = $(DISTFILES.common) Makevars POTFILES.in $(DOMAIN).pot stamp-po \
-$(POFILES) $(GMOFILES) \
-$(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
+DISTFILES = ChangeLog Makefile.in.in POTFILES.in \
+$(POFILES) $(SOURCES)
+EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 
 POTFILES = \
 
 CATALOGS = @CATALOGS@
-
-# Makevars gets inserted here. (Don't remove this line!)
+CATOBJEXT = @CATOBJEXT@
+INSTOBJEXT = @INSTOBJEXT@
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-update
+.SUFFIXES: .c .o .po .pox .gmo .mo .msg .cat
+
+.c.o:
+	$(COMPILE) $<
+
+.po.pox:
+	$(MAKE) $(GETTEXT_PACKAGE).pot
+	$(MSGMERGE) $< $(GETTEXT_PACKAGE).pot -o $*.pox
 
 .po.mo:
-	@echo "$(MSGFMT) -c -o $@ $<"; \
-	$(MSGFMT) -c -o t-$@ $< && mv t-$@ $@
+	$(MSGFMT) -o $@ $<
 
 .po.gmo:
-	@lang=`echo $* | sed -e 's,.*/,,'`; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
+	file=`echo $* | sed 's,.*/,,'`.gmo \
+	  && rm -f $$file && $(GMSGFMT) -o $$file $<
 
-.sin.sed:
-	sed -e '/^#/d' $< > t-$@
-	mv t-$@ $@
+.po.cat:
+	sed -f ../intl/po2msg.sed < $< > $*.msg \
+	  && rm -f $@ && $(GENCAT) $@ $*.msg
 
 
 all: all-@USE_NLS@
 
-all-yes: stamp-po
+all-yes: $(CATALOGS)
 all-no:
 
-# stamp-po is a timestamp denoting the last time at which the CATALOGS have
-# been loosely updated. Its purpose is that when a developer or translator
-# checks out the package via CVS, and the $(DOMAIN).pot file is not in CVS,
-# "make" will update the $(DOMAIN).pot and the $(CATALOGS), but subsequent
-# invocations of "make" will do nothing. This timestamp would not be necessary
-# if updating the $(CATALOGS) would always touch them; however, the rule for
-# $(POFILES) has been designed to not touch files that don't need to be
-# changed.
-stamp-po: $(srcdir)/$(DOMAIN).pot
-	test -z "$(CATALOGS)" || $(MAKE) $(CATALOGS)
-	@echo "touch stamp-po"
-	@echo timestamp > stamp-poT
-	@mv stamp-poT stamp-po
-
-# Note: Target 'all' must not depend on target '$(DOMAIN).pot-update',
-# otherwise packages like GCC can not be built if only parts of the source
-# have been downloaded.
-
-# This target rebuilds $(DOMAIN).pot; it is an expensive operation.
-# Note that $(DOMAIN).pot is not touched if it doesn't need to be changed.
-$(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
-	$(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
-	  --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
-	  --files-from=$(srcdir)/POTFILES.in \
-	  --copyright-holder='$(COPYRIGHT_HOLDER)' \
-	  --msgid-bugs-address='$(MSGID_BUGS_ADDRESS)'
-	test ! -f $(DOMAIN).po || { \
-	  if test -f $(srcdir)/$(DOMAIN).pot; then \
-	    sed -f remove-potcdate.sed < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
-	    sed -f remove-potcdate.sed < $(DOMAIN).po > $(DOMAIN).2po && \
-	    if cmp $(DOMAIN).1po $(DOMAIN).2po >/dev/null 2>&1; then \
-	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(DOMAIN).po; \
-	    else \
-	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(srcdir)/$(DOMAIN).pot && \
-	      mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
-	    fi; \
-	  else \
-	    mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
-	  fi; \
-	}
-
-# This rule has no dependencies: we don't need to update $(DOMAIN).pot at
-# every "make" invocation, only create it when it is missing.
-# Only "make $(DOMAIN).pot-update" or "make dist" will force an update.
-$(srcdir)/$(DOMAIN).pot:
-	$(MAKE) $(DOMAIN).pot-update
-
-# This target rebuilds a PO file if $(DOMAIN).pot has changed.
-# Note that a PO file is not touched if it doesn't need to be changed.
-$(POFILES): $(srcdir)/$(DOMAIN).pot
-	@lang=`echo $@ | sed -e 's,.*/,,' -e 's/\.po$$//'`; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}$(MSGMERGE_UPDATE) $${lang}.po $(DOMAIN).pot"; \
-	cd $(srcdir) && $(MSGMERGE_UPDATE) $${lang}.po $(DOMAIN).pot
-
+$(GETTEXT_PACKAGE).pot: $(POTFILES)
+	$(GENPOT)
 
 install: install-exec install-data
 install-exec:
 install-data: install-data-@USE_NLS@
-	if test "$(PACKAGE)" = "gettext-tools"; then \
-	  $(mkinstalldirs) $(DESTDIR)$(gettextsrcdir); \
-	  for file in $(DISTFILES.common) Makevars.template; do \
-	    $(INSTALL_DATA) $(srcdir)/$$file \
-			    $(DESTDIR)$(gettextsrcdir)/$$file; \
-	  done; \
-	  for file in Makevars; do \
-	    rm -f $(DESTDIR)$(gettextsrcdir)/$$file; \
-	  done; \
-	else \
-	  : ; \
-	fi
 install-data-no: all
 install-data-yes: all
-	$(mkinstalldirs) $(DESTDIR)$(datadir)
+	if test -n "$(MKINSTALLDIRS)"; then \
+	  $(MKINSTALLDIRS) $(DESTDIR)$(datadir); \
+	else \
+	  $(SHELL) $(top_srcdir)/mkinstalldirs $(DESTDIR)$(datadir); \
+	fi
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
-	  dir=$(localedir)/$$lang/LC_MESSAGES; \
-	  $(mkinstalldirs) $(DESTDIR)$$dir; \
-	  if test -r $$cat; then realcat=$$cat; else realcat=$(srcdir)/$$cat; fi; \
-	  $(INSTALL_DATA) $$realcat $(DESTDIR)$$dir/$(DOMAIN).mo; \
-	  echo "installing $$realcat as $(DESTDIR)$$dir/$(DOMAIN).mo"; \
-	  for lc in '' $(EXTRA_LOCALE_CATEGORIES); do \
-	    if test -n "$$lc"; then \
-	      if (cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc 2>/dev/null) | grep ' -> ' >/dev/null; then \
-	        link=`cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc | sed -e 's/^.* -> //'`; \
-	        mv $(DESTDIR)$(localedir)/$$lang/$$lc $(DESTDIR)$(localedir)/$$lang/$$lc.old; \
-	        mkdir $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	        (cd $(DESTDIR)$(localedir)/$$lang/$$lc.old && \
-	         for file in *; do \
-	           if test -f $$file; then \
-	             ln -s ../$$link/$$file $(DESTDIR)$(localedir)/$$lang/$$lc/$$file; \
-	           fi; \
-	         done); \
-	        rm -f $(DESTDIR)$(localedir)/$$lang/$$lc.old; \
-	      else \
-	        if test -d $(DESTDIR)$(localedir)/$$lang/$$lc; then \
-	          :; \
-	        else \
-	          rm -f $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	          mkdir $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	        fi; \
-	      fi; \
-	      rm -f $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo; \
-	      ln -s ../LC_MESSAGES/$(DOMAIN).mo $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo 2>/dev/null || \
-	      ln $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(DOMAIN).mo $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo 2>/dev/null || \
-	      cp -p $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(DOMAIN).mo $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo; \
-	      echo "installing $$realcat link as $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo"; \
+	  case "$$cat" in \
+	    *.gmo) destdir=$(gnulocaledir);; \
+	    *)     destdir=$(localedir);; \
+	  esac; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+	  dir=$(DESTDIR)$$destdir/$$lang/LC_MESSAGES; \
+	  if test -n "$(MKINSTALLDIRS)"; then \
+	    $(MKINSTALLDIRS) $$dir; \
+	  else \
+	    $(SHELL) $(top_srcdir)/mkinstalldirs $$dir; \
+	  fi; \
+	  if test -r $$cat; then \
+	    $(INSTALL_DATA) $$cat $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
+	    echo "installing $$cat as $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+	  else \
+	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
+	    echo "installing $(srcdir)/$$cat as" \
+		 "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+	  fi; \
+	  if test -r $$cat.m; then \
+	    $(INSTALL_DATA) $$cat.m $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
+	    echo "installing $$cat.m as $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+	  else \
+	    if test -r $(srcdir)/$$cat.m ; then \
+	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
+		$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
+	      echo "installing $(srcdir)/$$cat as" \
+		   "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+	    else \
+	      true; \
 	    fi; \
-	  done; \
+	  fi; \
 	done
-
-install-strip: install
-
-installdirs: installdirs-exec installdirs-data
-installdirs-exec:
-installdirs-data: installdirs-data-@USE_NLS@
-	if test "$(PACKAGE)" = "gettext-tools"; then \
-	  $(mkinstalldirs) $(DESTDIR)$(gettextsrcdir); \
+	if test "$(PACKAGE)" = "glib"; then \
+	  if test -n "$(MKINSTALLDIRS)"; then \
+	    $(MKINSTALLDIRS) $(DESTDIR)$(gettextsrcdir); \
+	  else \
+	    $(SHELL) $(top_srcdir)/mkinstalldirs $(DESTDIR)$(gettextsrcdir); \
+	  fi; \
+	  $(INSTALL_DATA) $(srcdir)/Makefile.in.in \
+			  $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
 	else \
 	  : ; \
 	fi
-installdirs-data-no:
-installdirs-data-yes:
-	$(mkinstalldirs) $(DESTDIR)$(datadir)
-	@catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
-	  dir=$(localedir)/$$lang/LC_MESSAGES; \
-	  $(mkinstalldirs) $(DESTDIR)$$dir; \
-	  for lc in '' $(EXTRA_LOCALE_CATEGORIES); do \
-	    if test -n "$$lc"; then \
-	      if (cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc 2>/dev/null) | grep ' -> ' >/dev/null; then \
-	        link=`cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc | sed -e 's/^.* -> //'`; \
-	        mv $(DESTDIR)$(localedir)/$$lang/$$lc $(DESTDIR)$(localedir)/$$lang/$$lc.old; \
-	        mkdir $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	        (cd $(DESTDIR)$(localedir)/$$lang/$$lc.old && \
-	         for file in *; do \
-	           if test -f $$file; then \
-	             ln -s ../$$link/$$file $(DESTDIR)$(localedir)/$$lang/$$lc/$$file; \
-	           fi; \
-	         done); \
-	        rm -f $(DESTDIR)$(localedir)/$$lang/$$lc.old; \
-	      else \
-	        if test -d $(DESTDIR)$(localedir)/$$lang/$$lc; then \
-	          :; \
-	        else \
-	          rm -f $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	          mkdir $(DESTDIR)$(localedir)/$$lang/$$lc; \
-	        fi; \
-	      fi; \
-	    fi; \
-	  done; \
-	done
 
 # Define this as empty until I found a useful application.
 installcheck:
 
-uninstall: uninstall-exec uninstall-data
-uninstall-exec:
-uninstall-data: uninstall-data-@USE_NLS@
-	if test "$(PACKAGE)" = "gettext-tools"; then \
-	  for file in $(DISTFILES.common) Makevars.template; do \
-	    rm -f $(DESTDIR)$(gettextsrcdir)/$$file; \
-	  done; \
-	else \
-	  : ; \
-	fi
-uninstall-data-no:
-uninstall-data-yes:
+uninstall:
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
-	  for lc in LC_MESSAGES $(EXTRA_LOCALE_CATEGORIES); do \
-	    rm -f $(DESTDIR)$(localedir)/$$lang/$$lc/$(DOMAIN).mo; \
-	  done; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
+	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
+	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
+	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
 	done
+	if test "$(PACKAGE)" = "glib"; then \
+	  rm -f $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
+	fi
 
-check: all
+check: all $(GETTEXT_PACKAGE).pot
 
-info dvi ps pdf html tags TAGS ctags CTAGS ID:
+dvi info tags TAGS ID:
 
 mostlyclean:
-	rm -f remove-potcdate.sed
-	rm -f stamp-poT
-	rm -f core core.* $(DOMAIN).po $(DOMAIN).1po $(DOMAIN).2po *.new.po
+	rm -f core core.* *.pox $(GETTEXT_PACKAGE).pot *.old.po cat-id-tbl.tmp
 	rm -fr *.o
+	rm -f .intltool-merge-cache
 
 clean: mostlyclean
 
 distclean: clean
-	rm -f Makefile Makefile.in POTFILES *.mo
+	rm -f Makefile Makefile.in POTFILES
+	rm -f *.mo *.msg *.cat *.cat.m $(GMOFILES)
 
 maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
-	rm -f stamp-po $(GMOFILES)
+	rm -f Makefile.in.in
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-dist distdir:
-	$(MAKE) update-po
-	@$(MAKE) dist2
-# This is a separate target because 'update-po' must be executed before.
-dist2: $(DISTFILES)
+distdir = ../$(GETTEXT_PACKAGE)-$(VERSION)/$(subdir)
+dist distdir: $(DISTFILES)
 	dists="$(DISTFILES)"; \
-	if test "$(PACKAGE)" = "gettext-tools"; then \
-	  dists="$$dists Makevars.template"; \
-	fi; \
-	if test -f $(srcdir)/ChangeLog; then \
-	  dists="$$dists ChangeLog"; \
-	fi; \
-	for i in 0 1 2 3 4 5 6 7 8 9; do \
-	  if test -f $(srcdir)/ChangeLog.$$i; then \
-	    dists="$$dists ChangeLog.$$i"; \
-	  fi; \
+	extra_dists="$(EXTRA_DISTFILES)"; \
+	for file in $$extra_dists; do \
+	  test -f $$file && dists="$$dists $$file"; \
 	done; \
-	if test -f $(srcdir)/LINGUAS; then dists="$$dists LINGUAS"; fi; \
 	for file in $$dists; do \
-	  if test -f $$file; then \
-	    cp -p $$file $(distdir); \
-	  else \
-	    cp -p $(srcdir)/$$file $(distdir); \
-	  fi; \
+	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
+	    || cp -p $(srcdir)/$$file $(distdir); \
 	done
 
 update-po: Makefile
-	$(MAKE) $(DOMAIN).pot-update
-	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
-	$(MAKE) update-gmo
-
-# General rule for updating PO files.
-
-.nop.po-update:
-	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
-	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
+	$(MAKE) $(GETTEXT_PACKAGE).pot
 	tmpdir=`pwd`; \
-	echo "$$lang:"; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
-	cd $(srcdir); \
-	if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
-	  if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
-	    rm -f $$tmpdir/$$lang.new.po; \
-	  else \
-	    if mv -f $$tmpdir/$$lang.new.po $$lang.po; then \
-	      :; \
-	    else \
-	      echo "msgmerge for $$lang.po failed: cannot move $$tmpdir/$$lang.new.po to $$lang.po" 1>&2; \
-	      exit 1; \
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+	  echo "$$lang:"; \
+	  result="`$(MSGMERGE) -o $$tmpdir/$$lang.new.po $$lang`"; \
+	  if $$result; then \
+	    if cmp $(srcdir)/$$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
+	      rm -f $$tmpdir/$$lang.new.po; \
+            else \
+	      if mv -f $$tmpdir/$$lang.new.po $$lang.po; then \
+	        :; \
+	      else \
+	        echo "msgmerge for $$lang.po failed: cannot move $$tmpdir/$$lang.new.po to $$lang.po" 1>&2; \
+	        rm -f $$tmpdir/$$lang.new.po; \
+	        exit 1; \
+	      fi; \
 	    fi; \
+	  else \
+	    echo "msgmerge for $$cat failed!"; \
+	    rm -f $$tmpdir/$$lang.new.po; \
 	  fi; \
-	else \
-	  echo "msgmerge for $$lang.po failed!" 1>&2; \
-	  rm -f $$tmpdir/$$lang.new.po; \
-	fi
+	done
 
-$(DUMMYPOFILES):
+# POTFILES is created from POTFILES.in by stripping comments, empty lines
+# and Intltool tags (enclosed in square brackets), and appending a full
+# relative path to them
+POTFILES: POTFILES.in
+	( posrcprefix='$(top_srcdir)/'; \
+	  rm -f $@-t $@ \
+	    && (sed -e '/^#/d' 					\
+		    -e 's/^[[].*] *//' 				\
+		    -e '/^[ 	]*$$/d' 			\
+		    -e "s@^@	$$posrcprefix@" $(srcdir)/$@.in	\
+		| sed -e '$$!s/$$/ \\/') > $@-t \
+	    && chmod a-w $@-t \
+	    && mv $@-t $@ )
 
-update-gmo: Makefile $(GMOFILES)
-	@:
-
-Makefile: Makevars Makefile.in.in $(top_builddir)/config.status @POMAKEFILEDEPS@
-	cd $(top_builddir) \
+Makefile: Makefile.in.in ../config.status POTFILES
+	cd .. \
 	  && CONFIG_FILES=$(subdir)/$@.in CONFIG_HEADERS= \
 	       $(SHELL) ./config.status
-
-force:
-
-gen-potfiles:
-	echo "# List of source files containing translatable strings." > POTFILES.in
-	echo "# To generate this file, type 'make gen-potfiles'" >> POTFILES.in
-	cd .. && find -name "*.c" >> po/POTFILES.in
-	cd .. && find -name "*.h" >> po/POTFILES.in
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -13,6 +13,7 @@ AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+AC_PROG_INTLTOOL
 
 AC_LANG([C])
 
@@ -130,7 +131,7 @@ AC_ARG_ENABLE(	gnome-applet,
 		fi])
 
 
-GDDCCONTROL=
+GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
 	GNOME_APPLET="gnome-ddcc-applet"
 	PKG_CHECK_MODULES(GNOME, libpanelapplet-2.0 >= 2.10,,GNOME_APPLET="")

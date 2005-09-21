@@ -10,3 +10,11 @@ ddccontrol.kdevses
 Makefile
 config.log
 config.status
+intltool-extract
+intltool-extract.in
+intltool-merge
+intltool-merge.in
+intltool-update
+intltool-update.in
+configure
+Makefile.in

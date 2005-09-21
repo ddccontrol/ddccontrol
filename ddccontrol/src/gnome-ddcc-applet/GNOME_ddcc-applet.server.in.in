@@ -22,10 +22,10 @@
                 <item value="IDL:Bonobo/Control:1.0"/>
                 <item value="IDL:Bonobo/Unknown:1.0"/>
         </oaf_attribute>
-        <oaf_attribute name="name" type="string" value="Monitor Profile Switcher"/>
-        <oaf_attribute name="description" type="string" value="Quickly switch monitor profiles created with gddccontrol"/>
+        <oaf_attribute name="name" type="string" _value="Monitor Profile Switcher"/>
+        <oaf_attribute name="description" type="string" _value="Quickly switch monitor profiles created with gddccontrol"/>
         <oaf_attribute name="panel:category" type="string" value="System"/>
-        <oaf_attribute name="panel:icon" type="string" value="gtk-convert"/>
+        <oaf_attribute name="panel:icon" type="string" value="display-capplet.png"/>
 
 </oaf_server>
 

@@ -22,8 +22,5 @@ $(server_in_files): $(server_in_files:.server.in=.server.in.in)
 
 CLEANFILES = $(server_in_files) $(server_DATA)
 
-##@INTLTOOL_SERVER_RULE@
-
-$(server_DATA) : $(server_in_files)
-	cp $(server_in_files) $(server_DATA)
+@INTLTOOL_SERVER_RULE@
 

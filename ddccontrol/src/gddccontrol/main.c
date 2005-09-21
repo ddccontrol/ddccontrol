@@ -419,6 +419,8 @@ int main( int   argc, char *argv[] )
 	gtk_window_set_title(GTK_WINDOW(main_app_window),_("Monitor settings"));
 	
 	gtk_window_set_default_size(GTK_WINDOW(main_app_window), 500, 500);
+
+	gtk_window_set_position (GTK_WINDOW (main_app_window), GTK_WIN_POS_CENTER);
 	
 	g_signal_connect (G_OBJECT (main_app_window), N_("delete_event"),
 				G_CALLBACK (delete_event), NULL);

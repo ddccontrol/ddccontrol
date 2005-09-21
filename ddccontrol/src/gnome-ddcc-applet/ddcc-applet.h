@@ -70,13 +70,18 @@ _DdccApplet
 static void
 ddcc_applet_init (DdccApplet* applet);
 
-void
+static void
 menu_properties_cb(BonoboUIComponent *uic,
 		DdccApplet *applet,
 	       	const gchar *verbname);
 
-void
+static void
 menu_about_cb(BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname);
+
+static void
+menu_rungdcc_cb(BonoboUIComponent *uic,
 		DdccApplet *applet,
 	       	const gchar *verbname);
 

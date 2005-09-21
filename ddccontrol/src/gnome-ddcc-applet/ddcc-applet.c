@@ -22,7 +22,7 @@
  * Includes
  * ****************/
 
-/* libddccontrol ipc */
+/* libddccontrol */
 #include "ddcci.h"
 #include "conf.h"
 
@@ -42,12 +42,18 @@
 #include "ddcpci-ipc.h"
 
 /* config */
-//#include "config.h"
+#include "config.h"
+
+
+/* ****************
+ * Constants
+ * ****************/
 
 /* Popup menu on the applet */
 static const BonoboUIVerb ddccapplet_applet_menu_verbs[] = 
 {
         BONOBO_UI_UNSAFE_VERB ("DdccAppletProperties", menu_properties_cb),
+        BONOBO_UI_UNSAFE_VERB ("DdccAppletRunGddcontrol", menu_rungdcc_cb),
         BONOBO_UI_UNSAFE_VERB ("DdccAppletAbout", menu_about_cb),
         BONOBO_UI_VERB_END
 };
@@ -58,7 +64,7 @@ static const BonoboUIVerb ddccapplet_applet_menu_verbs[] =
  * ****************/
 
 /* display [msg] as popup errormessage */
-void
+static void
 error_msg (char *msg)
 {
 	GtkWidget* dialog = 
@@ -73,7 +79,7 @@ error_msg (char *msg)
 
 /* makes the menu appear next to the widget [user_data]
  * instead off right under the cursor */
-void
+static void
 position_menu (	GtkMenu *menu, gint *x, gint *y,
 	       	gboolean *push_in, gpointer user_data)
 {
@@ -129,7 +135,8 @@ position_menu (	GtkMenu *menu, gint *x, gint *y,
 }
 
 /* sends heartbeat message to ddcpci, so it does not time out */
-static gboolean heartbeat(gpointer data)
+static gboolean
+heartbeat (gpointer data)
 {
 	ddcpci_send_heartbeat();
 	return TRUE;
@@ -142,18 +149,27 @@ static gboolean heartbeat(gpointer data)
 
 /* called when the user selects the "Properties..." entry from the menu
  * shows (not creates!) the properties dialog */
-void
-menu_properties_cb(BonoboUIComponent *uic,
+static void
+menu_properties_cb (BonoboUIComponent *uic,
 		DdccApplet *applet,
 	       	const gchar *verbname)
 {
 	gtk_widget_show(applet->w_properties_dialog);
 }
 
+/* runs the gddccontrol programm */
+static void
+menu_rungdcc_cb (BonoboUIComponent *uic,
+		DdccApplet *applet,
+	       	const gchar *verbname)
+{
+	system("gddccontrol &");
+}
+
 /* shows the about dialog, when the user selects the coresponding
  * menu entry */
-void
-menu_about_cb(BonoboUIComponent *uic,
+static void
+menu_about_cb (BonoboUIComponent *uic,
 		DdccApplet *applet,
 	       	const gchar *verbname)
 {
@@ -179,7 +195,7 @@ menu_about_cb(BonoboUIComponent *uic,
 }
 
 /* called when the user klicks on the applet */
-gboolean
+static gboolean
 applet_button_cb (GtkWidget	*widget,
 		GdkEventButton	*event,
 		DdccApplet	*applet)
@@ -204,7 +220,7 @@ applet_button_cb (GtkWidget	*widget,
 }
 
 /* called when the user chooses a profile from the profiles menu */
-gboolean
+static gboolean
 change_profile_cb (GtkMenuItem*	item,
 		  DdccApplet*	applet)
 {
@@ -222,7 +238,7 @@ change_profile_cb (GtkMenuItem*	item,
 
 /* called when properties window should be closed
  * in fact, it prevents it from being closed and just hides it */
-gboolean
+static gboolean
 dialog_delete_cb (GtkWidget *widget, GdkEvent *event, DdccApplet* applet)
 {
 	gtk_widget_hide(applet->w_properties_dialog);
@@ -231,7 +247,7 @@ dialog_delete_cb (GtkWidget *widget, GdkEvent *event, DdccApplet* applet)
 }
 
 /* does the same as above function */
-gboolean
+static gboolean
 dialog_close_button_cb (GtkWidget *widget, DdccApplet* applet)
 {
 	gtk_widget_hide(applet->w_properties_dialog);
@@ -241,7 +257,7 @@ dialog_close_button_cb (GtkWidget *widget, DdccApplet* applet)
 
 /* called when the user selects a different monitor, causes some
  * reinitialisation */
-void
+static void
 monitor_combo_cb (GtkComboBox* widget, DdccApplet* applet)
 {
 	char buffer[256];
@@ -282,7 +298,7 @@ destroy_cb (GtkObject* object, DdccApplet* applet)
 
 /* returns a GtkMenu containing all available profiles for
  * monitor [mon] */
-int
+static int
 fill_profiles_menu (DdccApplet *applet)
 {
 	struct profile* profile;
@@ -297,15 +313,15 @@ fill_profiles_menu (DdccApplet *applet)
 		g_signal_connect (item, "activate",
 				 G_CALLBACK (change_profile_cb), applet);
 		gtk_widget_show (item);
-		gtk_container_add (	GTK_CONTAINER (applet->w_profiles_menu),
-					item);
+		gtk_container_add (GTK_CONTAINER (applet->w_profiles_menu),
+				item);
 	}
 
 	return 1;
 }
 
 /* fills [applet->w_monitor] with entrys for each monitor */
-int
+static int
 fill_monitor_combo (DdccApplet *applet)
 {
 	struct monitorlist* monlist;
@@ -339,30 +355,28 @@ fill_monitor_combo (DdccApplet *applet)
 
 /* initializes the ddccontrol library, if initialisation is already
  * partly done it's just completed */
-
-#define START_INIT()					\
-	switch (applet->error) {			\
-		case ERR_NO_INIT:			\
-
-#define TRY_INIT(call_func,err_val,err_msg)		\
-	case err_val: 					\
-		if (call_func) {			\
-			error_msg (err_msg);		\
-				applet->error = err_val;\
-					break;		\
-		}
-
-#define FINISH_INIT()					\
-	applet->error = ERR_OK;				\
-	case ERR_OK:
-
-#define END_INIT()					\
-	return; }
-
-
 static void
 ddcc_applet_init (DdccApplet* applet)
 {
+#	define START_INIT()					\
+		switch (applet->error) {			\
+			case ERR_NO_INIT:			\
+
+#	define TRY_INIT(call_func,err_val,err_msg)		\
+		case err_val: 					\
+			if (call_func) {			\
+				error_msg (err_msg);		\
+					applet->error = err_val;\
+						break;		\
+			}
+
+#	define FINISH_INIT()					\
+		applet->error = ERR_OK;				\
+		case ERR_OK:
+
+#	define END_INIT()					\
+		return; }
+
 	START_INIT()
 
 	TRY_INIT (!ddcci_init (NULL),
@@ -398,6 +412,11 @@ ddcc_applet_init (DdccApplet* applet)
 
 	/* only reached, if init was not finished */
 	gtk_label_set_label (GTK_LABEL (applet->w_label), _("error"));
+
+#	undef START_INIT
+#	undef TRY_INIT
+#	undef FINISH_INIT
+#	undef END_INIT
 }
 
 /* creates the properties dialog */
@@ -467,7 +486,7 @@ ddcc_applet_main (PanelApplet* root_applet)
 
 	icon_theme = gtk_icon_theme_get_default();
 
-	icon = gtk_image_new_from_stock ("gtk-convert", GTK_ICON_SIZE_BUTTON);
+	icon = gtk_image_new_from_icon_name ("display-capplet", GTK_ICON_SIZE_BUTTON);
 	applet_hbox = gtk_hbox_new (FALSE,0);
 
 	gtk_box_pack_start (GTK_BOX (applet_hbox), icon, 0, 0, 0);
