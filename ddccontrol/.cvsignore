@@ -18,3 +18,4 @@ intltool-update
 intltool-update.in
 configure
 Makefile.in
+.exrc

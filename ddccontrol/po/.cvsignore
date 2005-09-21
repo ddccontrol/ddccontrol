@@ -5,3 +5,4 @@ stamp-po
 remove-potcdate.sed
 fr.mo
 ru.mo
+.intltool-merge-cache
