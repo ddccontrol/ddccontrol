@@ -1,3 +1,14 @@
+2005-09-21 09:04  cs123
+
+	* po/POTFILES.skip, src/.cvsignore, src/Makefile.in,
+	  src/ddccontrol/.cvsignore, src/ddccontrol/Makefile.in,
+	  src/ddcpci/.cvsignore, src/ddcpci/Makefile.in,
+	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
+	  src/gddccontrol/gddccontrol.desktop.in,
+	  src/gnome-ddcc-applet/.cvsignore,
+	  src/gnome-ddcc-applet/Makefile.in, src/lib/.cvsignore,
+	  src/lib/Makefile.in: removed Makefile.in s
+
 2005-09-21 01:39  cs123
 
 	* .cvsignore, ABOUT-NLS, Makefile.am, Makefile.in, aclocal.m4,
