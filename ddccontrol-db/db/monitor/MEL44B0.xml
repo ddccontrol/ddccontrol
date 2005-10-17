@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<monitor name="Mitsubishi Diamond Plus 92" init="standard">
+	<controls>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1A"/>
+		
+		<control id="hpos" address="0x20"/>
+		<control id="hsize" address="0x22"/>
+		<control id="vpos" address="0x30"/>
+		<control id="vsize" address="0x32"/>
+		
+		<control id="hpincushion" address="0x24"/>
+		<control id="hpincushionbalance" address="0x26"/>
+		<control id="hmisconvergence" address="0x28"/>
+		<control id="vmisconvergence" address="0x38"/>
+		
+		<control id="keybalance" address="0x40"/>
+		<control id="key" address="0x42"/>
+		<control id="tilt" address="0x44"/>
+		<control id="tdistortionctrl" address="0x46"/>
+		<control id="bdistortionctrl" address="0x4A"/>
+		
+		<control id="vmoire" address="0x56"/>
+		<control id="tlpurity" address="0xE8"/>
+		<control id="trpurity" address="0xE9"/>
+		<control id="blpurity" address="0xEA"/>
+		<control id="brpurity" address="0xEB"/>
+		
+		<control id="degauss" address="0x00"/>
+		<control id="defaults" address="0x04" delay="1000"/>
+		<control id="defaultsizepos" address="0x06" delay="1000"/>
+		<control id="defaultluma" address="0x08" delay="1000"/>
+		
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="0"/>
+			<value id="german"  value="1"/>
+			<value id="french"  value="2"/>
+			<value id="spanish" value="3"/>
+			<value id="italian" value="4"/>
+			<value id="chinese" value="5"/>
+		</control>
+	</controls>
+</monitor>
