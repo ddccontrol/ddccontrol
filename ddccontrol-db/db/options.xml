@@ -12,6 +12,11 @@
 				<value id="entertain" name="Entertain"/>
 				<value id="custom" name="Custom"/>
 			</control>
+			<control id="superbright" type="list" name="Super Bright Mode" address="0xF9">
+				<value id="one" name="One" value="0"/>
+				<value id="two" name="Two" value="1"/>
+				<value id="three" name="Three" value="2"/>
+			</control>
 		</subgroup>
 		<subgroup name="Color maximum level">
 			<control id="red" type="value" name="Red maximum level" address="0x16"/>
@@ -45,7 +50,9 @@
 				<value id="user1" name="User 1"/>
 				<value id="user2" name="User 2"/>
 				<value id="user3" name="User 3"/>
+				<value id="user4" name="User 4"/>
 			</control>
+			<control id="colortemp" type="value" name="Color temperature" address="0x54"/>
 		</subgroup>
 	</group>
 	<group name="Position and size">
@@ -53,7 +60,7 @@
 			<control id="hpos" type="value" name="Horizontal Position" address="0x20"/>
 			<control id="vpos" type="value" name="Vertical Position" address="0x30"/>
 		</subgroup>
-		<subgroup name="Size">
+		<subgroup name="Size">a
 			<control id="hsize" type="value" name="Horizontal Size" address="0x22"/>
 			<control id="vsize" type="value" name="Vertical Size" address="0x32"/>
 		</subgroup>
@@ -74,6 +81,7 @@
 			<control id="hpincushionbalance" type="value" name="Horizontal Pincushion Balance" address="0x26"/>
 			<control id="vpincushion" type="value" name="Vertical Pincushion" address="0x34"/>
 			<control id="vpincushionbalance" type="value" name="Vertical Pincushion Balance" address="0x36"/>		
+			<control id="cpincushion" type="value" name="Center Pincushion" address="0xE1"/>
 		</subgroup>
 		<subgroup name="Linearity">
 			<control id="hlinearity" type="value" name="Horizontal Linearity" address="0x2A"/>

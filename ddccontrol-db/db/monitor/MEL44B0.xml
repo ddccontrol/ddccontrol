@@ -1,20 +1,30 @@
 <?xml version="1.0"?>
-<monitor name="Mitsubishi Diamond Plus 92" init="standard">
+<monitor name="Mitsubishi Diamond Plus 92" init="standard" caps="">
+	<!--- degauss not in caps -->
 	<controls>
+		<control id="degauss" address="0x00"/>
+
 		<control id="brightness" address="0x10"/>
 		<control id="contrast" address="0x12"/>
+		<control id="colorpreset" address="0x14">
+			<!--- Maybe we could try to find the meaning of these values -->
+			<value id="user1" value="0"/>
+			<value id="user2" value="1"/>
+			<value id="user3" value="2"/>
+			<value id="user4" value="3"/>
+		</control>
 		<control id="red" address="0x16"/>
 		<control id="green" address="0x18"/>
 		<control id="blue" address="0x1A"/>
 		
 		<control id="hpos" address="0x20"/>
 		<control id="hsize" address="0x22"/>
-		<control id="vpos" address="0x30"/>
-		<control id="vsize" address="0x32"/>
-		
 		<control id="hpincushion" address="0x24"/>
 		<control id="hpincushionbalance" address="0x26"/>
 		<control id="hmisconvergence" address="0x28"/>
+
+		<control id="vpos" address="0x30"/>
+		<control id="vsize" address="0x32"/>
 		<control id="vmisconvergence" address="0x38"/>
 		
 		<control id="keybalance" address="0x40"/>
@@ -23,17 +33,9 @@
 		<control id="tdistortionctrl" address="0x46"/>
 		<control id="bdistortionctrl" address="0x4A"/>
 		
+		<control id="colortemp" address="0x54"/>
 		<control id="vmoire" address="0x56"/>
-		<control id="tlpurity" address="0xE8"/>
-		<control id="trpurity" address="0xE9"/>
-		<control id="blpurity" address="0xEA"/>
-		<control id="brpurity" address="0xEB"/>
-		
-		<control id="degauss" address="0x00"/>
-		<control id="defaults" address="0x04" delay="1000"/>
-		<control id="defaultsizepos" address="0x06" delay="1000"/>
-		<control id="defaultluma" address="0x08" delay="1000"/>
-		
+
 		<control id="language" type="list" address="0x68">
 			<value id="english" value="0"/>
 			<value id="german"  value="1"/>
@@ -42,5 +44,17 @@
 			<value id="italian" value="4"/>
 			<value id="chinese" value="5"/>
 		</control>
+
+		<control id="power" address="0xE1"/>
+		<!--- Control 0xe2: +/1/1 [Clamp Pulse Position] -->
+		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
+			<value id="enable"  value="0"/>
+			<value id="disable" value="1"/>
+		</control>
+		<control id="tlpurity" address="0xE8"/>
+		<control id="trpurity" address="0xE9"/>
+		<control id="blpurity" address="0xEA"/>
+		<control id="brpurity" address="0xEB"/>
+		<!--- Control 0xef: +/0/4 [OSD Position] -->
 	</controls>
 </monitor>

@@ -1,2 +1,90 @@
 <?xml version="1.0"?>
-<monitor include="MEL4513" name="Mitsubishi Diamond Pro 2070sb"/>
+<monitor name="Mitsubishi Diamond Pro 2070sb" init="standard" caps="">
+	<controls>
+		<control id="degauss" address="0x00"/>
+		<control id="defaults" address="0x04" delay="1000"/>
+		<control id="defaultsizepos" address="0x06" delay="1000"/>
+		<control id="defaultluma" address="0x08" delay="1000"/>
+
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="colorpreset" address="0x14">
+			<!--- Copied from NEC 2080UX+, needs to be checked -->
+			<value id="5000k"  value="4"/>
+			<value id="6500k"  value="1"/>
+			<value id="7500k"  value="6"/>
+			<value id="8200k"  value="7"/>
+			<value id="9300k"  value="8"/>
+			<value id="native" value="2"/>
+		</control>
+
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1A"/>
+		
+		<!--- Control 0x1e: +/0/1 [???] -->
+
+		<control id="hpos" address="0x20"/>
+		<control id="hsize" address="0x22"/>
+		<control id="hpincushion" address="0x24"/>
+		<control id="hpincushionbalance" address="0x26"/>
+		<control id="hmisconvergence" address="0x28"/>
+		<control id="vpos" address="0x30"/>
+		<control id="vsize" address="0x32"/>	
+		<control id="vmisconvergence" address="0x38"/>
+		<control id="vlinearity"  address="0x3A"/>
+		<control id="vlinearitybalance" address="0x3C"/>
+		
+		<control id="keybalance" address="0x40"/>
+		<control id="key" address="0x42"/>
+		<control id="tilt" address="0x44"/>
+		<control id="tdistortionctrl" address="0x46"/>
+		<control id="tdistortionbalance" address="0x48"/>
+		<control id="bdistortionctrl" address="0x4A"/>
+		<control id="bdistortionbalance" address="0x4C"/>
+		
+		<control id="colortemp" address="0x54"/>
+		<control id="vmoire" address="0x56"/>
+
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="0"/>
+			<value id="german"  value="1"/>
+			<value id="french"  value="2"/>
+			<value id="spanish" value="3"/>
+			<value id="italian" value="4"/>
+			<value id="chinese" value="5"/>
+		</control>
+		<control id="redblack" address="0x6C"/>
+		<control id="greenblack" address="0x6E"/>
+
+		<control id="blueblack" address="0x70"/>
+
+		<!---Control 0xa8: +/1/3 [Sync Type]-->
+
+		<control id="settings" address="0xb0"/>
+
+		<control id="dpms" address="0xd6">
+			<value id="on" value="1"/>
+			<value id="standby" value="4"/>
+		</control>
+
+		<control id="power" address="0xE1"/>
+		<!--- Control 0xe2: +/0/1 [Clamp Pulse Position] -->
+		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
+			<value id="enable"  value="0"/>
+			<value id="disable" value="1"/>
+		</control>
+		<control id="cpincushion" address="0xE1"/>
+		<control id="tlpurity" address="0xE8"/>
+		<control id="trpurity" address="0xE9"/>
+		<control id="blpurity" address="0xEA"/>
+		<control id="brpurity" address="0xEB"/>
+		<!--- Control 0xef: +/0/4 [OSD Position] -->
+
+		<!--- Control 0xf6: +/0/1 [REFRESH NOTIFIER] -->
+		<control id="superbright" address="0xF9"/> <!--- Needs to be tested -->
+		<!--- Control 0xfa: +/6885/65535 [Total Power Time in 30 min, RO] -->
+		<!--- Control 0xfc: +/9/24 [OSD Turn Off Delay] -->
+		<!--- Control 0xff: +/6060/65535 [Power On Time in 30 min, RO] -->
+	</controls>
+</monitor>
