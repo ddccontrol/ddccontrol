@@ -189,6 +189,11 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
   <entry class="yes">Yes</entry>
 </row>
 <row>
+  <entry>GeForce FX 5600</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
   <entry>GeForce FX 5700</entry>
   <entry class="no">No</entry>
   <entry class="yes">Yes</entry>
