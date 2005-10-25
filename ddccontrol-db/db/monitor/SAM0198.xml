@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<!---The Samsung 193P+ seems to be identical to 173P and 193P -->
+<monitor include="SAM00D3" name="Samsung SyncMaster 193P Plus (VGA)"/>
+
