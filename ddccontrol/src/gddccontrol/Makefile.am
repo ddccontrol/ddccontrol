@@ -13,5 +13,11 @@ desktopdir = $(datadir)/applications
 Desktop_in_files = gddccontrol.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
+pixmapdir = $(datadir)/pixmaps
+pixmap_DATA = gddccontrol.png
+
+install-data-local:
+	-@INSTALL@ -m 644 gddccontrol-bluecurve.png $(datadir)/icons/Bluecurve/48x48/apps/gddccontrol.png
+
 @INTLTOOL_DESKTOP_RULE@
 
