@@ -1,3 +1,25 @@
+2005-10-25 18:27  nboichat
+
+	* db/monitor/SAM0198.xml: Add support for Samsung 193P Plus (Thanks
+	  to Emil F.).
+
+2005-10-19 16:01  nboichat
+
+	* db/: options.xml, monitor/MEL44B0.xml, monitor/MEL4632.xml,
+	  monitor/SAM010C.xml: Add support for Samsung SyncMaster 710T,
+	  Mitsubishi Diamond Pro 2070sb and Mitsubishi Diamond Plus 92.
+
+2005-10-17 13:30  nboichat
+
+	* db/monitor/: MEL44B0.xml, MEL4632.xml, SAM0109.xml: Add
+	  Mitsubishi Diamond Plus 92, Mitsubishi Diamond Pro 2070sb,
+	  Samsung SyncMaster 997MB
+
+2005-10-17 13:29  nboichat
+
+	* db/monitor/SAM0168.xml: Add Samsung SyncMaster 710TM, thanks to
+	  Fabien Salvi.
+
 2005-09-20 11:39  nboichat
 
 	* db/monitor/SAM0194.xml: Add support for the Samsung SyncMaster
@@ -249,8 +271,10 @@
 
 2004-08-31 17:03  nboichat
 
-	* .cvsignore, db/.cvsignore: Remove autom4te cache and add
-	  cvsignore files
+	* .cvsignore, autom4te.cache/output.0, autom4te.cache/output.1,
+	  autom4te.cache/requests, autom4te.cache/traces.0,
+	  autom4te.cache/traces.1, db/.cvsignore: Remove autom4te cache and
+	  add cvsignore files
 
 2004-08-31 16:55  tag start
 
@@ -258,15 +282,19 @@
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
-	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial import
 
 2004-08-31 16:55  nboichat
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
-	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial revision
 
