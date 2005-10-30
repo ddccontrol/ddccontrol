@@ -1,3 +1,17 @@
+2005-10-30 09:10  nboichat
+
+	* .cvsignore, ABOUT-NLS, Makefile.in, aclocal.m4, autogen.sh,
+	  config.guess, config.sub, configure, configure.ac, install-sh,
+	  missing, mkinstalldirs, db/Makefile.in, db/options.xml.h,
+	  po/.cvsignore, po/LINGUAS, po/Makefile.in.in, po/Rules-quot,
+	  po/ddccontrol-db.pot, po/fr.gmo, po/fr.po, po/ru.gmo, po/ru.po:
+	  Remove configure and other stuff from ddccontrol-db (it now
+	  behaves like ddccontrol).
+
+2005-10-30 09:09  nboichat
+
+	* po/zh.po: Add Chinese translation (Thanks to "waq_cn").
+
 2005-10-25 18:27  nboichat
 
 	* db/monitor/SAM0198.xml: Add support for Samsung 193P Plus (Thanks
@@ -271,10 +285,8 @@
 
 2004-08-31 17:03  nboichat
 
-	* .cvsignore, autom4te.cache/output.0, autom4te.cache/output.1,
-	  autom4te.cache/requests, autom4te.cache/traces.0,
-	  autom4te.cache/traces.1, db/.cvsignore: Remove autom4te cache and
-	  add cvsignore files
+	* .cvsignore, db/.cvsignore: Remove autom4te cache and add
+	  cvsignore files
 
 2004-08-31 16:55  tag start
 
@@ -282,19 +294,15 @@
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, autom4te.cache/requests, autom4te.cache/output.0,
-	  autom4te.cache/traces.0, autom4te.cache/output.1,
-	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
-	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
+	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial import
 
 2004-08-31 16:55  nboichat
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, autom4te.cache/requests, autom4te.cache/output.0,
-	  autom4te.cache/traces.0, autom4te.cache/output.1,
-	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
-	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
+	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial revision
 

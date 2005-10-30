@@ -1,3 +1,20 @@
+2005-10-30 09:15  nboichat
+
+	* po/: .cvsignore, LINGUAS, Makefile.in.in, ddccontrol.pot, de.po,
+	  fr.po, ru.po, zh.po: Add Chinese translation (Thanks to
+	  "waq_cn").
+
+2005-10-25 19:31  nboichat
+
+	* src/gddccontrol/: Makefile.am, gddccontrol-bluecurve.png,
+	  gddccontrol.desktop.in, gddccontrol.png: Add Gnome icon, thanks
+	  to 'lekma' on ddccontrol-users.
+
+2005-10-19 15:59  nboichat
+
+	* doc/: supportedgc.xml, supportedmonitors.xml: Documentation
+	  update
+
 2005-09-21 20:45  nboichat
 
 	* .cvsignore, ABOUT-NLS, AUTHORS, Makefile.am, TODO,
