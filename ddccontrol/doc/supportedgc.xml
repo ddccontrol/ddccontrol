@@ -73,6 +73,11 @@ mailing lists (see <xref linkend="report"/>).</para>
 </thead>
 <tbody>
 <row>
+  <entry>Radeon 7000</entry>
+  <entry class="yes">Yes</entry>
+  <entry class="unknown">???</entry>
+</row>
+<row>
   <entry>Radeon 7500</entry>
   <entry class="yes">Yes</entry>
   <entry class="unknown">???</entry>

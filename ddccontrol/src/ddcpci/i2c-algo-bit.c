@@ -200,7 +200,7 @@ static int i2c_outb(struct i2c_algo_bit_data *adap, char c)
 	DEB2(printf(" i2c_outb: 0x%02x , getsda() = %d\n", c & 0xff, ack));
 
 	DEBPROTO( printf("[%2.2x]",c&0xff) );
-	DEBPROTO(if (0==ack){ printf(" A "));} else printf(" NA " );
+	DEBPROTO(if (0==ack){ printf(" A ");} else printf(" NA ") );
 	scllo(adap);
 	return 0==ack;		/* return 1 if device acked	 */
 	/* assert: scl is low (sda undef) */

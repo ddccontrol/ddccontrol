@@ -7,3 +7,5 @@ stamp-po
 remove-potcdate.sed
 *.mo
 .intltool-merge-cache
+.pot
+
