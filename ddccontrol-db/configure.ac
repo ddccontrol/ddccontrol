@@ -12,7 +12,7 @@ AC_CHECK_PROG(PERL,perl,perl,)
 
 AM_CONDITIONAL(HAVE_PERL, test -n $PERL)
 
-AC_CONFIG_FILES([ 
+AC_CONFIG_FILES([
 	po/Makefile.in
 	Makefile
 	db/Makefile])

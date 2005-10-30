@@ -3,4 +3,8 @@ Makefile.in
 POTFILES
 stamp-po
 remove-potcdate.sed
-fr.mo
+*.mo
+Makevars.template
+*.gmo
+.intltool-merge-cache
+
