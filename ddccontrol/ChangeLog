@@ -1,3 +1,8 @@
+2005-10-30 09:54  nboichat
+
+	* doc/supportedgc.xml, po/.cvsignore, src/ddcpci/i2c-algo-bit.c:
+	  Fix small bug ('NA' was printed when it shouldn't).
+
 2005-10-30 09:15  nboichat
 
 	* po/: .cvsignore, LINGUAS, Makefile.in.in, ddccontrol.pot, de.po,
