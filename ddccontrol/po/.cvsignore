@@ -5,6 +5,5 @@ Makefile.in
 POTFILES
 stamp-po
 remove-potcdate.sed
-fr.mo
-ru.mo
+*.mo
 .intltool-merge-cache
