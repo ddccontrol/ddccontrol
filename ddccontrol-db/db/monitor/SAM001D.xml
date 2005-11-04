@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--- Samsung SyncMaster 171P has some primitive DDC/CI support (no caps, only a few controls) -->
+<monitor name="Samsung SyncMaster 171P (VGA)" init="standard" caps="">
+	<controls>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1a"/>
+		
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+		
+		<!--- Control 0xd0: +/0/255 [???] -->
+		<!--- Control 0xd2: +/60/120 [???] -->
+		<!--- Control 0xdc: +/15/150 [???] -->
+		<!--- Control 0xdd: +/31/150 [???] -->
+		<!--- Control 0xde: +/16/150 [???] -->
+		<!--- Control 0xe4: +/163/63 [???] -->
+		<!--- Control 0xe6: +/163/63 [???] -->
+		<!--- Control 0xe8: +/165/63 [???] -->
+	</controls>
+</monitor>
