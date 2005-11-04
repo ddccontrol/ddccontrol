@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -142,12 +143,11 @@ static void combo_change(GtkWidget *widget, gpointer data)
 	g_mutex_unlock(combo_change_mutex);
 }
 
-#ifdef HAVE_XINERAMA
 static gboolean window_changed(GtkWidget *widget, 
 				GdkEventConfigure *event,
 				gpointer user_data)
 {
-	if (xineramanumber == 2) { // If there are more than two monitors, we need a configuration menu
+	if (num_monitor == 2) { // If there are more than two monitors, we need a configuration menu
 		int cx, cy, i;
 		struct monitorlist* current;
 		
@@ -168,21 +168,15 @@ static gboolean window_changed(GtkWidget *widget,
 		cx = event->x + (event->width/2);
 		cy = event->y + (event->height/2);
 		
-		for (i = 0; i < xineramanumber; i++) {
-			if (
-				(cx >= xineramainfo[i].x_org) && (cx < xineramainfo[i].x_org+xineramainfo[i].width) &&
-				(cy >= xineramainfo[i].y_org) && (cy < xineramainfo[i].y_org+xineramainfo[i].height)
-			   ) {
-				if (xineramacurrent != i) {
-					int k = nextid;
-					if (get_verbosity())
-						printf(_("Monitor changed (%d %d).\n"), i, k);
-					k = (k == 0) ? 1 : 0;
-					xineramacurrent = k;
-					gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
-				}
-				return FALSE;
-			}
+		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
+		
+		if (i != current_monitor) {
+			int k = nextid;
+			if (get_verbosity())
+				printf(_("Monitor changed (%d %d).\n"), i, k);
+			k = (k == 0) ? 1 : 0;
+			current_monitor = i;
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
 		}
 		
 		//g_warning(_("Could not find the current monitor in Xinerama monitors list."));
@@ -190,7 +184,6 @@ static gboolean window_changed(GtkWidget *widget,
 	
 	return FALSE;
 }
-#endif
 
 /* Enable or disable widgets (monitor choice, close/refresh button) */
 static void widgets_set_sensitive(gboolean sensitive)
@@ -360,14 +353,9 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 int main( int   argc, char *argv[] )
 { 
 	int i, verbosity = 0;
-	int event_base, error_base;
 	
 	mon = NULL;
 	monitor_manager = NULL;
-	
-#ifdef HAVE_XINERAMA
-	xineramacurrent = 0; //Arbitrary, should be read from the user
-#endif
 	
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -428,10 +416,8 @@ int main( int   argc, char *argv[] )
 	g_signal_connect (G_OBJECT (main_app_window), "destroy",
 				G_CALLBACK (destroy), NULL);
 
-	#ifdef HAVE_XINERAMA
 	g_signal_connect (G_OBJECT (main_app_window), "configure-event",
 				G_CALLBACK (window_changed), NULL);
-	#endif
 	
 	gtk_container_set_border_width (GTK_CONTAINER (main_app_window), 4);
 	
@@ -546,32 +532,18 @@ int main( int   argc, char *argv[] )
 	
 	gtk_widget_show(main_app_window);
 	
-	#ifdef HAVE_XINERAMA
-	if (XineramaQueryExtension(GDK_DISPLAY(), &event_base, &error_base)) {
-		if (XineramaIsActive(GDK_DISPLAY())) {
-			if (get_verbosity())
-				printf(_("Xinerama supported and active\n"));
-			
-			xineramainfo = XineramaQueryScreens(GDK_DISPLAY(), &xineramanumber);
-			int i;
-			for (i = 0; i < xineramanumber; i++) {
-				printf(_("Display %d: %d, %d, %d, %d, %d\n"), i, 
-					xineramainfo[i].screen_number, xineramainfo[i].x_org, xineramainfo[i].y_org, 
-					xineramainfo[i].width, xineramainfo[i].height);
-			}
-		}
-		else {
-			if (get_verbosity())
-				printf(_("Xinerama supported but inactive.\n"));
-			xineramainfo = NULL;
-		}
-	}
-	else {
-		if (get_verbosity())
-			printf(_("Xinerama not supported\n"));
-		xineramainfo = NULL;
-	}
-	#endif
+	GdkScreen* screen = gdk_screen_get_default();
+	
+	num_monitor = gdk_screen_get_n_monitors(screen);
+	
+	/*for (i = 0; i < nscreen; i++) {
+		GdkRectangle dest;
+		
+		gdk_screen_get_monitor_geometry(screen, i, &dest);
+		printf("%d: %d, %d %dx%d\n", nscreen, dest.x, dest.y, dest.width, dest.height);
+	}*/
+	
+	current_monitor = gdk_screen_get_monitor_at_window(screen, main_app_window->window);
 	
 	probe_monitors(NULL, NULL);
 	
@@ -591,10 +563,6 @@ int main( int   argc, char *argv[] )
 	ddcci_free_list(monlist);
 	
 	ddcci_release();
-	
-	#ifdef HAVE_XINERAMA
-	XFree(xineramainfo);
-	#endif
 	
 	return 0;
 }

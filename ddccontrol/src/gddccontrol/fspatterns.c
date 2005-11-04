@@ -158,37 +158,19 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 
 static void show_pattern(gchar* patternname)
 {
-	int x, y, width, height;
-	/* FIXME: Really ugly, change this... */
-#ifdef HAVE_XINERAMA
-	if (xineramainfo) {
-		x = xineramainfo[xineramacurrent].x_org;
-		y = xineramainfo[xineramacurrent].y_org;
-		width = xineramainfo[xineramacurrent].width;
-		height = xineramainfo[xineramacurrent].height;
-	}
-	else {
-		GdkScreen* screen = gdk_screen_get_default();
-		x = 0;
-		y = 0;
-		width = gdk_screen_get_width(screen);
-		height = gdk_screen_get_height(screen);
-	}
-#else
+	GdkRectangle drect;
+	
 	GdkScreen* screen = gdk_screen_get_default();
-	x = 0;
-	y = 0;
-	width = gdk_screen_get_width(screen);
-	height = gdk_screen_get_height(screen);
-#endif
+	int i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
+	gdk_screen_get_monitor_geometry(screen, i, &drect);
+		
+	int top = 7*drect.height/12, bottom = 11*drect.height/12, left = drect.width/3, right = 2*drect.width/3;
 	
-	int top = 7*height/12, bottom = 11*height/12, left = width/3, right = 2*width/3;
-
-	gtk_widget_set_size_request(fs_patterns_window, width, height);
+	gtk_widget_set_size_request(fs_patterns_window, drect.width, drect.height);
 	
-	gtk_window_move(GTK_WINDOW(fs_patterns_window), x, y);
+	gtk_window_move(GTK_WINDOW(fs_patterns_window), drect.x, drect.y);
 	
-	GdkDrawable* pixmap = gdk_pixmap_new(0, width, height, gdk_colormap_get_visual(gdk_colormap_get_system())->depth);
+	GdkDrawable* pixmap = gdk_pixmap_new(0, drect.width, drect.height, gdk_colormap_get_visual(gdk_colormap_get_system())->depth);
 	gdk_drawable_set_colormap(pixmap, gdk_colormap_get_system());
 	
 	int w, h;
@@ -197,9 +179,9 @@ static void show_pattern(gchar* patternname)
 	color.red = color.green = color.blue = 0x0000;
 	gdk_gc_set_rgb_fg_color(gc, &color);
 	gdk_gc_set_rgb_bg_color(gc, &color);
-	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, width, height);
+	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, drect.width, drect.height);
 	if (g_str_equal(patternname, "brightnesscontrast")) {
-		drawShade(pixmap, height/8, height/8, 21);
+		drawShade(pixmap, drect.height/8, drect.height/8, 21);
 		
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_gc_set_rgb_fg_color(gc, &color);
@@ -212,19 +194,19 @@ static void show_pattern(gchar* patternname)
 			  )
 			  , -1);
 		pango_layout_get_pixel_size(layout, &w, &h);
-		gdk_draw_layout(pixmap, gc, (width-w)/2, 3*height/8, layout);
+		gdk_draw_layout(pixmap, gc, (drect.width-w)/2, 3*drect.height/8, layout);
 		
 		/* Fujitsu-Siemens blank lines for auto level (0xfe). */
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_gc_set_rgb_fg_color(gc, &color);
-		gdk_draw_line(pixmap, gc, 0, (height)/24, width, (height)/24);
-		gdk_draw_line(pixmap, gc, 0, (23*height)/24, width, (23*height)/24);
+		gdk_draw_line(pixmap, gc, 0, (drect.height)/24, drect.width, (drect.height)/24);
+		gdk_draw_line(pixmap, gc, 0, (23*drect.height)/24, drect.width, (23*drect.height)/24);
 	}
 	else if (g_str_equal(patternname, "moire")) {
-		drawchecker(pixmap, width, height, _("Try to make moire patterns disappear."));
+		drawchecker(pixmap, drect.width, drect.height, _("Try to make moire patterns disappear."));
 	}
 	else if (g_str_equal(patternname, "clock")) {
-		drawchecker(pixmap, width, height,
+		drawchecker(pixmap, drect.width, drect.height,
 			_("Adjust Image Lock Coarse to make the vertical band disappear.\n"
 			  "Adjust Image Lock Fine to minimize movement on the screen."));
 	}
@@ -232,9 +214,9 @@ static void show_pattern(gchar* patternname)
 		const int csize = 51;
 		const int dsize = 25;
 		int x, y, c = 0, d = 0;
-		for (x = 0; x < width; x += csize) {
+		for (x = 0; x < drect.width; x += csize) {
 			c = d;
-			for (y = 0; y < height; y += csize) {
+			for (y = 0; y < drect.height; y += csize) {
 				color.red = 0x0000;
 				color.green = 0x0000;
 				color.blue = 0x0000;
@@ -269,17 +251,16 @@ static void show_pattern(gchar* patternname)
 		pango_layout_set_markup(layout, tmp, -1);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &w, &h);
-		gdk_draw_layout(pixmap, gc, (width-w)/2, height/8, layout);
+		gdk_draw_layout(pixmap, gc, (drect.width-w)/2, drect.height/8, layout);
 	}
 	
 	GdkPixbuf* pixbufs[4];
 	
-	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, width, top);
-	pixbufs[1] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, bottom, 0, 0, width, height-bottom);
+	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, drect.width, top);
+	pixbufs[1] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, bottom, 0, 0, drect.width, drect.height-bottom);
 	pixbufs[2] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, top, 0, 0, left, bottom-top);
-	pixbufs[3] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, right, top, 0, 0, width-right, bottom-top);
+	pixbufs[3] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, right, top, 0, 0, drect.width-right, bottom-top);
 	
-	int i;
 	if (images[0])
 	{ /* GtkImages already exist */
 		for (i = 0; i < 4; i++) {
@@ -302,6 +283,16 @@ static void show_pattern(gchar* patternname)
 	}
 	
 	gtk_widget_set_size_request(scrolled_window, right-left, bottom-top);
+	
+	GdkGeometry hints;
+
+	hints.min_width = drect.width;
+	hints.min_height = drect.height;
+	hints.max_width = drect.width;
+	hints.max_height = drect.height;
+	
+	gtk_window_set_geometry_hints(GTK_WINDOW(fs_patterns_window), GTK_WIDGET(fs_patterns_window),
+	                              &hints, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE);
 	
 	gtk_widget_show(fs_patterns_window);
 }

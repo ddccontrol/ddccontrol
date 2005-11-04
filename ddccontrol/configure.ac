@@ -114,11 +114,6 @@ if test x$support_gnome = xyes; then
       
       # Check for X11
       AC_PATH_XTRA
-   
-      AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
-        AC_DEFINE(HAVE_XINERAMA, 1, [Xinerama support]) XINERAMA_LIBS=-lXinerama, 
-      ,$X_LIBS)
-      AC_SUBST([XINERAMA_LIBS])
    else
       echo "no"
       AC_MSG_ERROR([gtk+>=2.4 development packages not found])

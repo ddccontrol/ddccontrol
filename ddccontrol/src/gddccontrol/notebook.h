@@ -23,11 +23,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_XINERAMA
 #include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#include <X11/extensions/Xinerama.h>
-#endif
 
 #include <gtk/gtk.h>
 
@@ -99,10 +95,8 @@ GtkWidget* saveprofile_button;
 GtkWidget* cancelprofile_button;
 GtkWidget* refresh_controls_button;
 
-#ifdef HAVE_XINERAMA
-int xineramacurrent;
-int xineramanumber;
-XineramaScreenInfo* xineramainfo;
-#endif
+/* Multimonitor support */
+int current_monitor; /* current monitor */
+int num_monitor; /* total number of monitors */
 
 #endif //NOTEBOOK_H
