@@ -1,3 +1,11 @@
+2005-11-04 11:05  nboichat
+
+	* configure.ac, doc/supportedmonitors.xml, doc/thanks.xml,
+	  src/config.h.in, src/gddccontrol/fspatterns.c,
+	  src/gddccontrol/main.c, src/gddccontrol/notebook.h: Use GTK/GDK
+	  high-level API to determine current screen (instead of Xinerama
+	  API).
+
 2005-10-30 09:54  nboichat
 
 	* doc/supportedgc.xml, po/.cvsignore, src/ddcpci/i2c-algo-bit.c:
