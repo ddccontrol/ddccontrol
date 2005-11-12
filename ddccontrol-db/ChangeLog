@@ -1,3 +1,9 @@
+2005-11-12 22:55  nboichat
+
+	* db/options.xml, db/options.xml.h, db/monitor/SAM0109.xml,
+	  po/ddccontrol-db.pot, po/fr.po, po/ru.po, po/zh_CN.po: Update
+	  Samsung SyncMaster 997MB.
+
 2005-11-12 22:12  nboichat
 
 	* po/: LINGUAS, Makefile.in.in, zh.po, zh_CN.po: Update Chinese
