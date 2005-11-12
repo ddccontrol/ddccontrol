@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-30 10:06+0100\n"
+"POT-Creation-Date: 2005-11-12 23:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Color Preset"
 msgstr ""
 
-#: db/options.xml.h:29 db/options.xml.h:119
+#: db/options.xml.h:29 db/options.xml.h:120
 #, c-format
 msgid "Normal"
 msgstr ""
@@ -281,12 +281,12 @@ msgstr ""
 msgid "Auto Size Center"
 msgstr ""
 
-#: db/options.xml.h:56 db/options.xml.h:126
+#: db/options.xml.h:56 db/options.xml.h:127
 #, c-format
 msgid "Enable"
 msgstr ""
 
-#: db/options.xml.h:57 db/options.xml.h:125
+#: db/options.xml.h:57 db/options.xml.h:126
 #, c-format
 msgid "Disable"
 msgstr ""
@@ -456,282 +456,282 @@ msgstr ""
 msgid "Image setup"
 msgstr ""
 
-#: db/options.xml.h:91
-#, c-format
-msgid "Image Lock Coarse (Clock)"
-msgstr ""
-
-#: db/options.xml.h:92
-#, c-format
-msgid "Image Lock Fine (Clock Phase)"
-msgstr ""
-
-#: db/options.xml.h:93
-#, c-format
-msgid "Corners purity"
-msgstr ""
-
-#: db/options.xml.h:94
-#, c-format
-msgid "Top left screen purity"
-msgstr ""
-
-#: db/options.xml.h:95
-#, c-format
-msgid "Top right screen purity"
-msgstr ""
-
-#: db/options.xml.h:96
-#, c-format
-msgid "Bottom left screen purity"
-msgstr ""
-
-#: db/options.xml.h:97
-#, c-format
-msgid "Bottom right screen purity"
-msgstr ""
-
-#: db/options.xml.h:98
-#, c-format
-msgid "Various"
-msgstr ""
-
-#: db/options.xml.h:99
+#: db/options.xml.h:91 db/options.xml.h:100
 #, c-format
 msgid "Focus"
 msgstr ""
 
-#: db/options.xml.h:100
+#: db/options.xml.h:92
 #, c-format
-msgid "Landing Adjust (RGB alignment)"
+msgid "Image Lock Coarse (Clock)"
+msgstr ""
+
+#: db/options.xml.h:93
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
+msgstr ""
+
+#: db/options.xml.h:94
+#, c-format
+msgid "Corners purity"
+msgstr ""
+
+#: db/options.xml.h:95
+#, c-format
+msgid "Top left screen purity"
+msgstr ""
+
+#: db/options.xml.h:96
+#, c-format
+msgid "Top right screen purity"
+msgstr ""
+
+#: db/options.xml.h:97
+#, c-format
+msgid "Bottom left screen purity"
+msgstr ""
+
+#: db/options.xml.h:98
+#, c-format
+msgid "Bottom right screen purity"
+msgstr ""
+
+#: db/options.xml.h:99
+#, c-format
+msgid "Various"
 msgstr ""
 
 #: db/options.xml.h:101
 #, c-format
-msgid "Sharpness"
+msgid "Landing Adjust (RGB alignment)"
 msgstr ""
 
 #: db/options.xml.h:102
 #, c-format
-msgid "Others"
+msgid "Sharpness"
 msgstr ""
 
 #: db/options.xml.h:103
 #, c-format
-msgid "Restore defaults"
+msgid "Others"
 msgstr ""
 
 #: db/options.xml.h:104
 #, c-format
-msgid "Restore Factory Defaults"
+msgid "Restore defaults"
 msgstr ""
 
 #: db/options.xml.h:105
 #, c-format
-msgid "Restore Brightness and Contrast"
+msgid "Restore Factory Defaults"
 msgstr ""
 
 #: db/options.xml.h:106
 #, c-format
-msgid "Restore Factory Default Geometry"
+msgid "Restore Brightness and Contrast"
 msgstr ""
 
 #: db/options.xml.h:107
 #, c-format
-msgid "Restore Factory Default Color"
+msgid "Restore Factory Default Geometry"
 msgstr ""
 
 #: db/options.xml.h:108
 #, c-format
-msgid "Restore Factory Default Position"
+msgid "Restore Factory Default Color"
 msgstr ""
 
 #: db/options.xml.h:109
 #, c-format
-msgid "Restore Factory Default Size"
+msgid "Restore Factory Default Position"
 msgstr ""
 
 #: db/options.xml.h:110
 #, c-format
-msgid "Restore Factory Default Size and Position"
+msgid "Restore Factory Default Size"
 msgstr ""
 
 #: db/options.xml.h:111
 #, c-format
-msgid "Settings"
+msgid "Restore Factory Default Size and Position"
 msgstr ""
 
 #: db/options.xml.h:112
 #, c-format
-msgid "Save Current Settings"
+msgid "Settings"
 msgstr ""
 
 #: db/options.xml.h:113
 #, c-format
-msgid "Restore Factory Settings"
+msgid "Save Current Settings"
 msgstr ""
 
 #: db/options.xml.h:114
 #, c-format
-msgid "Audio"
+msgid "Restore Factory Settings"
 msgstr ""
 
 #: db/options.xml.h:115
 #, c-format
-msgid "Audio Speaker Volume Adjust"
+msgid "Audio"
 msgstr ""
 
 #: db/options.xml.h:116
 #, c-format
+msgid "Audio Speaker Volume Adjust"
+msgstr ""
+
+#: db/options.xml.h:117
+#, c-format
 msgid "Audio Microphone Volume Adjust"
 msgstr ""
 
-#: db/options.xml.h:117 db/options.xml.h:118
+#: db/options.xml.h:118 db/options.xml.h:119
 #, c-format
 msgid "Mute"
 msgstr ""
 
-#: db/options.xml.h:120 db/options.xml.h:121
+#: db/options.xml.h:121 db/options.xml.h:122
 #, c-format
 msgid "Degauss"
 msgstr ""
 
-#: db/options.xml.h:122
+#: db/options.xml.h:123
 #, c-format
 msgid "Secondary Degauss"
 msgstr ""
 
-#: db/options.xml.h:123
+#: db/options.xml.h:124
 #, c-format
 msgid "OSD"
 msgstr ""
 
-#: db/options.xml.h:124
+#: db/options.xml.h:125
 #, c-format
 msgid "On Screen Display"
 msgstr ""
 
-#: db/options.xml.h:127
+#: db/options.xml.h:128
 #, c-format
 msgid "Enable only brightness/contrast settings"
 msgstr ""
 
-#: db/options.xml.h:128
+#: db/options.xml.h:129
 #, c-format
 msgid "OSD Orientation"
 msgstr ""
 
-#: db/options.xml.h:129
+#: db/options.xml.h:130
 #, c-format
 msgid "Landscape"
 msgstr ""
 
-#: db/options.xml.h:130
+#: db/options.xml.h:131
 #, c-format
 msgid "Portrait"
 msgstr ""
 
-#: db/options.xml.h:131
+#: db/options.xml.h:132
 #, c-format
 msgid "Language select"
 msgstr ""
 
-#: db/options.xml.h:132
+#: db/options.xml.h:133
 #, c-format
 msgid "English"
 msgstr ""
 
-#: db/options.xml.h:133
+#: db/options.xml.h:134
 #, c-format
 msgid "French"
 msgstr ""
 
-#: db/options.xml.h:134
+#: db/options.xml.h:135
 #, c-format
 msgid "German"
 msgstr ""
 
-#: db/options.xml.h:135
+#: db/options.xml.h:136
 #, c-format
 msgid "Italian"
 msgstr ""
 
-#: db/options.xml.h:136
+#: db/options.xml.h:137
 #, c-format
 msgid "Russian"
 msgstr ""
 
-#: db/options.xml.h:137
+#: db/options.xml.h:138
 #, c-format
 msgid "Spanish"
 msgstr ""
 
-#: db/options.xml.h:138
+#: db/options.xml.h:139
 #, c-format
 msgid "Swedish"
 msgstr ""
 
-#: db/options.xml.h:139
+#: db/options.xml.h:140
 #, c-format
 msgid "Chinese"
 msgstr ""
 
-#: db/options.xml.h:140
+#: db/options.xml.h:141
 #, c-format
 msgid "Dutch"
 msgstr ""
 
-#: db/options.xml.h:141
+#: db/options.xml.h:142
 #, c-format
 msgid "Input settings"
 msgstr ""
 
-#: db/options.xml.h:142
+#: db/options.xml.h:143
 #, c-format
 msgid "Input level Select"
 msgstr ""
 
-#: db/options.xml.h:143
+#: db/options.xml.h:144
 #, c-format
 msgid "Display Resolution Notifier"
 msgstr ""
 
-#: db/options.xml.h:144 db/options.xml.h:151 db/options.xml.h:155
+#: db/options.xml.h:145 db/options.xml.h:152 db/options.xml.h:156
 #, c-format
 msgid "On"
 msgstr ""
 
-#: db/options.xml.h:145 db/options.xml.h:154
+#: db/options.xml.h:146 db/options.xml.h:155
 #, c-format
 msgid "Off"
 msgstr ""
 
-#: db/options.xml.h:146
+#: db/options.xml.h:147
 #, c-format
 msgid "Input Source Select"
 msgstr ""
 
-#: db/options.xml.h:147
+#: db/options.xml.h:148
 #, c-format
 msgid "Analog"
 msgstr ""
 
-#: db/options.xml.h:148
+#: db/options.xml.h:149
 #, c-format
 msgid "Digital"
 msgstr ""
 
-#: db/options.xml.h:149 db/options.xml.h:153
+#: db/options.xml.h:150 db/options.xml.h:154
 #, c-format
 msgid "Power control"
 msgstr ""
 
-#: db/options.xml.h:150
+#: db/options.xml.h:151
 #, c-format
 msgid "DPMS Control"
 msgstr ""
 
-#: db/options.xml.h:152
+#: db/options.xml.h:153
 #, c-format
 msgid "Standby"
 msgstr ""

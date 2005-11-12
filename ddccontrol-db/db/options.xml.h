@@ -88,6 +88,7 @@ printf(_("Moire"));
 printf(_("Horizontal Moire"));
 printf(_("Vertical Moire"));
 printf(_("Image setup"));
+printf(_("Focus"));
 printf(_("Image Lock Coarse (Clock)"));
 printf(_("Image Lock Fine (Clock Phase)"));
 printf(_("Corners purity"));

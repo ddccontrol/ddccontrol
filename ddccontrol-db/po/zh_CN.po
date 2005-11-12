@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool database cvs version 2005-11-12\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-30 10:06+0100\n"
+"POT-Creation-Date: 2005-11-12 23:54+0100\n"
 "PO-Revision-Date: 2005-11-12 15:50+0800\n"
 "Last-Translator: Wu Songhai waq@21cn.com\n"
 "Language-Team: Simple Chinese <LL@li.org>\n"
@@ -145,7 +145,7 @@ msgstr "颜色曲线调整"
 msgid "Color Preset"
 msgstr "颜色预设"
 
-#: db/options.xml.h:29 db/options.xml.h:119
+#: db/options.xml.h:29 db/options.xml.h:120
 #, c-format
 msgid "Normal"
 msgstr "正常"
@@ -280,12 +280,12 @@ msgstr "自动调整"
 msgid "Auto Size Center"
 msgstr "自动大小居中"
 
-#: db/options.xml.h:56 db/options.xml.h:126
+#: db/options.xml.h:56 db/options.xml.h:127
 #, c-format
 msgid "Enable"
 msgstr "启用"
 
-#: db/options.xml.h:57 db/options.xml.h:125
+#: db/options.xml.h:57 db/options.xml.h:126
 #, c-format
 msgid "Disable"
 msgstr "禁止"
@@ -455,282 +455,282 @@ msgstr "垂直摩尔纹"
 msgid "Image setup"
 msgstr "图像设置"
 
-#: db/options.xml.h:91
-#, c-format
-msgid "Image Lock Coarse (Clock)"
-msgstr "图像锁定粗调(时钟)"
-
-#: db/options.xml.h:92
-#, c-format
-msgid "Image Lock Fine (Clock Phase)"
-msgstr "图像锁定细调(时钟相位)"
-
-#: db/options.xml.h:93
-#, c-format
-msgid "Corners purity"
-msgstr "角纯度"
-
-#: db/options.xml.h:94
-#, c-format
-msgid "Top left screen purity"
-msgstr "左上屏幕纯度"
-
-#: db/options.xml.h:95
-#, c-format
-msgid "Top right screen purity"
-msgstr "右上屏幕纯度"
-
-#: db/options.xml.h:96
-#, c-format
-msgid "Bottom left screen purity"
-msgstr "左下屏幕纯度"
-
-#: db/options.xml.h:97
-#, c-format
-msgid "Bottom right screen purity"
-msgstr "右下屏幕纯度"
-
-#: db/options.xml.h:98
-#, c-format
-msgid "Various"
-msgstr "杂项"
-
-#: db/options.xml.h:99
+#: db/options.xml.h:91 db/options.xml.h:100
 #, c-format
 msgid "Focus"
 msgstr "聚焦"
 
-#: db/options.xml.h:100
+#: db/options.xml.h:92
+#, c-format
+msgid "Image Lock Coarse (Clock)"
+msgstr "图像锁定粗调(时钟)"
+
+#: db/options.xml.h:93
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
+msgstr "图像锁定细调(时钟相位)"
+
+#: db/options.xml.h:94
+#, c-format
+msgid "Corners purity"
+msgstr "角纯度"
+
+#: db/options.xml.h:95
+#, c-format
+msgid "Top left screen purity"
+msgstr "左上屏幕纯度"
+
+#: db/options.xml.h:96
+#, c-format
+msgid "Top right screen purity"
+msgstr "右上屏幕纯度"
+
+#: db/options.xml.h:97
+#, c-format
+msgid "Bottom left screen purity"
+msgstr "左下屏幕纯度"
+
+#: db/options.xml.h:98
+#, c-format
+msgid "Bottom right screen purity"
+msgstr "右下屏幕纯度"
+
+#: db/options.xml.h:99
+#, c-format
+msgid "Various"
+msgstr "杂项"
+
+#: db/options.xml.h:101
 #, c-format
 msgid "Landing Adjust (RGB alignment)"
 msgstr "RGB 校正"
 
-#: db/options.xml.h:101
+#: db/options.xml.h:102
 #, c-format
 msgid "Sharpness"
 msgstr "清晰度"
 
-#: db/options.xml.h:102
+#: db/options.xml.h:103
 #, c-format
 msgid "Others"
 msgstr "其他"
 
-#: db/options.xml.h:103
+#: db/options.xml.h:104
 #, c-format
 msgid "Restore defaults"
 msgstr "恢复缺省值"
 
-#: db/options.xml.h:104
+#: db/options.xml.h:105
 #, c-format
 msgid "Restore Factory Defaults"
 msgstr "恢复工厂缺省值"
 
-#: db/options.xml.h:105
+#: db/options.xml.h:106
 #, c-format
 msgid "Restore Brightness and Contrast"
 msgstr "恢复亮度及对比度"
 
-#: db/options.xml.h:106
+#: db/options.xml.h:107
 #, c-format
 msgid "Restore Factory Default Geometry"
 msgstr "恢复工厂缺省几何"
 
-#: db/options.xml.h:107
+#: db/options.xml.h:108
 #, c-format
 msgid "Restore Factory Default Color"
 msgstr "恢复工厂缺省颜色"
 
-#: db/options.xml.h:108
+#: db/options.xml.h:109
 #, c-format
 msgid "Restore Factory Default Position"
 msgstr "恢复工厂缺省位置"
 
-#: db/options.xml.h:109
+#: db/options.xml.h:110
 #, c-format
 msgid "Restore Factory Default Size"
 msgstr "恢复工厂缺省大小"
 
-#: db/options.xml.h:110
+#: db/options.xml.h:111
 #, c-format
 msgid "Restore Factory Default Size and Position"
 msgstr "恢复工厂缺省大小及位置"
 
-#: db/options.xml.h:111
+#: db/options.xml.h:112
 #, c-format
 msgid "Settings"
 msgstr "设置"
 
-#: db/options.xml.h:112
+#: db/options.xml.h:113
 #, c-format
 msgid "Save Current Settings"
 msgstr "保存当前设置"
 
-#: db/options.xml.h:113
+#: db/options.xml.h:114
 #, c-format
 msgid "Restore Factory Settings"
 msgstr "恢复工厂设置"
 
-#: db/options.xml.h:114
+#: db/options.xml.h:115
 #, c-format
 msgid "Audio"
 msgstr "声音"
 
-#: db/options.xml.h:115
+#: db/options.xml.h:116
 #, c-format
 msgid "Audio Speaker Volume Adjust"
 msgstr "扬声器音量调节"
 
-#: db/options.xml.h:116
+#: db/options.xml.h:117
 #, c-format
 msgid "Audio Microphone Volume Adjust"
 msgstr "麦克风音量调节"
 
-#: db/options.xml.h:117 db/options.xml.h:118
+#: db/options.xml.h:118 db/options.xml.h:119
 #, c-format
 msgid "Mute"
 msgstr "静音"
 
-#: db/options.xml.h:120 db/options.xml.h:121
+#: db/options.xml.h:121 db/options.xml.h:122
 #, c-format
 msgid "Degauss"
 msgstr "消磁"
 
-#: db/options.xml.h:122
+#: db/options.xml.h:123
 #, c-format
 msgid "Secondary Degauss"
 msgstr "二次消磁"
 
-#: db/options.xml.h:123
+#: db/options.xml.h:124
 #, c-format
 msgid "OSD"
 msgstr "OSD"
 
-#: db/options.xml.h:124
+#: db/options.xml.h:125
 #, c-format
 msgid "On Screen Display"
 msgstr "屏幕显示"
 
-#: db/options.xml.h:127
+#: db/options.xml.h:128
 #, c-format
 msgid "Enable only brightness/contrast settings"
 msgstr "只允许亮度/对比度设置"
 
-#: db/options.xml.h:128
+#: db/options.xml.h:129
 #, c-format
 msgid "OSD Orientation"
 msgstr "OSD 方向"
 
-#: db/options.xml.h:129
+#: db/options.xml.h:130
 #, c-format
 msgid "Landscape"
 msgstr "风景"
 
-#: db/options.xml.h:130
+#: db/options.xml.h:131
 #, c-format
 msgid "Portrait"
 msgstr "肖像"
 
-#: db/options.xml.h:131
+#: db/options.xml.h:132
 #, c-format
 msgid "Language select"
 msgstr "语言选择"
 
-#: db/options.xml.h:132
+#: db/options.xml.h:133
 #, c-format
 msgid "English"
 msgstr ""
 
-#: db/options.xml.h:133
+#: db/options.xml.h:134
 #, c-format
 msgid "French"
 msgstr "Français"
 
-#: db/options.xml.h:134
+#: db/options.xml.h:135
 #, c-format
 msgid "German"
 msgstr "德语"
 
-#: db/options.xml.h:135
+#: db/options.xml.h:136
 #, c-format
 msgid "Italian"
 msgstr "意大利语"
 
-#: db/options.xml.h:136
+#: db/options.xml.h:137
 #, c-format
 msgid "Russian"
 msgstr "Русский"
 
-#: db/options.xml.h:137
+#: db/options.xml.h:138
 #, c-format
 msgid "Spanish"
 msgstr "西班牙语"
 
-#: db/options.xml.h:138
+#: db/options.xml.h:139
 #, c-format
 msgid "Swedish"
 msgstr "瑞典语"
 
-#: db/options.xml.h:139
+#: db/options.xml.h:140
 #, c-format
 msgid "Chinese"
 msgstr "中文"
 
-#: db/options.xml.h:140
+#: db/options.xml.h:141
 #, c-format
 msgid "Dutch"
 msgstr "荷兰语"
 
-#: db/options.xml.h:141
+#: db/options.xml.h:142
 #, c-format
 msgid "Input settings"
 msgstr "输入选择"
 
-#: db/options.xml.h:142
+#: db/options.xml.h:143
 #, c-format
 msgid "Input level Select"
 msgstr "输入级别选择"
 
-#: db/options.xml.h:143
+#: db/options.xml.h:144
 #, c-format
 msgid "Display Resolution Notifier"
 msgstr "显示分辨率提示"
 
-#: db/options.xml.h:144 db/options.xml.h:151 db/options.xml.h:155
+#: db/options.xml.h:145 db/options.xml.h:152 db/options.xml.h:156
 #, c-format
 msgid "On"
 msgstr "开"
 
-#: db/options.xml.h:145 db/options.xml.h:154
+#: db/options.xml.h:146 db/options.xml.h:155
 #, c-format
 msgid "Off"
 msgstr "关"
 
-#: db/options.xml.h:146
+#: db/options.xml.h:147
 #, c-format
 msgid "Input Source Select"
 msgstr "输入信号源选择"
 
-#: db/options.xml.h:147
+#: db/options.xml.h:148
 #, c-format
 msgid "Analog"
 msgstr "模拟"
 
-#: db/options.xml.h:148
+#: db/options.xml.h:149
 #, c-format
 msgid "Digital"
 msgstr "数字"
 
-#: db/options.xml.h:149 db/options.xml.h:153
+#: db/options.xml.h:150 db/options.xml.h:154
 #, c-format
 msgid "Power control"
 msgstr "电源控制"
 
-#: db/options.xml.h:150
+#: db/options.xml.h:151
 #, c-format
 msgid "DPMS Control"
 msgstr "DPMS 控制"
 
-#: db/options.xml.h:152
+#: db/options.xml.h:153
 #, c-format
 msgid "Standby"
 msgstr "待机"

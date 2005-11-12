@@ -113,6 +113,7 @@
 			<control id="vmoire" type="value" name="Vertical Moire" address="0x56"/>
 		</subgroup>
 		<subgroup name="Image setup" pattern="clock">
+			<control id="focus" type="value" name="Focus" address="0x1c"/>
 			<control id="coarse" type="value" name="Image Lock Coarse (Clock)" address="0x0e"/>
 			<control id="fine" type="value" name="Image Lock Fine (Clock Phase)" address="0x3e"/>
 		</subgroup>
