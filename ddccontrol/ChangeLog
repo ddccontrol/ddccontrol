@@ -1,3 +1,8 @@
+2005-11-12 22:12  nboichat
+
+	* po/: LINGUAS, de.po, fr.po, ru.po, zh.po, zh_CN.po: Update
+	  Chinese translation.
+
 2005-11-04 11:05  nboichat
 
 	* configure.ac, doc/supportedmonitors.xml, doc/thanks.xml,
