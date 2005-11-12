@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-30 10:13+0100\n"
+"POT-Creation-Date: 2005-11-12 23:06+0100\n"
 "PO-Revision-Date: 2005-08-12 13:32+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
@@ -97,7 +97,7 @@ msgstr "Нельзя использовать параметр -w без -r.\n"
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' не является правильным значением.\n"
 
-#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:403
+#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:391
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Не могу инициализировать библиотеку ddcci.\n"
@@ -404,7 +404,7 @@ msgstr "nvidia_open: не могу открыть /dev/mem"
 msgid "radeon_open: mmap failed"
 msgstr "nvidia_open: mmap не выполнена"
 
-#: src/gddccontrol/fspatterns.c:208
+#: src/gddccontrol/fspatterns.c:190
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -416,17 +416,17 @@ msgstr ""
 " - Белый должен быть максимально ярким.\n"
 " - Вы должны различать каждый уровень серого (в частности 0 и 12).\n"
 
-#: src/gddccontrol/fspatterns.c:224
+#: src/gddccontrol/fspatterns.c:206
 msgid "Try to make moire patterns disappear."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:228
+#: src/gddccontrol/fspatterns.c:210
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:267
+#: src/gddccontrol/fspatterns.c:249
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Неизвестное имя полноэкранного шаблона: %s"
@@ -521,16 +521,16 @@ msgstr "Сохраняю профиль..."
 msgid "Error while saving profile."
 msgstr "Ошибка при сохранении профиля."
 
-#: src/gddccontrol/main.c:179
+#: src/gddccontrol/main.c:176
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr "Монитор изменился (%d %d).\n"
 
-#: src/gddccontrol/main.c:315
+#: src/gddccontrol/main.c:308
 msgid "Probing for available monitors..."
 msgstr "Поиск доступных мониторов..."
 
-#: src/gddccontrol/main.c:354
+#: src/gddccontrol/main.c:347
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -542,70 +542,50 @@ msgstr ""
 "Если Ваша видеокарта это требует, то проверьте, что все требуемые модули "
 "ядра загружены (i2c-dev и драйвер фрейбуфера)."
 
-#: src/gddccontrol/main.c:409
+#: src/gddccontrol/main.c:397
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr ""
 "Не могу инициализировать библиотеку ddcci, посмотрите на консоли за "
 "пояснениями.\n"
 
-#: src/gddccontrol/main.c:419
+#: src/gddccontrol/main.c:407
 msgid "Monitor settings"
 msgstr "Установки монитора"
 
-#: src/gddccontrol/main.c:445
+#: src/gddccontrol/main.c:431
 msgid "Current monitor: "
 msgstr "Текущий монитор: "
 
-#: src/gddccontrol/main.c:455
+#: src/gddccontrol/main.c:441
 #, fuzzy
 msgid "Refresh monitor list"
 msgstr "Обновить все регистры"
 
-#: src/gddccontrol/main.c:472
+#: src/gddccontrol/main.c:458
 msgid "Profile manager"
 msgstr "Менеджер профилей"
 
-#: src/gddccontrol/main.c:479
+#: src/gddccontrol/main.c:465
 msgid "Save profile"
 msgstr "Сохранить профиль"
 
-#: src/gddccontrol/main.c:485
+#: src/gddccontrol/main.c:471
 msgid "Cancel profile creation"
 msgstr "Отменить создание профиля"
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh"
 msgstr "Обновить"
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh all controls"
 msgstr "Обновить все регистры"
 
-#: src/gddccontrol/main.c:530
+#: src/gddccontrol/main.c:516
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/gddccontrol/main.c:553
-#, c-format
-msgid "Xinerama supported and active\n"
-msgstr "Xinerama поддерживается и активна\n"
-
-#: src/gddccontrol/main.c:558
-#, c-format
-msgid "Display %d: %d, %d, %d, %d, %d\n"
-msgstr "Экран %d: %d, %d, %d, %d, %d\n"
-
-#: src/gddccontrol/main.c:565
-#, c-format
-msgid "Xinerama supported but inactive.\n"
-msgstr "Xinerama поддерживается, но неактивна\n"
-
-#: src/gddccontrol/main.c:571
-#, c-format
-msgid "Xinerama not supported\n"
-msgstr "Xinerama не поддерживается\n"
-
-#: src/gddccontrol/main.c:583
+#: src/gddccontrol/main.c:555
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr "Добро пожаловать в gddccontrol %s."
@@ -1140,6 +1120,18 @@ msgstr "В options.xml dbversion (%d) меньше, чем поддержива�
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
+
+#~ msgid "Xinerama supported and active\n"
+#~ msgstr "Xinerama поддерживается и активна\n"
+
+#~ msgid "Display %d: %d, %d, %d, %d, %d\n"
+#~ msgstr "Экран %d: %d, %d, %d, %d, %d\n"
+
+#~ msgid "Xinerama supported but inactive.\n"
+#~ msgstr "Xinerama поддерживается, но неактивна\n"
+
+#~ msgid "Xinerama not supported\n"
+#~ msgstr "Xinerama не поддерживается\n"
 
 #, fuzzy
 #~ msgid "Monitor Settings"

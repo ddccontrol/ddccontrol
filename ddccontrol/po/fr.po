@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-30 10:13+0100\n"
+"POT-Creation-Date: 2005-11-12 23:06+0100\n"
 "PO-Revision-Date: 2005-08-13 00:16+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -99,7 +99,7 @@ msgstr "Vous ne pouvez pas utiliser le paramètre -w sans -r.\n"
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' ne semble pas être une valeur valide\n"
 
-#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:403
+#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:391
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Impossible d'initialiser la librairie ddcci.\n"
@@ -405,7 +405,7 @@ msgstr "nvidia_open: Ne peut ouvrir /dev/mem."
 msgid "radeon_open: mmap failed"
 msgstr "nvidia_open: Erreur lors de mmap."
 
-#: src/gddccontrol/fspatterns.c:208
+#: src/gddccontrol/fspatterns.c:190
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -418,17 +418,17 @@ msgstr ""
 " - Chaque niveau de gris doit pouvoir être distingué (particulièrement les "
 "niveaux 0 et 12).\n"
 
-#: src/gddccontrol/fspatterns.c:224
+#: src/gddccontrol/fspatterns.c:206
 msgid "Try to make moire patterns disappear."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:228
+#: src/gddccontrol/fspatterns.c:210
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:267
+#: src/gddccontrol/fspatterns.c:249
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Motif plein écran inconnu : %s"
@@ -524,16 +524,16 @@ msgstr "Sauvegarde du profil..."
 msgid "Error while saving profile."
 msgstr "Erreur lors de la sauvegarde du profil."
 
-#: src/gddccontrol/main.c:179
+#: src/gddccontrol/main.c:176
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr "Moniteur changé (%d %d).\n"
 
-#: src/gddccontrol/main.c:315
+#: src/gddccontrol/main.c:308
 msgid "Probing for available monitors..."
 msgstr "Recherche des moniteurs disponibles..."
 
-#: src/gddccontrol/main.c:354
+#: src/gddccontrol/main.c:347
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -545,70 +545,50 @@ msgstr ""
 "Vérifiez que les modules du noyau sont chargés (i2c-dev, et votre driver de "
 "\"framebuffer\"), si votre carte graphique en a besoin."
 
-#: src/gddccontrol/main.c:409
+#: src/gddccontrol/main.c:397
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr ""
 "Impossible d'initialiser la librairie ddcci, voir la console pour plus de "
 "détails.\n"
 
-#: src/gddccontrol/main.c:419
+#: src/gddccontrol/main.c:407
 msgid "Monitor settings"
 msgstr "Paramètres du moniteur"
 
-#: src/gddccontrol/main.c:445
+#: src/gddccontrol/main.c:431
 msgid "Current monitor: "
 msgstr "Moniteur actuel :"
 
-#: src/gddccontrol/main.c:455
+#: src/gddccontrol/main.c:441
 #, fuzzy
 msgid "Refresh monitor list"
 msgstr "Rafraîchir tous les contrôles"
 
-#: src/gddccontrol/main.c:472
+#: src/gddccontrol/main.c:458
 msgid "Profile manager"
 msgstr "Gestion des profils"
 
-#: src/gddccontrol/main.c:479
+#: src/gddccontrol/main.c:465
 msgid "Save profile"
 msgstr "Sauver le profil"
 
-#: src/gddccontrol/main.c:485
+#: src/gddccontrol/main.c:471
 msgid "Cancel profile creation"
 msgstr "Annuler la création du profil"
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh all controls"
 msgstr "Rafraîchir tous les contrôles"
 
-#: src/gddccontrol/main.c:530
+#: src/gddccontrol/main.c:516
 msgid "Close"
 msgstr "Fermer"
 
-#: src/gddccontrol/main.c:553
-#, c-format
-msgid "Xinerama supported and active\n"
-msgstr "Xinerama supporté et actif\n"
-
-#: src/gddccontrol/main.c:558
-#, c-format
-msgid "Display %d: %d, %d, %d, %d, %d\n"
-msgstr "Ecran %d: %d, %d, %d, %d, %d\n"
-
-#: src/gddccontrol/main.c:565
-#, c-format
-msgid "Xinerama supported but inactive.\n"
-msgstr "Xinerama supporté mais inactif\n"
-
-#: src/gddccontrol/main.c:571
-#, c-format
-msgid "Xinerama not supported\n"
-msgstr "Xinerama pas supporté\n"
-
-#: src/gddccontrol/main.c:583
+#: src/gddccontrol/main.c:555
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr "Bienvenue dans gddccontrol %s."
@@ -1167,6 +1147,18 @@ msgstr ""
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Veuillez mettre à jour la base de données ddccontrol.\n"
+
+#~ msgid "Xinerama supported and active\n"
+#~ msgstr "Xinerama supporté et actif\n"
+
+#~ msgid "Display %d: %d, %d, %d, %d, %d\n"
+#~ msgstr "Ecran %d: %d, %d, %d, %d, %d\n"
+
+#~ msgid "Xinerama supported but inactive.\n"
+#~ msgstr "Xinerama supporté mais inactif\n"
+
+#~ msgid "Xinerama not supported\n"
+#~ msgstr "Xinerama pas supporté\n"
 
 #, fuzzy
 #~ msgid "Monitor Settings"
