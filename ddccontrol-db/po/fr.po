@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-11-12 23:54+0100\n"
-"PO-Revision-Date: 2005-08-11 20:28+0100\n"
+"PO-Revision-Date: 2005-11-14 18:30+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,24 +63,24 @@ msgid "Custom"
 msgstr "Personnalisé"
 
 #: db/options.xml.h:12
-#, fuzzy, c-format
+#, c-format
 msgid "Super Bright Mode"
-msgstr "Mode \"Magic Bright\""
+msgstr "Mode \"Super Bright\""
 
 #: db/options.xml.h:13
-#, fuzzy, c-format
+#, c-format
 msgid "One"
-msgstr "Allumé"
+msgstr "Un"
 
 #: db/options.xml.h:14
 #, c-format
 msgid "Two"
-msgstr ""
+msgstr "Deux"
 
 #: db/options.xml.h:15
 #, c-format
 msgid "Three"
-msgstr ""
+msgstr "Trois"
 
 #: db/options.xml.h:16
 #, c-format
@@ -228,14 +228,14 @@ msgid "User 3"
 msgstr "Utilisateur 3"
 
 #: db/options.xml.h:45
-#, fuzzy, c-format
+#, c-format
 msgid "User 4"
-msgstr "Utilisateur 1"
+msgstr "Utilisateur 4"
 
 #: db/options.xml.h:46
-#, fuzzy, c-format
+#, c-format
 msgid "Color temperature"
-msgstr "Paramètres de couleur prédéfinis"
+msgstr "Température de couleur"
 
 #: db/options.xml.h:47
 #, c-format
@@ -339,9 +339,9 @@ msgid "Vertical Pincushion Balance"
 msgstr "Balance du coussin horizontal"
 
 #: db/options.xml.h:67
-#, fuzzy, c-format
+#, c-format
 msgid "Center Pincushion"
-msgstr "Coussin"
+msgstr "Coussin central"
 
 #: db/options.xml.h:68
 #, c-format
@@ -459,7 +459,7 @@ msgstr "Moiré vertical"
 #: db/options.xml.h:90
 #, c-format
 msgid "Image setup"
-msgstr ""
+msgstr "Paramètre de l'image"
 
 #: db/options.xml.h:91 db/options.xml.h:100
 #, c-format
@@ -742,15 +742,3 @@ msgstr "Contrôle DPMS"
 #, c-format
 msgid "Standby"
 msgstr "En veille"
-
-#~ msgid "Automatically adjust Size and Position"
-#~ msgstr "Centrage et redimensionnement automatique"
-
-#~ msgid "Rotate OSD Display"
-#~ msgstr "Faire une rotation de l'affichage à l'écran (OSD)"
-
-#~ msgid "No"
-#~ msgstr "Non"
-
-#~ msgid "Yes"
-#~ msgstr "Oui"

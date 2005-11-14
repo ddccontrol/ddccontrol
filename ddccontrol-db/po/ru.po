@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2005-11-12 23:54+0100\n"
-"PO-Revision-Date: 2005-08-12 13:32+0300\n"
+"PO-Revision-Date: 2005-11-14 11:32+0300\n"
 "Last-Translator: SergeiEpiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -61,24 +61,24 @@ msgid "Custom"
 msgstr "Своё"
 
 #: db/options.xml.h:12
-#, fuzzy, c-format
+#, c-format
 msgid "Super Bright Mode"
-msgstr "Режим \"Bright Mode\""
+msgstr "Режим \"Super Bright Mode\""
 
 #: db/options.xml.h:13
-#, fuzzy, c-format
+#, c-format
 msgid "One"
-msgstr "Вкл"
+msgstr "Один"
 
 #: db/options.xml.h:14
 #, c-format
 msgid "Two"
-msgstr ""
+msgstr "Два"
 
 #: db/options.xml.h:15
 #, c-format
 msgid "Three"
-msgstr ""
+msgstr "Три"
 
 #: db/options.xml.h:16
 #, c-format
@@ -226,14 +226,14 @@ msgid "User 3"
 msgstr "Своя 3"
 
 #: db/options.xml.h:45
-#, fuzzy, c-format
+#, c-format
 msgid "User 4"
-msgstr "Своя 1"
+msgstr "Своя 4"
 
 #: db/options.xml.h:46
-#, fuzzy, c-format
+#, c-format
 msgid "Color temperature"
-msgstr "Предустановки цвета"
+msgstr "Цветовая температура"
 
 #: db/options.xml.h:47
 #, c-format
@@ -336,9 +336,9 @@ msgid "Vertical Pincushion Balance"
 msgstr "Баланс вертикальной подушки"
 
 #: db/options.xml.h:67
-#, fuzzy, c-format
+#, c-format
 msgid "Center Pincushion"
-msgstr "Подушка"
+msgstr "Подушка в центре"
 
 #: db/options.xml.h:68
 #, c-format
@@ -453,7 +453,7 @@ msgstr "Вертикальный муар"
 #: db/options.xml.h:90
 #, c-format
 msgid "Image setup"
-msgstr ""
+msgstr "Настройка изображения"
 
 #: db/options.xml.h:91 db/options.xml.h:100
 #, c-format
