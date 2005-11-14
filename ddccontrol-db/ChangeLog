@@ -1,3 +1,9 @@
+2005-11-14 18:53  nboichat
+
+	* CheckList: Update Checklist.
+
+2005-11-14 17:59  tag Release-20051114
+
 2005-11-14 17:59  nboichat
 
 	* NEWS, configure.ac, db/Makefile.in, db/options.xml,

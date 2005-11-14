@@ -1,3 +1,9 @@
+2005-11-14 18:51  nboichat
+
+	* CheckList: Update CheckList
+
+2005-11-14 18:48  tag Release-0_3
+
 2005-11-14 18:48  nboichat
 
 	* CheckList, Makefile.am, NEWS, configure.ac, doc/main.xml,
