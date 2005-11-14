@@ -1,3 +1,17 @@
+Version 20051114:
+ - Add support for new monitors:
+   + Dell 1704FPT (Digital).
+   + Samsung SyncMaster 171P.
+   + Samsung SyncMaster 174T.
+   + Samsung SyncMaster 193P Plus (Thanks to Emil Florea).
+   + Samsung SyncMaster 710T.
+   + Samsung SyncMaster 710TM (Thanks to Fabien Salvi).
+   + Samsung SyncMaster 930BF (Thanks to Michael Vogt).
+   + Samsung SyncMaster 997MB.
+   + Mitsubishi Diamond Plus 92.
+   + Mitsubishi Diamond Pro 2070sb.
+ - Add Chinese translation (Thanks to "waq_cn").
+
 Version 20050813:
  - Add support for Samsung SyncMaster 912N and 712N.
  - Add basic fullscreen patterns support.
