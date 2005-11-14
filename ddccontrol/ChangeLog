@@ -1,3 +1,10 @@
+2005-11-14 18:48  nboichat
+
+	* CheckList, Makefile.am, NEWS, configure.ac, doc/main.xml,
+	  po/Makevars, po/ddccontrol.pot, po/de.po, po/fr.po, po/ru.po,
+	  po/zh_CN.po, src/gddccontrol/Makefile.am,
+	  src/gnome-ddcc-applet/Makefile.am: Prepare release 0.3
+
 2005-11-14 17:46  nboichat
 
 	* doc/supportedmonitors.xml, doc/usage.xml, src/ddcpci/intel740.c,
