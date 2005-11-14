@@ -85,7 +85,7 @@ static int init_i2c_bus(struct i2c_algo_bit_data* algo)
 	intel740_setscl(algo->data, 1);
 	usleep(200000);
 	
-	test_bus(algo, N_("i740"));
+	test_bus(algo, "i740");
 	
 	return 1;
 }
@@ -100,13 +100,13 @@ struct card* intel740_open(struct pci_dev *dev)
 	
 	struct card* intel740_card = malloc(sizeof(struct card));
 	if (!intel740_card) {
-		fprintf(stderr, _("%s: Malloc error.\n"), N_("intel740_open"));
+		fprintf(stderr, _("%s: Malloc error.\n"), "intel740_open");
 		exit(-1);
 	}
 	memset(intel740_card, 0, sizeof(struct card));
 	
 	if (ioperm(0x3d6, 2, 1)) {
-		perror(_("%s: ioperm failed"), N_("intel740_open"));
+		perror(_("%s: ioperm failed"), "intel740_open");
 		intel740_close(intel740_card);
 		return 0;
 	}
@@ -118,7 +118,7 @@ struct card* intel740_open(struct pci_dev *dev)
 		init_i2c_bus(&intel740_card->i2c_busses[0]);
 		break;
 	default:
-		fprintf(stderr, _("%s: Error: unknown card type (%#x)\n"), N_("intel740_open"), dev->device_id);
+		fprintf(stderr, _("%s: Error: unknown card type (%#x)\n"), "intel740_open", dev->device_id);
 		intel740_close(intel740_card);
 		return 0;
 	}

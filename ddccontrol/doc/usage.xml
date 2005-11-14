@@ -1,14 +1,23 @@
 <chapter id="usage">
 <title>Usage</title>
 <sect1>
-<title>Gnome GUI</title>
+<title>GTK+ GUI</title>
 <para>If GTK+&gt;=2.4 is installed on your computer, the configure process will
 detect it, and build the GTK+ application.</para>
-<para>The Gnome GUI is designed to be user-friendly, so it should be easy to
+<para>The GTK+ GUI is designed to be user-friendly, so it should be easy to
 use it. To launch this GUI, simply type:</para>
 <screen format="linespecific">
 # gddccontrol
 </screen>
+</sect1>
+<sect1>
+   <title>Gnome panel applet</title>
+   <para>If Gnome&gt;=2.10 is installed on your computer, the configure process will
+      detect it, and build the Gnome panel applet.</para>
+   <para>The Gnome panel applet is useful to switch between different monitor profiles
+      created with the GTK+ GUI. To add it to your Gnome Panel, simply right-click on
+      the panel, choose <quote>Add to Panel</quote>, and select
+      <quote>Monitor Profile Switcher</quote>.</para>
 </sect1>
 <sect1>
 <title>Command line tool</title>

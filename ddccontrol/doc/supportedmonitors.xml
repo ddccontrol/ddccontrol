@@ -2,6 +2,14 @@
 <title>Supported monitors</title>
 <para>The following monitors are supported by DDCcontrol:</para>
 <sect3>
+<title>Dell</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Dell 1704FPT (DVI input)
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
 <title>Fujitsu Siemens</title>
 <itemizedlist mark='bullet'>
 <listitem>
@@ -11,7 +19,7 @@ P17-2
 P19-2
 </listitem>
 <listitem>
-P20-2
+P20-2 (VGA and DVI inputs)
 </listitem>
 </itemizedlist>
 </sect3>
@@ -45,6 +53,9 @@ Multisync 2080UX+ (VGA and DVI inputs)
 <title>Samsung</title>
 <itemizedlist mark='bullet'>
 <listitem>
+SyncMaster 171P (VGA input only)
+</listitem>
+<listitem>
 SyncMaster 173P (VGA and DVI inputs)
 </listitem>
 <listitem>
@@ -60,7 +71,10 @@ SyncMaster 174T (at least DVI input)
 SyncMaster 193P (VGA and DVI inputs)
 </listitem>
 <listitem>
-SyncMaster 193P Plus (at least VGA input)
+SyncMaster 193P Plus (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 710T
 </listitem>
 <listitem>
 SyncMaster 710TM

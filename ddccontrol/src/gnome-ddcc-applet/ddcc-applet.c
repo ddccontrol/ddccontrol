@@ -386,7 +386,7 @@ ddcc_applet_init (DdccApplet* applet)
 	TRY_INIT (!fill_monitor_combo (applet),
 		ERR_FILL_MONITOR_COMBO,
 		_("No monitor configuration found."
-		 " Plase run gddccontrol first"))
+		 " Please run gddccontrol first"))
 	
 	TRY_INIT (ddcci_open (applet->monitor, applet->monitor_name , 0) < 0,
 		ERR_DDCCI_OPEN,
