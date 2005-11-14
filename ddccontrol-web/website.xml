@@ -33,7 +33,6 @@ documentation</olink>.</para>
 					<listitem>Add a new Gnome Panel Applet to switch between monitor profiles (Thanks to Christian Schilling).</listitem>
 					<listitem>Speed up gddccontrol loading by caching monitor list.</listitem>
 					<listitem>Add new fullscreen patterns.</listitem>
-					<listitem>New database version, please upgrade ddccontrol-db.</listitem>
 				</itemizedlist>
 			</para>
 		</listitem>
