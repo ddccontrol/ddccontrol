@@ -1,6 +1,8 @@
 localedir = $(datadir)/locale
 INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 
+EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png
+
 LDADD = ../lib/libddccontrol.la
 
 bin_PROGRAMS = gddccontrol

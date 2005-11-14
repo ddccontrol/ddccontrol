@@ -4,9 +4,10 @@ INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
 
 DDCC_LDADD = ../lib/libddccontrol.la
 
+EXTRA_DIST = GNOME_ddcc-applet.server.in.in GNOME_ddcc-applet.xml
 
 pkglib_PROGRAMS = ddcc-applet
-ddcc_applet_SOURCES = ddcc-applet.c
+ddcc_applet_SOURCES = ddcc-applet.c ddcc-applet.h
 
 ddcc_applet_LDADD = $(GNOME_LIBS) $(DDCC_LDADD)
 AM_CFLAGS = $(GNOME_CFLAGS) '-DPKGDATADIR="$(pkgdatadir)"'

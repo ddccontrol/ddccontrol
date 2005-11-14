@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Oleg I. Vdovikin and Nicolas Boichat
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-29 12:47+0200\n"
+"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2005-11-14 19:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr ""
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:403
+#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:391
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr ""
@@ -234,13 +234,11 @@ msgid ""
 "Saving settings...\n"
 msgstr ""
 
-#. arbitration or no acknowledge
 #: src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr ""
 
-#. read timed out
 #: src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
@@ -251,19 +249,10 @@ msgstr ""
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr ""
 
-#: src/ddcpci/intel740.c:88
-msgid "i740"
-msgstr ""
-
 #: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
 #: src/ddcpci/radeon.c:153
 #, c-format
 msgid "%s: Malloc error.\n"
-msgstr ""
-
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel740.c:109
-#: src/ddcpci/intel740.c:121
-msgid "intel740_open"
 msgstr ""
 
 #: src/ddcpci/intel740.c:109
@@ -366,7 +355,7 @@ msgstr ""
 msgid "radeon_open: mmap failed"
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:208
+#: src/gddccontrol/fspatterns.c:190
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -374,27 +363,19 @@ msgid ""
 " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:224
+#: src/gddccontrol/fspatterns.c:206
 msgid "Try to make moire patterns disappear."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:228
+#: src/gddccontrol/fspatterns.c:210
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:267
+#: src/gddccontrol/fspatterns.c:249
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
-msgstr ""
-
-#: src/gddccontrol/gddccontrol.desktop.in.h:1
-msgid "Change monitor brightness, contrast etc."
-msgstr ""
-
-#: src/gddccontrol/gddccontrol.desktop.in.h:2
-msgid "Monitor Settings"
 msgstr ""
 
 #: src/gddccontrol/gprofile.c:53
@@ -477,7 +458,6 @@ msgstr ""
 msgid "Profile name:"
 msgstr ""
 
-#. Save
 #: src/gddccontrol/gprofile.c:493
 msgid "Saving profile..."
 msgstr ""
@@ -486,16 +466,16 @@ msgstr ""
 msgid "Error while saving profile."
 msgstr ""
 
-#: src/gddccontrol/main.c:179
+#: src/gddccontrol/main.c:176
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:315
+#: src/gddccontrol/main.c:308
 msgid "Probing for available monitors..."
 msgstr ""
 
-#: src/gddccontrol/main.c:354
+#: src/gddccontrol/main.c:347
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -503,71 +483,47 @@ msgid ""
 "are loaded (i2c-dev, and your framebuffer driver)."
 msgstr ""
 
-#: src/gddccontrol/main.c:409
+#: src/gddccontrol/main.c:397
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:419
+#: src/gddccontrol/main.c:407
 msgid "Monitor settings"
 msgstr ""
 
-#: src/gddccontrol/main.c:445
+#: src/gddccontrol/main.c:431
 msgid "Current monitor: "
 msgstr ""
 
-#: src/gddccontrol/main.c:455
+#: src/gddccontrol/main.c:441
 msgid "Refresh monitor list"
 msgstr ""
 
-#: src/gddccontrol/main.c:472
+#: src/gddccontrol/main.c:458
 msgid "Profile manager"
 msgstr ""
 
-#: src/gddccontrol/main.c:479
+#: src/gddccontrol/main.c:465
 msgid "Save profile"
 msgstr ""
 
-#: src/gddccontrol/main.c:485
+#: src/gddccontrol/main.c:471
 msgid "Cancel profile creation"
 msgstr ""
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh"
 msgstr ""
 
-#: src/gddccontrol/main.c:523
+#: src/gddccontrol/main.c:509
 msgid "Refresh all controls"
 msgstr ""
 
-#: src/gddccontrol/main.c:530
+#: src/gddccontrol/main.c:516
 msgid "Close"
 msgstr ""
 
-#: src/gddccontrol/main.c:553
-#, c-format
-msgid "Xinerama supported and active\n"
-msgstr ""
-
-#: src/gddccontrol/main.c:558
-#, c-format
-msgid "Display %d: %d, %d, %d, %d, %d\n"
-msgstr ""
-
-#: src/gddccontrol/main.c:565
-#, c-format
-msgid "Xinerama supported but inactive.\n"
-msgstr ""
-
-#: src/gddccontrol/main.c:571
-#, c-format
-msgid "Xinerama not supported\n"
-msgstr ""
-
-#. moninfo = gtk_label_new ();
-#. gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
-#.
-#. gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
-#: src/gddccontrol/main.c:583
+#: src/gddccontrol/main.c:555
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr ""
@@ -629,25 +585,8 @@ msgstr ""
 msgid "Loading profiles..."
 msgstr ""
 
-#: src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:1
 #: src/gnome-ddcc-applet/ddcc-applet.c:182
 msgid "Monitor Profile Switcher"
-msgstr ""
-
-#: src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:2
-msgid "Quickly switch monitor profiles created with gddccontrol"
-msgstr ""
-
-#: src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:1
-msgid "_About..."
-msgstr ""
-
-#: src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:2
-msgid "_Properties..."
-msgstr ""
-
-#: src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:3
-msgid "_Run gddccontrol..."
 msgstr ""
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:187
@@ -662,7 +601,7 @@ msgid "Unable to initialize ddcci library"
 msgstr ""
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:388
-msgid "No monitor configuration found. Plase run gddccontrol first"
+msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr ""
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:393
@@ -673,7 +612,6 @@ msgstr ""
 msgid "Can't find any profiles"
 msgstr ""
 
-#. only reached, if init was not finished
 #: src/gnome-ddcc-applet/ddcc-applet.c:414
 msgid "error"
 msgstr ""

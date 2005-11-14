@@ -1,7 +1,7 @@
 Release Check List (Nicolas Boichat)
 
 - in po/:
-  - make gen-potfiles && make update-po
+  - make update-po
   - poedit fr.po
 
 - cvs commit
