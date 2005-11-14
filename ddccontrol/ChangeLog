@@ -1,3 +1,13 @@
+2005-11-14 17:46  nboichat
+
+	* doc/supportedmonitors.xml, doc/usage.xml, src/ddcpci/intel740.c,
+	  src/gnome-ddcc-applet/ddcc-applet.c: Documentation update, fix
+	  type in Gnome applet.
+
+2005-11-14 17:46  nboichat
+
+	* po/: de.po, fr.po, ru.po, zh_CN.po: Update translations.
+
 2005-11-12 22:12  nboichat
 
 	* po/: LINGUAS, de.po, fr.po, ru.po, zh.po, zh_CN.po: Update

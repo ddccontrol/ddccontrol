@@ -1,3 +1,7 @@
+2005-11-14 17:46  nboichat
+
+	* po/: fr.po, ru.po: Update Russian and French translations.
+
 2005-11-12 22:55  nboichat
 
 	* db/options.xml, db/options.xml.h, db/monitor/SAM0109.xml,
@@ -316,8 +320,10 @@
 
 2004-08-31 17:03  nboichat
 
-	* .cvsignore, db/.cvsignore: Remove autom4te cache and add
-	  cvsignore files
+	* .cvsignore, autom4te.cache/output.0, autom4te.cache/output.1,
+	  autom4te.cache/requests, autom4te.cache/traces.0,
+	  autom4te.cache/traces.1, db/.cvsignore: Remove autom4te cache and
+	  add cvsignore files
 
 2004-08-31 16:55  tag start
 
@@ -325,15 +331,19 @@
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
-	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial import
 
 2004-08-31 16:55  nboichat
 
 	* Makefile.am, configure.ac, Makefile.in, aclocal.m4, install-sh,
 	  mkinstalldirs, INSTALL, missing, AUTHORS, COPYING, NEWS, README,
-	  configure, db/Makefile.am, db/Makefile.in, db/options.xml,
-	  db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
+	  configure, autom4te.cache/requests, autom4te.cache/output.0,
+	  autom4te.cache/traces.0, autom4te.cache/output.1,
+	  autom4te.cache/traces.1, db/Makefile.am, db/Makefile.in,
+	  db/options.xml, db/monitor/MEL4511.xml, db/monitor/MEL4513.xml,
 	  db/monitor/SAM1234.xml: Initial revision
 
