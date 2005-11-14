@@ -23,11 +23,11 @@ Release Check List (Nicolas Boichat)
 - ./commit.sh "Prepare release 0.xx"
 - cvs tag Release-0_xx
 
-- make dist
+- make dist-bzip2
 - ftp upload.sourceforge.net:
   - cd incoming
   - bin
-  - put ddccontrol-0.x.tar.gz
+  - put ddccontrol-0.x.tar.bz2
 - add file to SF
 
 - update website :
