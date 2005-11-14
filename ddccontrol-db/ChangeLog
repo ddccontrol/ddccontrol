@@ -1,3 +1,8 @@
+2005-11-14 17:59  nboichat
+
+	* NEWS, configure.ac, db/Makefile.in, db/options.xml,
+	  db/options.xml.in: Prepare release 20051114
+
 2005-11-14 17:46  nboichat
 
 	* po/: fr.po, ru.po: Update Russian and French translations.
