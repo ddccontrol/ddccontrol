@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE webpage PUBLIC "-//Norman Walsh//DTD Website V2.6//EN"
-       "http://docbook.sourceforge.net/release/website/2.6/schema/dtd/website.dtd">
+       "http://docbook.sourceforge.net/release/website/2.6.0/schema/dtd/website.dtd">
 <webpage id="home">
 
   <config param="desc" value="DDCcontrol Home Page"/>
