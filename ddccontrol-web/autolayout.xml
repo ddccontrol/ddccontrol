@@ -7,8 +7,8 @@
 <tocentry page="doc.xml" id="doc" filename="doc/index.html">
 <title>Documentation</title>
 <summary/>
-<tocentry id="doccurrent" href="/doc/0.2">
-<title>Current release (0.2)</title>
+<tocentry id="doccurrent" href="/doc/0.3">
+<title>Current release (0.3)</title>
 </tocentry>
 <tocentry id="doclatest" href="/doc/latest">
 <title>Development</title>
@@ -18,7 +18,7 @@
 <title>Download</title>
 <summary/>
 <tocentry id="downcurrent" href="http://sourceforge.net/project/showfiles.php?group_id=117933">
-<title>Current release (0.2)</title>
+<title>Current release (0.3)</title>
 </tocentry>
 <tocentry id="downlatest" href="http://sourceforge.net/cvs/?group_id=117933">
 <title>CVS</title>

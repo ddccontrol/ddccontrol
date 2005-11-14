@@ -22,6 +22,22 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+	<varlistentry><term>11 Nov 2005: Version 0.3 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>Use GTK/GDK high-level API to determine current screen (instead of Xinerama API).</listitem>
+					<listitem>Add Chinese translation (Thanks to "waq_cn").</listitem>
+					<listitem>Add Gnome icon, thanks to 'lekma' on ddccontrol-users.</listitem>
+					<listitem>Add a new Gnome Panel Applet to switch between monitor profiles (Thanks to Christian Schilling).</listitem>
+					<listitem>Speed up gddccontrol loading by caching monitor list.</listitem>
+					<listitem>Add new fullscreen patterns.</listitem>
+					<listitem>New database version, please upgrade ddccontrol-db.</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
 	<varlistentry><term>11 Nov 2005: Database version 20051114 released.</term>
 		<listitem>
 			<para>
