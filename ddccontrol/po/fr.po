@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:06+0100\n"
-"PO-Revision-Date: 2005-08-13 00:16+0100\n"
+"POT-Creation-Date: 2005-11-14 18:45+0100\n"
+"PO-Revision-Date: 2005-11-14 18:43+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -288,20 +288,11 @@ msgstr "i2c-algo-bit.o: readbytes: i2c_inb: temps dépassé.\n"
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: temps dépassé au moment du \"ack\".\n"
 
-#: src/ddcpci/intel740.c:88
-msgid "i740"
-msgstr ""
-
 #: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
 #: src/ddcpci/radeon.c:153
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: Erreur lors de malloc.\n"
-
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel740.c:109
-#: src/ddcpci/intel740.c:121
-msgid "intel740_open"
-msgstr ""
 
 #: src/ddcpci/intel740.c:109
 #, c-format
@@ -391,19 +382,17 @@ msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: Erreur lors de mmap."
 
 #: src/ddcpci/radeon.c:117
-#, fuzzy, c-format
+#, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
-msgstr "nvidia.c:init_i2c_bus: Erreur lors de malloc."
+msgstr "radeon.c:init_i2c_bus: Erreur lors de malloc."
 
 #: src/ddcpci/radeon.c:165
-#, fuzzy
 msgid "radeon_open: cannot open /dev/mem"
-msgstr "nvidia_open: Ne peut ouvrir /dev/mem."
+msgstr "radeon_open: Ne peut ouvrir /dev/mem."
 
 #: src/ddcpci/radeon.c:174
-#, fuzzy
 msgid "radeon_open: mmap failed"
-msgstr "nvidia_open: Erreur lors de mmap."
+msgstr "radeon_open: Erreur lors de mmap."
 
 #: src/gddccontrol/fspatterns.c:190
 msgid ""
@@ -420,13 +409,15 @@ msgstr ""
 
 #: src/gddccontrol/fspatterns.c:206
 msgid "Try to make moire patterns disappear."
-msgstr ""
+msgstr "Essayez de faire disparaître les artefacts dus au moiré."
 
 #: src/gddccontrol/fspatterns.c:210
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
+"Ajustez l'horloge pour faire disparaître les bandes verticales.\n"
+"Ajustez la phase d'horloge pour diminuer les mouvements sur l'écran."
 
 #: src/gddccontrol/fspatterns.c:249
 #, c-format
@@ -560,9 +551,8 @@ msgid "Current monitor: "
 msgstr "Moniteur actuel :"
 
 #: src/gddccontrol/main.c:441
-#, fuzzy
 msgid "Refresh monitor list"
-msgstr "Rafraîchir tous les contrôles"
+msgstr "Rafraîchir la liste de moniteurs"
 
 #: src/gddccontrol/main.c:458
 msgid "Profile manager"
@@ -615,7 +605,6 @@ msgid "Section"
 msgstr "Section"
 
 #: src/gddccontrol/notebook.c:568
-#, fuzzy
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -630,7 +619,11 @@ msgstr ""
 "\n"
 "Cela arrive souvent lorsqu'on connecte le câble VGA/DVI sur la mauvaise "
 "prise d'un moniteur ne supportant le protocole DDC/CI que sur une des "
-"entrées."
+"entrées.\n"
+"\n"
+"Si le moniteur a 2 entrées, veuillez essayer de connecter le cable sur "
+"l'autre entrée, puis cliquer sur le bouton Rafraîchir à côté de la liste des "
+"moniteurs."
 
 #: src/gddccontrol/notebook.c:579
 #, c-format
@@ -643,6 +636,9 @@ msgid ""
 "Maybe this monitor was disconnected, please click on the refresh button near "
 "the monitor list."
 msgstr ""
+"Erreur lors de l'ouverture du périphérique du moniteur.\n"
+"Le moniteur a peut-être été déconnecté, veuillez cliquer sur le bouton "
+"rafraîchir."
 
 #: src/gddccontrol/notebook.c:602
 msgid "Please click on a group name."
@@ -659,7 +655,7 @@ msgstr "Chargement des profils..."
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:182
 msgid "Monitor Profile Switcher"
-msgstr ""
+msgstr "Manager de profils d'affichage"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:187
 msgid ""
@@ -667,37 +663,39 @@ msgid ""
 "Based on libddccontrol and part of the ddccontrol project.\n"
 "(http://ddccontrol.sourceforge.net)"
 msgstr ""
+"Un applet pour changer rapidement de profiles de moniteurs.\n"
+"Basé sur libddccontrol et inclu dans le projet ddccontrol.\n"
+"(http://ddccontrol.sourceforge.net)"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:384
-#, fuzzy
 msgid "Unable to initialize ddcci library"
-msgstr "Impossible d'initialiser la librairie ddcci.\n"
+msgstr "Impossible d'initialiser la librairie ddcci"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:388
-msgid "No monitor configuration found. Plase run gddccontrol first"
+msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr ""
+"Aucune configuration de moniteurs trouvée, veuillez lancer gddccontrol "
+"d'abord."
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:393
-#, fuzzy
 msgid "An error occured while opening the monitor device"
-msgstr "Ouverture du périphérique du moniteur (%s)..."
+msgstr "Erreur lors de l'ouverture du périphérique du moniteur."
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:398
-#, fuzzy
 msgid "Can't find any profiles"
-msgstr "Ne peut trouver la propriété name."
+msgstr "Aucun profil trouvé."
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:414
 msgid "error"
-msgstr ""
+msgstr "erreur"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:438
 msgid "Monitor:"
-msgstr ""
+msgstr "Moniteur :"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:441
 msgid "Monitor Profile Switcher Properties"
-msgstr ""
+msgstr "Propriétés du manager de profils d'affichage."
 
 #: src/lib/conf.c:69 src/lib/conf.c:263 src/lib/conf.c:313 src/lib/ddcci.c:975
 msgid "Cannot create filename (buffer too small)\n"
@@ -720,29 +718,27 @@ msgid "profile of the wrong type, root node %s != profile"
 msgstr "profil de mauvais type, élement racine %s != profile"
 
 #: src/lib/conf.c:112
-#, fuzzy
 msgid "Can't find ddccontrolversion property."
-msgstr "Ne peut trouver la propriété version."
+msgstr "Ne peut trouver la propriété ddccontrolversion."
 
 #: src/lib/conf.c:114
 #, c-format
 msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
 msgstr ""
+"ddccontrol a été mis à jour depuis que la liste des moniteurs a été sauvé (%"
+"s contre %s).\n"
 
 #: src/lib/conf.c:131
-#, fuzzy
 msgid "Can't find filename property."
-msgstr "Ne peut trouver la propriété name."
+msgstr "Ne peut trouver la propriété filename."
 
 #: src/lib/conf.c:137
-#, fuzzy
 msgid "Can't find supported property."
-msgstr "Ne peut trouver la propriété pnpid."
+msgstr "Ne peut trouver la propriété supported."
 
 #: src/lib/conf.c:140
-#, fuzzy
 msgid "Can't convert supported property to int."
-msgstr "Ne peut convertir le délai en entier."
+msgstr "Ne peut convertir la propriété supported en entier."
 
 #: src/lib/conf.c:145 src/lib/conf.c:390 src/lib/monitor_db.c:181
 #: src/lib/monitor_db.c:276 src/lib/monitor_db.c:442
@@ -750,14 +746,12 @@ msgid "Can't find name property."
 msgstr "Ne peut trouver la propriété name."
 
 #: src/lib/conf.c:151
-#, fuzzy
 msgid "Can't find digital property."
-msgstr "Ne peut trouver la propriété init."
+msgstr "Ne peut trouver la propriété digital."
 
 #: src/lib/conf.c:154
-#, fuzzy
 msgid "Can't convert digital property to int."
-msgstr "Ne peut convertir la valeur en entier."
+msgstr "Ne peut convertir la propriété digital en entier."
 
 #: src/lib/conf.c:180 src/lib/conf.c:442
 msgid "Cannot create the xml writer\n"
@@ -1148,135 +1142,8 @@ msgstr ""
 msgid "Please update ddccontrol database.\n"
 msgstr "Veuillez mettre à jour la base de données ddccontrol.\n"
 
-#~ msgid "Xinerama supported and active\n"
-#~ msgstr "Xinerama supporté et actif\n"
+#~ msgid "i740"
+#~ msgstr "i740"
 
-#~ msgid "Display %d: %d, %d, %d, %d, %d\n"
-#~ msgstr "Ecran %d: %d, %d, %d, %d, %d\n"
-
-#~ msgid "Xinerama supported but inactive.\n"
-#~ msgstr "Xinerama supporté mais inactif\n"
-
-#~ msgid "Xinerama not supported\n"
-#~ msgstr "Xinerama pas supporté\n"
-
-#, fuzzy
-#~ msgid "Monitor Settings"
-#~ msgstr "Paramètres du moniteur"
-
-#, fuzzy
-#~ msgid "_Run gddccontrol..."
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "intel810.c:init_i2c_bus"
-#~ msgstr "i810_open: Erreur lors de malloc.\n"
-
-#, fuzzy
-#~ msgid "i810_open"
-#~ msgstr "nvidia_open: Erreur lors de mmap.\n"
-
-#, fuzzy
-#~ msgid "nvidia_open"
-#~ msgstr "nvidia_open: Erreur lors de mmap.\n"
-
-#, fuzzy
-#~ msgid "radeon_open"
-#~ msgstr "nvidia_open: Erreur lors de mmap."
-
-#, fuzzy
-#~ msgid "ddc_control"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "%s%s.ddccontrol/monitorlist"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "monitorlist"
-#~ msgstr "Rafraîchir tous les contrôles"
-
-#, fuzzy
-#~ msgid "ddccontrolversion"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "filename"
-#~ msgstr "Nom du profile :"
-
-#, fuzzy
-#~ msgid "digital"
-#~ msgstr "digitale"
-
-#, fuzzy
-#~ msgid "%s%s.ddccontrol/profiles/%s.xml"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "%s%s.ddccontrol/profiles/"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "profile"
-#~ msgstr "Sauver le profil"
-
-#, fuzzy
-#~ msgid "control"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "address"
-#~ msgstr "Adresse"
-
-#, fuzzy
-#~ msgid "value"
-#~ msgstr "Valeur"
-
-#, fuzzy
-#~ msgid "%s%s.ddccontrol"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "/profiles"
-#~ msgstr "Sauver le profil"
-
-#, fuzzy
-#~ msgid "ddccontrol-db"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "refresh"
-#~ msgstr "Rafraîchir"
-
-#, fuzzy
-#~ msgid "%s/monitor/%s.xml"
-#~ msgstr "monitor/%s.xml vide\n"
-
-#, fuzzy
-#~ msgid "controls"
-#~ msgstr "Contrôle"
-
-#, fuzzy
-#~ msgid "%s/options.xml"
-#~ msgstr "options.xml vide\n"
-
-#, fuzzy
-#~ msgid "options"
-#~ msgstr "options.xml vide\n"
-
-#~ msgid "Error: %s @%s:%d (%s:%ld)\n"
-#~ msgstr "Erreur: %s @%s:%d (%s:%ld)\n"
-
-#~ msgid "Error: %s @%s:%d\n"
-#~ msgstr "Erreur : %s @%s:%d\n"
-
-#~ msgid "nvidia_open: Malloc error.\n"
-#~ msgstr "nvidia_open: Erreur lors de malloc.\n"
-
-#~ msgid "Please click on a parameter on the left to change it."
-#~ msgstr "Cliquez sur un paramètre à gauche pour le changer."
-
-#~ msgid "restore_callback should not be called for command controls."
-#~ msgstr ""
-#~ "restore_callback ne devrait pas être appelé pour des contrôles de type "
-#~ "\"commande\"."
+#~ msgid "intel740_open"
+#~ msgstr "intel740_open"

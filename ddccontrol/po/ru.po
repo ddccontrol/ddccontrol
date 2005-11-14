@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:06+0100\n"
-"PO-Revision-Date: 2005-08-12 13:32+0300\n"
+"POT-Creation-Date: 2005-11-14 18:45+0100\n"
+"PO-Revision-Date: 2005-11-14 11:30+0300\n"
 "Last-Translator: Sergei Epiphanov <serpiph@nikiet.ru>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -286,20 +286,11 @@ msgstr "i2c-algo-bit.o: readbytes: тайм-аут i2c_inb .\n"
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: тайм-аут при подтверждении\n"
 
-#: src/ddcpci/intel740.c:88
-msgid "i740"
-msgstr ""
-
 #: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
 #: src/ddcpci/radeon.c:153
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: ошибка malloc.\n"
-
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel740.c:109
-#: src/ddcpci/intel740.c:121
-msgid "intel740_open"
-msgstr ""
 
 #: src/ddcpci/intel740.c:109
 #, c-format
@@ -390,19 +381,17 @@ msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: mmap не выполнена"
 
 #: src/ddcpci/radeon.c:117
-#, fuzzy, c-format
+#, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
-msgstr "nvidia.c:init_i2c_bus: ошибка malloc."
+msgstr "radeon.c:init_i2c_bus: ошибка malloc."
 
 #: src/ddcpci/radeon.c:165
-#, fuzzy
 msgid "radeon_open: cannot open /dev/mem"
-msgstr "nvidia_open: не могу открыть /dev/mem"
+msgstr "radeon_open: не могу открыть /dev/mem"
 
 #: src/ddcpci/radeon.c:174
-#, fuzzy
 msgid "radeon_open: mmap failed"
-msgstr "nvidia_open: mmap не выполнена"
+msgstr "radeon_open: mmap не выполнена"
 
 #: src/gddccontrol/fspatterns.c:190
 msgid ""
@@ -418,13 +407,15 @@ msgstr ""
 
 #: src/gddccontrol/fspatterns.c:206
 msgid "Try to make moire patterns disappear."
-msgstr ""
+msgstr "Попробуйте убрать муар."
 
 #: src/gddccontrol/fspatterns.c:210
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
+"Настройте грубо изображение, чтобы убрать вертикальные полосы.\n"
+"Настройте тонко изображение, чтобы минимизировать смещение экрана."
 
 #: src/gddccontrol/fspatterns.c:249
 #, c-format
@@ -557,9 +548,8 @@ msgid "Current monitor: "
 msgstr "Текущий монитор: "
 
 #: src/gddccontrol/main.c:441
-#, fuzzy
 msgid "Refresh monitor list"
-msgstr "Обновить все регистры"
+msgstr "Обновить список мониторов"
 
 #: src/gddccontrol/main.c:458
 msgid "Profile manager"
@@ -612,7 +602,6 @@ msgid "Section"
 msgstr "Секция"
 
 #: src/gddccontrol/notebook.c:568
-#, fuzzy
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -624,8 +613,11 @@ msgid ""
 msgstr ""
 "Данный монитор есть в базе данных, но не поддерживает DDC/CI.\n"
 "\n"
-"Часто это происходит при подключении кабеля VGA/DVI в неправльный вход "
-"монитора, поддерживающего DDC/CI только по одному из двух входов."
+"Часто это происходит при подключении кабеля VGA/DVI к ошибочному входу "
+"монитора, поддерживающего DDC/CI только по одному из двух входов.\n"
+"\n"
+"Если Ваш монитор имеет два входа, пожалуйста, попробуйте подключить кабель к "
+"другому входу и нажмите на кнопку обновления возле списка мониторов."
 
 #: src/gddccontrol/notebook.c:579
 #, c-format
@@ -638,6 +630,9 @@ msgid ""
 "Maybe this monitor was disconnected, please click on the refresh button near "
 "the monitor list."
 msgstr ""
+"Произошла ошибка при открывании устройства монитора.\n"
+"Возможно, монитор был отключён, пожалуйста, нажмите на кнопку обновления "
+"рядом со списком мониторов."
 
 #: src/gddccontrol/notebook.c:602
 msgid "Please click on a group name."
@@ -654,7 +649,7 @@ msgstr "Загружаю профили..."
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:182
 msgid "Monitor Profile Switcher"
-msgstr ""
+msgstr "Переключатель профилей монитора"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:187
 msgid ""
@@ -662,37 +657,38 @@ msgid ""
 "Based on libddccontrol and part of the ddccontrol project.\n"
 "(http://ddccontrol.sourceforge.net)"
 msgstr ""
+"Апплет для быстрого переключения профилей монитора.\n"
+"Работает на основе libddccontrol и является частью проекта ddccontrol.\n"
+"(http://ddccontrol.sourceforge.net)"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:384
-#, fuzzy
 msgid "Unable to initialize ddcci library"
-msgstr "Не могу инициализировать библиотеку ddcci.\n"
+msgstr "Не могу инициализировать библиотеку ddcci"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:388
-msgid "No monitor configuration found. Plase run gddccontrol first"
+msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr ""
+"Не найдена конфигурация мониторов. Пожалуйста, запустите сначала gddccontrol"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:393
-#, fuzzy
 msgid "An error occured while opening the monitor device"
-msgstr "Открываю устройство монитора (%s)..."
+msgstr "Произошла ошибка при открытии устройства монитора"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:398
-#, fuzzy
 msgid "Can't find any profiles"
-msgstr "Не могу найти элемент name."
+msgstr "Не могу найти ни одного профиля"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:414
 msgid "error"
-msgstr ""
+msgstr "ошибка"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:438
 msgid "Monitor:"
-msgstr ""
+msgstr "Монитор:"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:441
 msgid "Monitor Profile Switcher Properties"
-msgstr ""
+msgstr "Свойства переключателя профилей монитора"
 
 #: src/lib/conf.c:69 src/lib/conf.c:263 src/lib/conf.c:313 src/lib/ddcci.c:975
 msgid "Cannot create filename (buffer too small)\n"
@@ -715,29 +711,27 @@ msgid "profile of the wrong type, root node %s != profile"
 msgstr "неверный тип профиля, корень %s != profile"
 
 #: src/lib/conf.c:112
-#, fuzzy
 msgid "Can't find ddccontrolversion property."
-msgstr "Не могу найти свойство version."
+msgstr "Не могу найти свойство ddccontrolversion."
 
 #: src/lib/conf.c:114
 #, c-format
 msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
 msgstr ""
+"ddccontrol был обновлён с момента последнего сохранения списка мониторов (%s "
+"vs %s).\n"
 
 #: src/lib/conf.c:131
-#, fuzzy
 msgid "Can't find filename property."
-msgstr "Не могу найти элемент name."
+msgstr "Не могу найти свойство filename."
 
 #: src/lib/conf.c:137
-#, fuzzy
 msgid "Can't find supported property."
-msgstr "Не могу найти свойство pnpid."
+msgstr "Не могу найти поддерживаемое свойство."
 
 #: src/lib/conf.c:140
-#, fuzzy
 msgid "Can't convert supported property to int."
-msgstr "Не могу преобразовать задержку в int."
+msgstr "Не могу преобразовать поддерживаемое свойство в int."
 
 #: src/lib/conf.c:145 src/lib/conf.c:390 src/lib/monitor_db.c:181
 #: src/lib/monitor_db.c:276 src/lib/monitor_db.c:442
@@ -745,14 +739,12 @@ msgid "Can't find name property."
 msgstr "Не могу найти элемент name."
 
 #: src/lib/conf.c:151
-#, fuzzy
 msgid "Can't find digital property."
-msgstr "Не могу найти свойство init."
+msgstr "Не могу найти цифровое свойство."
 
 #: src/lib/conf.c:154
-#, fuzzy
 msgid "Can't convert digital property to int."
-msgstr "Не могу пребразовать значение в int."
+msgstr "Не могу пребразовать цифровое свойство в int."
 
 #: src/lib/conf.c:180 src/lib/conf.c:442
 msgid "Cannot create the xml writer\n"
@@ -1120,6 +1112,12 @@ msgstr "В options.xml dbversion (%d) меньше, чем поддержива�
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
+
+#~ msgid "i740"
+#~ msgstr "i740"
+
+#~ msgid "intel740_open"
+#~ msgstr "intel740_open"
 
 #~ msgid "Xinerama supported and active\n"
 #~ msgstr "Xinerama поддерживается и активна\n"

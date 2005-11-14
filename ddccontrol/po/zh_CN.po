@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool cvs version 2005-11-12\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:06+0100\n"
+"POT-Creation-Date: 2005-11-14 18:45+0100\n"
 "PO-Revision-Date: 2005-11-12 15:50+0800\n"
 "Last-Translator: Wu Songhai waq@21cn.com\n"
 "Language-Team: Simple Chinese <LL@li.org>\n"
@@ -285,20 +285,11 @@ msgstr "i2c-algo-bit.o: readbytes: i2c_inb 超时.\n"
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: 确认时超时\n"
 
-#: src/ddcpci/intel740.c:88
-msgid "i740"
-msgstr ""
-
 #: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
 #: src/ddcpci/radeon.c:153
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: malloc 出错.\n"
-
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel740.c:109
-#: src/ddcpci/intel740.c:121
-msgid "intel740_open"
-msgstr ""
 
 #: src/ddcpci/intel740.c:109
 #, c-format
@@ -668,7 +659,7 @@ msgid "Unable to initialize ddcci library"
 msgstr "未能初始化ddcci库"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:388
-msgid "No monitor configuration found. Plase run gddccontrol first"
+msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr "没找到显示器配置. 请先运行 gddccontrol"
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:393

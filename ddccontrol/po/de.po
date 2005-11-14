@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:06+0100\n"
+"POT-Creation-Date: 2005-11-14 18:45+0100\n"
 "PO-Revision-Date: 2005-09-21 12:47+0200\n"
 "Last-Translator: Christian Schilling <cschilling@gmx.de>\n"
 "Language-Team: German\n"
@@ -250,19 +250,10 @@ msgstr ""
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr ""
 
-#: src/ddcpci/intel740.c:88
-msgid "i740"
-msgstr ""
-
 #: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
 #: src/ddcpci/radeon.c:153
 #, c-format
 msgid "%s: Malloc error.\n"
-msgstr ""
-
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel740.c:109
-#: src/ddcpci/intel740.c:121
-msgid "intel740_open"
 msgstr ""
 
 #: src/ddcpci/intel740.c:109
@@ -614,7 +605,7 @@ msgid "Unable to initialize ddcci library"
 msgstr ""
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:388
-msgid "No monitor configuration found. Plase run gddccontrol first"
+msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr ""
 
 #: src/gnome-ddcc-applet/ddcc-applet.c:393
