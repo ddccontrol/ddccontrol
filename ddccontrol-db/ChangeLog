@@ -1,3 +1,7 @@
+2005-11-18 16:47  nboichat
+
+	* db/monitor/DELE009.xml: Add support for Dell 2005FPW.
+
 2005-11-18 15:59  nboichat
 
 	* db/monitor/SAM01B6.xml: Add support for Samsung Syncmaster 970P
