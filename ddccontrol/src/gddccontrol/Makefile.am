@@ -19,7 +19,7 @@ pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = gddccontrol.png
 
 install-data-local:
-	-@INSTALL@ -m 644 gddccontrol-bluecurve.png $(datadir)/icons/Bluecurve/48x48/apps/gddccontrol.png
+	-@INSTALL@ -m 644 gddccontrol-bluecurve.png $(DESTDIR)/$(datadir)/icons/Bluecurve/48x48/apps/gddccontrol.png
 
 @INTLTOOL_DESKTOP_RULE@
 

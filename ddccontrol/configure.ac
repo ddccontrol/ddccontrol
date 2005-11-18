@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool], [0.3],
+AC_INIT([DDC/CI control tool], [0.3.1],
         [DDCControl users list <ddccontrol-users@lists.sourceforge.net>],
         [ddccontrol])
 AM_CONFIG_HEADER(src/config.h)

@@ -2,7 +2,7 @@ Version 0.3 - 2005-11-14
  - Use GTK/GDK high-level API to determine current screen (instead of Xinerama API).
  - Add Chinese translation (Thanks to "waq_cn").
  - Add Gnome icon, thanks to 'lekma' on ddccontrol-users.
- - Add a new Gnome Panel Applet to switch between monitor profiles.
+ - Add a new Gnome Panel Applet to switch between monitor profiles (Thanks to Christian Schilling).
  - Speed up gddccontrol loading by caching monitor list.
  - Add new fullscreen patterns.
 

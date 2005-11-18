@@ -85,7 +85,7 @@ mailing lists (see <xref linkend="report"/>).</para>
 <row>
   <entry>Radeon 9200</entry>
   <entry class="yes">Yes</entry>
-  <entry class="unknown">???</entry>
+  <entry class="yes">Yes</entry>
 </row>
 <row>
   <entry>Radeon 9500</entry>
