@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<monitor name="Dell 2005FPW (Digital)" init="standard" caps="">
+	<controls>
+		<control id="defaults" address="0x04"/>
+		<control id="defaultluma" address="0x05"/>
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
+		<control id="coarse" address="0x0E"/>
+		
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="colorpreset" address="0x14">
+			<!--- Copied from Fujitsu, needs to be checked -->
+			<value id="srgb"   value="0x1"/>
+			<value id="5000k"  value="0x4"/>
+			<value id="6500k"  value="0x5"/>
+			<value id="9300k"  value="0x8"/>
+			<value id="user1"  value="0xB"/>
+		</control>
+		
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1A"/>
+		<control id="auto" address="0x1e">
+			<value id="coarsefine" value="1"/>
+			<value id="pos" value="2"/>
+		</control>
+
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+
+		<control id="fine" address="0x3e"/>
+
+		<control id="inputsource" type="list" address="0x60">
+			<value id="analog" value="1"/>
+			<value id="digital" value="3"/>
+		</control>
+
+		<!--- Control 0x68: +/0/255 [???] -->
+
+		<control id="settings" address="0xb0"/>
+		
+		<!--- Control 0xca: +/0/2 [???] -->
+
+		<control id="language" type="list" address="0xCC">
+			<!--- Copied partially from NEC662B, needs to be checked -->
+			<value id="german"  value="2"/>
+			<value id="french"  value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="italian" value="6"/>
+			<value id="english" value="0x0a"/>			
+		</control>
+		
+		<control id="dpms" address="0xd6">
+			<value id="on" value="1"/>
+			<value id="standby" value="4"/>
+		</control>
+		
+		<!--- Control 0xe0: +/0/3 [???] -->
+		<!--- Control 0xe1: +/1/1 [???] -->
+		<!--- Control 0xe3: +/0/2 [???] -->
+		<!--- Control 0xe4: +/0/1 [???] -->
+	</controls>
+</monitor>
