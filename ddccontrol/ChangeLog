@@ -1,3 +1,9 @@
+2005-11-18 16:07  nboichat
+
+	* NEWS, configure.ac, doc/main.xml, doc/supportedgc.xml,
+	  doc/supportedmonitors.xml, src/gddccontrol/Makefile.am: Fix
+	  sandbox violation (Gentoo ebuild).
+
 2005-11-14 18:51  nboichat
 
 	* CheckList: Update CheckList
