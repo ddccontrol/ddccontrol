@@ -1,3 +1,8 @@
+2005-11-18 15:59  nboichat
+
+	* db/monitor/SAM01B6.xml: Add support for Samsung Syncmaster 970P
+	  (Thanks to Martin Kalkman).
+
 2005-11-14 18:53  nboichat
 
 	* CheckList: Update Checklist.
