@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--- CA and E1 are supported but not reported by CAPS (OSD and power, so they're not very useful) -->
+<monitor name="Samsung SyncMaster 770P (DVI)" init="standard">
+	<controls>
+		<control id="defaults" address="0x04"/>
+		<control id="defaultluma" address="0x05"/>
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
+		<control id="coarse" address="0x0e"/>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1a"/>
+		<control id="auto" address="0x1e">
+			<value id="pos" value="1"/>
+		</control>
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+		<control id="fine" address="0x3e"/>
+		<control id="inputsource" type="list" address="0x60">
+			<value id="analog" value="1"/>
+			<value id="digital" value="3"/>
+		</control>
+		<!-- 0x62 has no meaning for SM173P -->
+		<!-- 0x6c Service: Red Video Black Level -->
+		<!-- 0x6e Service: Green Video Black Level -->
+		<!-- 0x70 Service: Blue Video Black Level -->
+		<control id="settings" type="command" address="0xb0">
+			<value id="store" value="1"/>
+			<value id="restorefactory" value="2"/>
+		</control>
+		<!-- 0xb6: +/3/8	[???] -->
+		<!-- 0xc6: +/1/1	[???] -->
+		<!-- 0xc8: +/5/16	[???] -->
+		<!-- 0xc9: +/1/0	[???] -->
+		<control id="osd" type="list" address="0xca">
+			<value id="disable" value="1"/>
+			<value id="enable" value="2"/>
+		</control>
+		<!--- 0xcc: language, always 2, english -->
+		<control id="dpms" type="list" address="0xd6">
+			<value id="on" value="1"/>
+			<value id="standby" value="4"/>
+		</control>
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+			<value id="game" value="3"/>
+			<value id="sport" value="4"/>
+                        <value id="entertain" value="5"/> 
+			<value id="custom" value="6"/>
+		</control>
+		<!-- 0xdf: +/512/0	[VCP Version] -->
+		<control id="colorpreset" type="list" address="0xe0">
+			<value id="normal" value="0"/>
+			<value id="warm1" value="1"/>
+                        <value id="warm2" value="2"/>
+			<value id="cool1" value="3"/>
+                        <value id="cool2" value="4"/>
+                        <value id="cool3" value="5"/>
+                        <value id="cool4" value="6"/>
+                        <value id="cool5" value="7"/>
+                        <value id="cool6" value="8"/>
+                        <value id="cool7" value="9"/>
+		</control>
+		<control id="power" type="list" address="0xe1">
+			<value id="off" value="0"/>
+			<value id="on" value="1"/>
+		</control>
+		<!-- 0xe2: +/0/1	[???] -->
+		<!-- 0xed: +/100/100	[SAM: Red Video Black Level] -->
+		<!-- 0xee: +/100/100	[SAM: Green Video Black Level] -->
+		<!-- 0xef: +/100/100    [SAM: Blue Video Black Level] -->
+                <control id="magiccolor" type="list" address="0xf0">
+                        <value id="off" value="0"/>
+                        <value id="demo" value="1"/>
+                        <value id="full" value="2"/>
+                        <value id="intelligent" value="3"/>
+                </control>
+               <control id="gamma" type ="list" address="0xf2" >
+                        <value id="-0.5" value="0"/>
+                        <value id="-0.3" value="1"/>
+                        <value id="-0.1" value="2"/>
+                        <value id="0" value="3"/>
+                        <value id="+0.1" value="4"/>
+                        <value id="+0.3" value="5"/>
+                        <value id="+0.5" value="6"/>
+                        <value id="+0.7" value="7"/>
+                        <value id="+0.9" value="8"/>
+                 </control>
+                 <!-- 0xf8: +/0/3 [???] -->
+                 <!-- 0xf9: +/50/100 [???] -->
+                 <!-- 0xfa: +/50/100 [???] -->
+                 <!-- 0xfb: +/128/255 [???] -->
+                 <!-- 0xfc: +/8/30 [???] -->
+	</controls>
+</monitor>

@@ -8,6 +8,8 @@
          <control id="magicbright" type="list" name="Magic Bright Mode" address="0xDC">
             <value id="text" name="Text"/>
             <value id="internet" name="Internet"/>
+            <value id="game" name="Game"/>
+            <value id="sport" name="Sport"/>
             <value id="entertain" name="Entertain"/>
             <value id="custom" name="Custom"/>
          </control>
@@ -15,6 +17,19 @@
             <value id="one" name="One" value="0"/>
             <value id="two" name="Two" value="1"/>
             <value id="three" name="Three" value="2"/>
+         </control>
+      </subgroup>
+      <subgroup name="Gamma" > 
+         <control id="gamma" type="list" name="Gamma" address="0xF2" >
+            <value id="-0.5" name="-0.5"/>
+            <value id="-0.3" name="-0.3"/>
+            <value id="-0.1" name="-0.1"/>
+            <value id="0" name="0"/>
+            <value id="+0.1" name="+0.1"/>
+            <value id="+0.3" name="+0.3"/>
+            <value id="+0.5" name="+0.5"/>
+            <value id="+0.7" name="+0.7"/>
+            <value id="+0.9" name="+0.9"/>
          </control>
       </subgroup>
       <subgroup name="Color maximum level">
@@ -36,6 +51,15 @@
             <value id="normal" name="Normal"/>
             <value id="warm" name="Warm"/>
             <value id="cool" name="Cool"/>
+            <value id="warm1" name="Warm1"/>
+            <value id="warm2" name="Warm2"/>
+            <value id="cool1" name="Cool1"/>
+            <value id="cool2" name="Cool2"/>
+            <value id="cool3" name="Cool3"/>
+            <value id="cool4" name="Cool4"/>
+            <value id="cool5" name="Cool5"/>
+            <value id="cool6" name="Cool6"/>
+            <value id="cool7" name="Cool7"/>
             <value id="srgb" name="sRGB"/>
             <value id="4000k" name="4000K"/>
             <value id="5000k" name="5000K"/>
@@ -50,7 +74,13 @@
             <value id="user2" name="User 2"/>
             <value id="user3" name="User 3"/>
             <value id="user4" name="User 4"/>
-         </control>
+        </control>
+   <control id="magiccolor" type="list" name="MagicColor" address="0xF0">
+            <value id="off" name="Off"/>
+            <value id="demo" name="Demo"/>
+            <value id="full" name="Full"/>
+            <value id="intelligent" name="Intelligent"/>
+   </control>
          <control id="colortemp" type="value" name="Color temperature" address="0x54"/>
       </subgroup>
    </group>
