@@ -1,3 +1,22 @@
+2005-12-28 11:16  nboichat
+
+	* db/monitor/SAM010D.xml: Add support for Samsung 701T.
+
+2005-12-27 22:27  nboichat
+
+	* db/monitor/: SAM01B5.xml, SAM01B6.xml: Add Samsung 970P analog.
+
+2005-12-27 21:56  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/SAM01B3.xml, monitor/SAM01B4.xml, monitor/SAM01B6.xml:
+	  Add support for Samsung 770P (Thanks to Mateusz Drach)
+
+2005-11-27 09:26  nboichat
+
+	* db/monitor/SAM001D.xml: Update Samsung 171P (Thanks to Radoslaw
+	  Marcinkowski)
+
 2005-11-27 09:11  nboichat
 
 	* db/monitor/DELE009.xml: Update Dell 2005FPW (Thanks to Miguel)
