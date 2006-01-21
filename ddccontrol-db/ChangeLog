@@ -1,3 +1,7 @@
+2006-01-21 18:30  nboichat
+
+	* db/monitor/SAM010F.xml: Add support for Samsung 910T.
+
 2006-01-21 18:27  nboichat
 
 	* db/monitor/SAM01E3.xml: Add support for Samsung 760BF.
