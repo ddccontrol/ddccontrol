@@ -205,6 +205,7 @@
             <value id="swedish" name="Swedish"/>
             <value id="chinese" name="Chinese"/>
             <value id="dutch"   name="Dutch"/>
+            <value id="japanese" name="Japanese"/>
          </control>
       </subgroup>
       <subgroup name="Input settings">
