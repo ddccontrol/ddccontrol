@@ -1,3 +1,7 @@
+2006-02-03 15:43  nboichat
+
+	* db/monitor/SAM0115.xml: Add support for Samsung Syncmaster 913V.
+
 2006-01-24 17:09  nboichat
 
 	* db/: options.xml, options.xml.in, monitor/SAM01B3.xml,
