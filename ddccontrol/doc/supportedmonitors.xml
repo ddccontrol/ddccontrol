@@ -74,6 +74,9 @@ SyncMaster 193P (VGA and DVI inputs)
 SyncMaster 193P Plus (VGA and DVI inputs)
 </listitem>
 <listitem>
+SyncMaster 701T
+</listitem>
+<listitem>
 SyncMaster 710T
 </listitem>
 <listitem>
@@ -83,13 +86,25 @@ SyncMaster 710TM
 SyncMaster 712N (at least VGA input)
 </listitem>
 <listitem>
+SyncMaster 760BF
+</listitem>
+<listitem>
+SyncMaster 910T
+</listitem>
+<listitem>
 SyncMaster 912N (at least VGA input)
+</listitem>
+<listitem>
+SyncMaster 913V
 </listitem>
 <listitem>
 SyncMaster 930BF (at least VGA input)
 </listitem>
 <listitem>
-SyncMaster 970P
+SyncMaster 960BF (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 970P (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 997MB

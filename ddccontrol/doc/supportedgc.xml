@@ -88,6 +88,11 @@ mailing lists (see <xref linkend="report"/>).</para>
   <entry class="yes">Yes</entry>
 </row>
 <row>
+        <entry>Radeon 9200 SE</entry>
+        <entry class="unknown">???</entry>
+        <entry class="yes">Yes</entry>
+</row>
+<row>
   <entry>Radeon 9500</entry>
   <entry class="yes">Yes</entry>
   <entry class="unknown">???</entry>
@@ -215,6 +220,11 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 </row>
 <row>
         <entry>GeForce 6200 TC</entry>
+        <entry class="unknown">???</entry>
+        <entry class="yes">Yes</entry>
+</row>
+<row>
+        <entry>GeForce 6600</entry>
         <entry class="unknown">???</entry>
         <entry class="yes">Yes</entry>
 </row>
