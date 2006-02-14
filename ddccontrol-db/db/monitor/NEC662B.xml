@@ -54,7 +54,7 @@
 		<!-- Control 0xb6: +/3/5 [Monitor Type, RO] -->
 		<!-- Control 0xf6: +/0/1 [Refresh Notifier] Not in CAPS -->
 		<!-- Control 0xfa: +/766/65535 [Total Power Time in 30 min, RO] -->
-		<control id="osd" type="list" name="On Screen Display" address="0xfb"> <!--- USB specifies address 0xCA -->
+		<control id="osd" type="list" address="0xfb"> <!--- USB specifies address 0xCA -->
 			<value id="enable" value="0"/>
 			<value id="partenable" value="1"/>
 		</control>

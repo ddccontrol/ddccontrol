@@ -1,2 +1,82 @@
 <?xml version="1.0"?>
-<monitor include="SAM01B4" name="Samsung SyncMaster 913V (Analog)"/>
+<!--- Thanks to Hubai Tamas for his help to create this database file -->
+<monitor name="Samsung SyncMaster 913V" init="standard" caps="">
+	<controls>
+		<control id="defaults" address="0x04"/>
+		<control id="defaultluma" address="0x05"/>
+		<control id="defaultgeom" address="0x06"/>
+		<control id="defaultcolor" address="0x08"/>
+		<control id="coarse" address="0x0e"/>
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+		<control id="red" address="0x16"/>
+		<control id="green" address="0x18"/>
+		<control id="blue" address="0x1a"/>
+		<control id="auto" address="0x1e">
+			<value id="pos" value="1"/>
+			<value id="posfast" value="2"/>
+		</control>
+		<control id="hpos" address="0x20"/>
+		<control id="vpos" address="0x30"/>
+		<control id="fine" address="0x3e"/>
+		<!-- 0x60: +/1/3 [Input source, not applicable on 913V] -->
+		<!-- 0x62: +/25/50 [???] -->
+		<!-- 0x6c Service: Red Video Black Level -->
+		<!-- 0x6e Service: Green Video Black Level -->
+		<!-- 0x70 Service: Blue Video Black Level -->
+		<control id="sharpness" address="0x87"/>
+		<control id="settings" type="command" address="0xb0">
+			<value id="store" value="1"/>
+			<value id="restorefactory" value="2"/>
+		</control>
+		<!-- 0xb6: +/3/8	[???] -->
+		<!-- 0xc6: +/1/1	[???] -->
+		<!-- 0xc8: +/5/16	[???] -->
+		<!-- 0xc9: +/1/0	[???] -->
+		<!-- 0xca: +/2/2 [???] -->
+		<control id="language" type="list" address="0xcc">
+			<value id="english" value="2"/>
+			<value id="french"  value="3"/>
+			<value id="german"  value="4"/>
+			<value id="italian" value="5"/>
+			<value id="russian" value="9"/>
+			<value id="spanish" value="10"/>
+			<value id="swedish" value="11"/>
+		</control>
+		<control id="dpms" type="list" address="0xd6">
+			<value id="on" value="1"/>
+			<value id="standby" value="4"/>
+		</control>
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+            <value id="entertain" value="3"/> 
+			<value id="custom" value="4"/>
+		</control>
+		<!-- 0xdf: +/512/0	[VCP Version] -->
+		<control id="colorpreset" type="list" address="0xe0">
+			<value id="custom" value="0"/>
+			<value id="warm" value="1"/>
+			<value id="cool" value="2"/>
+		</control>
+		<control id="power" type="list" address="0xe1">
+			<value id="off" value="0"/>
+			<value id="on" value="1"/>
+		</control>
+		<!-- 0xe2: +/0/1	[???] -->
+		<!-- 0xed: +/100/100	[SAM: Red Video Black Level] -->
+		<!-- 0xee: +/100/100	[SAM: Green Video Black Level] -->
+		<!-- 0xef: +/100/100    [SAM: Blue Video Black Level] -->
+		<!-- Control 0xf0: +/3/0 [Magic Color on other models] RO -->
+		<control id="gamma" type="list" address="0xf2">
+			<value id="mode1" value="0"/>
+			<value id="mode2" value="1"/>
+			<value id="mode3" value="2"/>
+		</control>
+
+		<control id="osd" type="list" address="0xf5">
+			<value id="enable" value="0"/>
+			<value id="disable" value="1"/>
+		</control>
+	</controls>
+</monitor>
