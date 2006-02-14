@@ -1,3 +1,24 @@
+2006-02-14 21:59  nboichat
+
+	* src/: ddcpci/main.c, ddcpci/nvidia.c, gddccontrol/fspatterns.c,
+	  gddccontrol/gprofile.c, gddccontrol/notebook.c, lib/conf.c,
+	  lib/ddcci.c, lib/monitor_db.c: Fix memory leaks using valgrind.
+
+2006-02-14 21:56  nboichat
+
+	* doc/: supportedgc.xml, supportedmonitors.xml: Update supported
+	  monitors/GC list.
+
+2006-02-14 19:32  nboichat
+
+	* src/ddcpci/ddcpci.h: Fix compilation bug on Gentoo
+	  (linux-headers-2.6.11-r2 + sys-apps/pciutils-2.2.0-r1)
+
+2005-11-19 13:32  nboichat
+
+	* po/: LINGUAS, pl.po: Add Polish translation (Thanks to Radoslaw
+	  Marcinkowski)
+
 2005-11-18 16:07  nboichat
 
 	* NEWS, configure.ac, doc/main.xml, doc/supportedgc.xml,
