@@ -576,7 +576,9 @@ void create_monitor_manager(struct monitorlist* monitor)
 		return;
 	}
 	
-	set_message(g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename));
+	gchar* tmp = g_strdup_printf(_("Opening the monitor device (%s)..."), monitor->filename);
+	set_message(tmp);
+	g_free(tmp);
 	
 	mon = malloc(sizeof(struct monitor));
 	
@@ -618,7 +620,9 @@ void create_monitor_manager(struct monitorlist* monitor)
 				count++;
 		}
 		
-		set_message(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+		gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
+		set_message(tmp);
+		g_free(tmp);
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
@@ -627,7 +631,9 @@ void create_monitor_manager(struct monitorlist* monitor)
 			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
 				createPage(notebook, subgroup);
 				current++;
-				set_message(g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count));
+				gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
+				set_message(tmp);
+				g_free(tmp);
 			}
 		}
 	}

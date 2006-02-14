@@ -100,6 +100,7 @@ static void open_card(struct i2c_bus* bus) {
 	}
 	
 	struct answer aopen;
+	memset(&aopen, 0, sizeof(struct answer));
 	aopen.mtype = 2;
 	aopen.status = -1;
 	
@@ -156,6 +157,7 @@ static void data(struct query* mquery, int len) {
 	}
 	if (mquery->flags & I2C_M_RD) {
 		struct answer adata;
+		memset(&adata, 0, sizeof(struct answer));
 		adata.mtype = 2;
 		
 		int ret;
@@ -189,6 +191,7 @@ static void data(struct query* mquery, int len) {
 		ret = bit_xfer(current_algo, i2cmsg, 1);
 		
 		struct answer adata;
+		memset(&adata, 0, sizeof(struct answer));
 		adata.mtype = 2;
 		adata.status = (ret < 0) ? -1 : ret;
 		if (msgsnd(msqid, &adata, ANSWER_SIZE, IPC_NOWAIT) < 0) {
@@ -228,6 +231,7 @@ static void list()
 					}
 					for (j = 0; j < thecard->nbusses; j++) {
 						struct answer alist;
+						memset(&alist, 0, sizeof(struct answer));
 						alist.mtype = 2;
 						alist.status = 0;
 						alist.last = 0;
@@ -250,6 +254,7 @@ static void list()
 	}
 	
 	struct answer alist;
+	memset(&alist, 0, sizeof(struct answer));
 	alist.mtype = 2;
 	alist.status = 0;
 	alist.last = 1;

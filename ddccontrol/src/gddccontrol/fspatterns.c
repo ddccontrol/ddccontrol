@@ -126,6 +126,9 @@ static void drawShade(GdkDrawable* pixmap, int ry, int rh, int number) {
 	}
 	gdk_draw_line(pixmap, gcwhite, rx, ry+rh, rx, ry+rh+5);
 	gdk_draw_line(pixmap, gcwhite, rx, ry-5, rx, ry);
+	
+	g_object_unref(gc);
+	g_object_unref(gcwhite);
 }
 
 static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text) {
@@ -154,6 +157,8 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	color.red = color.green = color.blue = 0x0000;
 	gdk_gc_set_rgb_fg_color(gc, &color);
 	gdk_draw_layout(pixmap, gc, (width-w)/2, 3*height/8, layout);
+	
+	g_object_unref(gc);
 }
 
 static void show_pattern(gchar* patternname)
@@ -254,6 +259,8 @@ static void show_pattern(gchar* patternname)
 		gdk_draw_layout(pixmap, gc, (drect.width-w)/2, drect.height/8, layout);
 	}
 	
+	g_object_unref(gc);
+	
 	GdkPixbuf* pixbufs[4];
 	
 	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, drect.width, top);
@@ -272,6 +279,7 @@ static void show_pattern(gchar* patternname)
 		for (i = 0; i < 4; i++) {
 			images[i] = gtk_image_new_from_pixbuf(pixbufs[i]);
 			gtk_widget_show(images[i]);
+			g_object_unref(pixbufs[i]);
 		}
 		
 		gtk_table_attach(GTK_TABLE(table), images[0],       0, 3, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);

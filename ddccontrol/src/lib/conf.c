@@ -89,6 +89,7 @@ struct monitorlist* ddcci_load_list() {
 		return 0;
 	
 	list_doc = xmlParseFile(filename);
+	free(filename);
 	if (list_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
 		return 0;
@@ -162,6 +163,8 @@ struct monitorlist* ddcci_load_list() {
 		cur = cur->next;
 	}
 	
+	xmlFreeDoc(list_doc);
+	
 	return list;
 }
 
@@ -175,6 +178,8 @@ int ddcci_save_list(struct monitorlist* monlist) {
 	filename = get_monitorlist_filename();
 	if (!filename)
 		return 0;
+	
+	free(filename);
 	
 	writer = xmlNewTextWriterFilename(filename, 0);
 	DDCCI_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
@@ -426,6 +431,8 @@ struct profile* ddcci_load_profile(const char* filename) {
 	}
 	
 	profile->filename = strdup(filename);
+	
+	xmlFreeDoc(profile_doc);
 	
 	return profile;
 }

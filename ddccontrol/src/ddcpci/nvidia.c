@@ -167,6 +167,7 @@ struct card* nvidia_open(struct pci_dev *dev)
 		return 0;
 	}
 	
+	data->memory = NULL;
 	data->length = 0x00001000;
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[0] + 0x00601000);
 	

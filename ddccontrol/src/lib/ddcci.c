@@ -86,7 +86,7 @@ int get_verbosity() {
 #include <sys/ipc.h>
 
 #define DDCPCI_RETRY_DELAY 10000 /* in us */
-#define DDCPCI_RETRIES 100
+#define DDCPCI_RETRIES 100000
 
 /* debugging */
 static void dumphex(FILE *f, unsigned char *buf, int len)
@@ -151,6 +151,7 @@ void ddcpci_release()
 	}
 	if (msqid >= 0) {
 		struct query qlist;
+		memset(&qlist, 0, sizeof(struct query));
 		qlist.mtype = 1;
 		qlist.qtype = QUERY_QUIT;
 		
@@ -196,6 +197,7 @@ int ddcpci_read(struct answer* manswer)
 void ddcpci_send_heartbeat() {
 	if (msqid >= 0) {
 		struct query qheart;
+		memset(&qheart, 0, sizeof(struct query));
 		qheart.mtype = 1;
 		qheart.qtype = QUERY_HEARTBEAT;
 		
@@ -261,6 +263,7 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 #ifdef HAVE_DDCPCI
 	else if (mon->type == pci) {
 		struct query qdata;
+		memset(&qdata, 0, sizeof(struct query));
 		qdata.mtype = 1;
 		qdata.qtype = QUERY_DATA;
 		qdata.addr = addr;
@@ -322,6 +325,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 	else if (mon->type == pci) {
 		int ret;
 		struct query qdata;
+		memset(&qdata, 0, sizeof(struct query));
 		qdata.mtype = 1;
 		qdata.qtype = QUERY_DATA;
 		qdata.addr = addr;
@@ -696,6 +700,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 			printf(_("Device: %s\n"), filename);
 		
 		struct query qopen;
+		memset(&qopen, 0, sizeof(struct query));
 		qopen.mtype = 1;
 		qopen.qtype = QUERY_OPEN;
 		
@@ -863,6 +868,7 @@ struct monitorlist* ddcci_probe() {
 	/* Fetch bus list from ddcpci */
 	if (msqid >= 0) {
 		struct query qlist;
+		memset(&qlist, 0, sizeof(struct query));
 		qlist.mtype = 1;
 		qlist.qtype = QUERY_LIST;
 		

@@ -159,6 +159,7 @@ void fill_profile_manager() {
 	struct profile* profile;
 	int count = 0;
 	int crow = 0;
+	gchar* tmp;
 	
 	profile = mon->profiles;
 	
@@ -170,7 +171,9 @@ void fill_profile_manager() {
 	profile = mon->profiles;
 	
 	label = gtk_label_new(NULL);
-	gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size='large' weight='ultrabold'>%s</span>", _("Profile Manager")));
+	tmp = g_strdup_printf("<span size='large' weight='ultrabold'>%s</span>", _("Profile Manager"));
+	gtk_label_set_markup(GTK_LABEL(label), tmp);
+	g_free(tmp);
 	gtk_box_pack_start(GTK_BOX(profile_manager), label, 0, 0, 0);
 	gtk_widget_show(label);
 	

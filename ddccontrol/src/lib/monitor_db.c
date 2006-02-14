@@ -188,16 +188,14 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			while (1)
 			{
 				if (cur == NULL) {
-					/* Control not found, free strings */
-					xmlFree(options_valueid);
-					xmlFree(options_valuename);
+					/* Control not found */
 					/* TODO: return */
 					break;
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"value"))) {
 					mon_valueid = xmlGetProp(cur, BAD_CAST "id");
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
-						current_value->id   = options_valueid;
+						current_value->id   = xmlCharStrdup(options_valueid);
 						current_value->name = _D(options_valuename);
 						
 						tmp = xmlGetProp(cur, BAD_CAST "value");
@@ -227,6 +225,9 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				if (cur->type == XML_ELEMENT_NODE) i++;
 				cur = cur->next;
 			}
+
+			xmlFree(options_valueid);
+			xmlFree(options_valuename);
 		}
 		
 		value = value->next;
@@ -249,6 +250,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	}
 	
 	free(matchedvalues);
+	free(current_value);
 	
 	return 0;
 }
@@ -300,9 +302,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 			while (1)
 			{
 				if (cur == NULL) {
-					/* Control not found, free strings */
-					xmlFree(options_ctrlid);
-					xmlFree(options_ctrlname);
+					/* Control not found */
 					/* TODO: return */
 					break;
 				}
@@ -327,7 +327,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 							break;
 						}
 						
-						current_control->id   = options_ctrlid;
+						current_control->id   = xmlCharStrdup(options_ctrlid);
 						current_control->name = _D(options_ctrlname);
 						current_control->refresh = options_refresh;
 						
@@ -389,6 +389,9 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 				if (cur->type == XML_ELEMENT_NODE) i++;
 				cur = cur->next;
 			}
+		
+			xmlFree(options_ctrlid);
+			xmlFree(options_ctrlname);
 		}
 		
 		control = control->next;
@@ -540,7 +543,6 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		}
 		
 		options_groupname = xmlGetProp(group, BAD_CAST "name");
-		//printf("*group name=%s\n", options_groupname);
 		
 		struct subgroup_db *current_subgroup = malloc(sizeof(struct subgroup_db));
 		struct subgroup_db **last_subgroup_ref = &current_group->subgroup_list;
@@ -563,13 +565,12 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 				NULL,  _("Error enumerating controls in group."), control);
 			
 			if (current_subgroup->control_list) {
-				current_subgroup->name = _D(options_subgroupname);
+				current_subgroup->name = _D(options_subgroupname); /* Note: copy string, so we can free options_subgroupname */
 				current_subgroup->pattern = xmlGetProp(subgroup, BAD_CAST "pattern");
 				*last_subgroup_ref = current_subgroup;
 				last_subgroup_ref = &current_subgroup->next;
 				current_subgroup = malloc(sizeof(struct subgroup_db));
 				memset(current_subgroup, 0, sizeof(struct subgroup_db));
-				options_subgroupname = NULL; /* So it is not freed */
 			}
 			
 			if (options_subgroupname) {
@@ -578,17 +579,17 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 		}
 		
 		if (current_group->subgroup_list) {
-			current_group->name = _D(options_groupname);
+			current_group->name = _D(options_groupname); /* Note: copy string, so we can free options_groupname */
 			*last_group_ref = current_group;
 			last_group_ref = &current_group->next;
 			current_group = malloc(sizeof(struct group_db));
 			memset(current_group, 0, sizeof(struct group_db));
-			options_groupname = NULL; /* So it is not freed */
 		}
 		
 		if (options_groupname) {
 			xmlFree(options_groupname);
 		}
+		free(current_subgroup);
 	}
 	
 	free(current_group);
@@ -621,6 +622,8 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
 			free(caps[i]);
 		}
 	}
+
+	xmlFree(prof_caps);
 	
 	return mon_db;
 }
@@ -656,6 +659,7 @@ void ddcci_free_db(struct monitor_db* monitor)
 		while (subgroup != NULL)
 		{
 			xmlFree(subgroup->name);
+			xmlFree(subgroup->pattern);
 			
 			/* free controls inside subgroup */
 			control = subgroup->control_list;
@@ -690,6 +694,8 @@ void ddcci_free_db(struct monitor_db* monitor)
 		group = ogroup->next;
 		free(ogroup);
 	}
+
+	free(monitor);
 }
 
 /* usedatadir : data directory to use (if NULL, uses DATADIR preprocessor symbol) */
@@ -716,18 +722,20 @@ int ddcci_init_db(char* usedatadir) {
 		fprintf(stderr,  _("Document not parsed successfully.\n"));
 		return 0;
 	}
-	
+
 	// Version check
 	cur = xmlDocGetRootElement(options_doc);
 	if (cur == NULL) {
 		fprintf(stderr,  _("empty options.xml\n"));
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
 	if (xmlStrcmp(cur->name, (const xmlChar *) "options")) {
 		fprintf(stderr,  _("options.xml of the wrong type, root node %s != options"), cur->name);
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
@@ -737,12 +745,14 @@ int ddcci_init_db(char* usedatadir) {
 	if (!version) {
 		fprintf(stderr,  _("options.xml dbversion attribute missing, please update your database.\n"));
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
 	if (!date) {
 		fprintf(stderr,  _("options.xml date attribute missing, please update your database.\n"));
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
@@ -753,6 +763,7 @@ int ddcci_init_db(char* usedatadir) {
 		fprintf(stderr,  _("options.xml dbversion (%d) is greater than the supported version (%d).\n"), iversion, DBVERSION);
 		fprintf(stderr,  _("Please update ddccontrol program.\n"));
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
@@ -760,10 +771,14 @@ int ddcci_init_db(char* usedatadir) {
 		fprintf(stderr,  _("options.xml dbversion (%d) is less than the supported version (%d).\n"), iversion, DBVERSION);
 		fprintf(stderr,  _("Please update ddccontrol database.\n"));
 		xmlFreeDoc(options_doc);
+		free(datadir);
 		return 0;
 	}
 	
 	/* TODO: do something with the date */
+
+	xmlFree(version);
+	xmlFree(date);
 	
 	return 1;
 }
