@@ -22,6 +22,9 @@
 
 #include "i2c-algo-bit.h"
 
+#include <sys/types.h>
+#define PCI_HAVE_Uxx_TYPES
+
 #include <pci/pci.h>
 
 #include <libintl.h>
