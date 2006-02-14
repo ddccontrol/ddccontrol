@@ -1,3 +1,7 @@
+2006-02-14 22:08  nboichat
+
+	* src/ddcpci/radeon.c: Add copyright back in ATI ddcpci code.
+
 2006-02-14 21:59  nboichat
 
 	* src/: ddcpci/main.c, ddcpci/nvidia.c, gddccontrol/fspatterns.c,
