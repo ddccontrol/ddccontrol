@@ -1,3 +1,59 @@
+/*
+ *  ddc/ci direct PCI memory interface for ATI cards
+ *  Copyright(c) 2005 Christian Schilling
+ *
+ *  Based on radeon_i2c.c from the kernel source.
+ * 
+ *  Original copyright:
+ *
+ *	framebuffer driver for ATI Radeon chipset video boards
+ *
+ *	Copyright 2003	Ben. Herrenschmidt <benh@kernel.crashing.org>
+ *	Copyright 2000	Ani Joshi <ajoshi@kernel.crashing.org>
+ *
+ *	i2c bits from Luca Tettamanti <kronos@kronoz.cjb.net>
+ *	
+ *	Special thanks to ATI DevRel team for their hardware donations.
+ *
+ *	...Insert GPL boilerplate here...
+ *
+ *	Significant portions of this driver apdated from XFree86 Radeon
+ *	driver which has the following copyright notice:
+ *
+ *	Copyright 2000 ATI Technologies Inc., Markham, Ontario, and
+ *                     VA Linux Systems Inc., Fremont, California.
+ *
+ *	All Rights Reserved.
+ *
+ *	Permission is hereby granted, free of charge, to any person obtaining
+ *	a copy of this software and associated documentation files (the
+ *	"Software"), to deal in the Software without restriction, including
+ *	without limitation on the rights to use, copy, modify, merge,
+ *	publish, distribute, sublicense, and/or sell copies of the Software,
+ *	and to permit persons to whom the Software is furnished to do so,
+ *	subject to the following conditions:
+ *
+ *	The above copyright notice and this permission notice (including the
+ *	next paragraph) shall be included in all copies or substantial
+ *	portions of the Software.
+ *
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *	NON-INFRINGEMENT.  IN NO EVENT SHALL ATI, VA LINUX SYSTEMS AND/OR
+ *	THEIR SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *	DEALINGS IN THE SOFTWARE.
+ *
+ *	XFree86 driver authors:
+ *
+ *	   Kevin E. Martin <martin@xfree86.org>
+ *	   Rickard E. Faith <faith@valinux.com>
+ *	   Alan Hourihane <alanh@fairlite.demon.co.uk>
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
