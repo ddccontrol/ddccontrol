@@ -1,3 +1,9 @@
+2006-02-20 17:16  nboichat
+
+	* po/Makefile.in.in, src/lib/Makefile.am: Fix link error when
+	  building with "-Wl,--as-needed" in LDFLAGS (Thanks to Ben
+	  Skeggs).
+
 2006-02-14 22:08  nboichat
 
 	* src/ddcpci/radeon.c: Add copyright back in ATI ddcpci code.
