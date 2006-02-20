@@ -132,6 +132,8 @@ GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
 	GNOME_APPLET="gnome-ddcc-applet"
 	PKG_CHECK_MODULES(GNOME, libpanelapplet-2.0 >= 2.10,,GNOME_APPLET="")
+    GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+    GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
 fi
 
 
