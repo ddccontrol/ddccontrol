@@ -1,3 +1,8 @@
+2006-02-21 11:38  nboichat
+
+	* db/monitor/: SAM0115.xml, SAM0191.xml, SAM0192.xml, SAM0194.xml:
+	  Add support for Samsung SyncMaster 730BF (Thanks to Gergely Nagy)
+
 2006-02-14 14:46  nboichat
 
 	* db/: options.xml, options.xml.h, options.xml.in,
