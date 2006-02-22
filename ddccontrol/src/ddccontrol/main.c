@@ -1,7 +1,7 @@
 /*
     ddc/ci command line tool
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
-    Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2006 Nicolas Boichat (nicolas@boichat.ch)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -170,10 +170,10 @@ int main(int argc, char **argv)
 	
 	fprintf(stdout,
 		_("ddccontrol version %s\n"
-		"Copyright 2005 Oleg I. Vdovikin (oleg@cs.msu.su) and Nicolas Boichat (nicolas@boichat.ch)\n"
+		"Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+		"Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
 		"This program comes with ABSOLUTELY NO WARRANTY.\n"
-		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"),
-		VERSION);
+		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 	
 	while ((i=getopt(argc,argv, "hdr:w:csfvpb:i:")) >= 0)
 	{
