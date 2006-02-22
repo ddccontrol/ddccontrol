@@ -1,3 +1,5 @@
 <?xml version="1.0"?>
 <!---The Samsung 912N is identical to 173P -->
-<monitor include="SAM00D3" name="Samsung SyncMaster 912N"/>
+<monitor name="Samsung SyncMaster 912N">
+	<include file="SAM00D3"/>
+</monitor>

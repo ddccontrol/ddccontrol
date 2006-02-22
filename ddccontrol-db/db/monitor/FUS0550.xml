@@ -1,3 +1,5 @@
 <?xml version="1.0"?>
 <!---The P17-2 is identical to P19-2 -->
-<monitor include="FUS0552" name="Fujitsu Siemens P17-2"/>
+<monitor name="Fujitsu Siemens P17-2">
+	<include file="FUS0552"/>
+</monitor>

@@ -1,34 +1,16 @@
 <?xml version="1.0"?>
-<monitor name="Dell 2005FPW (Digital)" init="standard" caps="">
+<monitor name="Dell 2005FPW (Digital)" init="standard">
+	<!--- vcp(page0(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E B0 CC(2 3 4 6 0A) E3)asset_eep(40)mccs_ver(1.0)type(LCD) -->
+	<caps add="(vcp(60 e1))"/>
 	<controls>
-		<control id="defaults" address="0x04"/>
-		
-		<!--- Control 0x05: +/0/1 [???] -->
-		<!--- Control 0x06: +/0/255 [???] -->
-
-		<control id="defaultcolor" address="0x08"/>
-		
-		<!--- Control 0x0e: +/0/255 [???] -->
-		
-		<control id="brightness" address="0x10"/>
-		
-		<!--- Control 0x12: +/0/255 [???] -->
-
 		<control id="colorpreset" address="0x14">
 			<value id="warm"  value="0x04"/>
 			<value id="srgb"  value="0x05"/>
 			<value id="cool"  value="0x08"/>
 			<value id="user1" value="0x0b"/>
 		</control>
-		
-		<control id="red"   address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue"  address="0x1a"/>
-		
+
 		<!--- Control 0x1e: +/0/255 [???] -->
-		<!--- Control 0x20: +/0/255 [???] -->
-		<!--- Control 0x30: +/0/255 [???] -->
-		<!--- Control 0x3e: +/0/255 [???] -->
 
 		<control id="inputsource" type="list" address="0x60">
 			<value id="analog"  value="1"/>
@@ -36,7 +18,6 @@
 		</control>
 
 		<!--- Control 0x68: +/0/255 [???] -->
-		<!--- Control 0xb0: +/0/1 [???] -->
 		<!--- Control 0xca: +/0/2 [???] -->
 
 		<control id="language" type="list" address="0xcc">
@@ -44,18 +25,14 @@
 			<value id="french"   value="0x03"/>
 			<value id="german"   value="0x04"/>
 			<value id="japanese" value="0x06"/>
-			<value id="spanish"  value="0x0a"/>			
+			<value id="spanish"  value="0x0a"/>
 		</control>
 		
 		<!--- Control 0xd6: +/1/4 [???] -->
 		<!--- Control 0xe0: +/0/3 [???] -->
 		
-		<control id="power" type="list" address="0xe1">
-			<value id="off" value="0"/>
-			<value id="on"  value="1"/>
-		</control>
-		
 		<!--- Control 0xe3: +/0/2 [???] -->
 		<!--- Control 0xe4: +/0/1 [???] -->
 	</controls>
+	<include file="VESA"/>
 </monitor>

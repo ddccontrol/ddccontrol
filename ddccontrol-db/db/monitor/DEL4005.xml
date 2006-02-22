@@ -1,11 +1,6 @@
 <?xml version="1.0"?>
 <monitor name="Dell 1704FPT (Digital)" init="standard">
 	<controls>
-		<control id="defaults" address="0x04"/>
-		<control id="defaultcolor" address="0x08"/>
-		
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14">
 			<!--- Copied from Fujitsu, needs to be checked -->
 			<value id="srgb"   value="0x1"/>
@@ -21,10 +16,6 @@
 			<value id="user1"  value="0xB"/>
 			<value id="user2"  value="0xC"/>
 		</control>
-		
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1A"/>
 		
 		<control id="language" type="list" address="0x68">
 			<!--- Copied from NEC662B, needs to be checked -->
@@ -43,12 +34,8 @@
 		<!-- Control 0xb4: +/1/2 [RGB Ordering, RO] -->
 		<!-- Control 0xb6: +/3/5 [Monitor Type, RO] -->
 		
-		<control id="dpms" address="0xd6">
-			<value id="on" value="1"/>
-			<value id="standby" value="4"/>
-		</control>
-		
 		<!--- Control 0xd7: +/0/1 [???] -->
 		<!--- Control 0xd8: +/0/1 [???] -->
 	</controls>
+	<include file="VESA"/>
 </monitor>

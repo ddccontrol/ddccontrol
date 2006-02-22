@@ -1,3 +1,5 @@
 <?xml version="1.0"?>
 <!---The Samsung 910T is identical to 710T, so to 173P -->
-<monitor include="SAM00D3" name="Samsung SyncMaster 910T"/>
+<monitor name="Samsung SyncMaster 910T">
+	<include file="SAM00D3"/>
+</monitor>

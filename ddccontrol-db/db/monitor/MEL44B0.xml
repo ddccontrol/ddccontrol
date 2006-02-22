@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
-<monitor name="Mitsubishi Diamond Plus 92" init="standard" caps="">
-	<!--- degauss not in caps -->
+<monitor name="Mitsubishi Diamond Plus 92" init="standard">
+	<!---
+		( prot(Monitor) type(CRT)       model(NFK99XX)
+		pwr({run( ) stdby( ) susp( )    shut( )} )
+		cmds( 01 02 03 )
+		vcp( 10 12 14 16 18 1A 20 22 24 26 28 30 32 38 40 42
+		44 46 4A 54 56 68 E1 E2 E3 E8 E9 EA EB EF)) 
+	-->
+	<caps add="(vcp (00))"/>
 	<controls>
-		<control id="degauss" address="0x00"/>
-
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14">
 			<!--- Maybe we could try to find the meaning of these values -->
 			<value id="user1" value="0"/>
@@ -13,29 +16,7 @@
 			<value id="user3" value="2"/>
 			<value id="user4" value="3"/>
 		</control>
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1A"/>
 		
-		<control id="hpos" address="0x20"/>
-		<control id="hsize" address="0x22"/>
-		<control id="hpincushion" address="0x24"/>
-		<control id="hpincushionbalance" address="0x26"/>
-		<control id="hmisconvergence" address="0x28"/>
-
-		<control id="vpos" address="0x30"/>
-		<control id="vsize" address="0x32"/>
-		<control id="vmisconvergence" address="0x38"/>
-		
-		<control id="keybalance" address="0x40"/>
-		<control id="key" address="0x42"/>
-		<control id="tilt" address="0x44"/>
-		<control id="tdistortionctrl" address="0x46"/>
-		<control id="bdistortionctrl" address="0x4A"/>
-		
-		<control id="colortemp" address="0x54"/>
-		<control id="vmoire" address="0x56"/>
-
 		<control id="language" type="list" address="0x68">
 			<value id="english" value="0"/>
 			<value id="german"  value="1"/>
@@ -45,7 +26,6 @@
 			<value id="chinese" value="5"/>
 		</control>
 
-		<control id="power" address="0xE1"/>
 		<!--- Control 0xe2: +/1/1 [Clamp Pulse Position] -->
 		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
 			<value id="enable"  value="0"/>
@@ -57,4 +37,5 @@
 		<control id="brpurity" address="0xEB"/>
 		<!--- Control 0xef: +/0/4 [OSD Position] -->
 	</controls>
+	<include file="VESA"/>
 </monitor>

@@ -1,2 +1,4 @@
 <?xml version="1.0"?>
-<monitor include="SAM0191" name="Samsung SyncMaster 930BF (VGA)"/>
+<monitor name="Samsung SyncMaster 930BF (VGA)">
+	<include file="SAM0191"/>
+</monitor>

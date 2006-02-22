@@ -2,14 +2,7 @@
 <monitor name="Fujitsu Siemens P19-2" init="standard">
 	<controls>
 		<!-- 0x02: +/1/2 New control value -->
-		<control id="defaults" address="0x04"/>
-		<control id="defaultluma" address="0x05"/>
-		<control id="defaultgeom" address="0x06"/>
-		<control id="defaultcolor" address="0x08"/>
-		<control id="coarse" address="0x0E"/>
 
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14">
 			<value id="srgb"   value="0x1"/>
 			<value id="native" value="0x2"/>
@@ -26,38 +19,21 @@
 			<value id="user3"  value="0xD"/>
 		</control>
 
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1A"/>
-
 		<control id="auto" address="0x1e">
 			<value id="coarsefine" value="1"/>
 			<value id="pos" value="2"/>
 		</control>
 
-		<control id="hpos" address="0x20"/>
-		<control id="vpos" address="0x30"/>
-
-		<control id="fine" address="0x3e"/>
-
 		<control id="inputsource" type="list" address="0x60">
 			<value id="analog" value="1"/>
 			<value id="digital" value="3"/>
 		</control>
-		<control id="audiospeakervolume" address="0x62"/>
-		<!-- 0x6c Red Video Black Level -->
-		<!-- 0x6e Green Video Black Level -->
-		<!-- 0x70 Blue Video Black Level -->
-
+		
 		<control id="mute" type="list" address="0x94">
 			<value id="mute" value="0"/>
 			<value id="normal" value="2"/>
 		</control>
 
-		<control id="osdorientation" type="list" address="0xaa">
-				<value id="landscape" value="1"/>
-				<value id="portrait" value="2"/>
-		</control>
 		<!-- 0xac: +/6390/0 Horizontal freq.  [kHz] -->
 		<!-- 0xae: +/5990/0 Vertical freq. [Hz] -->
 		<!-- 0xb2: +/1/0 Flat panel sub pixel layout
@@ -91,10 +67,6 @@
 			<value id="swedish" value="12"/>
 		</control>
 
-		<control id="dpms" type="list" address="0xd6">
-			<value id="on" value="1"/>
-			<value id="standby" value="2"/>
-		</control>
 		<!-- 0xdf: +/512/0 VCP version (02 00) -->
 		<!-- 0xfe: Auto level : For the auto level function a suitable test
 picture is required which has at least 1 full white (0xFFFFFF) line. -->
@@ -103,4 +75,5 @@ picture is required which has at least 1 full white (0xFFFFFF) line. -->
 			<value id="off" value="0"/>
 		</control>
 	</controls>
+	<include file="VESA"/>
 </monitor>

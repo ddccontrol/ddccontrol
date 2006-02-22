@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<options date="$DATE" dbversion="2">
+<options date="$DATE" dbversion="3">
 	<group name="Color settings">
 		<subgroup name="Brightness and Contrast" pattern="brightnesscontrast">
 			<control id="brightness" type="value" name="Brightness" address="0x10"/>

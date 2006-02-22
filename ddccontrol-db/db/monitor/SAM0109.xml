@@ -3,14 +3,10 @@
 <monitor name="Samsung SyncMaster 997MB" init="standard">
 	<controls>
 		<control id="degauss" address="0x01"/>
-		<control id="defaultluma" address="0x05" delay="1000"/>
 		<control id="defaultsizepos" address="0x06" delay="1000"/>
-		<control id="defaultcolor" address="0x08" delay="1000"/>
 		<!--- Control 0x0b: +/100/100 [???] -->
 		<!--- Control 0x0c: +/35/63 [???] -->
 
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14"> <!--- Color preset. Looks invalid (value=5, max=3) -->
 			<!--- Values need to be tested -->
 			<value id="srgb"   value="0x1"/>
@@ -18,40 +14,13 @@
 			<value id="6500k"  value="0x5"/>
 			<value id="9300k"  value="0x8"/>
 		</control>
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1A"/>
-		<control id="focus" address="0x1C"/>
 
-		<control id="hpos" address="0x20"/>
-		<control id="hsize" address="0x22"/>	
-		<control id="hpincushion" address="0x24"/>
-		<control id="hpincushionbalance" address="0x26"/>
-
-		<control id="vpos" address="0x30"/>
-		<control id="vsize" address="0x32"/>
-		<control id="vlinearity"  address="0x3A"/>
-		
-		<control id="keybalance" address="0x40"/>
-		<control id="key" address="0x42"/>
-		<control id="tilt" address="0x44"/>
-		<control id="tdistortionctrl" address="0x46"/>
-		<control id="bdistortionctrl" address="0x4A"/>
-		
-		<control id="hmoire" address="0x56"/>
-		<control id="vmoire" address="0x58"/>
-		
 		<!--- Control 0x6c: +/128/255 [Red Video Black Level] -->
 		<!--- Control 0x6e: +/118/255 [Green Video Black Level] -->
 		<!--- Control 0x70: +/126/255 [Blue Video Black Level] -->
 
 		<!--- Control 0xac: +/28164/2 [Horizontal freq. [? * Hz]] -->
 		<!--- Control 0xae: +/7400/0 [Vertical freq. [Hz]] -->
-
-		<control id="settings" type="command" address="0xb0">
-			<value id="store" value="1"/>
-			<value id="restorefactory" value="2"/>
-		</control>
 
 		<control id="magicbright" type="list" address="0xdc">
 			<value id="text" value="1"/>
@@ -78,4 +47,5 @@
 		<!--- Control 0xf8: +/55/127 [???] -->
 		<!--- Control 0xff: +/0/127 [???] -->
 	</controls>
+	<include file="VESA"/>
 </monitor>

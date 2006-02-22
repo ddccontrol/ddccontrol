@@ -1,3 +1,5 @@
 <?xml version="1.0"?>
 <!---The Samsung 970P is identical to 770P -->
-<monitor include="SAM01B4" name="Samsung SyncMaster 970P (Digital)"/>
+<monitor name="Samsung SyncMaster 970P (Digital)">
+	<include file="SAM01B4"/>
+</monitor>

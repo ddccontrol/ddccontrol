@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <monitor name="NEC Multisync 2080UX+" init="standard">
 	<controls>
-		<control id="defaults" address="0x04"/>
-		<control id="defaultgeom" address="0x06"/>
-		<control id="defaultcolor" address="0x08"/>
-		<control id="coarse" address="0x0e"/>
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
 		<control id="colorpreset" address="0x14">
 			<value id="5000k"  value="4"/>
 			<value id="6500k"  value="1"/>
@@ -18,11 +12,6 @@
 		<control id="auto" address="0x1e">
 			<value id="pos" value="1"/>
 		</control>
-		
-		<control id="hpos" address="0x20"/>
-		<control id="vpos" address="0x30"/>
-		
-		<control id="fine" address="0x3e"/>
 		
 		<!-- Control 0x54: +/43/46 [Color Temperature], not working -->
 		
@@ -60,4 +49,5 @@
 		</control>
 		<!-- Control 0xff: +/587/65535 [Power On Time in 30 min, RO] -->
 	</controls>
+	<include file="VESA"/>
 </monitor>

@@ -1,43 +1,19 @@
 <?xml version="1.0"?>
-<monitor name="Mitsubishi Diamond Pro 2060u" init="standard" caps="">
-<!--- language is not in caps... -->
+<monitor name="Mitsubishi Diamond Pro 2060u">
+	<!--- ( prot(monitor) type(crt)       model(NSZ21XXK) pwr({run()
+		  stdby() susp() shut()})  cmds( 01 02 03 ) vcp( 00 04 06
+		  08 10 12 14 16 18 1A 20 22 24   26 28 30 32 38 3A 3C 40 42 44
+		  46 48 4A 4C 54 56 6C 6E 70 C9   E1 E2 E3 E8 E9 EA EB F7 FB FC ) )
+	-->
+	<caps add="(vcp ( 68 (00 01 02 03 04 05) ))"/>
 	<controls>
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1A"/>
+		<control id="defaultsizepos" address="0x06" delay="1000"/>
+		<control id="defaultluma" address="0x08" delay="1000"/>
 		
-		<control id="hpos" address="0x20"/>
-		<control id="hsize" address="0x22"/>
-		<control id="vpos" address="0x30"/>
-		<control id="vsize" address="0x32"/>
-		
-		<control id="hpincushion" address="0x24"/>
-		<control id="hpincushionbalance" address="0x26"/>
-		<control id="hmisconvergence" address="0x28"/>
-		<control id="vmisconvergence" address="0x38"/>
-		<control id="vlinearity"  address="0x3A"/>
-		<control id="vlinearitybalance" address="0x3C"/>
-		
-		<control id="keybalance" address="0x40"/>
-		<control id="key" address="0x42"/>
-		<control id="tilt" address="0x44"/>
-		<control id="tdistortionctrl" address="0x46"/>
-		<control id="tdistortionbalance" address="0x48"/>
-		<control id="bdistortionctrl" address="0x4A"/>
-		<control id="bdistortionbalance" address="0x4C"/>
-		
-		<control id="vmoire" address="0x56"/>
 		<control id="tlpurity" address="0xE8"/>
 		<control id="trpurity" address="0xE9"/>
 		<control id="blpurity" address="0xEA"/>
 		<control id="brpurity" address="0xEB"/>
-		
-		<control id="degauss" address="0x00"/>
-		<control id="defaults" address="0x04" delay="1000"/>
-		<control id="defaultsizepos" address="0x06" delay="1000"/>
-		<control id="defaultluma" address="0x08" delay="1000"/>
 		
 		<control id="language" type="list" address="0x68">
 			<value id="english" value="0"/>
@@ -48,4 +24,5 @@
 			<value id="chinese" value="5"/>
 		</control>
 	</controls>
+	<include file="VESA"/>
 </monitor>

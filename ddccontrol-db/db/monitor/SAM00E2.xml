@@ -1,3 +1,5 @@
 <?xml version="1.0"?>
 <!---The Samsung 173P has two different IDs, one for VGA, the other for DVI -->
-<monitor include="SAM00D3" name="Samsung SyncMaster 173P (DVI)"/>
+<monitor name="Samsung SyncMaster 173P (DVI)">
+	<include file="SAM00D3"/>
+</monitor>

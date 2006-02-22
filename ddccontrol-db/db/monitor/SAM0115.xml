@@ -1,35 +1,19 @@
 <?xml version="1.0"?>
 <!--- Thanks to Hubai Tamas for his help to create this database file -->
 <!--- CC, E1 and F5 are not in caps  (language, power and OSD enable) -->
-<monitor name="Samsung SyncMaster 913V" init="standard" caps="">
+<monitor name="Samsung SyncMaster 913V" init="standard">
+	<caps add="(lcd(CC E1 F5))">
 	<controls>
-		<control id="defaults" address="0x04"/>
-		<control id="defaultluma" address="0x05"/>
-		<control id="defaultgeom" address="0x06"/>
-		<control id="defaultcolor" address="0x08"/>
-		<control id="coarse" address="0x0e"/>
-		<control id="brightness" address="0x10"/>
-		<control id="contrast" address="0x12"/>
-		<control id="red" address="0x16"/>
-		<control id="green" address="0x18"/>
-		<control id="blue" address="0x1a"/>
 		<control id="auto" address="0x1e">
 			<value id="pos" value="1"/>
 			<value id="posfast" value="2"/>
 		</control>
-		<control id="hpos" address="0x20"/>
-		<control id="vpos" address="0x30"/>
-		<control id="fine" address="0x3e"/>
 		<!-- 0x60: +/1/3 [Input source, not applicable on 913V] -->
 		<!-- 0x62: +/25/50 [???] -->
 		<!-- 0x6c Service: Red Video Black Level -->
 		<!-- 0x6e Service: Green Video Black Level -->
 		<!-- 0x70 Service: Blue Video Black Level -->
 		<control id="sharpness" address="0x87"/>
-		<control id="settings" type="command" address="0xb0">
-			<value id="store" value="1"/>
-			<value id="restorefactory" value="2"/>
-		</control>
 		<!-- 0xb6: +/3/8	[???] -->
 		<!-- 0xc6: +/1/1	[???] -->
 		<!-- 0xc8: +/5/16	[???] -->
@@ -44,10 +28,6 @@
 			<value id="spanish" value="10"/>
 			<value id="swedish" value="11"/>
 		</control>
-		<control id="dpms" type="list" address="0xd6">
-			<value id="on" value="1"/>
-			<value id="standby" value="4"/>
-		</control>
 		<control id="magicbright" type="list" address="0xdc">
 			<value id="text" value="1"/>
 			<value id="internet" value="2"/>
@@ -59,10 +39,6 @@
 			<value id="custom" value="0"/>
 			<value id="warm" value="1"/>
 			<value id="cool" value="2"/>
-		</control>
-		<control id="power" type="list" address="0xe1">
-			<value id="off" value="0"/>
-			<value id="on" value="1"/>
 		</control>
 		<!-- 0xe2: +/0/1	[???] -->
 		<!-- 0xed: +/100/100	[SAM: Red Video Black Level] -->
@@ -80,4 +56,5 @@
 			<value id="disable" value="1"/>
 		</control>
 	</controls>
+	<include file="VESA"/>
 </monitor>

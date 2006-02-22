@@ -1,2 +1,4 @@
 <?xml version="1.0"?>
-<monitor include="SAM01B4" name="Samsung SyncMaster 770P (Analog)"/>
+<monitor name="Samsung SyncMaster 770P (VGA)">
+	<include file="SAM01B4"/>
+</monitor>
