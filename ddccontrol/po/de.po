@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
-"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-14 19:44+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-02-21 12:49+0100\n"
 "PO-Revision-Date: 2005-09-21 12:47+0200\n"
 "Last-Translator: Christian Schilling <cschilling@gmx.de>\n"
 "Language-Team: German\n"
@@ -17,11 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/ddccontrol/main.c:83 src/ddccontrol/main.c:87 src/ddccontrol/main.c:91
+#: ../src/ddccontrol/main.c:83 ../src/ddccontrol/main.c:87
+#: ../src/ddccontrol/main.c:91
 msgid "Control"
 msgstr ""
 
-#: src/ddccontrol/main.c:103
+#: ../src/ddccontrol/main.c:103
 #, c-format
 msgid ""
 "Usage:\n"
@@ -38,22 +39,22 @@ msgid ""
 "\t-b : ddccontrol-db directory (if other than %s)\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:121 src/ddccontrol/main.c:129
+#: ../src/ddccontrol/main.c:121 ../src/ddccontrol/main.c:129
 #, c-format
 msgid "Checking %s integrity...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:123 src/ddccontrol/main.c:131
+#: ../src/ddccontrol/main.c:123 ../src/ddccontrol/main.c:131
 #, c-format
 msgid "[ FAILED ]\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:127 src/ddccontrol/main.c:136
+#: ../src/ddccontrol/main.c:127 ../src/ddccontrol/main.c:136
 #, c-format
 msgid "[ OK ]\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:172
+#: ../src/ddccontrol/main.c:172
 #, c-format
 msgid ""
 "ddccontrol version %s\n"
@@ -65,73 +66,73 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:191
+#: ../src/ddccontrol/main.c:191
 #, c-format
 msgid "'%s' does not seem to be a valid register name\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:197
+#: ../src/ddccontrol/main.c:197
 #, c-format
 msgid "You cannot use -w parameter without -r.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:202
+#: ../src/ddccontrol/main.c:202
 #, c-format
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:391
+#: ../src/ddccontrol/main.c:247 ../src/gddccontrol/main.c:391
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:259
+#: ../src/ddccontrol/main.c:259
 #, c-format
 msgid "Detected monitors :\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:264
+#: ../src/ddccontrol/main.c:264
 #, c-format
 msgid " - Device: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 msgid "Yes"
 msgstr ""
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 msgid "No"
 msgstr ""
 
-#: src/ddccontrol/main.c:266
+#: ../src/ddccontrol/main.c:266
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:267
+#: ../src/ddccontrol/main.c:267
 #, c-format
 msgid "   Input type: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:267 src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:267 ../src/ddccontrol/main.c:305
 msgid "Digital"
 msgstr ""
 
-#: src/ddccontrol/main.c:267 src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:267 ../src/ddccontrol/main.c:305
 msgid "Analog"
 msgstr ""
 
-#: src/ddccontrol/main.c:271
+#: ../src/ddccontrol/main.c:271
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:281
+#: ../src/ddccontrol/main.c:281
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
@@ -139,12 +140,12 @@ msgid ""
 "are loaded (i2c-dev, and your framebuffer driver).\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:294
+#: ../src/ddccontrol/main.c:294
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:298
+#: ../src/ddccontrol/main.c:298
 #, c-format
 msgid ""
 "\n"
@@ -153,210 +154,212 @@ msgid ""
 "are loaded (i2c-dev, and your framebuffer driver).\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:302
+#: ../src/ddccontrol/main.c:302
 #, c-format
 msgid ""
 "\n"
 "EDID readings:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:303
+#: ../src/ddccontrol/main.c:303
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:305
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:310
+#: ../src/ddccontrol/main.c:310
 #, c-format
 msgid ""
 "\n"
 "Capabilities:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:320
+#: ../src/ddccontrol/main.c:320
 #, c-format
 msgid "Capabilities read fail.\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:326
+#: ../src/ddccontrol/main.c:326
 #, c-format
 msgid ""
 "\n"
 "Writing 0x%02x, 0x%02x(%d)...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:330
+#: ../src/ddccontrol/main.c:330
 #, c-format
 msgid ""
 "\n"
 "Reading 0x%02x...\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:337
+#: ../src/ddccontrol/main.c:337
 #, c-format
 msgid ""
 "\n"
 "Controls (valid/current/max) [Description - Value name]:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:361
+#: ../src/ddccontrol/main.c:361
 #, c-format
 msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:366
+#: ../src/ddccontrol/main.c:366
 #, c-format
 msgid "\t\t  Possible values:\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:370
+#: ../src/ddccontrol/main.c:370
 #, c-format
 msgid "\t\t\t> id=%s - name=%s, value=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:380
+#: ../src/ddccontrol/main.c:380
 #, c-format
 msgid "\t\t  supported, value=%d, maximum=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:381
+#: ../src/ddccontrol/main.c:381
 #, c-format
 msgid "\t\t  not supported, value=%d, maximum=%d\n"
 msgstr ""
 
-#: src/ddccontrol/main.c:392
+#: ../src/ddccontrol/main.c:392
 #, c-format
 msgid ""
 "\n"
 "Saving settings...\n"
 msgstr ""
 
-#: src/ddcpci/i2c-algo-bit.c:368
+#. arbitration or no acknowledge
+#: ../src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr ""
 
-#: src/ddcpci/i2c-algo-bit.c:395
+#. read timed out
+#: ../src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr ""
 
-#: src/ddcpci/i2c-algo-bit.c:414
+#: ../src/ddcpci/i2c-algo-bit.c:414
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr ""
 
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
-#: src/ddcpci/radeon.c:153
+#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:161
+#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr ""
 
-#: src/ddcpci/intel740.c:109
+#: ../src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
 msgstr ""
 
-#: src/ddcpci/intel740.c:121
+#: ../src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr ""
 
-#: src/ddcpci/intel810.c:105
+#: ../src/ddcpci/intel810.c:105
 #, c-format
 msgid "%s: Malloc error."
 msgstr ""
 
-#: src/ddcpci/intel810.c:171
+#: ../src/ddcpci/intel810.c:171
 msgid "i810_open: cannot open /dev/mem"
 msgstr ""
 
-#: src/ddcpci/intel810.c:206
+#: ../src/ddcpci/intel810.c:206
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr ""
 
-#: src/ddcpci/intel810.c:213
+#: ../src/ddcpci/intel810.c:213
 msgid "i810_open: mmap failed"
 msgstr ""
 
-#: src/ddcpci/main.c:149
+#: ../src/ddcpci/main.c:150
 msgid "==>Error while sending open message"
 msgstr ""
 
-#: src/ddcpci/main.c:172 src/ddcpci/main.c:178 src/ddcpci/main.c:195
+#: ../src/ddcpci/main.c:174 ../src/ddcpci/main.c:180 ../src/ddcpci/main.c:198
 msgid "==>Error while sending data answer message"
 msgstr ""
 
-#: src/ddcpci/main.c:243 src/ddcpci/main.c:257
+#: ../src/ddcpci/main.c:247 ../src/ddcpci/main.c:262
 msgid "==>Error while sending list message"
 msgstr ""
 
-#: src/ddcpci/main.c:275
+#: ../src/ddcpci/main.c:280
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:281
+#: ../src/ddcpci/main.c:286
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:288
+#: ../src/ddcpci/main.c:293
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:293
+#: ../src/ddcpci/main.c:298
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr ""
 
-#: src/ddcpci/main.c:307
+#: ../src/ddcpci/main.c:312
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr ""
 
-#: src/ddcpci/main.c:315
+#: ../src/ddcpci/main.c:320
 msgid "==>Error while receiving query\n"
 msgstr ""
 
-#: src/ddcpci/main.c:350
+#: ../src/ddcpci/main.c:355
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr ""
 
-#: src/ddcpci/nvidia.c:122
+#: ../src/ddcpci/nvidia.c:122
 #, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
 msgstr ""
 
-#: src/ddcpci/nvidia.c:165
+#: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
 msgstr ""
 
-#: src/ddcpci/nvidia.c:174
+#: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
 msgstr ""
 
-#: src/ddcpci/radeon.c:117
+#: ../src/ddcpci/radeon.c:173
 #, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
 msgstr ""
 
-#: src/ddcpci/radeon.c:165
+#: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
 msgstr ""
 
-#: src/ddcpci/radeon.c:174
+#: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:190
+#: ../src/gddccontrol/fspatterns.c:195
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -364,119 +367,120 @@ msgid ""
 " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:206
+#: ../src/gddccontrol/fspatterns.c:211
 msgid "Try to make moire patterns disappear."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:210
+#: ../src/gddccontrol/fspatterns.c:215
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
 msgstr ""
 
-#: src/gddccontrol/fspatterns.c:249
+#: ../src/gddccontrol/fspatterns.c:254
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:53
+#: ../src/gddccontrol/gprofile.c:53
 msgid "You must select at least one control to be saved in the profile."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:61
+#: ../src/gddccontrol/gprofile.c:61
 msgid "Creating profile..."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:76
+#: ../src/gddccontrol/gprofile.c:76
 msgid "Error while creating profile."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:93
+#: ../src/gddccontrol/gprofile.c:93
 msgid "Applying profile..."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:116
+#: ../src/gddccontrol/gprofile.c:116
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:142
+#: ../src/gddccontrol/gprofile.c:142
 msgid ""
 "Please select the controls you want to save in the profile using the "
 "checkboxes to the left of each control."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:173
+#: ../src/gddccontrol/gprofile.c:174
 msgid "Profile Manager"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:190
+#: ../src/gddccontrol/gprofile.c:193
 msgid "Apply profile"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:195
+#: ../src/gddccontrol/gprofile.c:198
 msgid "Show profile details / Rename profile"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:200
+#: ../src/gddccontrol/gprofile.c:203
 msgid "Delete profile"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:226
+#: ../src/gddccontrol/gprofile.c:229
 msgid "Create profile"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:232
+#: ../src/gddccontrol/gprofile.c:235
 msgid "Close profile manager"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:296
+#: ../src/gddccontrol/gprofile.c:299
 msgid "Control name"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:307
+#: ../src/gddccontrol/gprofile.c:310
 msgid "Value"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:310
+#: ../src/gddccontrol/gprofile.c:313
 msgid "Address"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:313
+#: ../src/gddccontrol/gprofile.c:316
 msgid "Raw value"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:431 src/gddccontrol/gprofile.c:451
+#: ../src/gddccontrol/gprofile.c:434 ../src/gddccontrol/gprofile.c:454
 msgid "Profile information:"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:460
+#: ../src/gddccontrol/gprofile.c:463
 #, c-format
 msgid "File name: %s"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:471
+#: ../src/gddccontrol/gprofile.c:474
 msgid "Profile name:"
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:493
+#. Save
+#: ../src/gddccontrol/gprofile.c:496
 msgid "Saving profile..."
 msgstr ""
 
-#: src/gddccontrol/gprofile.c:502
+#: ../src/gddccontrol/gprofile.c:505
 msgid "Error while saving profile."
 msgstr ""
 
-#: src/gddccontrol/main.c:176
+#: ../src/gddccontrol/main.c:176
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:308
+#: ../src/gddccontrol/main.c:308
 msgid "Probing for available monitors..."
 msgstr ""
 
-#: src/gddccontrol/main.c:347
+#: ../src/gddccontrol/main.c:347
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -484,73 +488,77 @@ msgid ""
 "are loaded (i2c-dev, and your framebuffer driver)."
 msgstr ""
 
-#: src/gddccontrol/main.c:397
+#: ../src/gddccontrol/main.c:397
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr ""
 
-#: src/gddccontrol/main.c:407
+#: ../src/gddccontrol/main.c:407
 msgid "Monitor settings"
 msgstr "Bildschirmeinstellungen"
 
-#: src/gddccontrol/main.c:431
+#: ../src/gddccontrol/main.c:431
 msgid "Current monitor: "
 msgstr ""
 
-#: src/gddccontrol/main.c:441
+#: ../src/gddccontrol/main.c:441
 msgid "Refresh monitor list"
 msgstr ""
 
-#: src/gddccontrol/main.c:458
+#: ../src/gddccontrol/main.c:458
 msgid "Profile manager"
 msgstr ""
 
-#: src/gddccontrol/main.c:465
+#: ../src/gddccontrol/main.c:465
 msgid "Save profile"
 msgstr ""
 
-#: src/gddccontrol/main.c:471
+#: ../src/gddccontrol/main.c:471
 msgid "Cancel profile creation"
 msgstr ""
 
-#: src/gddccontrol/main.c:509
+#: ../src/gddccontrol/main.c:509
 msgid "Refresh"
 msgstr ""
 
-#: src/gddccontrol/main.c:509
+#: ../src/gddccontrol/main.c:509
 msgid "Refresh all controls"
 msgstr ""
 
-#: src/gddccontrol/main.c:516
+#: ../src/gddccontrol/main.c:516
 msgid "Close"
 msgstr ""
 
-#: src/gddccontrol/main.c:555
+#. moninfo = gtk_label_new ();
+#. gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
+#.
+#. gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
+#: ../src/gddccontrol/main.c:555
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:81
+#: ../src/gddccontrol/notebook.c:81
 msgid "Error while getting value"
 msgstr ""
 
-#: src/gddccontrol/notebook.c:116 src/gddccontrol/notebook.c:126
+#: ../src/gddccontrol/notebook.c:116 ../src/gddccontrol/notebook.c:126
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:129
+#: ../src/gddccontrol/notebook.c:129
 msgid "Could not get the control_db struct related to a control."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:489
+#: ../src/gddccontrol/notebook.c:489
 msgid "Show fullscreen patterns"
 msgstr ""
 
-#: src/gddccontrol/notebook.c:521
+#: ../src/gddccontrol/notebook.c:521
 msgid "Section"
 msgstr ""
 
-#: src/gddccontrol/notebook.c:568
+#: ../src/gddccontrol/notebook.c:568
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -561,36 +569,53 @@ msgid ""
 "input, and then click on the refresh button near the monitor list."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:579
+#: ../src/gddccontrol/notebook.c:579
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/notebook.c:587
 msgid ""
 "An error occured while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
 "the monitor list."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:602
+#: ../src/gddccontrol/notebook.c:604
 msgid "Please click on a group name."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:621 src/gddccontrol/notebook.c:630
+#: ../src/gddccontrol/notebook.c:623 ../src/gddccontrol/notebook.c:634
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr ""
 
-#: src/gddccontrol/notebook.c:642
+#: ../src/gddccontrol/notebook.c:648
 msgid "Loading profiles..."
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:182
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:1
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:182
 msgid "Monitor Profile Switcher"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:187
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:2
+msgid "Quickly switch monitor profiles created with gddccontrol"
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:1
+msgid "_About..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:2
+msgid "_Properties..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:3
+msgid "_Run gddccontrol..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:187
 msgid ""
 "An applet for quick switching of monitor profiles.\n"
 "Based on libddccontrol and part of the ddccontrol project.\n"
@@ -600,440 +625,442 @@ msgstr ""
 "Basiert auf libddccontrol und ist Teil des ddccontrol Projektes.\n"
 "(http://ddccontrol.sourceforge.net)"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:384
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:384
 msgid "Unable to initialize ddcci library"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:388
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:388
 msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:393
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:393
 msgid "An error occured while opening the monitor device"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:398
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:398
 msgid "Can't find any profiles"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:414
+#. only reached, if init was not finished
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:414
 msgid "error"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:438
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:438
 msgid "Monitor:"
 msgstr ""
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:441
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:441
 msgid "Monitor Profile Switcher Properties"
 msgstr ""
 
-#: src/lib/conf.c:69 src/lib/conf.c:263 src/lib/conf.c:313 src/lib/ddcci.c:975
+#: ../src/lib/conf.c:69 ../src/lib/conf.c:268 ../src/lib/conf.c:318
+#: ../src/lib/ddcci.c:981
 msgid "Cannot create filename (buffer too small)\n"
 msgstr ""
 
-#: src/lib/conf.c:93 src/lib/conf.c:368 src/lib/monitor_db.c:423
-#: src/lib/monitor_db.c:716
+#: ../src/lib/conf.c:94 ../src/lib/conf.c:373 ../src/lib/monitor_db.c:426
+#: ../src/lib/monitor_db.c:722
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr ""
 
-#: src/lib/conf.c:100 src/lib/conf.c:375
+#: ../src/lib/conf.c:101 ../src/lib/conf.c:380
 #, c-format
 msgid "empty profile file\n"
 msgstr ""
 
-#: src/lib/conf.c:106 src/lib/conf.c:381
+#: ../src/lib/conf.c:107 ../src/lib/conf.c:386
 #, c-format
 msgid "profile of the wrong type, root node %s != profile"
 msgstr ""
 
-#: src/lib/conf.c:112
+#: ../src/lib/conf.c:113
 msgid "Can't find ddccontrolversion property."
 msgstr ""
 
-#: src/lib/conf.c:114
+#: ../src/lib/conf.c:115
 #, c-format
 msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
 msgstr ""
 
-#: src/lib/conf.c:131
+#: ../src/lib/conf.c:132
 msgid "Can't find filename property."
 msgstr ""
 
-#: src/lib/conf.c:137
+#: ../src/lib/conf.c:138
 msgid "Can't find supported property."
 msgstr ""
 
-#: src/lib/conf.c:140
+#: ../src/lib/conf.c:141
 msgid "Can't convert supported property to int."
 msgstr ""
 
-#: src/lib/conf.c:145 src/lib/conf.c:390 src/lib/monitor_db.c:181
-#: src/lib/monitor_db.c:276 src/lib/monitor_db.c:442
+#: ../src/lib/conf.c:146 ../src/lib/conf.c:395 ../src/lib/monitor_db.c:181
+#: ../src/lib/monitor_db.c:278 ../src/lib/monitor_db.c:445
 msgid "Can't find name property."
 msgstr ""
 
-#: src/lib/conf.c:151
+#: ../src/lib/conf.c:152
 msgid "Can't find digital property."
 msgstr ""
 
-#: src/lib/conf.c:154
+#: ../src/lib/conf.c:155
 msgid "Can't convert digital property to int."
 msgstr ""
 
-#: src/lib/conf.c:180 src/lib/conf.c:442
+#: ../src/lib/conf.c:185 ../src/lib/conf.c:449
 msgid "Cannot create the xml writer\n"
 msgstr ""
 
-#: src/lib/conf.c:244
+#: ../src/lib/conf.c:249
 msgid "Cannot read control value\n"
 msgstr ""
 
-#: src/lib/conf.c:281
+#: ../src/lib/conf.c:286
 msgid "Cannot write control value\n"
 msgstr ""
 
-#: src/lib/conf.c:318
+#: ../src/lib/conf.c:323
 msgid "Error while opening ddccontrol home directory."
 msgstr ""
 
-#: src/lib/conf.c:342
+#: ../src/lib/conf.c:347
 msgid "Error while reading ddccontrol home directory."
 msgstr ""
 
-#: src/lib/conf.c:387
+#: ../src/lib/conf.c:392
 msgid "Can't find pnpid property."
 msgstr ""
 
-#: src/lib/conf.c:393 src/lib/conf.c:396
+#: ../src/lib/conf.c:398 ../src/lib/conf.c:401
 msgid "Can't find version property."
 msgstr ""
 
-#: src/lib/conf.c:395 src/lib/monitor_db.c:750
+#: ../src/lib/conf.c:400 ../src/lib/monitor_db.c:760
 msgid "Can't convert version to int."
 msgstr ""
 
-#: src/lib/conf.c:398
+#: ../src/lib/conf.c:403
 #, c-format
 msgid "profile version (%d) is not supported (should be %d).\n"
 msgstr ""
 
-#: src/lib/conf.c:412 src/lib/monitor_db.c:313
+#: ../src/lib/conf.c:417 ../src/lib/monitor_db.c:313
 msgid "Can't find address property."
 msgstr ""
 
-#: src/lib/conf.c:414 src/lib/monitor_db.c:315
+#: ../src/lib/conf.c:419 ../src/lib/monitor_db.c:315
 msgid "Can't convert address to int."
 msgstr ""
 
-#: src/lib/conf.c:418 src/lib/monitor_db.c:205
+#: ../src/lib/conf.c:423 ../src/lib/monitor_db.c:203
 msgid "Can't find value property."
 msgstr ""
 
-#: src/lib/conf.c:420 src/lib/monitor_db.c:207
+#: ../src/lib/conf.c:425 ../src/lib/monitor_db.c:205
 msgid "Can't convert value to int."
 msgstr ""
 
-#: src/lib/conf.c:502
+#: ../src/lib/conf.c:509
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
 msgstr ""
 
-#: src/lib/conf.c:522
+#: ../src/lib/conf.c:529
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:130
+#: ../src/lib/ddcci.c:130
 msgid "Error while initialisating the message queue"
 msgstr ""
 
-#: src/lib/ddcci.c:158
+#: ../src/lib/ddcci.c:159
 msgid "Error while sending quit message"
 msgstr ""
 
-#: src/lib/ddcci.c:203
+#: ../src/lib/ddcci.c:205
 msgid "Error while sending heartbeat message"
 msgstr ""
 
-#: src/lib/ddcci.c:221
+#: ../src/lib/ddcci.c:223
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr ""
 
-#: src/lib/ddcci.c:254 src/lib/ddcci.c:314
+#: ../src/lib/ddcci.c:256 ../src/lib/ddcci.c:317
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:272
+#: ../src/lib/ddcci.c:275
 msgid "Error while sending write message"
 msgstr ""
 
-#: src/lib/ddcci.c:281
+#: ../src/lib/ddcci.c:284
 msgid "Error while reading write message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:333
+#: ../src/lib/ddcci.c:337
 msgid "Error while sending read message"
 msgstr ""
 
-#: src/lib/ddcci.c:342
+#: ../src/lib/ddcci.c:346
 msgid "Error while reading read message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:433
+#: ../src/lib/ddcci.c:437
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:442
+#: ../src/lib/ddcci.c:446
 #, c-format
 msgid "Invalid response, magic is 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:450
+#: ../src/lib/ddcci.c:454
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr ""
 
-#: src/lib/ddcci.c:463
+#: ../src/lib/ddcci.c:467
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr ""
 
-#: src/lib/ddcci.c:582
+#: ../src/lib/ddcci.c:586
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:592
+#: ../src/lib/ddcci.c:596
 #, c-format
 msgid "Buffer too small to contain caps.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:634
+#: ../src/lib/ddcci.c:638
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:646
+#: ../src/lib/ddcci.c:650
 #, c-format
 msgid "Serial number: %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:649
+#: ../src/lib/ddcci.c:653
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:652
+#: ../src/lib/ddcci.c:656
 #, c-format
 msgid "EDID version: %d.%d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:655
+#: ../src/lib/ddcci.c:659
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
 msgstr ""
 
-#: src/lib/ddcci.c:666
+#: ../src/lib/ddcci.c:670
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr ""
 
-#: src/lib/ddcci.c:696
+#: ../src/lib/ddcci.c:700
 #, c-format
 msgid "Device: %s\n"
 msgstr ""
 
-#: src/lib/ddcci.c:709
+#: ../src/lib/ddcci.c:714
 msgid "Error while sending open message"
 msgstr ""
 
-#: src/lib/ddcci.c:717
+#: ../src/lib/ddcci.c:722
 msgid "Error while reading open message answer"
 msgstr ""
 
-#: src/lib/ddcci.c:725
+#: ../src/lib/ddcci.c:730
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr ""
 
-#: src/lib/ddcci.c:823
+#: ../src/lib/ddcci.c:828
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr ""
 
-#: src/lib/ddcci.c:836
+#: ../src/lib/ddcci.c:841
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr ""
 
-#: src/lib/ddcci.c:857
+#: ../src/lib/ddcci.c:862
 #, c-format
 msgid "Probing for available monitors"
 msgstr ""
 
-#: src/lib/ddcci.c:870
+#: ../src/lib/ddcci.c:876
 msgid "Error while sending list message"
 msgstr ""
 
-#: src/lib/ddcci.c:879
+#: ../src/lib/ddcci.c:885
 msgid "Error while reading list entry"
 msgstr ""
 
-#: src/lib/ddcci.c:896
+#: ../src/lib/ddcci.c:902
 #, c-format
 msgid "Found PCI device (%s)\n"
 msgstr ""
 
-#: src/lib/ddcci.c:930
+#: ../src/lib/ddcci.c:936
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr ""
 
-#: src/lib/ddcci.c:979
+#: ../src/lib/ddcci.c:985
 msgid "Error while getting informations about ddccontrol home directory."
 msgstr ""
 
-#: src/lib/ddcci.c:984
+#: ../src/lib/ddcci.c:990
 msgid "Error while creating ddccontrol home directory."
 msgstr ""
 
-#: src/lib/ddcci.c:989
+#: ../src/lib/ddcci.c:995
 msgid ""
 "Error while getting informations about ddccontrol home directory after "
 "creating it."
 msgstr ""
 
-#: src/lib/ddcci.c:996
+#: ../src/lib/ddcci.c:1002
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr ""
 
-#: src/lib/ddcci.c:1004
+#: ../src/lib/ddcci.c:1010
 msgid "Error while getting informations about ddccontrol profile directory."
 msgstr ""
 
-#: src/lib/ddcci.c:1009
+#: ../src/lib/ddcci.c:1015
 msgid "Error while creating ddccontrol profile directory."
 msgstr ""
 
-#: src/lib/ddcci.c:1014
+#: ../src/lib/ddcci.c:1020
 msgid ""
 "Error while getting informations about ddccontrol profile directory after "
 "creating it."
 msgstr ""
 
-#: src/lib/ddcci.c:1021
+#: ../src/lib/ddcci.c:1027
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr ""
 
-#: src/lib/monitor_db.c:101 src/lib/monitor_db.c:115
+#: ../src/lib/monitor_db.c:101 ../src/lib/monitor_db.c:115
 msgid "Can't convert value to int, invalid CAPS."
 msgstr ""
 
-#: src/lib/monitor_db.c:173 src/lib/monitor_db.c:274
+#: ../src/lib/monitor_db.c:173 ../src/lib/monitor_db.c:276
 msgid "Can't find id property."
 msgstr ""
 
-#: src/lib/monitor_db.c:241 src/lib/monitor_db.c:602
+#: ../src/lib/monitor_db.c:242 ../src/lib/monitor_db.c:603
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:287
+#: ../src/lib/monitor_db.c:289
 msgid "Invalid refresh type (!= none, != all)."
 msgstr ""
 
-#: src/lib/monitor_db.c:322
+#: ../src/lib/monitor_db.c:322
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:337
+#: ../src/lib/monitor_db.c:337
 msgid "Can't convert delay to int."
 msgstr ""
 
-#: src/lib/monitor_db.c:345
+#: ../src/lib/monitor_db.c:345
 msgid "Can't find type property."
 msgstr ""
 
-#: src/lib/monitor_db.c:370 src/lib/monitor_db.c:479
+#: ../src/lib/monitor_db.c:370 ../src/lib/monitor_db.c:482
 msgid "Invalid type."
 msgstr ""
 
-#: src/lib/monitor_db.c:416
+#: ../src/lib/monitor_db.c:419
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:430
+#: ../src/lib/monitor_db.c:433
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:436
+#: ../src/lib/monitor_db.c:439
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr ""
 
-#: src/lib/monitor_db.c:450
+#: ../src/lib/monitor_db.c:453
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:471
+#: ../src/lib/monitor_db.c:474
 msgid "Can't find init property."
 msgstr ""
 
-#: src/lib/monitor_db.c:495
+#: ../src/lib/monitor_db.c:498
 #, c-format
 msgid "document of the wrong type, can't find controls.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:563
+#: ../src/lib/monitor_db.c:565
 msgid "Error enumerating controls in group."
 msgstr ""
 
-#: src/lib/monitor_db.c:723
+#: ../src/lib/monitor_db.c:729
 #, c-format
 msgid "empty options.xml\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:729
+#: ../src/lib/monitor_db.c:736
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr ""
 
-#: src/lib/monitor_db.c:738
+#: ../src/lib/monitor_db.c:746
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:744
+#: ../src/lib/monitor_db.c:753
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:753
+#: ../src/lib/monitor_db.c:763
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:754
+#: ../src/lib/monitor_db.c:764
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:760
+#: ../src/lib/monitor_db.c:771
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr ""
 
-#: src/lib/monitor_db.c:761
+#: ../src/lib/monitor_db.c:772
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr ""

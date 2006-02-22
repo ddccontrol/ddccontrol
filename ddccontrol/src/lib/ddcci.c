@@ -1,7 +1,7 @@
 /*
     ddc/ci interface functions
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
-    Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2006 Nicolas Boichat (nicolas@boichat.ch)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -89,10 +89,19 @@ int get_verbosity() {
 #define DDCPCI_RETRIES 100000
 
 /* debugging */
-static void dumphex(FILE *f, unsigned char *buf, int len)
+static void dumphex(FILE *f, unsigned char *text, unsigned char *buf, int len)
 {
 	int i, j;
-	
+
+	if (text) {
+		if (len > 16) {
+			fprintf(f, "%s:\n", text);
+		}
+		else {
+			fprintf(f, "%s: ", text);
+		}
+	}
+
 	for (j = 0; j < len; j +=16) {
 		if (len > 16) {
 			fprintf(f, "%04x: ", j);
@@ -257,7 +266,11 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 			}
 			return -1;
 		}
-	
+
+		if (verbosity > 1) {
+			dumphex(stderr, "Send", buf, len);
+		}
+
 		return i;
 	}
 #ifdef HAVE_DDCPCI
@@ -285,6 +298,11 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 			}
 			return -1;
 		}
+
+		if (verbosity > 1) {
+			dumphex(stderr, "Send", buf, len);
+		}
+
 		return adata.status;
 	}
 #endif
@@ -318,7 +336,11 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 			}
 			return -1;
 		}
-	
+
+		if (verbosity > 1) {
+			dumphex(stderr, "Recv", buf, i);
+		}
+
 		return i;
 	}
 #ifdef HAVE_DDCPCI
@@ -350,6 +372,10 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		
 		memcpy(buf, adata.buffer, ret - ANSWER_SIZE);
 		
+		if (verbosity > 1) {
+			dumphex(stderr, "Recv", buf, ret - ANSWER_SIZE);
+		}
+
 		return ret - ANSWER_SIZE;
 	}
 #endif
@@ -362,7 +388,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 static void ddcci_delay(struct monitor* mon, int iswrite)
 {
 	struct timeval now;
-	
+
 	if (gettimeofday(&now, NULL)) {
 		usleep(DELAY);
 	} else {
@@ -392,11 +418,6 @@ static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char le
 	int i = 0;
 	unsigned char _buf[MAX_BYTES + 3];
 	unsigned xor = ((unsigned char)mon->addr << 1);	/* initial xor value */
-
-	if (verbosity > 1) {
-		fprintf(stderr, "Send: ");
-		dumphex(stderr, buf, len);
-	}
 
 	/* put first magic */
 	xor ^= (_buf[i++] = MAGIC_1);
@@ -436,7 +457,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 		if (!mon->probing || verbosity) {
 			fprintf(stderr, _("Invalid response, first byte is 0x%02x, should be 0x%02x\n"),
 				_buf[0], mon->addr * 2);
-			dumphex(stderr, _buf, len + 3);
+			dumphex(stderr, NULL, _buf, len + 3);
 		}
 		return -1;
 	}
@@ -465,7 +486,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	if (xor != 0) {
 		if (!mon->probing || verbosity) {
 			fprintf(stderr, _("Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"), xor, _len);
-			dumphex(stderr, _buf, len + 3);
+			dumphex(stderr, NULL, _buf, len + 3);
 		}
 		
 		return -1;
@@ -473,12 +494,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 
 	/* copy payload data */
 	memcpy(buf, _buf + 2, _len);
-	
-	if (verbosity > 1) {
-		fprintf(stderr, "Recv: ");
-		dumphex(stderr, buf, _len);
-	}
-	
+		
 	return _len;
 }
 
@@ -626,11 +642,7 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 	
 	if (i2c_write(mon, addr, buf, 1) > 0 &&
 	    i2c_read(mon, addr, buf, sizeof(buf)) > 0) 
-	{
-		if (verbosity) {
-			dumphex(stdout, buf, sizeof(buf));
-		}
-		
+	{		
 		if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
 		    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
 		{

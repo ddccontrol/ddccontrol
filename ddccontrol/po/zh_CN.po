@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool cvs version 2005-11-12\n"
-"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-14 19:44+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-02-21 12:49+0100\n"
 "PO-Revision-Date: 2005-11-12 15:50+0800\n"
 "Last-Translator: Wu Songhai waq@21cn.com\n"
 "Language-Team: Simple Chinese <LL@li.org>\n"
@@ -15,11 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/ddccontrol/main.c:83 src/ddccontrol/main.c:87 src/ddccontrol/main.c:91
+#: ../src/ddccontrol/main.c:83 ../src/ddccontrol/main.c:87
+#: ../src/ddccontrol/main.c:91
 msgid "Control"
 msgstr "控制器"
 
-#: src/ddccontrol/main.c:103
+#: ../src/ddccontrol/main.c:103
 #, c-format
 msgid ""
 "Usage:\n"
@@ -48,22 +49,22 @@ msgstr ""
 "\t-v : 冗长模式 (增加更多详细的说明)\n"
 "\t-b : ddccontrol-db 目录 (如果不是 %s 的话)\n"
 
-#: src/ddccontrol/main.c:121 src/ddccontrol/main.c:129
+#: ../src/ddccontrol/main.c:121 ../src/ddccontrol/main.c:129
 #, c-format
 msgid "Checking %s integrity...\n"
 msgstr "正在检查 %s 的完整性...\n"
 
-#: src/ddccontrol/main.c:123 src/ddccontrol/main.c:131
+#: ../src/ddccontrol/main.c:123 ../src/ddccontrol/main.c:131
 #, c-format
 msgid "[ FAILED ]\n"
 msgstr "[ 失败 ]\n"
 
-#: src/ddccontrol/main.c:127 src/ddccontrol/main.c:136
+#: ../src/ddccontrol/main.c:127 ../src/ddccontrol/main.c:136
 #, c-format
 msgid "[ OK ]\n"
 msgstr "[ 成功 ]\n"
 
-#: src/ddccontrol/main.c:172
+#: ../src/ddccontrol/main.c:172
 #, c-format
 msgid ""
 "ddccontrol version %s\n"
@@ -81,73 +82,73 @@ msgstr ""
 "你可以在GNU通用公共许可(GPL)条款下重新发布此程序的拷贝.\n"
 "\n"
 
-#: src/ddccontrol/main.c:191
+#: ../src/ddccontrol/main.c:191
 #, c-format
 msgid "'%s' does not seem to be a valid register name\n"
 msgstr "'%s' 不像是一个有效的控制器名\n"
 
-#: src/ddccontrol/main.c:197
+#: ../src/ddccontrol/main.c:197
 #, c-format
 msgid "You cannot use -w parameter without -r.\n"
 msgstr "你不能在没有 -r 参数的情况下使用 -w 参数.\n"
 
-#: src/ddccontrol/main.c:202
+#: ../src/ddccontrol/main.c:202
 #, c-format
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' 不像是一个有效的值.\n"
 
-#: src/ddccontrol/main.c:247 src/gddccontrol/main.c:391
+#: ../src/ddccontrol/main.c:247 ../src/gddccontrol/main.c:391
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "未能初始化ddcci库.\n"
 
-#: src/ddccontrol/main.c:259
+#: ../src/ddccontrol/main.c:259
 #, c-format
 msgid "Detected monitors :\n"
 msgstr "检查到的显示器:\n"
 
-#: src/ddccontrol/main.c:264
+#: ../src/ddccontrol/main.c:264
 #, c-format
 msgid " - Device: %s\n"
 msgstr " - 设备: %s\n"
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr "   DDC/CI 支持: %s\n"
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 msgid "Yes"
 msgstr "是"
 
-#: src/ddccontrol/main.c:265
+#: ../src/ddccontrol/main.c:265
 msgid "No"
 msgstr "否"
 
-#: src/ddccontrol/main.c:266
+#: ../src/ddccontrol/main.c:266
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr "   显示器名称: %s\n"
 
-#: src/ddccontrol/main.c:267
+#: ../src/ddccontrol/main.c:267
 #, c-format
 msgid "   Input type: %s\n"
 msgstr "   输入类型: %s\n"
 
-#: src/ddccontrol/main.c:267 src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:267 ../src/ddccontrol/main.c:305
 msgid "Digital"
 msgstr "数字"
 
-#: src/ddccontrol/main.c:267 src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:267 ../src/ddccontrol/main.c:305
 msgid "Analog"
 msgstr "模拟"
 
-#: src/ddccontrol/main.c:271
+#: ../src/ddccontrol/main.c:271
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr "  (已自动选择)\n"
 
-#: src/ddccontrol/main.c:281
+#: ../src/ddccontrol/main.c:281
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
@@ -158,12 +159,12 @@ msgstr ""
 "如果你的图形卡需要它,请检查所有的必需的内核模块已经加载 (i2c-dev, 以及你的 "
 "framebuffer 驱动).\n"
 
-#: src/ddccontrol/main.c:294
+#: ../src/ddccontrol/main.c:294
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr "正在总线 %s 中读取EDID和初始化DDC/CI...\n"
 
-#: src/ddccontrol/main.c:298
+#: ../src/ddccontrol/main.c:298
 #, c-format
 msgid ""
 "\n"
@@ -176,7 +177,7 @@ msgstr ""
 "如果你的图形卡需要它,请检查所有的必需的内核模块已经加载 (i2c-dev, 以及你的 "
 "framebuffer 驱动).\n"
 
-#: src/ddccontrol/main.c:302
+#: ../src/ddccontrol/main.c:302
 #, c-format
 msgid ""
 "\n"
@@ -185,17 +186,17 @@ msgstr ""
 "\n"
 "正在读取EDID数据:\n"
 
-#: src/ddccontrol/main.c:303
+#: ../src/ddccontrol/main.c:303
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr "\t即插即用ID: %s [%s]\n"
 
-#: src/ddccontrol/main.c:305
+#: ../src/ddccontrol/main.c:305
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr "\t输入信号类型: %s\n"
 
-#: src/ddccontrol/main.c:310
+#: ../src/ddccontrol/main.c:310
 #, c-format
 msgid ""
 "\n"
@@ -204,12 +205,12 @@ msgstr ""
 "\n"
 "功能:\n"
 
-#: src/ddccontrol/main.c:320
+#: ../src/ddccontrol/main.c:320
 #, c-format
 msgid "Capabilities read fail.\n"
 msgstr "读取功能失败.\n"
 
-#: src/ddccontrol/main.c:326
+#: ../src/ddccontrol/main.c:326
 #, c-format
 msgid ""
 "\n"
@@ -218,7 +219,7 @@ msgstr ""
 "\n"
 "正在写 0x%02x, 0x%02x(%d)...\n"
 
-#: src/ddccontrol/main.c:330
+#: ../src/ddccontrol/main.c:330
 #, c-format
 msgid ""
 "\n"
@@ -227,7 +228,7 @@ msgstr ""
 "\n"
 "正在读 0x%02x...\n"
 
-#: src/ddccontrol/main.c:337
+#: ../src/ddccontrol/main.c:337
 #, c-format
 msgid ""
 "\n"
@@ -236,32 +237,32 @@ msgstr ""
 "\n"
 "控制器    (有效/当前值/最大值) [描述 - 值名]:\n"
 
-#: src/ddccontrol/main.c:361
+#: ../src/ddccontrol/main.c:361
 #, c-format
 msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
 msgstr "\t\t> 标识符=%s, 名字=%s, 地址=%#x, 延迟=%dms, 类型=%d\n"
 
-#: src/ddccontrol/main.c:366
+#: ../src/ddccontrol/main.c:366
 #, c-format
 msgid "\t\t  Possible values:\n"
 msgstr "\t\t  可能的值:\n"
 
-#: src/ddccontrol/main.c:370
+#: ../src/ddccontrol/main.c:370
 #, c-format
 msgid "\t\t\t> id=%s - name=%s, value=%d\n"
 msgstr "\t\t\t> 标识符=%s - 名字=%s, 值=%d\n"
 
-#: src/ddccontrol/main.c:380
+#: ../src/ddccontrol/main.c:380
 #, c-format
 msgid "\t\t  supported, value=%d, maximum=%d\n"
 msgstr "\t\t  已支持, 值=%d, 最大值=%d\n"
 
-#: src/ddccontrol/main.c:381
+#: ../src/ddccontrol/main.c:381
 #, c-format
 msgid "\t\t  not supported, value=%d, maximum=%d\n"
 msgstr "\t\t  不支持, 值=%d, 最大值=%d\n"
 
-#: src/ddccontrol/main.c:392
+#: ../src/ddccontrol/main.c:392
 #, c-format
 msgid ""
 "\n"
@@ -270,128 +271,130 @@ msgstr ""
 "\n"
 "正在保存设置...\n"
 
-#: src/ddcpci/i2c-algo-bit.c:368
+#. arbitration or no acknowledge
+#: ../src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr "sendbytes: 错误 - bailout.\n"
 
-#: src/ddcpci/i2c-algo-bit.c:395
+#. read timed out
+#: ../src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr "i2c-algo-bit.o: readbytes: i2c_inb 超时.\n"
 
-#: src/ddcpci/i2c-algo-bit.c:414
+#: ../src/ddcpci/i2c-algo-bit.c:414
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: 确认时超时\n"
 
-#: src/ddcpci/intel740.c:103 src/ddcpci/intel810.c:161 src/ddcpci/nvidia.c:155
-#: src/ddcpci/radeon.c:153
+#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:161
+#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: malloc 出错.\n"
 
-#: src/ddcpci/intel740.c:109
+#: ../src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
 msgstr "%s: ioperm 失败"
 
-#: src/ddcpci/intel740.c:121
+#: ../src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr "%s: 错误: 未知的显卡类型 (%#x)\n"
 
-#: src/ddcpci/intel810.c:105
+#: ../src/ddcpci/intel810.c:105
 #, c-format
 msgid "%s: Malloc error."
 msgstr "%s: malloc 出错."
 
-#: src/ddcpci/intel810.c:171
+#: ../src/ddcpci/intel810.c:171
 msgid "i810_open: cannot open /dev/mem"
 msgstr "i810_open: 打不开 /dev/mem"
 
-#: src/ddcpci/intel810.c:206
+#: ../src/ddcpci/intel810.c:206
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr "i810_open: 错误 :找不到任何有效的 MMIO　PCI　区域.\n"
 
-#: src/ddcpci/intel810.c:213
+#: ../src/ddcpci/intel810.c:213
 msgid "i810_open: mmap failed"
 msgstr "i810_open: mmap 失败"
 
-#: src/ddcpci/main.c:149
+#: ../src/ddcpci/main.c:150
 msgid "==>Error while sending open message"
 msgstr "==>发送打开消息时出错"
 
-#: src/ddcpci/main.c:172 src/ddcpci/main.c:178 src/ddcpci/main.c:195
+#: ../src/ddcpci/main.c:174 ../src/ddcpci/main.c:180 ../src/ddcpci/main.c:198
 msgid "==>Error while sending data answer message"
 msgstr "==>发送数据应答消息时出错"
 
-#: src/ddcpci/main.c:243 src/ddcpci/main.c:257
+#: ../src/ddcpci/main.c:247 ../src/ddcpci/main.c:262
 msgid "==>Error while sending list message"
 msgstr "==>发送列表消息时出错"
 
-#: src/ddcpci/main.c:275
+#: ../src/ddcpci/main.c:280
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "无效的参数.\n"
 
-#: src/ddcpci/main.c:281
+#: ../src/ddcpci/main.c:286
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>不能读取详细资料.\n"
 
-#: src/ddcpci/main.c:288
+#: ../src/ddcpci/main.c:293
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>不能读取键值.\n"
 
-#: src/ddcpci/main.c:293
+#: ../src/ddcpci/main.c:298
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>打不开键值 %u\n"
 
-#: src/ddcpci/main.c:307
+#: ../src/ddcpci/main.c:312
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>在 %ld 秒时间内没收到命令, 中止.\n"
 
-#: src/ddcpci/main.c:315
+#: ../src/ddcpci/main.c:320
 msgid "==>Error while receiving query\n"
 msgstr "==>接收查询时出错\n"
 
-#: src/ddcpci/main.c:350
+#: ../src/ddcpci/main.c:355
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>无效的查询...\n"
 
-#: src/ddcpci/nvidia.c:122
+#: ../src/ddcpci/nvidia.c:122
 #, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: malloc 出错."
 
-#: src/ddcpci/nvidia.c:165
+#: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
 msgstr "nvidia_open: 打不开 /dev/mem"
 
-#: src/ddcpci/nvidia.c:174
+#: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: mmap 失败"
 
-#: src/ddcpci/radeon.c:117
+#: ../src/ddcpci/radeon.c:173
 #, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
 msgstr "radeon.c:init_i2c_bus: malloc 出错."
 
-#: src/ddcpci/radeon.c:165
+#: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
 msgstr "radeon_open: 打不开 /dev/mem"
 
-#: src/ddcpci/radeon.c:174
+#: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
 msgstr "radeon_open: mmap 失败"
 
-#: src/gddccontrol/fspatterns.c:190
+#: ../src/gddccontrol/fspatterns.c:195
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -403,11 +406,11 @@ msgstr ""
 " - 白色必须尽可能地亮.\n"
 " - 你必须能够辨别每一个灰度级 (特别是 0 和 12).\n"
 
-#: src/gddccontrol/fspatterns.c:206
+#: ../src/gddccontrol/fspatterns.c:211
 msgid "Try to make moire patterns disappear."
 msgstr "试图使摩尔纹图案消失."
 
-#: src/gddccontrol/fspatterns.c:210
+#: ../src/gddccontrol/fspatterns.c:215
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -415,109 +418,110 @@ msgstr ""
 "粗调使垂直区域消失.\n"
 "调节图像锁定细调使屏幕波动最小."
 
-#: src/gddccontrol/fspatterns.c:249
+#: ../src/gddccontrol/fspatterns.c:254
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "未知的全屏图案名字: %s"
 
-#: src/gddccontrol/gprofile.c:53
+#: ../src/gddccontrol/gprofile.c:53
 msgid "You must select at least one control to be saved in the profile."
 msgstr "你必须至少选择一个控制项来保存到预设文件中."
 
-#: src/gddccontrol/gprofile.c:61
+#: ../src/gddccontrol/gprofile.c:61
 msgid "Creating profile..."
 msgstr "正在创建预设文件..."
 
-#: src/gddccontrol/gprofile.c:76
+#: ../src/gddccontrol/gprofile.c:76
 msgid "Error while creating profile."
 msgstr "创建预设文件时出错."
 
-#: src/gddccontrol/gprofile.c:93
+#: ../src/gddccontrol/gprofile.c:93
 msgid "Applying profile..."
 msgstr "正在应用预设..."
 
-#: src/gddccontrol/gprofile.c:116
+#: ../src/gddccontrol/gprofile.c:116
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "你确认要删除预设文件 '%s' 吗?"
 
-#: src/gddccontrol/gprofile.c:142
+#: ../src/gddccontrol/gprofile.c:142
 msgid ""
 "Please select the controls you want to save in the profile using the "
 "checkboxes to the left of each control."
 msgstr "请选择你想要保存到预设文件中的控制项, 使用各个控制项前的检查框."
 
-#: src/gddccontrol/gprofile.c:173
+#: ../src/gddccontrol/gprofile.c:174
 msgid "Profile Manager"
 msgstr "预设文件管理器"
 
-#: src/gddccontrol/gprofile.c:190
+#: ../src/gddccontrol/gprofile.c:193
 msgid "Apply profile"
 msgstr "应用预设"
 
-#: src/gddccontrol/gprofile.c:195
+#: ../src/gddccontrol/gprofile.c:198
 msgid "Show profile details / Rename profile"
 msgstr "显示预设文件详细信息/给预设文件改名"
 
-#: src/gddccontrol/gprofile.c:200
+#: ../src/gddccontrol/gprofile.c:203
 msgid "Delete profile"
 msgstr "删除预设文件"
 
-#: src/gddccontrol/gprofile.c:226
+#: ../src/gddccontrol/gprofile.c:229
 msgid "Create profile"
 msgstr "创建预设文件"
 
-#: src/gddccontrol/gprofile.c:232
+#: ../src/gddccontrol/gprofile.c:235
 msgid "Close profile manager"
 msgstr "关闭预设文件管理器"
 
-#: src/gddccontrol/gprofile.c:296
+#: ../src/gddccontrol/gprofile.c:299
 msgid "Control name"
 msgstr "控制器名称"
 
-#: src/gddccontrol/gprofile.c:307
+#: ../src/gddccontrol/gprofile.c:310
 msgid "Value"
 msgstr "值"
 
-#: src/gddccontrol/gprofile.c:310
+#: ../src/gddccontrol/gprofile.c:313
 msgid "Address"
 msgstr "地址"
 
-#: src/gddccontrol/gprofile.c:313
+#: ../src/gddccontrol/gprofile.c:316
 msgid "Raw value"
 msgstr "原始值"
 
-#: src/gddccontrol/gprofile.c:431 src/gddccontrol/gprofile.c:451
+#: ../src/gddccontrol/gprofile.c:434 ../src/gddccontrol/gprofile.c:454
 msgid "Profile information:"
 msgstr "预设信息:"
 
-#: src/gddccontrol/gprofile.c:460
+#: ../src/gddccontrol/gprofile.c:463
 #, c-format
 msgid "File name: %s"
 msgstr "文件名: %s"
 
-#: src/gddccontrol/gprofile.c:471
+#: ../src/gddccontrol/gprofile.c:474
 msgid "Profile name:"
 msgstr "预设名:"
 
-#: src/gddccontrol/gprofile.c:493
+#. Save
+#: ../src/gddccontrol/gprofile.c:496
 msgid "Saving profile..."
 msgstr "正在保存预设文件..."
 
-#: src/gddccontrol/gprofile.c:502
+#: ../src/gddccontrol/gprofile.c:505
 msgid "Error while saving profile."
 msgstr "保存预设文件是出错."
 
-#: src/gddccontrol/main.c:176
+#: ../src/gddccontrol/main.c:176
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr "显示器已改变 (%d %d).\n"
 
-#: src/gddccontrol/main.c:308
+#: ../src/gddccontrol/main.c:308
 msgid "Probing for available monitors..."
 msgstr "正在检测可用的显示器..."
 
-#: src/gddccontrol/main.c:347
+#: ../src/gddccontrol/main.c:347
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -529,73 +533,77 @@ msgstr ""
 "如果你的图形卡需要它,请检查所有必需的内核模块已经加载 (i2c-dev, 及你的 "
 "framebuffer 驱动)."
 
-#: src/gddccontrol/main.c:397
+#: ../src/gddccontrol/main.c:397
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr "不能初始化ddcci库,详细信息参见控制台.\n"
 
-#: src/gddccontrol/main.c:407
+#: ../src/gddccontrol/main.c:407
 msgid "Monitor settings"
 msgstr "显示器的设置"
 
-#: src/gddccontrol/main.c:431
+#: ../src/gddccontrol/main.c:431
 msgid "Current monitor: "
 msgstr "当前显示器: "
 
-#: src/gddccontrol/main.c:441
+#: ../src/gddccontrol/main.c:441
 msgid "Refresh monitor list"
 msgstr "刷新显示器列表"
 
-#: src/gddccontrol/main.c:458
+#: ../src/gddccontrol/main.c:458
 msgid "Profile manager"
 msgstr "预设文件管理"
 
-#: src/gddccontrol/main.c:465
+#: ../src/gddccontrol/main.c:465
 msgid "Save profile"
 msgstr "保存预设文件"
 
-#: src/gddccontrol/main.c:471
+#: ../src/gddccontrol/main.c:471
 msgid "Cancel profile creation"
 msgstr "取消建立预设文件"
 
-#: src/gddccontrol/main.c:509
+#: ../src/gddccontrol/main.c:509
 msgid "Refresh"
 msgstr "刷新"
 
-#: src/gddccontrol/main.c:509
+#: ../src/gddccontrol/main.c:509
 msgid "Refresh all controls"
 msgstr "刷新所有控制项"
 
-#: src/gddccontrol/main.c:516
+#: ../src/gddccontrol/main.c:516
 msgid "Close"
 msgstr "关闭"
 
-#: src/gddccontrol/main.c:555
+#. moninfo = gtk_label_new ();
+#. gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
+#.
+#. gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
+#: ../src/gddccontrol/main.c:555
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr "欢迎使用gddccontrol %s"
 
-#: src/gddccontrol/notebook.c:81
+#: ../src/gddccontrol/notebook.c:81
 msgid "Error while getting value"
 msgstr "在取值时发生错误"
 
-#: src/gddccontrol/notebook.c:116 src/gddccontrol/notebook.c:126
+#: ../src/gddccontrol/notebook.c:116 ../src/gddccontrol/notebook.c:126
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "正在刷新控制项的值 (%d%%)..."
 
-#: src/gddccontrol/notebook.c:129
+#: ../src/gddccontrol/notebook.c:129
 msgid "Could not get the control_db struct related to a control."
 msgstr "不能获取与一个控制器相关的控制库结构."
 
-#: src/gddccontrol/notebook.c:489
+#: ../src/gddccontrol/notebook.c:489
 msgid "Show fullscreen patterns"
 msgstr "显示全屏式样"
 
-#: src/gddccontrol/notebook.c:521
+#: ../src/gddccontrol/notebook.c:521
 msgid "Section"
 msgstr "区段"
 
-#: src/gddccontrol/notebook.c:568
+#: ../src/gddccontrol/notebook.c:568
 msgid ""
 "The current monitor is in the database but does not supports DDC/CI.\n"
 "\n"
@@ -613,12 +621,12 @@ msgstr ""
 "如果你的显示器有两个信号输入接口, 请尝试连接到另一个接口, 然后点击显示器列表"
 "旁的刷新按钮."
 
-#: src/gddccontrol/notebook.c:579
+#: ../src/gddccontrol/notebook.c:579
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "正在打开显示器设备 (%s)..."
 
-#: src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/notebook.c:587
 msgid ""
 "An error occured while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
@@ -627,24 +635,41 @@ msgstr ""
 "在打开显示器设备时发生了一个错误.\n"
 "可能是显示器没有连接, 请点击显示器列表旁的刷新按钮."
 
-#: src/gddccontrol/notebook.c:602
+#: ../src/gddccontrol/notebook.c:604
 msgid "Please click on a group name."
 msgstr "请单击一个组名."
 
-#: src/gddccontrol/notebook.c:621 src/gddccontrol/notebook.c:630
+#: ../src/gddccontrol/notebook.c:623 ../src/gddccontrol/notebook.c:634
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr "正在获取控制器的值 (%d%%)..."
 
-#: src/gddccontrol/notebook.c:642
+#: ../src/gddccontrol/notebook.c:648
 msgid "Loading profiles..."
 msgstr "正在装载预设文件..."
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:182
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:1
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:182
 msgid "Monitor Profile Switcher"
 msgstr "显示器预设切换器"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:187
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:2
+msgid "Quickly switch monitor profiles created with gddccontrol"
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:1
+msgid "_About..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:2
+msgid "_Properties..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:3
+msgid "_Run gddccontrol..."
+msgstr ""
+
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:187
 msgid ""
 "An applet for quick switching of monitor profiles.\n"
 "Based on libddccontrol and part of the ddccontrol project.\n"
@@ -654,440 +679,442 @@ msgstr ""
 "基于 libddccontrol 和部分 ddccontrol 项目.\n"
 "(http://ddccontrol.sourceforge.net)"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:384
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:384
 msgid "Unable to initialize ddcci library"
 msgstr "未能初始化ddcci库"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:388
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:388
 msgid "No monitor configuration found. Please run gddccontrol first"
 msgstr "没找到显示器配置. 请先运行 gddccontrol"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:393
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:393
 msgid "An error occured while opening the monitor device"
 msgstr "打开显示器设备时发生了一个错误"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:398
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:398
 msgid "Can't find any profiles"
 msgstr "找不到任何预设文件."
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:414
+#. only reached, if init was not finished
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:414
 msgid "error"
 msgstr "错误"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:438
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:438
 msgid "Monitor:"
 msgstr "显示器:"
 
-#: src/gnome-ddcc-applet/ddcc-applet.c:441
+#: ../src/gnome-ddcc-applet/ddcc-applet.c:441
 msgid "Monitor Profile Switcher Properties"
 msgstr "显示器预设切换器属性"
 
-#: src/lib/conf.c:69 src/lib/conf.c:263 src/lib/conf.c:313 src/lib/ddcci.c:975
+#: ../src/lib/conf.c:69 ../src/lib/conf.c:268 ../src/lib/conf.c:318
+#: ../src/lib/ddcci.c:981
 msgid "Cannot create filename (buffer too small)\n"
 msgstr "不能创建文件名 (缓冲区太小)\n"
 
-#: src/lib/conf.c:93 src/lib/conf.c:368 src/lib/monitor_db.c:423
-#: src/lib/monitor_db.c:716
+#: ../src/lib/conf.c:94 ../src/lib/conf.c:373 ../src/lib/monitor_db.c:426
+#: ../src/lib/monitor_db.c:722
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "文档语法分析不成功.\n"
 
-#: src/lib/conf.c:100 src/lib/conf.c:375
+#: ../src/lib/conf.c:101 ../src/lib/conf.c:380
 #, c-format
 msgid "empty profile file\n"
 msgstr "空的预设文件\n"
 
-#: src/lib/conf.c:106 src/lib/conf.c:381
+#: ../src/lib/conf.c:107 ../src/lib/conf.c:386
 #, c-format
 msgid "profile of the wrong type, root node %s != profile"
 msgstr "预设文件有错误类型, 根节点 %s 不等于 profile"
 
-#: src/lib/conf.c:112
+#: ../src/lib/conf.c:113
 msgid "Can't find ddccontrolversion property."
 msgstr "找不到ddccontrol版本属性."
 
-#: src/lib/conf.c:114
+#: ../src/lib/conf.c:115
 #, c-format
 msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
 msgstr "在显示器列表保存之后 ddccontrol 已经被升级了(%s vs %s).\n"
 
-#: src/lib/conf.c:131
+#: ../src/lib/conf.c:132
 msgid "Can't find filename property."
 msgstr "找不到文件名属性."
 
-#: src/lib/conf.c:137
+#: ../src/lib/conf.c:138
 msgid "Can't find supported property."
 msgstr "找不到支持属性."
 
-#: src/lib/conf.c:140
+#: ../src/lib/conf.c:141
 msgid "Can't convert supported property to int."
 msgstr "支持属性不能转换成整数."
 
-#: src/lib/conf.c:145 src/lib/conf.c:390 src/lib/monitor_db.c:181
-#: src/lib/monitor_db.c:276 src/lib/monitor_db.c:442
+#: ../src/lib/conf.c:146 ../src/lib/conf.c:395 ../src/lib/monitor_db.c:181
+#: ../src/lib/monitor_db.c:278 ../src/lib/monitor_db.c:445
 msgid "Can't find name property."
 msgstr "找不到名称属性."
 
-#: src/lib/conf.c:151
+#: ../src/lib/conf.c:152
 msgid "Can't find digital property."
 msgstr "找不到数字式属性."
 
-#: src/lib/conf.c:154
+#: ../src/lib/conf.c:155
 msgid "Can't convert digital property to int."
 msgstr "数字式属性不能转换成整数."
 
-#: src/lib/conf.c:180 src/lib/conf.c:442
+#: ../src/lib/conf.c:185 ../src/lib/conf.c:449
 msgid "Cannot create the xml writer\n"
 msgstr "不能创建xml写入器\n"
 
-#: src/lib/conf.c:244
+#: ../src/lib/conf.c:249
 msgid "Cannot read control value\n"
 msgstr "不能读取控制器值\n"
 
-#: src/lib/conf.c:281
+#: ../src/lib/conf.c:286
 msgid "Cannot write control value\n"
 msgstr "不能写控制器值\n"
 
-#: src/lib/conf.c:318
+#: ../src/lib/conf.c:323
 msgid "Error while opening ddccontrol home directory."
 msgstr "打开ddccontrol的目录时出错."
 
-#: src/lib/conf.c:342
+#: ../src/lib/conf.c:347
 msgid "Error while reading ddccontrol home directory."
 msgstr "读取ddccontrol的目录时出错."
 
-#: src/lib/conf.c:387
+#: ../src/lib/conf.c:392
 msgid "Can't find pnpid property."
 msgstr "找不到 pnpid 属性."
 
-#: src/lib/conf.c:393 src/lib/conf.c:396
+#: ../src/lib/conf.c:398 ../src/lib/conf.c:401
 msgid "Can't find version property."
 msgstr "找不到版本属性."
 
-#: src/lib/conf.c:395 src/lib/monitor_db.c:750
+#: ../src/lib/conf.c:400 ../src/lib/monitor_db.c:760
 msgid "Can't convert version to int."
 msgstr "版本不能转换到整数."
 
-#: src/lib/conf.c:398
+#: ../src/lib/conf.c:403
 #, c-format
 msgid "profile version (%d) is not supported (should be %d).\n"
 msgstr "不支持的预设文件版本 (%d), 应该是 (%d).\n"
 
-#: src/lib/conf.c:412 src/lib/monitor_db.c:313
+#: ../src/lib/conf.c:417 ../src/lib/monitor_db.c:313
 msgid "Can't find address property."
 msgstr "找不到地址属性."
 
-#: src/lib/conf.c:414 src/lib/monitor_db.c:315
+#: ../src/lib/conf.c:419 ../src/lib/monitor_db.c:315
 msgid "Can't convert address to int."
 msgstr "地址不能转换成整数."
 
-#: src/lib/conf.c:418 src/lib/monitor_db.c:205
+#: ../src/lib/conf.c:423 ../src/lib/monitor_db.c:203
 msgid "Can't find value property."
 msgstr "找不到值属性."
 
-#: src/lib/conf.c:420 src/lib/monitor_db.c:207
+#: ../src/lib/conf.c:425 ../src/lib/monitor_db.c:205
 msgid "Can't convert value to int."
 msgstr "值不能转换成整数."
 
-#: src/lib/conf.c:502
+#: ../src/lib/conf.c:509
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
 msgstr "ddcci_delete_profile: 错误, 不能删除预设文件.\n"
 
-#: src/lib/conf.c:522
+#: ../src/lib/conf.c:529
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
 msgstr "ddcci_delete_profile: 错误, 找不到要删除的预设文件.\n"
 
-#: src/lib/ddcci.c:130
+#: ../src/lib/ddcci.c:130
 msgid "Error while initialisating the message queue"
 msgstr "初始化消息队列时出错"
 
-#: src/lib/ddcci.c:158
+#: ../src/lib/ddcci.c:159
 msgid "Error while sending quit message"
 msgstr "发送退出消息时出错"
 
-#: src/lib/ddcci.c:203
+#: ../src/lib/ddcci.c:205
 msgid "Error while sending heartbeat message"
 msgstr "发送心跳消息时出错"
 
-#: src/lib/ddcci.c:221
+#: ../src/lib/ddcci.c:223
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr "初始化 ddccontrol 数据库时失败...\n"
 
-#: src/lib/ddcci.c:254 src/lib/ddcci.c:314
+#: ../src/lib/ddcci.c:256 ../src/lib/ddcci.c:317
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr "ioctl返回 %d\n"
 
-#: src/lib/ddcci.c:272
+#: ../src/lib/ddcci.c:275
 msgid "Error while sending write message"
 msgstr "发送写消息时出错"
 
-#: src/lib/ddcci.c:281
+#: ../src/lib/ddcci.c:284
 msgid "Error while reading write message answer"
 msgstr "读取写消息的应答时出错"
 
-#: src/lib/ddcci.c:333
+#: ../src/lib/ddcci.c:337
 msgid "Error while sending read message"
 msgstr "发送读消息时出错"
 
-#: src/lib/ddcci.c:342
+#: ../src/lib/ddcci.c:346
 msgid "Error while reading read message answer"
 msgstr "读取读消息的应答时出错"
 
-#: src/lib/ddcci.c:433
+#: ../src/lib/ddcci.c:437
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr "无效的响应, 首字节是 0x%02x, 应该是 0x%02x\n"
 
-#: src/lib/ddcci.c:442
+#: ../src/lib/ddcci.c:446
 #, c-format
 msgid "Invalid response, magic is 0x%02x\n"
 msgstr "无效的响应, 魔术数是 0x%02x\n"
 
-#: src/lib/ddcci.c:450
+#: ../src/lib/ddcci.c:454
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr "无效的响应, 长度是 %d, 最多应该是 %d\n"
 
-#: src/lib/ddcci.c:463
+#: ../src/lib/ddcci.c:467
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr "无效的响应, 已损坏的数据 - xor 是 0x%02x, 长度 0x%02x\n"
 
-#: src/lib/ddcci.c:582
+#: ../src/lib/ddcci.c:586
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr "无效的功能响应.\n"
 
-#: src/lib/ddcci.c:592
+#: ../src/lib/ddcci.c:596
 #, c-format
 msgid "Buffer too small to contain caps.\n"
 msgstr "缓冲区太小不能容纳功能数据.\n"
 
-#: src/lib/ddcci.c:634
+#: ../src/lib/ddcci.c:638
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr "在 0x%02x 中已损坏的 EDIT.\n"
 
-#: src/lib/ddcci.c:646
+#: ../src/lib/ddcci.c:650
 #, c-format
 msgid "Serial number: %d\n"
 msgstr "序列号: %d\n"
 
-#: src/lib/ddcci.c:649
+#: ../src/lib/ddcci.c:653
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
 msgstr "制造: %2$d年 第%1$d周\n"
 
-#: src/lib/ddcci.c:652
+#: ../src/lib/ddcci.c:656
 #, c-format
 msgid "EDID version: %d.%d\n"
 msgstr "EDID版本: %d.%d\n"
 
-#: src/lib/ddcci.c:655
+#: ../src/lib/ddcci.c:659
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
 msgstr "最大尺寸: %d x %d (cm)\n"
 
-#: src/lib/ddcci.c:666
+#: ../src/lib/ddcci.c:670
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr "读取EDID 0x%02x 失败.\n"
 
-#: src/lib/ddcci.c:696
+#: ../src/lib/ddcci.c:700
 #, c-format
 msgid "Device: %s\n"
 msgstr "设备: %s\n"
 
-#: src/lib/ddcci.c:709
+#: ../src/lib/ddcci.c:714
 msgid "Error while sending open message"
 msgstr "发送打开消息时出错"
 
-#: src/lib/ddcci.c:717
+#: ../src/lib/ddcci.c:722
 msgid "Error while reading open message answer"
 msgstr "读取打开消息的应答时出错"
 
-#: src/lib/ddcci.c:725
+#: ../src/lib/ddcci.c:730
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr "无效的文件名 (%s).\n"
 
-#: src/lib/ddcci.c:823
+#: ../src/lib/ddcci.c:828
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr "ddcci_open 返回 %d\n"
 
-#: src/lib/ddcci.c:836
+#: ../src/lib/ddcci.c:841
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr "未知的显示器 (%s)"
 
-#: src/lib/ddcci.c:857
+#: ../src/lib/ddcci.c:862
 #, c-format
 msgid "Probing for available monitors"
 msgstr "正在探测可用的显示器"
 
-#: src/lib/ddcci.c:870
+#: ../src/lib/ddcci.c:876
 msgid "Error while sending list message"
 msgstr "发送列表消息时出错"
 
-#: src/lib/ddcci.c:879
+#: ../src/lib/ddcci.c:885
 msgid "Error while reading list entry"
 msgstr "读取列表入口时出错"
 
-#: src/lib/ddcci.c:896
+#: ../src/lib/ddcci.c:902
 #, c-format
 msgid "Found PCI device (%s)\n"
 msgstr "找到 PCI 设备 (%s)\n"
 
-#: src/lib/ddcci.c:930
+#: ../src/lib/ddcci.c:936
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr "找到 I2C 设备 (%s)\n"
 
-#: src/lib/ddcci.c:979
+#: ../src/lib/ddcci.c:985
 msgid "Error while getting informations about ddccontrol home directory."
 msgstr "获取ddccontrol的目录信息时出错."
 
-#: src/lib/ddcci.c:984
+#: ../src/lib/ddcci.c:990
 msgid "Error while creating ddccontrol home directory."
 msgstr "创建ddccontrol的目录时出错."
 
-#: src/lib/ddcci.c:989
+#: ../src/lib/ddcci.c:995
 msgid ""
 "Error while getting informations about ddccontrol home directory after "
 "creating it."
 msgstr "创建ddccontrol的目录后再获取目录信息时出错."
 
-#: src/lib/ddcci.c:996
+#: ../src/lib/ddcci.c:1002
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "错误: 你目录的中'.ddccontrol'不是一个目录."
 
-#: src/lib/ddcci.c:1004
+#: ../src/lib/ddcci.c:1010
 msgid "Error while getting informations about ddccontrol profile directory."
 msgstr "获取ddccontrol的预设目录信息时出错."
 
-#: src/lib/ddcci.c:1009
+#: ../src/lib/ddcci.c:1015
 msgid "Error while creating ddccontrol profile directory."
 msgstr "创建ddccontrol的预设目录时出错."
 
-#: src/lib/ddcci.c:1014
+#: ../src/lib/ddcci.c:1020
 msgid ""
 "Error while getting informations about ddccontrol profile directory after "
 "creating it."
 msgstr "创建ddccontrol的预设文件目录后再获取目录信息时出错."
 
-#: src/lib/ddcci.c:1021
+#: ../src/lib/ddcci.c:1027
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr "错误: 你目录的中'.ddccontrol/profiles'不是一个目录."
 
-#: src/lib/monitor_db.c:101 src/lib/monitor_db.c:115
+#: ../src/lib/monitor_db.c:101 ../src/lib/monitor_db.c:115
 msgid "Can't convert value to int, invalid CAPS."
 msgstr "值不能转换成整数, 无效的功能值."
 
-#: src/lib/monitor_db.c:173 src/lib/monitor_db.c:274
+#: ../src/lib/monitor_db.c:173 ../src/lib/monitor_db.c:276
 msgid "Can't find id property."
 msgstr "找不到id属性."
 
-#: src/lib/monitor_db.c:241 src/lib/monitor_db.c:602
+#: ../src/lib/monitor_db.c:242 ../src/lib/monitor_db.c:603
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr "元件 %s (id=%s) 已经找到 (%ld行).\n"
 
-#: src/lib/monitor_db.c:287
+#: ../src/lib/monitor_db.c:289
 msgid "Invalid refresh type (!= none, != all)."
 msgstr "无效的刷新类型 (!= none, != all)."
 
-#: src/lib/monitor_db.c:322
+#: ../src/lib/monitor_db.c:322
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
 msgstr "控制器 %s 功能字符串已经被丢弃.\n"
 
-#: src/lib/monitor_db.c:337
+#: ../src/lib/monitor_db.c:337
 msgid "Can't convert delay to int."
 msgstr "延迟不能转换成整数."
 
-#: src/lib/monitor_db.c:345
+#: ../src/lib/monitor_db.c:345
 msgid "Can't find type property."
 msgstr "找不到类型属性."
 
-#: src/lib/monitor_db.c:370 src/lib/monitor_db.c:479
+#: ../src/lib/monitor_db.c:370 ../src/lib/monitor_db.c:482
 msgid "Invalid type."
 msgstr "无效的类型."
 
-#: src/lib/monitor_db.c:416
+#: ../src/lib/monitor_db.c:419
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr "在读取一个显示器文件之前必须初始化数据库.\n"
 
-#: src/lib/monitor_db.c:430
+#: ../src/lib/monitor_db.c:433
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr "monitor/%s.xml 是空的\n"
 
-#: src/lib/monitor_db.c:436
+#: ../src/lib/monitor_db.c:439
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr "monitor/%s.xml 有错误的类型, 根节点 %s 不等于 monitor"
 
-#: src/lib/monitor_db.c:450
+#: ../src/lib/monitor_db.c:453
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr "错误, 循环嵌套大于15层 (文件:%s).\n"
 
-#: src/lib/monitor_db.c:471
+#: ../src/lib/monitor_db.c:474
 msgid "Can't find init property."
 msgstr "找不到初始化属性."
 
-#: src/lib/monitor_db.c:495
+#: ../src/lib/monitor_db.c:498
 #, c-format
 msgid "document of the wrong type, can't find controls.\n"
 msgstr "文档有错误的类型, 找不到控制器.\n"
 
-#: src/lib/monitor_db.c:563
+#: ../src/lib/monitor_db.c:565
 msgid "Error enumerating controls in group."
 msgstr "组中有错误的控制器列举."
 
-#: src/lib/monitor_db.c:723
+#: ../src/lib/monitor_db.c:729
 #, c-format
 msgid "empty options.xml\n"
 msgstr "options.xml 是空的\n"
 
-#: src/lib/monitor_db.c:729
+#: ../src/lib/monitor_db.c:736
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr "options.xml 有错误的类型, 根节点 %s 不等于 options"
 
-#: src/lib/monitor_db.c:738
+#: ../src/lib/monitor_db.c:746
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr "options.xml 的数据库版本(dbversion)属性缺失, 请更新你的数据库.\n"
 
-#: src/lib/monitor_db.c:744
+#: ../src/lib/monitor_db.c:753
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr "options.xml 的日期(date)属性缺失, 请更新你的数据库.\n"
 
-#: src/lib/monitor_db.c:753
+#: ../src/lib/monitor_db.c:763
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr "options.xml 的数据库版本 (%d) 大于支持的版本 (%d).\n"
 
-#: src/lib/monitor_db.c:754
+#: ../src/lib/monitor_db.c:764
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr "请更新ddccontrol程序.\n"
 
-#: src/lib/monitor_db.c:760
+#: ../src/lib/monitor_db.c:771
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr "options.xml 的数据库版本 (%d) 小于支持的版本 (%d).\n"
 
-#: src/lib/monitor_db.c:761
+#: ../src/lib/monitor_db.c:772
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "请更新ddccontrol数据库.\n"
