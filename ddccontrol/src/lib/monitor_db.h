@@ -38,8 +38,9 @@ all = 1
 };
 
 enum init_type {
-standard = 0,
-samsung = 1
+unknown = 0,
+standard = 1,
+samsung = 2
 };
 
 struct value_db {

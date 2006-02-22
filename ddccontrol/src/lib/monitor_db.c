@@ -56,9 +56,11 @@ int get_verbosity(); /* Defined in ddcci.c */
 /* See documentation Appendix D.
  * Returns :
  * -1 if an error occured 
- *  0 otherwise
+ *  number of controls added
+ *
+ * add: if true: add caps_str to caps, otherwise remove caps_str from the caps.
  */
-int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
+int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps, int add)
 {
 //	printf("Parsing CAPS (%s).\n", caps_str);
 	int pos = 0; /* position in caps_str */
@@ -66,13 +68,14 @@ int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
 	int level = 0; /* CAPS parenthesis level */
 	int vcp = 0; /* Current CAPS section is vcp */
 	
-	int containsvcp = 0;
-	
 	char buf[8];
 	char* endptr;
-	long ind = -1;
+	int ind = -1;
 	long val = -1;
 	int i;
+	int removeprevious = 0;
+	
+	int num = 0;
 	
 	for (pos = 0; caps_str[pos] != 0; pos++)
 	{
@@ -91,18 +94,31 @@ int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
 			if ((level == 1) && (strncmp(caps_str+pos, "vcp", 3) == 0)) {
 				vcp = 1;
 				pos += 2;
-				containsvcp = 1;
 			}
 			else if ((vcp == 1) && (level == 2)) {
+				if (!add && ((removeprevious == 1) || (caps[ind] && caps[ind]->values_len == 0))) {
+					if(caps[ind]) {
+						if (caps[ind]->values) {
+							free(caps[ind]->values);
+						}
+						free(caps[ind]);
+						caps[ind] = NULL;
+					}
+				}
 				buf[0] = caps_str[pos];
 				buf[1] = caps_str[++pos];
 				buf[2] = 0;
 				ind = strtol(buf, &endptr, 16);
 				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
-				//printf("Index %lx in CAPS.\n", ind);
-				caps[ind] = malloc(sizeof(struct caps_entry));
-				caps[ind]->values_len = -1;
-				caps[ind]->values = NULL;
+				if (add) {
+					caps[ind] = malloc(sizeof(struct caps_entry));
+					caps[ind]->values_len = -1;
+					caps[ind]->values = NULL;
+				}
+				else {
+					removeprevious = 1;
+				}
+				num++;
 			}
 			else if ((vcp == 1) && (level == 3)) {
 				i = 0;
@@ -113,28 +129,43 @@ int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps)
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
 				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
-				if (caps[ind]->values_len == -1) {
-					caps[ind]->values_len = 1;
+				if (add) {
+					if (caps[ind]->values_len == -1) {
+						caps[ind]->values_len = 1;
+					}
+					else {
+						caps[ind]->values_len++;
+					}
+					caps[ind]->values = realloc(caps[ind]->values, caps[ind]->values_len*sizeof(unsigned short));
+					caps[ind]->values[caps[ind]->values_len-1] = val;
 				}
 				else {
-					caps[ind]->values_len++;
+					if (caps[ind]->values_len > 0) {
+						removeprevious = 0;
+						int j = 0;
+						for (i = 0; i < caps[ind]->values_len; i++) {
+							if (caps[ind]->values[i] != val) {
+								caps[ind]->values[j++] = caps[ind]->values[i];
+							}
+						}
+						caps[ind]->values_len--;
+					}
 				}
-				caps[ind]->values = realloc(caps[ind]->values, caps[ind]->values_len*sizeof(unsigned short));
-				caps[ind]->values[caps[ind]->values_len-1] = val;
 			}
 		}
 	}
 	
-	/* If no vcp is specified, then every control is accepted */
-	if (!containsvcp) {
-		for (i = 0; i < 256; i++) {
-			caps[i] = malloc(sizeof(struct caps_entry));
-			caps[i]->values_len = -1;
-			caps[i]->values = NULL;
+	if (!add && ((removeprevious == 1) || (caps[ind] && caps[ind]->values_len == 0))) {
+		if(caps[ind]) {
+			if (caps[ind]->values) {
+				free(caps[ind]->values);
+			}
+			free(caps[ind]);
+			caps[ind] = NULL;
 		}
 	}
 	
-	return 0;
+	return num;
 }
 
 /* End of CAPS structs/functions */
@@ -255,7 +286,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	return 0;
 }
 
-int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char *matchedcontrols, int faulttolerance) {
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char* defined, char *matchedcontrols, int faulttolerance) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
@@ -322,8 +353,14 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 								printf(_("Control %s has been discarded by the caps string.\n"), options_ctrlid);
 							}
 							memset(current_control, 0, sizeof(struct control_db));
-							xmlFree(options_ctrlid);
-							xmlFree(options_ctrlname);
+							break;
+						}
+						
+						if (defined[current_control->address]) {
+							if (get_verbosity() > 1) {
+								printf(_("Control %s (0x%02x) has already been defined.\n"), options_ctrlid, current_control->address);
+							}
+							memset(current_control, 0, sizeof(struct control_db));
 							break;
 						}
 						
@@ -374,6 +411,8 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 
 						options_ctrlid, options_groupname, options_ctrlname, mon_address);*/
 						
+						defined[current_control->address] = 1;
+						
 						*last_control_ref = current_control;
 						last_control_ref = &current_control->next;
 						current_control = malloc(sizeof(struct control_db));
@@ -406,226 +445,261 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
  * default_caps: CAPS passed to ddcci_create_db (read from the monitor)
  * prof_caps: CAPS read from one of the profile (NULL if none has been read yet)
  */
-struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionlevel, const char* default_caps, xmlChar* prof_caps, int faulttolerance)
+int ddcci_create_db_protected(
+	struct monitor_db* mon_db, const char* pnpname, int recursionlevel,
+	struct caps_entry** caps, char* defined, int faulttolerance)
 {
-	struct monitor_db* mon_db;
 	xmlDocPtr mon_doc;
-	xmlNodePtr cur, mon_control;
-	xmlChar *mon_name;
+	xmlNodePtr root, mon_child, mon_control;
 	xmlChar *tmp;
 	char buffer[256];
 	
 	if (options_doc == NULL) {
 		fprintf(stderr, _("Database must be inited before reading a monitor file.\n"));
-		return NULL;
+		return 0;
 	}
 	
 	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
-		return NULL;
+		return 0;
 	}
 	
-	cur = xmlDocGetRootElement(mon_doc);
+	root = xmlDocGetRootElement(mon_doc);
 	
-	if (cur == NULL) {
+	if (root == NULL) {
 		fprintf(stderr,  _("empty monitor/%s.xml\n"), pnpname);
 		xmlFreeDoc(mon_doc);
-		return NULL;
+		return 0;
 	}
 	
-	if (xmlStrcmp(cur->name, (const xmlChar *) "monitor")) {
-		fprintf(stderr,  _("monitor/%s.xml of the wrong type, root node %s != monitor"), pnpname, cur->name);
+	if (xmlStrcmp(root->name, (const xmlChar *) "monitor")) {
+		fprintf(stderr,  _("monitor/%s.xml of the wrong type, root node %s != monitor"), pnpname, root->name);
 		xmlFreeDoc(mon_doc);
-		return NULL;
+		return 0;
+	}
+		
+	if (!mon_db->name) {
+		mon_db->name = xmlGetProp(root, BAD_CAST "name");
+		DDCCI_DB_RETURN_IF(mon_db->name == NULL, 0,  _("Can't find name property."), root);
 	}
 	
-	mon_name = xmlGetProp(cur, BAD_CAST "name");
-	DDCCI_DB_RETURN_IF(mon_name == NULL, NULL,  _("Can't find name property."), cur);
-	if (prof_caps == NULL) {
-		prof_caps = xmlGetProp(cur, BAD_CAST "caps");
-	}
-	
-	if ((tmp = xmlGetProp(cur, BAD_CAST "include"))) {
-		recursionlevel++;
-		if (recursionlevel > 15) {
-			fprintf(stderr,  _("Error, include recursion level > 15 (file: %s).\n"), pnpname);
-			xmlFree(mon_name);
-			mon_db = NULL;
-			return NULL;
+	if ((mon_db->init == unknown) && (tmp = xmlGetProp(root, BAD_CAST "init"))) {
+		if (!(xmlStrcmp(tmp, (const xmlChar *)"standard"))) {
+			mon_db->init = standard;
 		}
-
-		mon_db = ddcci_create_db_protected(tmp, recursionlevel, default_caps, prof_caps, faulttolerance);
-		if (mon_db) {
-			xmlFree(mon_db->name);
-			mon_db->name = mon_name;
+		else if (!(xmlStrcmp(tmp, (const xmlChar *)"samsung"))) {
+			mon_db->init = samsung;
+		}
+		else {
+			DDCCI_DB_RETURN_IF(1, 0,  _("Invalid type."), root);
 		}
 		xmlFree(tmp);
-		
-		return mon_db;
 	}
 	
-	mon_db = malloc(sizeof(struct monitor_db));
-	memset(mon_db, 0, sizeof(struct monitor_db));
-	mon_db->name = mon_name;
-	
-	tmp = xmlGetProp(cur, BAD_CAST "init");
-	DDCCI_DB_RETURN_IF(tmp == NULL, NULL,  _("Can't find init property."), cur);
-	if (!(xmlStrcmp(tmp, (const xmlChar *)"standard"))) {
-		mon_db->init = standard;
-	}
-	else if (!(xmlStrcmp(tmp, (const xmlChar *)"samsung"))) {
-		mon_db->init = samsung;
-	}
-	else {
-		DDCCI_DB_RETURN_IF(1, NULL,  _("Invalid type."), cur);
-	}
-	xmlFree(tmp);
-	
-	cur = cur->xmlChildrenNode;
-	mon_control = NULL;
-	
-	while (cur != NULL) {
-		if (!xmlStrcmp(cur->name, (const xmlChar *) "controls")) {
-			mon_control = cur;
+	if ((tmp = xmlGetProp(root, BAD_CAST "caps"))) {
+		if (faulttolerance)
+			fprintf(stderr, "Warning: caps property is deprecated.\n");
+		else {
+			fprintf(stderr, "Error: caps property is deprecated.\n");
+			return 0;
 		}
-		
-		cur = cur->next;
 	}
 	
-	if (!mon_control) {
-		fprintf(stderr,  _("document of the wrong type, can't find controls.\n"));
-		xmlFreeDoc(mon_doc);
-		return NULL;
-	}
-	
-	/* Parse caps, and fill structure array. */
-	struct caps_entry* caps[256];
-	int i;
-	
-	for (i = 0; i < 256; i++) {
-		caps[i] = NULL;
-	}
-	
-	ddcci_parse_caps((prof_caps == NULL) ? default_caps: (const char*)prof_caps, caps);
-	
-	/* Find, if possible, each element of options_doc in mon_doc. */
-	
-	xmlChar *options_groupname, *options_subgroupname;
-	xmlNodePtr group, subgroup, control;
-	
-	struct group_db *current_group = malloc(sizeof(struct group_db));
-	struct group_db **last_group_ref = &mon_db->group_list;
-	memset(current_group, 0, sizeof(struct group_db));
-	
-	int ncontrols = 0; /* Number of controls in monitor file */
-	char *matchedcontrols; /* Array of monitor controls with (=1) or without (=0) corresponding global control */
-	
-	/* Compute nvalues */
-	cur = mon_control->xmlChildrenNode;
-	while (cur) {
-		if (cur->type == XML_ELEMENT_NODE) {
-			ncontrols++;
-		}
-		cur = cur->next;
-	}
-	
-	matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
-	memset(matchedcontrols, 0, ncontrols*sizeof(char));
-	
-	/* List groups (options.xml) */
-	for (group = xmlDocGetRootElement(options_doc)->xmlChildrenNode; group != NULL; group = group->next)
-	{
-		options_groupname = NULL;
-		if (xmlStrcmp(group->name, (const xmlChar *) "group")) { // Not a group
-			continue;
-		}
+	/* Create group-subgroup structure (we'll clean it up later) */
+	if (!recursionlevel) {
+		/*printf("Creating struct...\n");*/
+		xmlNodePtr group, subgroup;
+		xmlChar *options_groupname, *options_subgroupname;
 		
-		options_groupname = xmlGetProp(group, BAD_CAST "name");
+		struct group_db *current_group;
+		struct group_db **last_group_ref = &mon_db->group_list;
 		
-		struct subgroup_db *current_subgroup = malloc(sizeof(struct subgroup_db));
-		struct subgroup_db **last_subgroup_ref = &current_group->subgroup_list;
-		memset(current_subgroup, 0, sizeof(struct subgroup_db));
-		
-		/* List subgroups (options.xml) */
-		for (subgroup = group->xmlChildrenNode; subgroup != NULL; subgroup = subgroup->next)
+		/* List groups (options.xml) */
+		for (group = xmlDocGetRootElement(options_doc)->xmlChildrenNode; group != NULL; group = group->next)
 		{
-			options_subgroupname = NULL;
-			if (xmlStrcmp(subgroup->name, (const xmlChar *) "subgroup")) { // Not a subgroup
+			options_groupname = NULL;
+			if (xmlStrcmp(group->name, (const xmlChar *) "group")) { // Not a group
 				continue;
 			}
-			
-			options_subgroupname = xmlGetProp(subgroup, BAD_CAST "name");
-			
-			control = subgroup->xmlChildrenNode;
-			
-			DDCCI_DB_RETURN_IF(
-				!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, (struct caps_entry**)&caps, matchedcontrols, faulttolerance), 
-				NULL,  _("Error enumerating controls in group."), control);
-			
-			if (current_subgroup->control_list) {
-				current_subgroup->name = _D(options_subgroupname); /* Note: copy string, so we can free options_subgroupname */
-				current_subgroup->pattern = xmlGetProp(subgroup, BAD_CAST "pattern");
-				*last_subgroup_ref = current_subgroup;
-				last_subgroup_ref = &current_subgroup->next;
-				current_subgroup = malloc(sizeof(struct subgroup_db));
-				memset(current_subgroup, 0, sizeof(struct subgroup_db));
-			}
-			
-			if (options_subgroupname) {
-				xmlFree(options_subgroupname);
-			}
-		}
-		
-		if (current_group->subgroup_list) {
-			current_group->name = _D(options_groupname); /* Note: copy string, so we can free options_groupname */
-			*last_group_ref = current_group;
-			last_group_ref = &current_group->next;
-			current_group = malloc(sizeof(struct group_db));
+			*last_group_ref = current_group = malloc(sizeof(struct group_db));
 			memset(current_group, 0, sizeof(struct group_db));
-		}
-		
-		if (options_groupname) {
+			last_group_ref = &current_group->next;
+			/*printf("On group %p\n", current_group);*/
+			
+			options_groupname = xmlGetProp(group, BAD_CAST "name");
+			DDCCI_DB_RETURN_IF(options_groupname == NULL, 0,  _("Can't find name property."), group);
+			current_group->name = _D(options_groupname); /* Note: copy string, so we can free options_groupname */
 			xmlFree(options_groupname);
-		}
-		free(current_subgroup);
-	}
-	
-	free(current_group);
-	
-	i = 0;
-	cur = mon_control->xmlChildrenNode;
-	while (cur) {
-		if (cur->type == XML_ELEMENT_NODE) {
-			if (!matchedcontrols[i]) {
-				tmp = xmlGetProp(cur, BAD_CAST "id");
-				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
-				xmlFree(tmp);
-				if (!faulttolerance)
-					return NULL;
+			
+			struct subgroup_db *current_subgroup;
+			struct subgroup_db **last_subgroup_ref = &current_group->subgroup_list;
+			
+			/* List subgroups (options.xml) */
+			for (subgroup = group->xmlChildrenNode; subgroup != NULL; subgroup = subgroup->next)
+			{
+				options_subgroupname = NULL;
+				if (xmlStrcmp(subgroup->name, (const xmlChar *) "subgroup")) { // Not a subgroup
+					continue;
+				}
+				*last_subgroup_ref = current_subgroup = malloc(sizeof(struct subgroup_db));
+				memset(current_subgroup, 0, sizeof(struct subgroup_db));
+				last_subgroup_ref = &current_subgroup->next;
+				
+				/*printf("On subgroup %p\n", current_subgroup);*/
+				
+				options_subgroupname = xmlGetProp(subgroup, BAD_CAST "name");
+				DDCCI_DB_RETURN_IF(options_subgroupname == NULL, 0,  _("Can't find name property."), subgroup);
+				
+				current_subgroup->name = _D(options_subgroupname); /* Note: copy string, so we can free options_subgroupname */
+				xmlFree(options_subgroupname);
+				current_subgroup->pattern = xmlGetProp(subgroup, BAD_CAST "pattern");
 			}
-			i++;
 		}
-		cur = cur->next;
 	}
 	
-	free(matchedcontrols);
+	mon_child = root->xmlChildrenNode;
+	mon_control = NULL;
+	
+	int controls_or_include = 0;
+	while (mon_child != NULL) {
+		if (!xmlStrcmp(mon_child->name, (const xmlChar *) "caps")) {
+			xmlChar* remove = xmlGetProp(mon_child, BAD_CAST "remove");
+			xmlChar* add = xmlGetProp(mon_child, BAD_CAST "add");
+			DDCCI_DB_RETURN_IF(!remove && !add, 0,  _("Can't find add or remove property in caps."), mon_child);
+			if (remove)
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
+			if (add)
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
+		}
+		else if (!xmlStrcmp(mon_child->name, (const xmlChar *) "include")) {
+			controls_or_include = 1;
+			if (recursionlevel > 15) {
+				fprintf(stderr,  _("Error, include recursion level > 15 (file: %s).\n"), pnpname);
+				mon_db = NULL;
+				return 0;
+			}
+			
+			xmlChar* file = xmlGetProp(mon_child, BAD_CAST "file");
+			DDCCI_DB_RETURN_IF(file == NULL, 0,  _("Can't find file property."), mon_child);
+			if (!ddcci_create_db_protected(mon_db, file, recursionlevel+1, caps, defined, faulttolerance)) {
+				xmlFree(file);
+				return 0;
+			}
+			xmlFree(file);
+		}
+		else if (!xmlStrcmp(mon_child->name, (const xmlChar *) "controls")) {
+			DDCCI_DB_RETURN_IF(mon_control != NULL, 0,  _("Two controls part in XML file."), root);
+			controls_or_include = 1;
+			mon_control = mon_child;
+			/* Find, if possible, each element of options_doc in mon_doc. */
+			xmlNodePtr mon_control_child, group, subgroup, control;
+			
+			struct group_db *current_group = mon_db->group_list;
+			
+			int ncontrols = 0; /* Number of controls in monitor file */
+			char *matchedcontrols; /* Array of monitor controls with (=1) or without (=0) corresponding global control */
+			
+			/* Compute nvalues */
+			mon_control_child = mon_control->xmlChildrenNode;
+			while (mon_control_child) {
+				if (mon_control_child->type == XML_ELEMENT_NODE) {
+					ncontrols++;
+				}
+				mon_control_child = mon_control_child->next;
+			}
+			
+			matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
+			memset(matchedcontrols, 0, ncontrols*sizeof(char));
+			
+			/*printf("Filling struct...\n");*/
+			
+			/* List groups (options.xml) */
+			for (group = xmlDocGetRootElement(options_doc)->xmlChildrenNode; group != NULL; group = group->next)
+			{
+				if (xmlStrcmp(group->name, (const xmlChar *) "group")) { // Not a group
+					continue;
+				}
+				/*printf("On group %p\n", current_group);*/
+				
+				struct subgroup_db *current_subgroup = current_group->subgroup_list;
+				
+				/* List subgroups (options.xml) */
+				for (subgroup = group->xmlChildrenNode; subgroup != NULL; subgroup = subgroup->next)
+				{
+					if (xmlStrcmp(subgroup->name, (const xmlChar *) "subgroup")) { // Not a subgroup
+						continue;
+					}
+					/*printf("On subgroup %p\n", current_subgroup);*/
+					
+					control = subgroup->xmlChildrenNode;
+					
+					DDCCI_DB_RETURN_IF(
+						!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, caps, defined, matchedcontrols, faulttolerance),
+						0,  _("Error enumerating controls in subgroup."), control);
+					current_subgroup = current_subgroup->next;
+				}
+				current_group = current_group->next;
+			}
+			
+			int i = 0;
+			mon_control_child = mon_control->xmlChildrenNode;
+			while (mon_control_child) {
+				if (mon_control_child->type == XML_ELEMENT_NODE) {
+					if (!matchedcontrols[i]) {
+						tmp = xmlGetProp(mon_control_child, BAD_CAST "id");
+						fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), mon_control_child->name, tmp, XML_GET_LINE(mon_control_child));
+						xmlFree(tmp);
+						if (!faulttolerance)
+							return 0;
+					}
+					i++;
+				}
+				mon_control_child = mon_control_child->next;
+			}
+			
+			free(matchedcontrols);
+		} /* mon_child->name == "controls" */
+		
+		mon_child = mon_child->next;
+	}
+	
+	if (!recursionlevel) {
+		struct group_db** group;
+		struct subgroup_db** subgroup;
+		
+		/* loop through groups */
+		group = &mon_db->group_list;
+		while (*group != NULL)
+		{
+			/* loop through subgroups inside group */
+			subgroup = &((*group)->subgroup_list);
+			while (*subgroup != NULL)
+			{
+				if (!(*subgroup)->control_list) {
+					*subgroup = (*subgroup)->next;
+					continue;
+				}
+				subgroup = &(*subgroup)->next;
+			}
+			if (!(*group)->subgroup_list) {
+				*group = (*group)->next;
+				continue;
+			}
+			group = &(*group)->next;
+		}
+	}
+	
+	if (!controls_or_include) {
+		fprintf(stderr,  _("document of the wrong type, can't find controls or include.\n"));
+		xmlFreeDoc(mon_doc);
+		return 0;
+	}
 	
 	xmlFreeDoc(mon_doc);
 	
-	for (i = 0; i < 256; i++) {
-		if(caps[i]) {
-			if (caps[i]->values) {
-				free(caps[i]->values);
-			}
-			free(caps[i]);
-		}
-	}
-
-	xmlFree(prof_caps);
-	
-	return mon_db;
+	return 1;
 }
 
 /* 
@@ -636,7 +710,76 @@ struct monitor_db* ddcci_create_db_protected(const char* pnpname, int recursionl
  */
 struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps, int faulttolerance)
 {
-	return ddcci_create_db_protected(pnpname, 0, default_caps, NULL, faulttolerance);
+	struct monitor_db* mon_db = malloc(sizeof(struct monitor_db));
+	memset(mon_db, 0, sizeof(struct monitor_db));
+	
+	/* Parse caps, and fill structure array. */
+	struct caps_entry* caps[256];
+	
+	memset(caps, 0, 256*sizeof(struct caps_entry*));
+	
+	/* defined controls, when including another file, we don't define the same control 2 times.  */
+	char defined[256];
+	memset(defined, 0, 256*sizeof(char));
+	
+	ddcci_parse_caps(default_caps, caps, 1);
+	
+	if (!ddcci_create_db_protected(mon_db, pnpname, 0, caps, defined, faulttolerance)) {
+		free(mon_db);
+		mon_db = NULL;
+	}
+	
+	if (mon_db && (mon_db->init == unknown)) {
+		if (faulttolerance) {
+			fprintf(stderr, "Warning: init mode not set, using standard.\n");
+			mon_db->init = standard;
+		}
+		else {
+			fprintf(stderr, "Error: init mode not set.\n");
+			free(mon_db);
+			mon_db = NULL;
+		}
+	}
+	
+	int i;
+	for (i = 0; i < 256; i++) {
+		if(caps[i]) {
+			if (caps[i]->values) {
+				free(caps[i]->values);
+			}
+			free(caps[i]);
+		}
+	}
+	
+#ifdef DEBUG_DB_CREATION
+	struct monitor_db* monitor = mon_db;
+	struct group_db* group;
+	struct subgroup_db* subgroup;
+	struct control_db* control;
+	struct value_db* valued;
+	
+	/* loop through groups */
+	for (group = monitor->group_list; (group != NULL); group = group->next) 
+	{
+		printf("Group %p: %s\n", group, group->name);
+		/* loop through subgroups inside group */
+		for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next) 
+		{
+			printf("\tSubgroup %p: %s\n", subgroup, subgroup->name);
+			/* loop through controls inside subgroup */
+			for (control = subgroup->control_list; (control != NULL); control = control->next) 
+			{
+				printf("\t\tControl: %s 0x%02x\n", control->name, control->address);
+				/* look for the value */
+				for (valued = control->value_list; (valued != NULL); valued = valued->next) {
+					printf("\t\t\tValue: %s 0x%02x\n", valued->name, valued->value);
+				}
+			}
+		}
+	}
+#endif
+	
+	return mon_db;
 }
 
 void ddcci_free_db(struct monitor_db* monitor)

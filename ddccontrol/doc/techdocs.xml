@@ -38,7 +38,7 @@ current database (YYYYMMDD format).
 </listitem>
 <listitem>
 <sgmltag class="attribute">dbversion</sgmltag>: indicates which version of
-database format is used (must be set to 2).
+database format is used (must be set to 3).
 </listitem>
 </itemizedlist></para>
 
@@ -124,7 +124,7 @@ needed if there is only one value for command controls).
 <para>File format:</para>
 <screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
-<options date="%date%" dbversion="2">
+<options date="%date%" dbversion="3">
   <group name="%groupname%">
     <subgroup name="%subgroupname%" pattern="%patternname%">
       <control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/>
@@ -147,63 +147,62 @@ needed if there is only one value for command controls).
 <title>Monitor Profiles</title>
 <subtitle>XML files:
 <filename>monitor/<replaceable>%monitor_id%</replaceable>.xml</filename></subtitle>
-<para>List of controls supported by a monitor.</para>
-<para><sgmltag class="element">control</sgmltag>
-<sgmltag class="attribute">id</sgmltag> attributes are defined in
-<filename>options.xml</filename>. If <sgmltag class="element">control</sgmltag>
-<sgmltag class="attribute">type</sgmltag> is
-<sgmltag class="attvalue">list</sgmltag> or
-<sgmltag class="attvalue">command</sgmltag> without non-default value, supported
-values must be defined.</para>
-<para><sgmltag class="attribute">address</sgmltag> attribute for 
-<sgmltag class="element">control</sgmltag> elements and
-<sgmltag class="attribute">value</sgmltag> attribute for 
-<sgmltag class="element">value</sgmltag> elements are optional if they are
-defined in the general options file.</para>
+<sect3>
+	<title><sgmltag class="element">caps</sgmltag> element</title>
+	<para>The caps attribute is optional. Its format is defined in ACCESS.bus specifications.</para>
+	<para>To add controls to caps, use the <sgmltag class="attribute">add</sgmltag> attribute.
+	To remove controls from caps, use the <sgmltag class="attribute">remove</sgmltag> attribute.</para>
+	<para>Note remove is handled before add, so if you remove and add a same control, it will
+	finally be in caps.</para>
+</sect3>
+<sect3>
+	<title><sgmltag class="element">controls</sgmltag> element</title>
+	<para>List of controls supported by a monitor (optional if you have an
+	<sgmltag class="attribute">include</sgmltag> element).</para>
+	<para><sgmltag class="element">control</sgmltag>
+	<sgmltag class="attribute">id</sgmltag> attributes are defined in
+	<filename>options.xml</filename>. If <sgmltag class="element">control</sgmltag>
+	<sgmltag class="attribute">type</sgmltag> is
+	<sgmltag class="attvalue">list</sgmltag> or
+	<sgmltag class="attvalue">command</sgmltag> without default values, supported
+	values must be defined.</para>
+	<para><sgmltag class="attribute">address</sgmltag> attribute for 
+	<sgmltag class="element">control</sgmltag> elements and
+	<sgmltag class="attribute">value</sgmltag> attribute for 
+	<sgmltag class="element">value</sgmltag> elements are optional if they are
+	defined in the general options file.</para>
+	
+	<para>The <sgmltag class="attribute">init</sgmltag> attribute in
+	<sgmltag class="element">monitor</sgmltag> element define the type of the
+	initialization: DDC/CI standard (<sgmltag class="attvalue">standard</sgmltag>),
+	or Samsung (<sgmltag class="attvalue">samsung</sgmltag>). This attribute is
+	optional, as long as the monitor profile includes another profile which defines
+	this attribute.</para>
+	
+	<para>
+	You can set a <sgmltag class="attribute">delay</sgmltag> attribute in
+	<sgmltag class="element">control</sgmltag> elements to set the time in
+	milliseconds to wait after changing the value of this control.
+	If you don't, a default value is used.
+	</para>
+</sect3>
 
-<para>The <sgmltag class="attribute">init</sgmltag> attribute in
-<sgmltag class="element">monitor</sgmltag> element define the type of the
-initialization: DDC/CI standard (<sgmltag class="attvalue">standard</sgmltag>),
-or Samsung (<sgmltag class="attvalue">samsung</sgmltag>).</para>
+<sect3>
+	<title><sgmltag class="element">include</sgmltag> element</title>
+	<para>Includes another monitor, manufacturer or standard profile, specified
+	by the <sgmltag class="attribute">file</sgmltag> attribute.</para>
+</sect3>
 
-<para>The <sgmltag class="attribute">caps</sgmltag> attribute is optional. Its
-format is defined in ACCESS.bus specifications and is treated as
-following:</para>
-<itemizedlist mark='bullet'>
-<listitem>
-<para>
-If <sgmltag class="attribute">caps</sgmltag> is not defined, caps are read from
-monitor.
-</para>
-</listitem>
-<listitem>
-<para>
-If this attribute exists and have a <sgmltag class="attvalue">vcp</sgmltag>
-string (e.g. <sgmltag class="attvalue">type(lcd) vcp(10 12)</sgmltag>) then the
-specified caps string is used.
-</para>
-</listitem>
-<listitem>
-<para> 
-If this attribute exists but does not have a
-<sgmltag class="attvalue">vcp</sgmltag> (e.g.
-<sgmltag class="attvalue">type(crt)</sgmltag> or
-<sgmltag class="attvalue"></sgmltag>), then all controls defined in the
-monitor profile are supposed to be supported.</para>
-</listitem>
-</itemizedlist>
-
-<para>
-You can set a <sgmltag class="attribute">delay</sgmltag> attribute in
-<sgmltag class="element">control</sgmltag> elements to set the time in
-milliseconds to wait after changing the value of this control.
-If you don't, a default value is used.
-</para>
+<note>Monitor profile are read sequentially. Control and init mode redifinitions
+are ignored, so define specific controls and init mode before including a generic
+profile. Caps are also treated sequentially, so if a control is not in CAPS at the
+time it is defined, it won't be supported by ddccontrol.</note>
 
 <para>File format:</para>
 <screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
-<monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%">
+<monitor name="%full_monitor_name%" init="[standard|samsung]">
+  <caps add="%add_caps%" remove="%remove_caps%"/>
   <controls>
     <!--- value -->
     <control id="%control_id%" address="%hex_address%" delay="%wait_time%"/>
@@ -220,13 +219,18 @@ If you don't, a default value is used.
     </control>
     <control...>
   </controls>
+  <!--- Including VESA generic profile is generally a good idea. -->
+  <include file="VESA"/>
 </monitor>
 ]]></screen>
 <para>If a monitor supports exactly the same controls as another one, you can
 define it as shown:</para>
 <screen format='linespecific'>
 <![CDATA[<?xml version="1.0"?>
-<monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/>
+<monitor name="%full_monitor_name%">
+  <caps add="%add_caps%" remove="%remove_caps%"/>
+  <include file="%include_monitor_id%"/>
+</monitor>
 ]]></screen>
 </sect2>
 </sect1>

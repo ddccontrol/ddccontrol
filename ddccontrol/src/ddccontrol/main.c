@@ -126,8 +126,19 @@ static void check_integrity(char* datadir, char* pnpname) {
 
 	printf(_("[ OK ]\n"));
 	
+	/* Create caps with all controls. */
+	char buf2[4];
+	char buffer[256*3+25];
+	strcpy(buffer, "(vcp(");
+	int i;
+	for (i = 0; i < 256; i++) {
+		snprintf(buf2, 4, "%02x ", i);
+		strcat(buffer, buf2);
+	}
+	strcat(buffer, "))");
+	
 	printf(_("Checking %s integrity...\n"), pnpname);
-	if (!(mon_db = ddcci_create_db(pnpname, "", 0))) {
+	if (!(mon_db = ddcci_create_db(pnpname, buffer, 0))) {
 		printf(_("[ FAILED ]\n"));
 		ddcci_release_db();
 		exit(1);
