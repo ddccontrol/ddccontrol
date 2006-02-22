@@ -1,3 +1,11 @@
+2006-02-22 21:25  nboichat
+
+	* configure.ac, doc/techdocs.xml, src/ddccontrol/main.c,
+	  src/lib/monitor_db.c, src/lib/monitor_db.h: Database version 3
+	  (support of generic profiles).
+
+2006-02-22 13:27  tag Before_db_version_3
+
 2006-02-22 13:27  nboichat
 
 	* po/ddccontrol.pot, po/de.po, po/fr.po, po/pl.po, po/ru.po,
