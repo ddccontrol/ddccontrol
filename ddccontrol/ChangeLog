@@ -1,3 +1,17 @@
+2006-02-22 13:27  nboichat
+
+	* po/ddccontrol.pot, po/de.po, po/fr.po, po/pl.po, po/ru.po,
+	  po/zh_CN.po, src/lib/ddcci.c: Show more infos in dumps (very
+	  verbose mode).
+
+2006-02-22 13:25  nboichat
+
+	* src/ddccontrol/main.c: Update copyright string.
+
+2006-02-21 11:49  nboichat
+
+	* doc/supportedmonitors.xml: Update supported monitors list.
+
 2006-02-20 17:27  nboichat
 
 	* configure.ac: Fix gnome-ddcc-applet compile error (libgnome-panel
