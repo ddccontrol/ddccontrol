@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--- SUN GDM-5410 is a CRT (Thanks to "bman" for providing this file) -->
+<monitor name="SUN GDM-5410" init="standard">
+	<controls>
+	
+		<control id="brightness" address="0x10"/>
+		<control id="contrast" address="0x12"/>
+
+		<control id="hsize" address="0x22"/>
+		<control id="hpos" address="0x20"/>
+
+		<control id="vpos" address="0x30"/>
+                <control id="vsize" address="0x32"/>
+
+		<control id="hpincushion" address="0x24"/>
+                <control id="hpincushionbalance" address="0x26"/>
+
+		<control id="tilt" address="0x44"/>
+
+		<control id="key" address="0x42"/>
+		<control id="keybalance" address="0x40"/>
+				
+		<control id="colorpreset" address="0x14">
+			<value id="5000k"  value="0x0"/>
+			<value id="6500k"  value="0x1"/>
+			<value id="9300k"  value="0x2"/>
+		</control>
+
+		<control id="hmoire" address="0x56"/>
+
+		<control id="hmisconvergence" address="0x28"/>
+		<control id="vmisconvergence" address="0x38"/>
+
+		<control id="tlpurity" address="0xF1"/>
+		<control id="trpurity" address="0xF2"/>
+		<control id="blpurity" address="0xF4"/>
+		<control id="brpurity" address="0xF3"/>
+
+		<control id="language" type="list" address="0x68">
+			<value id="chinese" value="0"/>
+			<value id="english" value="1"/>
+			<value id="french"  value="2"/>
+			<value id="german"  value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="italian" value="5"/>
+			<value id="swedish" value="6"/>
+			<value id="dutch" value="7"/>
+			<value id="russian" value="8"/>
+		</control>
+
+<!--		<control id="vtopmisconvergence" address="0xF6"/>	-->
+<!--		<control id="vbotmisconvergence" address="0xF7"/>	-->
+
+	</controls>
+</monitor>
