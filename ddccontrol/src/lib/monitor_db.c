@@ -47,121 +47,6 @@ xmlDocPtr options_doc = NULL;
 
 int get_verbosity(); /* Defined in ddcci.c */
 
-/* See documentation Appendix D.
- * Returns :
- * -1 if an error occured 
- *  number of controls added
- *
- * add: if true: add caps_str to caps, otherwise remove caps_str from the caps.
- */
-int ddcci_parse_caps(const char* caps_str, struct caps_entry** caps, int add)
-{
-//	printf("Parsing CAPS (%s).\n", caps_str);
-	int pos = 0; /* position in caps_str */
-	
-	int level = 0; /* CAPS parenthesis level */
-	int vcp = 0; /* Current CAPS section is vcp */
-	
-	char buf[8];
-	char* endptr;
-	int ind = -1;
-	long val = -1;
-	int i;
-	int removeprevious = 0;
-	
-	int num = 0;
-	
-	for (pos = 0; caps_str[pos] != 0; pos++)
-	{
-		if (caps_str[pos] == '(') {
-			level++;
-		}
-		else if (caps_str[pos] == ')')
-		{
-			level--;
-			if (level == 1) {
-				vcp = 0;
-			}
-		}
-		else if (caps_str[pos] != ' ')
-		{
-			if ((level == 1) && (strncmp(caps_str+pos, "vcp", 3) == 0)) {
-				vcp = 1;
-				pos += 2;
-			}
-			else if ((vcp == 1) && (level == 2)) {
-				if (!add && ((removeprevious == 1) || (caps[ind] && caps[ind]->values_len == 0))) {
-					if(caps[ind]) {
-						if (caps[ind]->values) {
-							free(caps[ind]->values);
-						}
-						free(caps[ind]);
-						caps[ind] = NULL;
-					}
-				}
-				buf[0] = caps_str[pos];
-				buf[1] = caps_str[++pos];
-				buf[2] = 0;
-				ind = strtol(buf, &endptr, 16);
-				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
-				if (add) {
-					caps[ind] = malloc(sizeof(struct caps_entry));
-					caps[ind]->values_len = -1;
-					caps[ind]->values = NULL;
-				}
-				else {
-					removeprevious = 1;
-				}
-				num++;
-			}
-			else if ((vcp == 1) && (level == 3)) {
-				i = 0;
-				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
-					buf[i] = caps_str[pos+i];
-					i++;
-				}
-				buf[i] = 0;
-				val = strtol(buf, &endptr, 16);
-				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
-				if (add) {
-					if (caps[ind]->values_len == -1) {
-						caps[ind]->values_len = 1;
-					}
-					else {
-						caps[ind]->values_len++;
-					}
-					caps[ind]->values = realloc(caps[ind]->values, caps[ind]->values_len*sizeof(unsigned short));
-					caps[ind]->values[caps[ind]->values_len-1] = val;
-				}
-				else {
-					if (caps[ind]->values_len > 0) {
-						removeprevious = 0;
-						int j = 0;
-						for (i = 0; i < caps[ind]->values_len; i++) {
-							if (caps[ind]->values[i] != val) {
-								caps[ind]->values[j++] = caps[ind]->values[i];
-							}
-						}
-						caps[ind]->values_len--;
-					}
-				}
-			}
-		}
-	}
-	
-	if (!add && ((removeprevious == 1) || (caps[ind] && caps[ind]->values_len == 0))) {
-		if(caps[ind]) {
-			if (caps[ind]->values) {
-				free(caps[ind]->values);
-			}
-			free(caps[ind]);
-			caps[ind] = NULL;
-		}
-	}
-	
-	return num;
-}
-
 /* End of CAPS structs/functions */
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
@@ -281,7 +166,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 }
 
 int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, 
-		struct subgroup_db *current_group, struct caps_entry** caps, char* defined, char *matchedcontrols, int faulttolerance) {
+		struct subgroup_db *current_group, struct vcp_entry** vcp, char* defined, char *matchedcontrols, int faulttolerance) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
@@ -349,7 +234,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 						
 						matchedcontrols[i] = 1;
 						
-						if (caps[current_control->address] == NULL) {
+						if (vcp[current_control->address] == NULL) {
 							if (get_verbosity()) {
 								printf(_("Control %s has been discarded by the caps string.\n"), options_ctrlid);
 							}
@@ -447,7 +332,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
  * prof_caps: CAPS read from one of the profile (NULL if none has been read yet)
  */
 int ddcci_create_db_protected(
-	struct monitor_db* mon_db, const char* pnpname, int recursionlevel,
+	struct monitor_db* mon_db, const char* pnpname, struct caps* caps, int recursionlevel,
 	char* defined, int faulttolerance)
 {
 	xmlDocPtr mon_doc;
@@ -579,9 +464,9 @@ int ddcci_create_db_protected(
 			xmlChar* add = xmlGetProp(mon_child, BAD_CAST "add");
 			DDCCI_DB_RETURN_IF(!remove && !add, 0,  _("Can't find add or remove property in caps."), mon_child);
 			if (remove)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, mon_db->caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
 			if (add)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, mon_db->caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
 		}
 		else if (!xmlStrcmp(mon_child->name, (const xmlChar *) "include")) {
 			controls_or_include = 1;
@@ -593,7 +478,7 @@ int ddcci_create_db_protected(
 			
 			xmlChar* file = xmlGetProp(mon_child, BAD_CAST "file");
 			DDCCI_DB_RETURN_IF(file == NULL, 0,  _("Can't find file property."), mon_child);
-			if (!ddcci_create_db_protected(mon_db, file, recursionlevel+1, defined, faulttolerance)) {
+			if (!ddcci_create_db_protected(mon_db, file, caps, recursionlevel+1, defined, faulttolerance)) {
 				xmlFree(file);
 				return 0;
 			}
@@ -646,7 +531,7 @@ int ddcci_create_db_protected(
 					control = subgroup->xmlChildrenNode;
 					
 					DDCCI_DB_RETURN_IF(
-						!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, mon_db->caps,
+						!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, caps->vcp,
 							defined, matchedcontrols, faulttolerance), 0,  _("Error enumerating controls in subgroup."), control);
 					current_subgroup = current_subgroup->next;
 				}
@@ -718,18 +603,16 @@ int ddcci_create_db_protected(
  *  - 0 : fail on every database error
  "  - 1 : do not fail on minor errors
  */
-struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps, int faulttolerance)
+struct monitor_db* ddcci_create_db(const char* pnpname, struct caps* caps, int faulttolerance)
 {
 	struct monitor_db* mon_db = malloc(sizeof(struct monitor_db));
 	memset(mon_db, 0, sizeof(struct monitor_db));
-	
-	ddcci_parse_caps(default_caps, mon_db->caps, 1);
 	
 	/* defined controls, when including another file, we don't define the same control 2 times.  */
 	char defined[256];
 	memset(defined, 0, 256*sizeof(char));
 	
-	if (!ddcci_create_db_protected(mon_db, pnpname, 0, defined, faulttolerance)) {
+	if (!ddcci_create_db_protected(mon_db, pnpname, caps, 0, defined, faulttolerance)) {
 		free(mon_db);
 		mon_db = NULL;
 	}
@@ -803,16 +686,6 @@ void ddcci_free_db(struct monitor_db* monitor)
 		ogroup = group;
 		group = ogroup->next;
 		free(ogroup);
-	}
-	
-	int i;
-	for (i = 0; i < 256; i++) {
-		if(monitor->caps[i]) {
-			if (monitor->caps[i]->values) {
-				free(monitor->caps[i]->values);
-			}
-			free(monitor->caps[i]);
-		}
 	}
 	
 	free(monitor);

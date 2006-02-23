@@ -113,7 +113,9 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 	unsigned short currentValue = 1;
 	unsigned short currentMaximum = 1;
 	
-	set_message(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+	gchar* tmp = g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count);
+	set_message(tmp);
+	g_free(tmp);
 	
 	refreshing = 1; /* Tell callbacks not to write values back to the monitor. */
 	while (list) {
@@ -123,7 +125,9 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 				get_value_and_max(control, &currentValue, &currentMaximum);
 				change_control_value(list->data, (gpointer)(long)currentValue);
 			}
-			set_message(g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count));
+			gchar* tmp = g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count);
+			set_message(tmp);
+			g_free(tmp);
 		}
 		else {
 			g_warning(_("Could not get the control_db struct related to a control."));
@@ -591,6 +595,18 @@ void create_monitor_manager(struct monitorlist* monitor)
 		return;
 	}
 	
+	if (!mon->db) {
+		tmp = g_strdup_printf(_(
+			"The current monitor is not supported, please run\n"
+			"%s\n"
+			"and send the output to ddccontrol-users@lists.sourceforge.net.\n"
+			"Thanks."), "<tt>LANG= LC_ALL= ddccontrol -p -c -d</tt>");
+		set_message(tmp);
+		g_free(tmp);
+		monitor_manager = NULL;
+		return;
+	}
+	
 	GtkWidget *notebook = gtk_notebook_new();
 	
 	struct group_db* group;
@@ -651,9 +667,41 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	create_profile_manager();
 	
-	set_message("");
-	
 	monitor_manager = table;
+	
+	if (mon->fallback) {
+		/* Put a big warning. */
+		gchar* message;
+		if (mon->fallback == 1) {
+			message = g_strdup(_(
+				"There is no support for your monitor in the database, but ddccontrol is "
+				"using a generic profile for your monitor's manufacturer. Some controls "
+				"may not be supported, or may not work as expected.\n"));
+		}
+		else if (mon->fallback == 2) {
+			message = g_strdup(_(
+				"There is no support for your monitor in the database, but ddccontrol is "
+				"using a basic generic profile. Many controls will not be supported, and "
+				"some controls may not work as expected.\n"));
+		}
+		
+		gchar* tmp = g_strconcat("<span size='large' weight='ultrabold'>", _("Warning!"), "</span>\n\n", 
+				message, _(
+				"Please update ddccontrol-db, or, if you are already using the latest "
+				"version, please send the output of the following command to "
+				"ddccontrol-users@lists.sourceforge.net:\n"
+				),
+				"\n<tt>LANG= LC_ALL= ddccontrol -p -c -d</tt>\n\n",
+				_("Thank you.\n"), NULL);
+		gtk_widget_show(monitor_manager);
+		set_message_ok(tmp, 1);
+		g_free(message);
+		g_free(tmp);
+	}
+	else {
+		set_message("");
+		gtk_widget_show(monitor_manager);
+	}
 }
 
 // Cleanup

@@ -559,6 +559,139 @@ int ddcci_readctrl(struct monitor* mon, unsigned char ctrl,
 	return -1;
 }
 
+/* See documentation Appendix D.
+ * Returns :
+ * -1 if an error occured 
+ *  number of controls added
+ *
+ * add: if true: add caps_str to caps, otherwise remove caps_str from the caps.
+ */
+int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
+{
+//	printf("Parsing CAPS (%s).\n", caps_str);
+	int pos = 0; /* position in caps_str */
+	
+	int level = 0; /* CAPS parenthesis level */
+	int svcp = 0; /* Current CAPS section is vcp */
+	int stype = 0; /* Current CAPS section is type */
+	
+	char buf[8];
+	char* endptr;
+	int ind = -1;
+	long val = -1;
+	int i;
+	int removeprevious = 0;
+	
+	int num = 0;
+	
+	for (pos = 0; caps_str[pos] != 0; pos++)
+	{
+		if (caps_str[pos] == '(') {
+			level++;
+		}
+		else if (caps_str[pos] == ')')
+		{
+			level--;
+			if (level == 1) {
+				svcp = 0;
+				stype = 0;
+			}
+		}
+		else if (caps_str[pos] != ' ')
+		{
+			if (level == 1) {
+				if (strncmp(caps_str+pos, "vcp", 3) == 0) {
+					svcp = 1;
+					pos += 2;
+				}
+				else if (strncmp(caps_str+pos, "type", 4) == 0) {
+					stype = 1;
+					pos += 3;
+				}
+			}
+			else if ((stype == 1) && (level == 2)) {
+				if (strncmp(caps_str+pos, "lcd", 3) == 0) {
+					caps->type = lcd;
+					pos += 2;
+				}
+				else if (strncmp(caps_str+pos, "crt", 3) == 0) {
+					caps->type = crt;
+					pos += 2;
+				}
+			}
+			else if ((svcp == 1) && (level == 2)) {
+				if (!add && ((removeprevious == 1) || (caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
+					if(caps->vcp[ind]) {
+						if (caps->vcp[ind]->values) {
+							free(caps->vcp[ind]->values);
+						}
+						free(caps->vcp[ind]);
+						caps->vcp[ind] = NULL;
+					}
+				}
+				buf[0] = caps_str[pos];
+				buf[1] = caps_str[++pos];
+				buf[2] = 0;
+				ind = strtol(buf, &endptr, 16);
+				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
+				if (add) {
+					caps->vcp[ind] = malloc(sizeof(struct vcp_entry));
+					caps->vcp[ind]->values_len = -1;
+					caps->vcp[ind]->values = NULL;
+				}
+				else {
+					removeprevious = 1;
+				}
+				num++;
+			}
+			else if ((svcp == 1) && (level == 3)) {
+				i = 0;
+				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
+					buf[i] = caps_str[pos+i];
+					i++;
+				}
+				buf[i] = 0;
+				val = strtol(buf, &endptr, 16);
+				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
+				if (add) {
+					if (caps->vcp[ind]->values_len == -1) {
+						caps->vcp[ind]->values_len = 1;
+					}
+					else {
+						caps->vcp[ind]->values_len++;
+					}
+					caps->vcp[ind]->values = realloc(caps->vcp[ind]->values, caps->vcp[ind]->values_len*sizeof(unsigned short));
+					caps->vcp[ind]->values[caps->vcp[ind]->values_len-1] = val;
+				}
+				else {
+					if (caps->vcp[ind]->values_len > 0) {
+						removeprevious = 0;
+						int j = 0;
+						for (i = 0; i < caps->vcp[ind]->values_len; i++) {
+							if (caps->vcp[ind]->values[i] != val) {
+								caps->vcp[ind]->values[j++] = caps->vcp[ind]->values[i];
+							}
+						}
+						caps->vcp[ind]->values_len--;
+					}
+				}
+			}
+		}
+	}
+	
+	if (!add && ((removeprevious == 1) || (caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
+		if(caps->vcp[ind]) {
+			if (caps->vcp[ind]->values) {
+				free(caps->vcp[ind]->values);
+			}
+			free(caps->vcp[ind]);
+			caps->vcp[ind] = NULL;
+		}
+	}
+	
+	return num;
+}
+
 /* read capabilities raw data of ddc/ci at address addr starting at offset to buf */
 static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf, unsigned char len)
 {
@@ -576,8 +709,9 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 	return ddcci_read(mon, buf, len);
 }
 
-int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
+int ddcci_caps(struct monitor* mon)
 {
+	mon->caps.raw_caps = (char*)malloc(16);
 	int bufferpos = 0;
 	unsigned char buf[64];	/* 64 bytes chunk (was 35, but 173P+ send 43 bytes chunks) */
 	int offset = 0;
@@ -585,7 +719,7 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 	int retries = 3;
 	
 	do {
-		buffer[bufferpos] = 0;
+		mon->caps.raw_caps[bufferpos] = 0;
 		if (retries == 0) {
 			return -1;
 		}
@@ -605,14 +739,9 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 			continue;
 		}
 
+		mon->caps.raw_caps = (char*)realloc(mon->caps.raw_caps, bufferpos + len - 2);
 		for (i = 3; i < len; i++) {
-			buffer[bufferpos++] = buf[i];
-			if (bufferpos >= buflen) {
-				if (!mon->probing || verbosity) {
-					fprintf(stderr, _("Buffer too small to contain caps.\n"));
-				}
-				return -1;
-			}
+			mon->caps.raw_caps[bufferpos++] = buf[i];
 		}
 		
 		offset += len - 3;
@@ -620,7 +749,9 @@ int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen)
 		retries = 3;
 	} while (len != 3);
 
-	buffer[bufferpos] = 0;
+	mon->caps.raw_caps[bufferpos] = 0;
+	
+	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
 	
 	return bufferpos;
 }
@@ -749,37 +880,45 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		return -2;
 	}
 	
-	unsigned char buf[1024];
+	ddcci_caps(mon);
+	mon->db = ddcci_create_db(mon->pnpid, &mon->caps, 1);
+	mon->fallback = 0; /* No fallback */
 	
-	if (ddcci_caps(mon, buf, 1024) > -1) {
-		mon->db = ddcci_create_db(mon->pnpid, buf, 1);
+	if (!mon->db) {
+		/* Fallback on manufacturer generic profile */
+		char buffer[7];
+		buffer[0] = 0;
+		strncat(buffer, mon->pnpid, 3); /* copy manufacturer id */
+		switch(mon->caps.type) {
+		case lcd:
+			strcat(buffer, "lcd");
+			mon->db = ddcci_create_db(buffer, &mon->caps, 1);
+			mon->fallback = 1;
+			break;
+		case crt:
+			strcat(buffer, "crt");
+			mon->db = ddcci_create_db(buffer, &mon->caps, 1);
+			mon->fallback = 1;
+			break;
+		case unk:
+			break;
+		}
+		
+		if (!mon->db) {
+			/* Fallback on VESA generic profile */
+			mon->db = ddcci_create_db("VESA", &mon->caps, 1);
+			mon->fallback = 2;
+		}
+	}
+	
+	if ((mon->db) && (mon->db->init == samsung)) {
+		if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
+			return -1;
+		}
 	}
 	else {
-		mon->db = ddcci_create_db(mon->pnpid, "", 1);
-	}
-	
-	if (mon->db) {
-		if (mon->db->init == samsung) {
-			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
-				return -1;
-			}
-		}
-		else {
-			if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
-				return -1;
-			}
-		}
-	}
-	else { /* Alternate way of init mode detecting for unsupported monitors */
-		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
-			if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
-				return -1;
-			}
-		}
-		else {
-			if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
-				return -1;
-			}
+		if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
+			return -1;
 		}
 	}
 	
@@ -818,6 +957,16 @@ int ddcci_close(struct monitor* mon)
 			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE, 0)) < 0) {
 				return -1;
 			}
+		}
+	}
+	
+	int i;
+	for (i = 0; i < 256; i++) {
+		if(mon->caps.vcp[i]) {
+			if (mon->caps.vcp[i]->values) {
+				free(mon->caps.vcp[i]->values);
+			}
+			free(mon->caps.vcp[i]);
 		}
 	}
 	

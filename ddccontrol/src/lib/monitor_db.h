@@ -21,16 +21,12 @@
 #ifndef MONITOR_DB_H
 #define MONITOR_DB_H
 
+#include "ddcci.h"
+
 #include <libxml/xmlstring.h>
 
 /* Current database version */
 #define DBVERSION 3
-
-/* Structure to store CAPS entry (control and related values) */
-struct caps_entry {
-	int values_len; /* -1 if values are not specified */
-	unsigned short* values;
-};
 
 enum control_type {
 value = 0,
@@ -88,12 +84,10 @@ struct monitor_db {
 	xmlChar* name;
 	enum init_type init;
 	
-	struct caps_entry* caps[256]; /* CAPS */
-	
 	struct group_db* group_list;
 };
 
-struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps, int faulttolerance);
+struct monitor_db* ddcci_create_db(const char* pnpname, struct caps* caps, int faulttolerance);
 void ddcci_free_db(struct monitor_db* mon_db);
 
 int ddcci_init_db(char* usedatadir);

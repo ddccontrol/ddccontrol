@@ -87,6 +87,7 @@ void set_status(char* message);
 
 /* Show a message on top of every other controls. */
 void set_message(char* message);
+void set_message_ok(char* message, int with_ok);
 
 GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
 

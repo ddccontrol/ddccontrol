@@ -81,15 +81,15 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 				}
 				if (controlname == NULL) {
 					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [???]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-', value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ');
+						ctrl, (result > 0) ? '+' : '-', value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ');
 				}
 				else if (valuename == NULL) {
 					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ', controlname);
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname);
 				}
 				else {
 					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s - %s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ', controlname, valuename);
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname, valuename);
 				}
 			}
 			break;
@@ -137,8 +137,11 @@ static void check_integrity(char* datadir, char* pnpname) {
 	}
 	strcat(buffer, "))");
 	
+	struct caps caps;
+	ddcci_parse_caps(buffer, &caps, 1);
+	
 	printf(_("Checking %s integrity...\n"), pnpname);
-	if (!(mon_db = ddcci_create_db(pnpname, buffer, 0))) {
+	if (!(mon_db = ddcci_create_db(pnpname, &caps, 0))) {
 		printf(_("[ FAILED ]\n"));
 		ddcci_release_db();
 		exit(1);
@@ -314,15 +317,59 @@ int main(int argc, char **argv)
 		fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"), 
 			mon.pnpid, mon.db ? mon.db->name : NULL);
 		fprintf(stdout, _("\tInput type: %s\n"), mon.digital ? _("Digital") : _("Analog"));
-
+		
+		if (mon.fallback) {
+			/* Put a big warning (in red if we are writing to a terminal). */
+			printf("%s%s\n", isatty(1) ? "\x1B[5;31m" : "", _("=============================== WARNING ==============================="));
+			if (mon.fallback == 1) {
+				printf(_(
+					"There is no support for your monitor in the database, but ddccontrol is\n"
+					"using a generic profile for your monitor's manufacturer. Some controls\n"
+					"may not be supported, or may not work as expected.\n"));
+			}
+			else if (mon.fallback == 2) {
+				printf(_(
+					"There is no support for your monitor in the database, but ddccontrol is\n"
+					"using a basic generic profile. Many controls will not be supported, and\n"
+					"some controls may not work as expected.\n"));
+			}
+			printf(_(
+					"Please update ddccontrol-db, or, if you are already using the latest\n"
+					"version, please send the output of the following command to\n"
+					"ddccontrol-users@lists.sourceforge.net:\n"));
+			printf("\nLANG= LC_ALL= ddccontrol -p -c -d\n\n");
+			printf(_("Thank you.\n"));
+			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
+		}
+		
 		if (caps) {
-			unsigned char buf[1024];
-			
 			fprintf(stdout, _("\nCapabilities:\n"));
 			
 			for (retry = RETRYS; retry; retry--) {
-				if (ddcci_caps(&mon, buf, 1024) >= 0) {
-					fprintf(stdout, "%s\n", buf);
+				if (ddcci_caps(&mon) >= 0) {
+					fprintf(stdout, _("Raw output: %s\n"), mon.caps.raw_caps);
+					
+					fprintf(stdout, _("Parsed output: \n\tVCP: "));
+					int i;
+					for (i = 0; i < 256; i++) {
+						if (mon.caps.vcp[i]) {
+							printf("%02x ", i);
+						}
+					}
+					printf("\n");
+					printf(_("\tType: "));
+					switch(mon.caps.type) {
+					case lcd:
+						printf(_("LCD"));
+						break;
+					case crt:
+						printf(_("CRT"));
+						break;
+					case unk:
+						printf(_("Unknown"));
+						break;
+					}
+					printf("\n");
 					break;
 				}
 			}

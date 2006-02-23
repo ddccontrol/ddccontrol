@@ -179,8 +179,6 @@ int ddcci_save_list(struct monitorlist* monlist) {
 	if (!filename)
 		return 0;
 	
-	free(filename);
-	
 	writer = xmlNewTextWriterFilename(filename, 0);
 	DDCCI_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
 

@@ -33,7 +33,9 @@ GtkWidget* table;
 GtkWidget *combo_box;
 GtkWidget* refresh_monitors_button;
 
+GtkWidget *messagebox = NULL;
 GtkWidget *messagelabel = NULL;
+GtkWidget *messagebutton = NULL;
 GtkWidget *statuslabel = NULL;
 
 GtkWidget* close_button = NULL;
@@ -115,7 +117,6 @@ static void combo_change(GtkWidget *widget, gpointer data)
 				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
 				create_monitor_manager(current);
 				if (monitor_manager) {
-					gtk_widget_show(monitor_manager);
 					gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 				}
 				else {
@@ -223,11 +224,22 @@ void set_status(char* message) {
 	gtk_label_set_text(GTK_LABEL(statuslabel), message);
 }
 
-/* Show a message on top of every other controls. */
-void set_message(char* message)
+static void messagebutton_callback(GtkWidget *widget, gpointer data)
 {
+	set_message("");
+}
+
+void set_message(char* message) {
+	set_message_ok(message, 0);
+}
+
+/* Show a message on top of every other controls, with a ok button
+ * if the user can hide it himself. */
+void set_message_ok(char* message, int with_ok)
+{
+	gtk_widget_show(messagebutton);
 	if (!message[0]) {
-		gtk_widget_hide(messagelabel);
+		gtk_widget_hide(messagebox);
 		if (monitor_manager) {
 			set_current_main_component(current_main_component);
 		}
@@ -237,9 +249,18 @@ void set_message(char* message)
 		return;
 	}
 	
+	gtk_label_set_markup(GTK_LABEL(messagelabel), message);
+	
 	widgets_set_sensitive(FALSE);
-	gtk_label_set_text(GTK_LABEL(messagelabel), message);
-	gtk_widget_show(messagelabel);
+	
+	gtk_widget_show(messagebox);
+	if (with_ok) {
+		gtk_widget_show(messagebutton);
+	}
+	else {
+		gtk_widget_hide(messagebutton);
+	}
+	
 	if (monitor_manager) {
 		gtk_widget_hide(monitor_manager);
 		gtk_widget_hide(profile_manager);
@@ -483,10 +504,24 @@ int main( int   argc, char *argv[] )
 	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
 	crow++;
 	
-	/* Status message label (used when loading or refreshing) */
+	/* Status message label (used when loading or refreshing, or when displaying some kind of warnings) */
+	messagebox = gtk_vbox_new(FALSE, 10);
+	
 	messagelabel = gtk_label_new ("");
 	gtk_label_set_line_wrap(GTK_LABEL(messagelabel), TRUE);
-	gtk_table_attach(GTK_TABLE(table), messagelabel, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	gtk_box_pack_start(GTK_BOX(messagebox), messagelabel, 1, 1, 0);
+	gtk_widget_show(messagelabel);
+	
+	GtkWidget* messagealign = gtk_alignment_new(0.5, 0.5, 0, 0);
+	messagebutton = stock_label_button(GTK_STOCK_OK, _("OK"), NULL);
+	g_signal_connect(G_OBJECT(messagebutton), "clicked", G_CALLBACK(messagebutton_callback), NULL);
+	gtk_container_add(GTK_CONTAINER(messagealign), messagebutton);
+	gtk_widget_show(messagebutton);
+	
+	gtk_box_pack_start(GTK_BOX(messagebox), messagealign, 0, 0, 10);
+	gtk_widget_show(messagealign);
+	
+	gtk_table_attach(GTK_TABLE(table), messagebox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
 	mainrow = crow;
 	crow++;
 	

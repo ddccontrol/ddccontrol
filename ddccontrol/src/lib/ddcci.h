@@ -32,9 +32,28 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include "monitor_db.h"
-
 struct profile;
+
+enum monitor_type {
+unk = 0,
+lcd = 1,
+crt = 2
+};
+
+/* Structure to store CAPS vcp entry (control and related values) */
+struct vcp_entry {
+	int values_len; /* -1 if values are not specified */
+	unsigned short* values;
+};
+
+/* Structure to store CAPS */
+struct caps {
+	struct vcp_entry* vcp[256]; /* vcp entries */
+	enum monitor_type type;
+	char* raw_caps; /* raw text caps */
+};
+
+#include "monitor_db.h"
 
 struct monitor {
 	int fd;
@@ -43,6 +62,7 @@ struct monitor {
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
 	struct monitor_db* db;
+	struct caps caps;
 	
 	struct profile* profiles; /* profiles available for this monitor. Filled by get_all_profiles. */
 	
@@ -53,6 +73,11 @@ struct monitor {
 #endif
 	} type;
 	int probing; /* are we probing? */
+	
+	int fallback;
+	/* 0 - the db is designed for this monitor
+	   1 - we are using a manufacturer standard profile (warn the user)
+	   2 - we are using the VESA generic profile (warn the user) */
 };
 
 /* Struct used to return monitor data probed by ddcci_probe */
@@ -79,7 +104,9 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
 	unsigned short *value, unsigned short *maximum);
 
-int ddcci_caps(struct monitor* mon, unsigned char *buffer, unsigned int buflen);
+int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add);
+
+int ddcci_caps(struct monitor* mon);
 
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
 void ddcci_verbosity(int verbosity);
