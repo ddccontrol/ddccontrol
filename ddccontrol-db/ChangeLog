@@ -1,3 +1,23 @@
+2006-02-23 00:54  nboichat
+
+	* configure.ac, db/Makefile.am, db/Makefile.in, db/options.xml,
+	  db/options.xml.h, db/options.xml.in, db/monitor/DEL4005.xml,
+	  db/monitor/DELE009.xml, db/monitor/FUS0552.xml,
+	  db/monitor/MEL4632.xml, db/monitor/NEC662B.xml,
+	  db/monitor/SAM00BA.xml, db/monitor/SAM00D3.xml,
+	  db/monitor/SAM010C.xml, db/monitor/SAM010D.xml,
+	  db/monitor/SAM010F.xml, db/monitor/SAM0115.xml,
+	  db/monitor/SAM011F.xml, db/monitor/SAM0124.xml,
+	  db/monitor/SAM0168.xml, db/monitor/SAM017C.xml,
+	  db/monitor/SAM0191.xml, db/monitor/SAM0196.xml,
+	  db/monitor/SAM0198.xml, db/monitor/SAM01B4.xml,
+	  db/monitor/SAM01E3.xml, db/monitor/SAM01E4.xml,
+	  db/monitor/SAM01E5.xml, db/monitor/SAMcp10.xml,
+	  db/monitor/SAMg9.xml, db/monitor/SAMlcd.xml,
+	  db/monitor/SAMmb6.xml, db/monitor/VESA.xml, po/ddccontrol-db.pot,
+	  po/fr.po, po/pl.po, po/ru.po, po/zh_CN.po: Update Samsung
+	  monitors to use generic profiles.
+
 2006-02-22 22:16  nboichat
 
 	* configure.ac, db/Makefile.in, db/options.xml, db/options.xml.in,
