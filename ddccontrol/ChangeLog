@@ -1,3 +1,8 @@
+2006-02-23 22:21  nboichat
+
+	* po/ddccontrol.pot, po/de.po, po/fr.po, po/pl.po, po/ru.po,
+	  po/zh_CN.po, src/ddccontrol/main.c: Update translation.
+
 2006-02-23 21:48  nboichat
 
 	* src/: ddccontrol/main.c, gddccontrol/main.c,
