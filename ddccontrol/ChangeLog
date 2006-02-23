@@ -1,3 +1,8 @@
+2006-02-23 12:51  nboichat
+
+	* src/: ddccontrol/main.c, lib/monitor_db.c, lib/monitor_db.h:
+	  Various bugfixes in DB version 3 handling.
+
 2006-02-22 21:25  nboichat
 
 	* configure.ac, doc/techdocs.xml, src/ddccontrol/main.c,
