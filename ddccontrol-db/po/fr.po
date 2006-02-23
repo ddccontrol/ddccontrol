@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-02-23 01:52+0100\n"
-"PO-Revision-Date: 2005-11-14 18:30+0100\n"
+"PO-Revision-Date: 2006-02-23 22:43+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -55,19 +55,20 @@ msgstr "Internet"
 #: ../db/options.xml.h:10
 #, c-format
 msgid "Game"
-msgstr ""
+msgstr "Jeu"
 
 #: ../db/options.xml.h:11
 #, c-format
 msgid "Sport"
-msgstr ""
+msgstr "Sport"
 
 #: ../db/options.xml.h:12
 #, c-format
 msgid "Entertain"
 msgstr "Divertissement"
 
-#: ../db/options.xml.h:13 ../db/options.xml.h:46
+#: ../db/options.xml.h:13
+#: ../db/options.xml.h:46
 #, c-format
 msgid "Custom"
 msgstr "Personnalisé"
@@ -92,70 +93,71 @@ msgstr "Deux"
 msgid "Three"
 msgstr "Trois"
 
-#: ../db/options.xml.h:18 ../db/options.xml.h:19
+#: ../db/options.xml.h:18
+#: ../db/options.xml.h:19
 #, c-format
 msgid "Gamma"
-msgstr ""
+msgstr "Gamma"
 
 #: ../db/options.xml.h:20
 #, c-format
 msgid "-0.5"
-msgstr ""
+msgstr "-0.5"
 
 #: ../db/options.xml.h:21
 #, c-format
 msgid "-0.3"
-msgstr ""
+msgstr "-0.3"
 
 #: ../db/options.xml.h:22
 #, c-format
 msgid "-0.1"
-msgstr ""
+msgstr "-0.1"
 
 #: ../db/options.xml.h:23
 #, c-format
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: ../db/options.xml.h:24
 #, c-format
 msgid "+0.1"
-msgstr ""
+msgstr "+0.1"
 
 #: ../db/options.xml.h:25
 #, c-format
 msgid "+0.3"
-msgstr ""
+msgstr "+0.3"
 
 #: ../db/options.xml.h:26
 #, c-format
 msgid "+0.5"
-msgstr ""
+msgstr "+0.5"
 
 #: ../db/options.xml.h:27
 #, c-format
 msgid "+0.7"
-msgstr ""
+msgstr "+0.7"
 
 #: ../db/options.xml.h:28
 #, c-format
 msgid "+0.9"
-msgstr ""
+msgstr "+0.9"
 
 #: ../db/options.xml.h:29
 #, c-format
 msgid "Mode 1"
-msgstr ""
+msgstr "Mode 1"
 
 #: ../db/options.xml.h:30
 #, c-format
 msgid "Mode 2"
-msgstr ""
+msgstr "Mode 2"
 
 #: ../db/options.xml.h:31
 #, c-format
 msgid "Mode 3"
-msgstr ""
+msgstr "Mode 3"
 
 #: ../db/options.xml.h:32
 #, c-format
@@ -222,7 +224,8 @@ msgstr "Ajustement de la courbe de couleur"
 msgid "Color Preset"
 msgstr "Paramètres de couleur prédéfinis"
 
-#: ../db/options.xml.h:45 ../db/options.xml.h:151
+#: ../db/options.xml.h:45
+#: ../db/options.xml.h:151
 #, c-format
 msgid "Normal"
 msgstr "Normal"
@@ -238,49 +241,49 @@ msgid "Cool"
 msgstr "Froid"
 
 #: ../db/options.xml.h:49
-#, fuzzy, c-format
+#, c-format
 msgid "Warm1"
-msgstr "Chaud"
+msgstr "Chaud1"
 
 #: ../db/options.xml.h:50
-#, fuzzy, c-format
+#, c-format
 msgid "Warm2"
-msgstr "Chaud"
+msgstr "Chaud2"
 
 #: ../db/options.xml.h:51
-#, fuzzy, c-format
+#, c-format
 msgid "Cool1"
-msgstr "Froid"
+msgstr "Froid1"
 
 #: ../db/options.xml.h:52
-#, fuzzy, c-format
+#, c-format
 msgid "Cool2"
-msgstr "Froid"
+msgstr "Froid2"
 
 #: ../db/options.xml.h:53
-#, fuzzy, c-format
+#, c-format
 msgid "Cool3"
-msgstr "Froid"
+msgstr "Froid3"
 
 #: ../db/options.xml.h:54
-#, fuzzy, c-format
+#, c-format
 msgid "Cool4"
-msgstr "Froid"
+msgstr "Froid4"
 
 #: ../db/options.xml.h:55
-#, fuzzy, c-format
+#, c-format
 msgid "Cool5"
-msgstr "Froid"
+msgstr "Froid5"
 
 #: ../db/options.xml.h:56
-#, fuzzy, c-format
+#, c-format
 msgid "Cool6"
-msgstr "Froid"
+msgstr "Froid6"
 
 #: ../db/options.xml.h:57
-#, fuzzy, c-format
+#, c-format
 msgid "Cool7"
-msgstr "Froid"
+msgstr "Froid7"
 
 #: ../db/options.xml.h:58
 #, c-format
@@ -355,9 +358,11 @@ msgstr "Utilisateur 4"
 #: ../db/options.xml.h:72
 #, c-format
 msgid "MagicColor"
-msgstr ""
+msgstr "MagicColor"
 
-#: ../db/options.xml.h:73 ../db/options.xml.h:181 ../db/options.xml.h:190
+#: ../db/options.xml.h:73
+#: ../db/options.xml.h:181
+#: ../db/options.xml.h:190
 #, c-format
 msgid "Off"
 msgstr "Éteint"
@@ -365,17 +370,17 @@ msgstr "Éteint"
 #: ../db/options.xml.h:74
 #, c-format
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #: ../db/options.xml.h:75
 #, c-format
 msgid "Full"
-msgstr ""
+msgstr "Complet"
 
 #: ../db/options.xml.h:76
-#, fuzzy, c-format
+#, c-format
 msgid "Intelligent"
-msgstr "Internet"
+msgstr "Intelligent"
 
 #: ../db/options.xml.h:77
 #, c-format
@@ -427,12 +432,16 @@ msgstr "Ajustements automatiques"
 msgid "Auto Size Center"
 msgstr "Centrage et redimensionnement automatique"
 
-#: ../db/options.xml.h:87 ../db/options.xml.h:158 ../db/options.xml.h:162
+#: ../db/options.xml.h:87
+#: ../db/options.xml.h:158
+#: ../db/options.xml.h:162
 #, c-format
 msgid "Enable"
 msgstr "Activer"
 
-#: ../db/options.xml.h:88 ../db/options.xml.h:157 ../db/options.xml.h:161
+#: ../db/options.xml.h:88
+#: ../db/options.xml.h:157
+#: ../db/options.xml.h:161
 #, c-format
 msgid "Disable"
 msgstr "Désactiver"
@@ -454,9 +463,9 @@ msgid "Clock and clock phase"
 msgstr "Boucle d'image (horloge et phase d'horloge)"
 
 #: ../db/options.xml.h:92
-#, fuzzy, c-format
+#, c-format
 msgid "H/V Position (fast mode)"
-msgstr "Position H/V"
+msgstr "Position H/V (rapide)"
 
 #: ../db/options.xml.h:93
 #, c-format
@@ -743,12 +752,14 @@ msgstr "Volume des haut-parleurs"
 msgid "Audio Microphone Volume Adjust"
 msgstr "Volume du microphone"
 
-#: ../db/options.xml.h:149 ../db/options.xml.h:150
+#: ../db/options.xml.h:149
+#: ../db/options.xml.h:150
 #, c-format
 msgid "Mute"
 msgstr "Muet"
 
-#: ../db/options.xml.h:152 ../db/options.xml.h:153
+#: ../db/options.xml.h:152
+#: ../db/options.xml.h:153
 #, c-format
 msgid "Degauss"
 msgstr "Démagnétiser"
@@ -774,9 +785,9 @@ msgid "Enable only brightness/contrast settings"
 msgstr "Activer seulement le contrôle de la luminosité et du contraste"
 
 #: ../db/options.xml.h:160
-#, fuzzy, c-format
+#, c-format
 msgid "On Screen Display (Samsung)"
-msgstr "Affichage à l'écran (OSD)"
+msgstr "Affichage à l'écran (OSD) (Samsung)"
 
 #: ../db/options.xml.h:163
 #, c-format
@@ -846,7 +857,7 @@ msgstr "Hollandais"
 #: ../db/options.xml.h:176
 #, c-format
 msgid "Japanese"
-msgstr ""
+msgstr "Japonais"
 
 #: ../db/options.xml.h:177
 #, c-format
@@ -863,7 +874,9 @@ msgstr "Niveau de l'entrée"
 msgid "Display Resolution Notifier"
 msgstr "Affichage de la résolution"
 
-#: ../db/options.xml.h:180 ../db/options.xml.h:187 ../db/options.xml.h:191
+#: ../db/options.xml.h:180
+#: ../db/options.xml.h:187
+#: ../db/options.xml.h:191
 #, c-format
 msgid "On"
 msgstr "Allumé"
@@ -883,7 +896,8 @@ msgstr "Analogique"
 msgid "Digital"
 msgstr "Digital"
 
-#: ../db/options.xml.h:185 ../db/options.xml.h:189
+#: ../db/options.xml.h:185
+#: ../db/options.xml.h:189
 #, c-format
 msgid "Power control"
 msgstr "Allumer/éteindre"
@@ -897,3 +911,4 @@ msgstr "Contrôle DPMS"
 #, c-format
 msgid "Standby"
 msgstr "En veille"
+

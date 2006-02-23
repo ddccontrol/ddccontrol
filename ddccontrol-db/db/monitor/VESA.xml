@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--- "Standard" controls -->
-<monitor name="VESA standard controls" init="standard">
+<monitor name="VESA standard monitor" init="standard">
 	<controls>
 		<control id="degauss" address="0x00"/>
 		
