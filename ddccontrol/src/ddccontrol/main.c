@@ -349,7 +349,8 @@ int main(int argc, char **argv)
 				if (ddcci_caps(&mon) >= 0) {
 					fprintf(stdout, _("Raw output: %s\n"), mon.caps.raw_caps);
 					
-					fprintf(stdout, _("Parsed output: \n\tVCP: "));
+					fprintf(stdout, _("Parsed output: \n"));
+					fprintf(stdout, "\tVCP: ");
 					int i;
 					for (i = 0; i < 256; i++) {
 						if (mon.caps.vcp[i]) {
