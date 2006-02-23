@@ -15,6 +15,7 @@ printf(_("Super Bright Mode"));
 printf(_("One"));
 printf(_("Two"));
 printf(_("Three"));
+printf(_("Auto Level (Needs a blank line to work)"));
 printf(_("Gamma"));
 printf(_("Gamma"));
 printf(_("-0.5"));

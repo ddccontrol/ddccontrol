@@ -18,6 +18,7 @@
 				<value id="two" name="Two" value="1"/>
 				<value id="three" name="Three" value="2"/>
 			</control>
+			<control id="autolevel" type="command" name="Auto Level (Needs a blank line to work)"/>
 		</subgroup>
 		<subgroup name="Gamma" > 
 			<control id="gamma" type="list" name="Gamma" address="0xF2" >

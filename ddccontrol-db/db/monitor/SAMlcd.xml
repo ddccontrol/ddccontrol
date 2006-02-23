@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--- "Standard" Samsung controls, 87, CA, CC, F5 are useful but usually not in caps -->
-<monitor name="Samsung LCD standard controls">
+<monitor name="Samsung standard LCD">
 	<caps add="(vcp(E1))"/>
 	<controls>
 		<control id="auto" address="0x1e">

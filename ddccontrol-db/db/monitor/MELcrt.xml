@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<monitor name="Mitsubishi standard CRT">
+	<controls>
+		<control id="defaultsizepos" address="0x06" delay="1000"/>
+		<control id="defaultluma" address="0x08" delay="1000"/>
+		
+		<control id="colorpreset" address="0x14">
+			<value id="9300k"  value="1"/>
+			<value id="6500k" value="2"/>
+			<value id="5000k" value="3"/>
+			<value id="srgb" value="4"/>
+		</control>
+		
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="0"/>
+			<value id="german"  value="1"/>
+			<value id="french"  value="2"/>
+			<value id="spanish" value="3"/>
+			<value id="italian" value="4"/>
+			<value id="chinese" value="5"/>
+		</control>
+		
+		<!--- Control 0xe2: +/0/1 [Clamp Pulse Position] -->
+		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
+			<value id="enable"  value="0"/>
+			<value id="disable" value="1"/>
+		</control>
+		
+		<control id="cpincushion" address="0xE6"/>
+		<control id="tlpurity" address="0xE8"/>
+		<control id="trpurity" address="0xE9"/>
+		<control id="blpurity" address="0xEA"/>
+		<control id="brpurity" address="0xEB"/>
+		
+		<control id="superbright" address="0xF9"/> <!--- Needs to be tested -->
+	</controls>
+	<include file="VESA"/>
+</monitor>

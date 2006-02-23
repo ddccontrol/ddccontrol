@@ -6,23 +6,6 @@
 		  46 48 4A 4C 54 56 6C 6E 70 C9   E1 E2 E3 E8 E9 EA EB F7 FB FC ) )
 	-->
 	<caps add="(vcp ( 68 (00 01 02 03 04 05) ))"/>
-	<controls>
-		<control id="defaultsizepos" address="0x06" delay="1000"/>
-		<control id="defaultluma" address="0x08" delay="1000"/>
-		
-		<control id="tlpurity" address="0xE8"/>
-		<control id="trpurity" address="0xE9"/>
-		<control id="blpurity" address="0xEA"/>
-		<control id="brpurity" address="0xEB"/>
-		
-		<control id="language" type="list" address="0x68">
-			<value id="english" value="0"/>
-			<value id="german"  value="1"/>
-			<value id="french"  value="2"/>
-			<value id="spanish" value="3"/>
-			<value id="italian" value="4"/>
-			<value id="chinese" value="5"/>
-		</control>
-	</controls>
-	<include file="VESA"/>
+	<!--- 0xf7 Image mode: 0 - Graphic, 1 - Text, 2 - Normal -->
+	<include file="MELcrt"/>
 </monitor>

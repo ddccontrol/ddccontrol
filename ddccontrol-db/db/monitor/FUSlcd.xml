@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--- "Standard" Fujitsu controls, seems to be very standard-compliant (no missing control in CAPS, etc...). -->
+<monitor name="Fujitsu Siemens Standard LCD" init="standard">
+	<controls>
+		<!-- 0x02: +/1/2 New control value -->
+		
+		<control id="colorpreset" address="0x14">
+			<value id="srgb"   value="0x1"/>
+			<value id="native" value="0x2"/>
+			<value id="4000k"  value="0x3"/>
+			<value id="5000k"  value="0x4"/>
+			<value id="6500k"  value="0x5"/>
+			<value id="7500k"  value="0x6"/>
+			<value id="8200k"  value="0x7"/>
+			<value id="9300k"  value="0x8"/>
+			<value id="10000k" value="0x9"/>
+			<value id="11500k" value="0xA"/>
+			<value id="user1"  value="0xB"/>
+			<value id="user2"  value="0xC"/>
+			<value id="user3"  value="0xD"/>
+		</control>
+		
+		<control id="auto" address="0x1e">
+			<value id="coarsefine" value="1"/>
+			<value id="pos" value="2"/>
+		</control>
+		
+		<control id="mute" type="list" address="0x94">
+			<value id="mute" value="0"/>
+			<value id="normal" value="2"/>
+		</control>
+		
+		<!-- 0xac: +/6390/0 Horizontal freq.  [kHz] -->
+		<!-- 0xae: +/5990/0 Vertical freq. [Hz] -->
+		<!-- 0xb2: +/1/0 Flat panel sub pixel layout
+			 [1: RGB vertical stripe
+			 2: RGB horizontal stripe
+			 3: BGR vertical stripe
+			 4: BGR horizontal stripe] -->
+		<!-- 0xb6: +/3/0 Monitor Type
+			 [1: CRT (shadow mask)
+			 2: CRT (aperture grill)
+			 3: TFT
+			 4: Projector 
+			 5: Plasma -->
+		<!-- 0xc0: +/61/0 Display usage time [h] -->
+		<!-- 0xc6: +/69/0 unknown -->
+		<!-- 0xc8: +/5/0 Display controller type -->
+		<!-- 0xc9: +/19714/0 Display firmware level -->
+		<control id="osd" type="list" address="0xca">
+			<value id="disable" value="1"/>
+			<value id="enable" value="2"/>
+		</control>
+		
+		<control id="language" type="list" address="0xcc">
+			<value id="english" value="2"/>
+			<value id="french"  value="3"/>
+			<value id="german"  value="4"/>
+			<value id="italian" value="5"/>
+			<value id="russian" value="9"/>
+			<value id="spanish" value="10"/>
+			<value id="dutch"   value="11"/>
+			<value id="swedish" value="12"/>
+		</control>
+		
+		<!-- 0xdf: +/512/0 VCP version (02 00) -->
+		<!-- 0xfe: Auto level : For the auto level function a suitable test
+			 picture is required which has at least 1 full white (0xFFFFFF) line. -->
+		<control id="autolevel" type="command" address="0xfe"/>
+		<control id="resolutionnotifier" type="list" address="0xf6">
+			<value id="on" value="1"/>
+			<value id="off" value="0"/>
+		</control>
+	</controls>
+	<include file="VESA"/>
+</monitor>

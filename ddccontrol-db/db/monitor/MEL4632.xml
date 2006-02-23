@@ -2,9 +2,6 @@
 <monitor name="Mitsubishi Diamond Pro 2070sb">
 	<!---  mccs_ver(1.1) type(CRT_AG) vcp(00 01 04 06 08 10 12 14(01 04 06 07 08) 16 18 1A 1E 20 22 24 26 28 30 32 38 3A 3C 40 42 44 46 47 48 4A 4C 54 56 68 6C 6E 70 D6 E1 E2 E3 E6 E8 E9 EA EB EF F6 F9 FA FC FF) vcp_p02(3B 3C 42 43 44 46 49 4A 4B 4C 4E 4F 54 56) asset_eep(40) mpu_ver(2.1.0) -->
 	<controls>
-		<control id="defaultsizepos" address="0x06" delay="1000"/>
-		<control id="defaultluma" address="0x08" delay="1000"/>
-		
 		<control id="colorpreset" address="0x14">
 			<!--- Copied from NEC 2080UX+, needs to be checked -->
 			<value id="5000k"  value="4"/>
@@ -16,35 +13,12 @@
 		</control>
 	
 		<!--- Control 0x1e: +/0/1 [???] -->
-	
-		<control id="language" type="list" address="0x68">
-			<value id="english" value="0"/>
-			<value id="german"  value="1"/>
-			<value id="french"  value="2"/>
-			<value id="spanish" value="3"/>
-			<value id="italian" value="4"/>
-			<value id="chinese" value="5"/>
-		</control>
-
 		<!---Control 0xa8: +/1/3 [Sync Type]-->
-
-		<!--- Control 0xe2: +/0/1 [Clamp Pulse Position] -->
-		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
-			<value id="enable"  value="0"/>
-			<value id="disable" value="1"/>
-		</control>
-		<control id="cpincushion" address="0xE6"/>
-		<control id="tlpurity" address="0xE8"/>
-		<control id="trpurity" address="0xE9"/>
-		<control id="blpurity" address="0xEA"/>
-		<control id="brpurity" address="0xEB"/>
 		<!--- Control 0xef: +/0/4 [OSD Position] -->
-
 		<!--- Control 0xf6: +/0/1 [REFRESH NOTIFIER] -->
-		<control id="superbright" address="0xF9"/> <!--- Needs to be tested -->
 		<!--- Control 0xfa: +/6885/65535 [Total Power Time in 30 min, RO] -->
 		<!--- Control 0xfc: +/9/24 [OSD Turn Off Delay] -->
 		<!--- Control 0xff: +/6060/65535 [Power On Time in 30 min, RO] -->
 	</controls>
-	<include file="VESA"/>
+	<include file="MELcrt"/>
 </monitor>
