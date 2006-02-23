@@ -1,3 +1,16 @@
+2006-02-23 21:44  nboichat
+
+	* db/monitor/VESA.xml, po/fr.po: Update French translation.
+
+2006-02-23 13:01  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/FUS0550.xml, monitor/FUS0552.xml, monitor/FUS0554.xml,
+	  monitor/FUS0555.xml, monitor/FUSlcd.xml, monitor/MEL44B0.xml,
+	  monitor/MEL4513.xml, monitor/MEL4632.xml, monitor/MELcrt.xml,
+	  monitor/SAMlcd.xml: Create Mitsubishi and Fujitsu generic
+	  profiles.
+
 2006-02-23 00:54  nboichat
 
 	* configure.ac, db/Makefile.am, db/Makefile.in, db/options.xml,

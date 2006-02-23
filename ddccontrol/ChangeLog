@@ -1,3 +1,12 @@
+2006-02-23 21:48  nboichat
+
+	* src/: ddccontrol/main.c, gddccontrol/main.c,
+	  gddccontrol/notebook.c, gddccontrol/notebook.h, lib/conf.c,
+	  lib/ddcci.c, lib/ddcci.h, lib/monitor_db.c, lib/monitor_db.h:
+	  Fallback to generic profiles when a monitor is not supported in
+	  the database (displaying a big warning inviting the users to send
+	  their dumps to ddccontrol-users).
+
 2006-02-23 12:51  nboichat
 
 	* src/: ddccontrol/main.c, lib/monitor_db.c, lib/monitor_db.h:
