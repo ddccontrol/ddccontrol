@@ -9,9 +9,6 @@
 			<value id="9300k"  value="8"/>
 			<value id="native" value="2"/>
 		</control>
-		<control id="auto" address="0x1e">
-			<value id="pos" value="1"/>
-		</control>
 		
 		<!-- Control 0x54: +/43/46 [Color Temperature], not working -->
 		

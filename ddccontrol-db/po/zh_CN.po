@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool database cvs version 2005-11-12\n"
-"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:54+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-02-23 01:52+0100\n"
 "PO-Revision-Date: 2005-11-12 15:50+0800\n"
 "Last-Translator: Wu Songhai waq@21cn.com\n"
 "Language-Team: Simple Chinese <LL@li.org>\n"
@@ -15,722 +15,877 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db/options.xml.h:3
+#: ../db/options.xml.h:3
 #, c-format
 msgid "Color settings"
 msgstr "颜色设置"
 
-#: db/options.xml.h:4
+#: ../db/options.xml.h:4
 #, c-format
 msgid "Brightness and Contrast"
 msgstr "亮度及对比度"
 
-#: db/options.xml.h:5
+#: ../db/options.xml.h:5
 #, c-format
 msgid "Brightness"
 msgstr "亮度"
 
-#: db/options.xml.h:6
+#: ../db/options.xml.h:6
 #, c-format
 msgid "Contrast"
 msgstr "对比度"
 
-#: db/options.xml.h:7
+#: ../db/options.xml.h:7
 #, c-format
 msgid "Magic Bright Mode"
 msgstr "魔亮模式"
 
-#: db/options.xml.h:8
+#: ../db/options.xml.h:8
 #, c-format
 msgid "Text"
 msgstr "文本"
 
-#: db/options.xml.h:9
+#: ../db/options.xml.h:9
 #, c-format
 msgid "Internet"
 msgstr "因特网"
 
-#: db/options.xml.h:10
+#: ../db/options.xml.h:10
+#, c-format
+msgid "Game"
+msgstr ""
+
+#: ../db/options.xml.h:11
+#, c-format
+msgid "Sport"
+msgstr ""
+
+#: ../db/options.xml.h:12
 #, c-format
 msgid "Entertain"
 msgstr "娱乐"
 
-#: db/options.xml.h:11
+#: ../db/options.xml.h:13 ../db/options.xml.h:46
 #, c-format
 msgid "Custom"
 msgstr "自定义"
 
-#: db/options.xml.h:12
+#: ../db/options.xml.h:14
 #, c-format
 msgid "Super Bright Mode"
 msgstr "超亮模式"
 
-#: db/options.xml.h:13
+#: ../db/options.xml.h:15
 #, c-format
 msgid "One"
 msgstr "一"
 
-#: db/options.xml.h:14
+#: ../db/options.xml.h:16
 #, c-format
 msgid "Two"
 msgstr "二"
 
-#: db/options.xml.h:15
+#: ../db/options.xml.h:17
 #, c-format
 msgid "Three"
 msgstr "三"
 
-#: db/options.xml.h:16
+#: ../db/options.xml.h:18 ../db/options.xml.h:19
+#, c-format
+msgid "Gamma"
+msgstr ""
+
+#: ../db/options.xml.h:20
+#, c-format
+msgid "-0.5"
+msgstr ""
+
+#: ../db/options.xml.h:21
+#, c-format
+msgid "-0.3"
+msgstr ""
+
+#: ../db/options.xml.h:22
+#, c-format
+msgid "-0.1"
+msgstr ""
+
+#: ../db/options.xml.h:23
+#, c-format
+msgid "0"
+msgstr ""
+
+#: ../db/options.xml.h:24
+#, c-format
+msgid "+0.1"
+msgstr ""
+
+#: ../db/options.xml.h:25
+#, c-format
+msgid "+0.3"
+msgstr ""
+
+#: ../db/options.xml.h:26
+#, c-format
+msgid "+0.5"
+msgstr ""
+
+#: ../db/options.xml.h:27
+#, c-format
+msgid "+0.7"
+msgstr ""
+
+#: ../db/options.xml.h:28
+#, c-format
+msgid "+0.9"
+msgstr ""
+
+#: ../db/options.xml.h:29
+#, c-format
+msgid "Mode 1"
+msgstr ""
+
+#: ../db/options.xml.h:30
+#, c-format
+msgid "Mode 2"
+msgstr ""
+
+#: ../db/options.xml.h:31
+#, c-format
+msgid "Mode 3"
+msgstr ""
+
+#: ../db/options.xml.h:32
 #, c-format
 msgid "Color maximum level"
 msgstr "颜色最大值"
 
-#: db/options.xml.h:17
+#: ../db/options.xml.h:33
 #, c-format
 msgid "Red maximum level"
 msgstr "红色最大值"
 
-#: db/options.xml.h:18
+#: ../db/options.xml.h:34
 #, c-format
 msgid "Green maximum level"
 msgstr "绿色最大值"
 
-#: db/options.xml.h:19
+#: ../db/options.xml.h:35
 #, c-format
 msgid "Blue maximum level"
 msgstr "蓝色最大值"
 
-#: db/options.xml.h:20
+#: ../db/options.xml.h:36
 #, c-format
 msgid "Color minimum level"
 msgstr "颜色最小值"
 
-#: db/options.xml.h:21
+#: ../db/options.xml.h:37
 #, c-format
 msgid "Red minimum level"
 msgstr "红色最小值"
 
-#: db/options.xml.h:22
+#: ../db/options.xml.h:38
 #, c-format
 msgid "Green minimum level"
 msgstr "绿色最小值"
 
-#: db/options.xml.h:23
+#: ../db/options.xml.h:39
 #, c-format
 msgid "Blue minimum level"
 msgstr "蓝色最小值"
 
-#: db/options.xml.h:24
+#: ../db/options.xml.h:40
 #, c-format
 msgid "Various color settings"
 msgstr "杂项颜色设置"
 
-#: db/options.xml.h:25
+#: ../db/options.xml.h:41
 #, c-format
 msgid "Hue"
 msgstr "色调"
 
-#: db/options.xml.h:26
+#: ../db/options.xml.h:42
 #, c-format
 msgid "Saturation"
 msgstr "饱和度"
 
-#: db/options.xml.h:27
+#: ../db/options.xml.h:43
 #, c-format
 msgid "Color curve adjust"
 msgstr "颜色曲线调整"
 
-#: db/options.xml.h:28
+#: ../db/options.xml.h:44
 #, c-format
 msgid "Color Preset"
 msgstr "颜色预设"
 
-#: db/options.xml.h:29 db/options.xml.h:120
+#: ../db/options.xml.h:45 ../db/options.xml.h:151
 #, c-format
 msgid "Normal"
 msgstr "正常"
 
-#: db/options.xml.h:30
+#: ../db/options.xml.h:47
 #, c-format
 msgid "Warm"
 msgstr "暧色"
 
-#: db/options.xml.h:31
+#: ../db/options.xml.h:48
 #, c-format
 msgid "Cool"
 msgstr "冷色"
 
-#: db/options.xml.h:32
+#: ../db/options.xml.h:49
+#, fuzzy, c-format
+msgid "Warm1"
+msgstr "暧色"
+
+#: ../db/options.xml.h:50
+#, fuzzy, c-format
+msgid "Warm2"
+msgstr "暧色"
+
+#: ../db/options.xml.h:51
+#, fuzzy, c-format
+msgid "Cool1"
+msgstr "冷色"
+
+#: ../db/options.xml.h:52
+#, fuzzy, c-format
+msgid "Cool2"
+msgstr "冷色"
+
+#: ../db/options.xml.h:53
+#, fuzzy, c-format
+msgid "Cool3"
+msgstr "冷色"
+
+#: ../db/options.xml.h:54
+#, fuzzy, c-format
+msgid "Cool4"
+msgstr "冷色"
+
+#: ../db/options.xml.h:55
+#, fuzzy, c-format
+msgid "Cool5"
+msgstr "冷色"
+
+#: ../db/options.xml.h:56
+#, fuzzy, c-format
+msgid "Cool6"
+msgstr "冷色"
+
+#: ../db/options.xml.h:57
+#, fuzzy, c-format
+msgid "Cool7"
+msgstr "冷色"
+
+#: ../db/options.xml.h:58
 #, c-format
 msgid "sRGB"
 msgstr ""
 
-#: db/options.xml.h:33
+#: ../db/options.xml.h:59
 #, c-format
 msgid "4000K"
 msgstr ""
 
-#: db/options.xml.h:34
+#: ../db/options.xml.h:60
 #, c-format
 msgid "5000K"
 msgstr ""
 
-#: db/options.xml.h:35
+#: ../db/options.xml.h:61
 #, c-format
 msgid "6500K"
 msgstr ""
 
-#: db/options.xml.h:36
+#: ../db/options.xml.h:62
 #, c-format
 msgid "7500K"
 msgstr ""
 
-#: db/options.xml.h:37
+#: ../db/options.xml.h:63
 #, c-format
 msgid "8200K"
 msgstr ""
 
-#: db/options.xml.h:38
+#: ../db/options.xml.h:64
 #, c-format
 msgid "9300K"
 msgstr ""
 
-#: db/options.xml.h:39
+#: ../db/options.xml.h:65
 #, c-format
 msgid "10000K"
 msgstr ""
 
-#: db/options.xml.h:40
+#: ../db/options.xml.h:66
 #, c-format
 msgid "11500K"
 msgstr ""
 
-#: db/options.xml.h:41
+#: ../db/options.xml.h:67
 #, c-format
 msgid "Native"
 msgstr "自然"
 
-#: db/options.xml.h:42
+#: ../db/options.xml.h:68
 #, c-format
 msgid "User 1"
 msgstr "用户1"
 
-#: db/options.xml.h:43
+#: ../db/options.xml.h:69
 #, c-format
 msgid "User 2"
 msgstr "用户2"
 
-#: db/options.xml.h:44
+#: ../db/options.xml.h:70
 #, c-format
 msgid "User 3"
 msgstr "用户3"
 
-#: db/options.xml.h:45
+#: ../db/options.xml.h:71
 #, c-format
 msgid "User 4"
 msgstr "用户4"
 
-#: db/options.xml.h:46
+#: ../db/options.xml.h:72
 #, c-format
-msgid "Color temperature"
-msgstr "色温"
-
-#: db/options.xml.h:47
-#, c-format
-msgid "Position and size"
-msgstr "位置及大小"
-
-#: db/options.xml.h:48
-#, c-format
-msgid "Position"
-msgstr "位置"
-
-#: db/options.xml.h:49
-#, c-format
-msgid "Horizontal Position"
-msgstr "水平位置"
-
-#: db/options.xml.h:50
-#, c-format
-msgid "Vertical Position"
-msgstr "垂直位置"
-
-#: db/options.xml.h:51
-#, c-format
-msgid "Size"
-msgstr "大小"
-
-#: db/options.xml.h:52
-#, c-format
-msgid "Horizontal Size"
-msgstr "水平大小"
-
-#: db/options.xml.h:53
-#, c-format
-msgid "Vertical Size"
-msgstr "垂直大小"
-
-#: db/options.xml.h:54
-#, c-format
-msgid "Automatic adjustments"
-msgstr "自动调整"
-
-#: db/options.xml.h:55
-#, c-format
-msgid "Auto Size Center"
-msgstr "自动大小居中"
-
-#: db/options.xml.h:56 db/options.xml.h:127
-#, c-format
-msgid "Enable"
-msgstr "启用"
-
-#: db/options.xml.h:57 db/options.xml.h:126
-#, c-format
-msgid "Disable"
-msgstr "禁止"
-
-#: db/options.xml.h:58
-#, c-format
-msgid "Automatically adjust"
-msgstr "自动调整"
-
-#: db/options.xml.h:59
-#, c-format
-msgid "H/V Position"
-msgstr "水平/垂直位置"
-
-#: db/options.xml.h:60
-#, c-format
-msgid "Clock and clock phase"
-msgstr "时钟及其相位"
-
-#: db/options.xml.h:61
-#, c-format
-msgid "Geometry"
-msgstr "几何"
-
-#: db/options.xml.h:62
-#, c-format
-msgid "Pincushion"
-msgstr "枕形"
-
-#: db/options.xml.h:63
-#, c-format
-msgid "Horizontal Pincushion"
-msgstr "水平枕形"
-
-#: db/options.xml.h:64
-#, c-format
-msgid "Horizontal Pincushion Balance"
-msgstr "水平枕形平衡"
-
-#: db/options.xml.h:65
-#, c-format
-msgid "Vertical Pincushion"
-msgstr "垂直枕形"
-
-#: db/options.xml.h:66
-#, c-format
-msgid "Vertical Pincushion Balance"
-msgstr "垂直枕形平衡"
-
-#: db/options.xml.h:67
-#, c-format
-msgid "Center Pincushion"
-msgstr "中心枕形"
-
-#: db/options.xml.h:68
-#, c-format
-msgid "Linearity"
-msgstr "线性"
-
-#: db/options.xml.h:69
-#, c-format
-msgid "Horizontal Linearity"
-msgstr "水平线性"
-
-#: db/options.xml.h:70
-#, c-format
-msgid "Horizontal Linearity Balance"
-msgstr "水平线性平衡"
-
-#: db/options.xml.h:71
-#, c-format
-msgid "Vertical Linearity"
-msgstr "垂直线性"
-
-#: db/options.xml.h:72
-#, c-format
-msgid "Vertical Linearity Balance"
-msgstr "垂直线性平衡"
-
-#: db/options.xml.h:73
-#, c-format
-msgid "Misconvergence"
-msgstr "失焦"
-
-#: db/options.xml.h:74
-#, c-format
-msgid "Horizontal Misconvergence"
-msgstr "水平失焦"
-
-#: db/options.xml.h:75
-#, c-format
-msgid "Vertical Misconvergence"
-msgstr "垂直失焦"
-
-#: db/options.xml.h:76
-#, c-format
-msgid "General distortion"
-msgstr "普通失真"
-
-#: db/options.xml.h:77
-#, c-format
-msgid "Parallelogram Distortion (Key Balance)"
-msgstr "平行四边形失真"
-
-#: db/options.xml.h:78
-#, c-format
-msgid "Trapezoidal Distortion (Key)"
-msgstr "梯形失真"
-
-#: db/options.xml.h:79
-#, c-format
-msgid "Corners distortion"
-msgstr "角失真"
-
-#: db/options.xml.h:80
-#, c-format
-msgid "Top Corner Distortion Control"
-msgstr "顶部角失真控制"
-
-#: db/options.xml.h:81
-#, c-format
-msgid "Top Corner Distortion Balance"
-msgstr "顶部角失真平衡"
-
-#: db/options.xml.h:82
-#, c-format
-msgid "Bottom Corner Distortion Control"
-msgstr "底部角失真控制"
-
-#: db/options.xml.h:83
-#, c-format
-msgid "Bottom Corner Distortion Balance"
-msgstr "底部角失真平衡"
-
-#: db/options.xml.h:84
-#, c-format
-msgid "Rotation"
-msgstr "旋转"
-
-#: db/options.xml.h:85
-#, c-format
-msgid "Rotation (Tilt)"
-msgstr "旋转(倾斜)"
-
-#: db/options.xml.h:86
-#, c-format
-msgid "Screen purity"
-msgstr "屏幕纯度"
-
-#: db/options.xml.h:87
-#, c-format
-msgid "Moire"
-msgstr "摩尔纹"
-
-#: db/options.xml.h:88
-#, c-format
-msgid "Horizontal Moire"
-msgstr "水平摩尔纹"
-
-#: db/options.xml.h:89
-#, c-format
-msgid "Vertical Moire"
-msgstr "垂直摩尔纹"
-
-#: db/options.xml.h:90
-#, c-format
-msgid "Image setup"
-msgstr "图像设置"
-
-#: db/options.xml.h:91 db/options.xml.h:100
-#, c-format
-msgid "Focus"
-msgstr "聚焦"
-
-#: db/options.xml.h:92
-#, c-format
-msgid "Image Lock Coarse (Clock)"
-msgstr "图像锁定粗调(时钟)"
-
-#: db/options.xml.h:93
-#, c-format
-msgid "Image Lock Fine (Clock Phase)"
-msgstr "图像锁定细调(时钟相位)"
-
-#: db/options.xml.h:94
-#, c-format
-msgid "Corners purity"
-msgstr "角纯度"
-
-#: db/options.xml.h:95
-#, c-format
-msgid "Top left screen purity"
-msgstr "左上屏幕纯度"
-
-#: db/options.xml.h:96
-#, c-format
-msgid "Top right screen purity"
-msgstr "右上屏幕纯度"
-
-#: db/options.xml.h:97
-#, c-format
-msgid "Bottom left screen purity"
-msgstr "左下屏幕纯度"
-
-#: db/options.xml.h:98
-#, c-format
-msgid "Bottom right screen purity"
-msgstr "右下屏幕纯度"
-
-#: db/options.xml.h:99
-#, c-format
-msgid "Various"
-msgstr "杂项"
-
-#: db/options.xml.h:101
-#, c-format
-msgid "Landing Adjust (RGB alignment)"
-msgstr "RGB 校正"
-
-#: db/options.xml.h:102
-#, c-format
-msgid "Sharpness"
-msgstr "清晰度"
-
-#: db/options.xml.h:103
-#, c-format
-msgid "Others"
-msgstr "其他"
-
-#: db/options.xml.h:104
-#, c-format
-msgid "Restore defaults"
-msgstr "恢复缺省值"
-
-#: db/options.xml.h:105
-#, c-format
-msgid "Restore Factory Defaults"
-msgstr "恢复工厂缺省值"
-
-#: db/options.xml.h:106
-#, c-format
-msgid "Restore Brightness and Contrast"
-msgstr "恢复亮度及对比度"
-
-#: db/options.xml.h:107
-#, c-format
-msgid "Restore Factory Default Geometry"
-msgstr "恢复工厂缺省几何"
-
-#: db/options.xml.h:108
-#, c-format
-msgid "Restore Factory Default Color"
-msgstr "恢复工厂缺省颜色"
-
-#: db/options.xml.h:109
-#, c-format
-msgid "Restore Factory Default Position"
-msgstr "恢复工厂缺省位置"
-
-#: db/options.xml.h:110
-#, c-format
-msgid "Restore Factory Default Size"
-msgstr "恢复工厂缺省大小"
-
-#: db/options.xml.h:111
-#, c-format
-msgid "Restore Factory Default Size and Position"
-msgstr "恢复工厂缺省大小及位置"
-
-#: db/options.xml.h:112
-#, c-format
-msgid "Settings"
-msgstr "设置"
-
-#: db/options.xml.h:113
-#, c-format
-msgid "Save Current Settings"
-msgstr "保存当前设置"
-
-#: db/options.xml.h:114
-#, c-format
-msgid "Restore Factory Settings"
-msgstr "恢复工厂设置"
-
-#: db/options.xml.h:115
-#, c-format
-msgid "Audio"
-msgstr "声音"
-
-#: db/options.xml.h:116
-#, c-format
-msgid "Audio Speaker Volume Adjust"
-msgstr "扬声器音量调节"
-
-#: db/options.xml.h:117
-#, c-format
-msgid "Audio Microphone Volume Adjust"
-msgstr "麦克风音量调节"
-
-#: db/options.xml.h:118 db/options.xml.h:119
-#, c-format
-msgid "Mute"
-msgstr "静音"
-
-#: db/options.xml.h:121 db/options.xml.h:122
-#, c-format
-msgid "Degauss"
-msgstr "消磁"
-
-#: db/options.xml.h:123
-#, c-format
-msgid "Secondary Degauss"
-msgstr "二次消磁"
-
-#: db/options.xml.h:124
-#, c-format
-msgid "OSD"
-msgstr "OSD"
-
-#: db/options.xml.h:125
-#, c-format
-msgid "On Screen Display"
-msgstr "屏幕显示"
-
-#: db/options.xml.h:128
-#, c-format
-msgid "Enable only brightness/contrast settings"
-msgstr "只允许亮度/对比度设置"
-
-#: db/options.xml.h:129
-#, c-format
-msgid "OSD Orientation"
-msgstr "OSD 方向"
-
-#: db/options.xml.h:130
-#, c-format
-msgid "Landscape"
-msgstr "风景"
-
-#: db/options.xml.h:131
-#, c-format
-msgid "Portrait"
-msgstr "肖像"
-
-#: db/options.xml.h:132
-#, c-format
-msgid "Language select"
-msgstr "语言选择"
-
-#: db/options.xml.h:133
-#, c-format
-msgid "English"
+msgid "MagicColor"
 msgstr ""
 
-#: db/options.xml.h:134
-#, c-format
-msgid "French"
-msgstr "Français"
-
-#: db/options.xml.h:135
-#, c-format
-msgid "German"
-msgstr "德语"
-
-#: db/options.xml.h:136
-#, c-format
-msgid "Italian"
-msgstr "意大利语"
-
-#: db/options.xml.h:137
-#, c-format
-msgid "Russian"
-msgstr "Русский"
-
-#: db/options.xml.h:138
-#, c-format
-msgid "Spanish"
-msgstr "西班牙语"
-
-#: db/options.xml.h:139
-#, c-format
-msgid "Swedish"
-msgstr "瑞典语"
-
-#: db/options.xml.h:140
-#, c-format
-msgid "Chinese"
-msgstr "中文"
-
-#: db/options.xml.h:141
-#, c-format
-msgid "Dutch"
-msgstr "荷兰语"
-
-#: db/options.xml.h:142
-#, c-format
-msgid "Input settings"
-msgstr "输入选择"
-
-#: db/options.xml.h:143
-#, c-format
-msgid "Input level Select"
-msgstr "输入级别选择"
-
-#: db/options.xml.h:144
-#, c-format
-msgid "Display Resolution Notifier"
-msgstr "显示分辨率提示"
-
-#: db/options.xml.h:145 db/options.xml.h:152 db/options.xml.h:156
-#, c-format
-msgid "On"
-msgstr "开"
-
-#: db/options.xml.h:146 db/options.xml.h:155
+#: ../db/options.xml.h:73 ../db/options.xml.h:181 ../db/options.xml.h:190
 #, c-format
 msgid "Off"
 msgstr "关"
 
-#: db/options.xml.h:147
+#: ../db/options.xml.h:74
+#, c-format
+msgid "Demo"
+msgstr ""
+
+#: ../db/options.xml.h:75
+#, c-format
+msgid "Full"
+msgstr ""
+
+#: ../db/options.xml.h:76
+#, fuzzy, c-format
+msgid "Intelligent"
+msgstr "因特网"
+
+#: ../db/options.xml.h:77
+#, c-format
+msgid "Color temperature"
+msgstr "色温"
+
+#: ../db/options.xml.h:78
+#, c-format
+msgid "Position and size"
+msgstr "位置及大小"
+
+#: ../db/options.xml.h:79
+#, c-format
+msgid "Position"
+msgstr "位置"
+
+#: ../db/options.xml.h:80
+#, c-format
+msgid "Horizontal Position"
+msgstr "水平位置"
+
+#: ../db/options.xml.h:81
+#, c-format
+msgid "Vertical Position"
+msgstr "垂直位置"
+
+#: ../db/options.xml.h:82
+#, c-format
+msgid "Size"
+msgstr "大小"
+
+#: ../db/options.xml.h:83
+#, c-format
+msgid "Horizontal Size"
+msgstr "水平大小"
+
+#: ../db/options.xml.h:84
+#, c-format
+msgid "Vertical Size"
+msgstr "垂直大小"
+
+#: ../db/options.xml.h:85
+#, c-format
+msgid "Automatic adjustments"
+msgstr "自动调整"
+
+#: ../db/options.xml.h:86
+#, c-format
+msgid "Auto Size Center"
+msgstr "自动大小居中"
+
+#: ../db/options.xml.h:87 ../db/options.xml.h:158 ../db/options.xml.h:162
+#, c-format
+msgid "Enable"
+msgstr "启用"
+
+#: ../db/options.xml.h:88 ../db/options.xml.h:157 ../db/options.xml.h:161
+#, c-format
+msgid "Disable"
+msgstr "禁止"
+
+#: ../db/options.xml.h:89
+#, c-format
+msgid "Automatically adjust"
+msgstr "自动调整"
+
+#: ../db/options.xml.h:90
+#, c-format
+msgid "H/V Position"
+msgstr "水平/垂直位置"
+
+#: ../db/options.xml.h:91
+#, c-format
+msgid "Clock and clock phase"
+msgstr "时钟及其相位"
+
+#: ../db/options.xml.h:92
+#, fuzzy, c-format
+msgid "H/V Position (fast mode)"
+msgstr "水平/垂直位置"
+
+#: ../db/options.xml.h:93
+#, c-format
+msgid "Geometry"
+msgstr "几何"
+
+#: ../db/options.xml.h:94
+#, c-format
+msgid "Pincushion"
+msgstr "枕形"
+
+#: ../db/options.xml.h:95
+#, c-format
+msgid "Horizontal Pincushion"
+msgstr "水平枕形"
+
+#: ../db/options.xml.h:96
+#, c-format
+msgid "Horizontal Pincushion Balance"
+msgstr "水平枕形平衡"
+
+#: ../db/options.xml.h:97
+#, c-format
+msgid "Vertical Pincushion"
+msgstr "垂直枕形"
+
+#: ../db/options.xml.h:98
+#, c-format
+msgid "Vertical Pincushion Balance"
+msgstr "垂直枕形平衡"
+
+#: ../db/options.xml.h:99
+#, c-format
+msgid "Center Pincushion"
+msgstr "中心枕形"
+
+#: ../db/options.xml.h:100
+#, c-format
+msgid "Linearity"
+msgstr "线性"
+
+#: ../db/options.xml.h:101
+#, c-format
+msgid "Horizontal Linearity"
+msgstr "水平线性"
+
+#: ../db/options.xml.h:102
+#, c-format
+msgid "Horizontal Linearity Balance"
+msgstr "水平线性平衡"
+
+#: ../db/options.xml.h:103
+#, c-format
+msgid "Vertical Linearity"
+msgstr "垂直线性"
+
+#: ../db/options.xml.h:104
+#, c-format
+msgid "Vertical Linearity Balance"
+msgstr "垂直线性平衡"
+
+#: ../db/options.xml.h:105
+#, c-format
+msgid "Misconvergence"
+msgstr "失焦"
+
+#: ../db/options.xml.h:106
+#, c-format
+msgid "Horizontal Misconvergence"
+msgstr "水平失焦"
+
+#: ../db/options.xml.h:107
+#, c-format
+msgid "Vertical Misconvergence"
+msgstr "垂直失焦"
+
+#: ../db/options.xml.h:108
+#, c-format
+msgid "General distortion"
+msgstr "普通失真"
+
+#: ../db/options.xml.h:109
+#, c-format
+msgid "Parallelogram Distortion (Key Balance)"
+msgstr "平行四边形失真"
+
+#: ../db/options.xml.h:110
+#, c-format
+msgid "Trapezoidal Distortion (Key)"
+msgstr "梯形失真"
+
+#: ../db/options.xml.h:111
+#, c-format
+msgid "Corners distortion"
+msgstr "角失真"
+
+#: ../db/options.xml.h:112
+#, c-format
+msgid "Top Corner Distortion Control"
+msgstr "顶部角失真控制"
+
+#: ../db/options.xml.h:113
+#, c-format
+msgid "Top Corner Distortion Balance"
+msgstr "顶部角失真平衡"
+
+#: ../db/options.xml.h:114
+#, c-format
+msgid "Bottom Corner Distortion Control"
+msgstr "底部角失真控制"
+
+#: ../db/options.xml.h:115
+#, c-format
+msgid "Bottom Corner Distortion Balance"
+msgstr "底部角失真平衡"
+
+#: ../db/options.xml.h:116
+#, c-format
+msgid "Rotation"
+msgstr "旋转"
+
+#: ../db/options.xml.h:117
+#, c-format
+msgid "Rotation (Tilt)"
+msgstr "旋转(倾斜)"
+
+#: ../db/options.xml.h:118
+#, c-format
+msgid "Screen purity"
+msgstr "屏幕纯度"
+
+#: ../db/options.xml.h:119
+#, c-format
+msgid "Moire"
+msgstr "摩尔纹"
+
+#: ../db/options.xml.h:120
+#, c-format
+msgid "Horizontal Moire"
+msgstr "水平摩尔纹"
+
+#: ../db/options.xml.h:121
+#, c-format
+msgid "Vertical Moire"
+msgstr "垂直摩尔纹"
+
+#: ../db/options.xml.h:122
+#, c-format
+msgid "Image setup"
+msgstr "图像设置"
+
+#: ../db/options.xml.h:123
+#, c-format
+msgid "Focus"
+msgstr "聚焦"
+
+#: ../db/options.xml.h:124
+#, c-format
+msgid "Image Lock Coarse (Clock)"
+msgstr "图像锁定粗调(时钟)"
+
+#: ../db/options.xml.h:125
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
+msgstr "图像锁定细调(时钟相位)"
+
+#: ../db/options.xml.h:126
+#, c-format
+msgid "Corners purity"
+msgstr "角纯度"
+
+#: ../db/options.xml.h:127
+#, c-format
+msgid "Top left screen purity"
+msgstr "左上屏幕纯度"
+
+#: ../db/options.xml.h:128
+#, c-format
+msgid "Top right screen purity"
+msgstr "右上屏幕纯度"
+
+#: ../db/options.xml.h:129
+#, c-format
+msgid "Bottom left screen purity"
+msgstr "左下屏幕纯度"
+
+#: ../db/options.xml.h:130
+#, c-format
+msgid "Bottom right screen purity"
+msgstr "右下屏幕纯度"
+
+#: ../db/options.xml.h:131
+#, c-format
+msgid "Various"
+msgstr "杂项"
+
+#: ../db/options.xml.h:132
+#, c-format
+msgid "Landing Adjust (RGB alignment)"
+msgstr "RGB 校正"
+
+#: ../db/options.xml.h:133
+#, c-format
+msgid "Sharpness"
+msgstr "清晰度"
+
+#: ../db/options.xml.h:134
+#, c-format
+msgid "Others"
+msgstr "其他"
+
+#: ../db/options.xml.h:135
+#, c-format
+msgid "Restore defaults"
+msgstr "恢复缺省值"
+
+#: ../db/options.xml.h:136
+#, c-format
+msgid "Restore Factory Defaults"
+msgstr "恢复工厂缺省值"
+
+#: ../db/options.xml.h:137
+#, c-format
+msgid "Restore Brightness and Contrast"
+msgstr "恢复亮度及对比度"
+
+#: ../db/options.xml.h:138
+#, c-format
+msgid "Restore Factory Default Geometry"
+msgstr "恢复工厂缺省几何"
+
+#: ../db/options.xml.h:139
+#, c-format
+msgid "Restore Factory Default Color"
+msgstr "恢复工厂缺省颜色"
+
+#: ../db/options.xml.h:140
+#, c-format
+msgid "Restore Factory Default Position"
+msgstr "恢复工厂缺省位置"
+
+#: ../db/options.xml.h:141
+#, c-format
+msgid "Restore Factory Default Size"
+msgstr "恢复工厂缺省大小"
+
+#: ../db/options.xml.h:142
+#, c-format
+msgid "Restore Factory Default Size and Position"
+msgstr "恢复工厂缺省大小及位置"
+
+#: ../db/options.xml.h:143
+#, c-format
+msgid "Settings"
+msgstr "设置"
+
+#: ../db/options.xml.h:144
+#, c-format
+msgid "Save Current Settings"
+msgstr "保存当前设置"
+
+#: ../db/options.xml.h:145
+#, c-format
+msgid "Restore Factory Settings"
+msgstr "恢复工厂设置"
+
+#: ../db/options.xml.h:146
+#, c-format
+msgid "Audio"
+msgstr "声音"
+
+#: ../db/options.xml.h:147
+#, c-format
+msgid "Audio Speaker Volume Adjust"
+msgstr "扬声器音量调节"
+
+#: ../db/options.xml.h:148
+#, c-format
+msgid "Audio Microphone Volume Adjust"
+msgstr "麦克风音量调节"
+
+#: ../db/options.xml.h:149 ../db/options.xml.h:150
+#, c-format
+msgid "Mute"
+msgstr "静音"
+
+#: ../db/options.xml.h:152 ../db/options.xml.h:153
+#, c-format
+msgid "Degauss"
+msgstr "消磁"
+
+#: ../db/options.xml.h:154
+#, c-format
+msgid "Secondary Degauss"
+msgstr "二次消磁"
+
+#: ../db/options.xml.h:155
+#, c-format
+msgid "OSD"
+msgstr "OSD"
+
+#: ../db/options.xml.h:156
+#, c-format
+msgid "On Screen Display"
+msgstr "屏幕显示"
+
+#: ../db/options.xml.h:159
+#, c-format
+msgid "Enable only brightness/contrast settings"
+msgstr "只允许亮度/对比度设置"
+
+#: ../db/options.xml.h:160
+#, fuzzy, c-format
+msgid "On Screen Display (Samsung)"
+msgstr "屏幕显示"
+
+#: ../db/options.xml.h:163
+#, c-format
+msgid "OSD Orientation"
+msgstr "OSD 方向"
+
+#: ../db/options.xml.h:164
+#, c-format
+msgid "Landscape"
+msgstr "风景"
+
+#: ../db/options.xml.h:165
+#, c-format
+msgid "Portrait"
+msgstr "肖像"
+
+#: ../db/options.xml.h:166
+#, c-format
+msgid "Language select"
+msgstr "语言选择"
+
+#: ../db/options.xml.h:167
+#, c-format
+msgid "English"
+msgstr ""
+
+#: ../db/options.xml.h:168
+#, c-format
+msgid "French"
+msgstr "Français"
+
+#: ../db/options.xml.h:169
+#, c-format
+msgid "German"
+msgstr "德语"
+
+#: ../db/options.xml.h:170
+#, c-format
+msgid "Italian"
+msgstr "意大利语"
+
+#: ../db/options.xml.h:171
+#, c-format
+msgid "Russian"
+msgstr "Русский"
+
+#: ../db/options.xml.h:172
+#, c-format
+msgid "Spanish"
+msgstr "西班牙语"
+
+#: ../db/options.xml.h:173
+#, c-format
+msgid "Swedish"
+msgstr "瑞典语"
+
+#: ../db/options.xml.h:174
+#, c-format
+msgid "Chinese"
+msgstr "中文"
+
+#: ../db/options.xml.h:175
+#, c-format
+msgid "Dutch"
+msgstr "荷兰语"
+
+#: ../db/options.xml.h:176
+#, c-format
+msgid "Japanese"
+msgstr ""
+
+#: ../db/options.xml.h:177
+#, c-format
+msgid "Input settings"
+msgstr "输入选择"
+
+#: ../db/options.xml.h:178
+#, c-format
+msgid "Input level Select"
+msgstr "输入级别选择"
+
+#: ../db/options.xml.h:179
+#, c-format
+msgid "Display Resolution Notifier"
+msgstr "显示分辨率提示"
+
+#: ../db/options.xml.h:180 ../db/options.xml.h:187 ../db/options.xml.h:191
+#, c-format
+msgid "On"
+msgstr "开"
+
+#: ../db/options.xml.h:182
 #, c-format
 msgid "Input Source Select"
 msgstr "输入信号源选择"
 
-#: db/options.xml.h:148
+#: ../db/options.xml.h:183
 #, c-format
 msgid "Analog"
 msgstr "模拟"
 
-#: db/options.xml.h:149
+#: ../db/options.xml.h:184
 #, c-format
 msgid "Digital"
 msgstr "数字"
 
-#: db/options.xml.h:150 db/options.xml.h:154
+#: ../db/options.xml.h:185 ../db/options.xml.h:189
 #, c-format
 msgid "Power control"
 msgstr "电源控制"
 
-#: db/options.xml.h:151
+#: ../db/options.xml.h:186
 #, c-format
 msgid "DPMS Control"
 msgstr "DPMS 控制"
 
-#: db/options.xml.h:153
+#: ../db/options.xml.h:188
 #, c-format
 msgid "Standby"
 msgstr "待机"

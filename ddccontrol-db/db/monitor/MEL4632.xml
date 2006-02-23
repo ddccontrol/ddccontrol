@@ -28,7 +28,6 @@
 
 		<!---Control 0xa8: +/1/3 [Sync Type]-->
 
-		<control id="power" address="0xE1"/>
 		<!--- Control 0xe2: +/0/1 [Clamp Pulse Position] -->
 		<control id="osd" type="list" address="0xE3"> <!--- Control lock = OSD lock ? -->
 			<value id="enable"  value="0"/>

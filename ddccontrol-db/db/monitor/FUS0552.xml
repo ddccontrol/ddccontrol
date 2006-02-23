@@ -23,11 +23,6 @@
 			<value id="coarsefine" value="1"/>
 			<value id="pos" value="2"/>
 		</control>
-
-		<control id="inputsource" type="list" address="0x60">
-			<value id="analog" value="1"/>
-			<value id="digital" value="3"/>
-		</control>
 		
 		<control id="mute" type="list" address="0x94">
 			<value id="mute" value="0"/>

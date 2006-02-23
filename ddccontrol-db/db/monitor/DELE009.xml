@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <monitor name="Dell 2005FPW (Digital)" init="standard">
-	<!--- vcp(page0(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E B0 CC(2 3 4 6 0A) E3)asset_eep(40)mccs_ver(1.0)type(LCD) -->
-	<caps add="(vcp(60 e1))"/>
+	<!--- vcp(page0(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E B0 CC(2 3 4 6 0A) E3)asset_eep(40)mccs_ver(1.0)type(LCD): INVALID -->
+	<caps add="(vcp(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E 60 B0 CC(2 3 4 6 A) E1)"/>
 	<controls>
 		<control id="colorpreset" address="0x14">
 			<value id="warm"  value="0x04"/>
@@ -11,11 +11,6 @@
 		</control>
 
 		<!--- Control 0x1e: +/0/255 [???] -->
-
-		<control id="inputsource" type="list" address="0x60">
-			<value id="analog"  value="1"/>
-			<value id="digital" value="3"/>
-		</control>
 
 		<!--- Control 0x68: +/0/255 [???] -->
 		<!--- Control 0xca: +/0/2 [???] -->

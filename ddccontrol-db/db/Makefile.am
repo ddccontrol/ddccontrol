@@ -26,4 +26,4 @@ dist-hook:
 	make options.xml
 
 check-db: options.xml
-	ls monitor/*.xml | awk -F/ '{print $$2}' | awk -F. '{print "ddccontrol -b . -v -v -i " $$1 "\nif [ $$? = 1 ]; then\nexit 1;\nfi"}' | bash -
+	ls monitor/*.xml | awk -F/ '{print $$2}' | awk -F. '{print "grep -q NOCHECKDB monitor/" $$1 ".xml\nif [ $$? = 1 ]; then\n ddccontrol -b . -v -v -i " $$1 "\nif [ $$? = 1 ]; then\nexit 1;\nfi\nfi"}' | bash -

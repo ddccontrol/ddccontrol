@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--- NOCHECKDB -->
+<monitor name="Samsung LCD 6-value magicbright">
+	<controls>
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+			<value id="game" value="3"/>
+			<value id="sport" value="4"/>
+			<value id="entertain" value="5"/> 
+			<value id="custom" value="6"/>
+		</control>
+	</controls>
+</monitor>

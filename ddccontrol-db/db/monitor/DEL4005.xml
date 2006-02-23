@@ -1,20 +1,13 @@
 <?xml version="1.0"?>
+<!--- vcp(04 08 10 12 14(05 08 0B) 16 18 1A B6) type(LCD)
+	  mccs_ver(1.1) asset_eep(32) mpu(1.02) -->
 <monitor name="Dell 1704FPT (Digital)" init="standard">
+	<caps add="(vcp(68))"/>
 	<controls>
 		<control id="colorpreset" address="0x14">
-			<!--- Copied from Fujitsu, needs to be checked -->
-			<value id="srgb"   value="0x1"/>
-			<value id="native" value="0x2"/>
-			<value id="4000k"  value="0x3"/>
-			<value id="5000k"  value="0x4"/>
-			<value id="6500k"  value="0x5"/>
-			<value id="7500k"  value="0x6"/>
-			<value id="8200k"  value="0x7"/>
-			<value id="9300k"  value="0x8"/>
-			<value id="10000k" value="0x9"/>
-			<value id="11500k" value="0xA"/>
-			<value id="user1"  value="0xB"/>
-			<value id="user2"  value="0xC"/>
+			<value id="srgb"  value="0x05"/>
+			<value id="cool"  value="0x08"/>
+			<value id="user1" value="0x0b"/>
 		</control>
 		
 		<control id="language" type="list" address="0x68">

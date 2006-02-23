@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--- "Standard" Samsung controls, 87, CA, CC, F5 are useful but usually not in caps -->
+<monitor name="Samsung LCD standard controls">
+	<caps add="(vcp(E1))"/>
+	<controls>
+		<control id="auto" address="0x1e">
+			<value id="pos" value="1"/>
+			<value id="posfast" value="2"/>
+		</control>
+		
+		<control id="sharpness" address="0x87"/>
+		
+		<control id="osd" type="list" address="0xca">
+			<value id="disable" value="1"/>
+			<value id="enable" value="2"/>
+		</control>
+		
+		<control id="language" type="list" address="0xcc">
+			<value id="english" value="2"/>
+			<value id="french"  value="3"/>
+			<value id="german"  value="4"/>
+			<value id="italian" value="5"/>
+			<value id="russian" value="9"/>
+			<value id="spanish" value="10"/>
+			<value id="swedish" value="11"/>
+		</control>
+		
+		<!--- Some monitors use a 6-value magicbright, in this case include
+			  SAMmb6.xml before including this file. -->
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+			<value id="entertain" value="3"/>
+			<value id="custom" value="4"/>
+		</control>
+		
+		<!--- Some monitors use a 10-value colorpreset, in this case include
+			  SAMcp10.xml before including this file. -->
+		<control id="colorpreset" type="list" address="0xe0">
+			<value id="custom" value="0"/> <!--- 3 = 0 -->
+			<value id="warm" value="1"/>
+			<value id="cool" value="2"/>
+		</control>
+		
+		<control id="magiccolor" type="list" address="0xf0">
+			<value id="off" value="0"/>
+			<value id="demo" value="1"/>
+			<value id="full" value="2"/>
+			<value id="intelligent" value="3"/>
+		</control>
+		
+		<!--- Some monitors use a 9-value gamma, in this case include
+			  SAMg9.xml before including this file. -->
+		<control id="gamma" type="list" address="0xf2">
+			<value id="mode1" value="0"/>
+			<value id="mode2" value="1"/>
+			<value id="mode3" value="2"/>
+		</control>
+		
+		<control id="osd2" type="list" address="0xf5">
+			<value id="enable" value="0"/>
+			<value id="disable" value="1"/>
+		</control>
+	</controls>
+	<include file="VESA"/>
+</monitor>

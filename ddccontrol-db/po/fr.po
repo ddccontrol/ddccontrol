@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
-"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-12 23:54+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-02-23 01:52+0100\n"
 "PO-Revision-Date: 2005-11-14 18:30+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -17,728 +17,883 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: db/options.xml.h:3
+#: ../db/options.xml.h:3
 #, c-format
 msgid "Color settings"
 msgstr "Paramètres de couleurs"
 
-#: db/options.xml.h:4
+#: ../db/options.xml.h:4
 #, c-format
 msgid "Brightness and Contrast"
 msgstr "Luminosité et contraste"
 
-#: db/options.xml.h:5
+#: ../db/options.xml.h:5
 #, c-format
 msgid "Brightness"
 msgstr "Luminosité"
 
-#: db/options.xml.h:6
+#: ../db/options.xml.h:6
 #, c-format
 msgid "Contrast"
 msgstr "Contraste"
 
-#: db/options.xml.h:7
+#: ../db/options.xml.h:7
 #, c-format
 msgid "Magic Bright Mode"
 msgstr "Mode \"Magic Bright\""
 
-#: db/options.xml.h:8
+#: ../db/options.xml.h:8
 #, c-format
 msgid "Text"
 msgstr "Texte"
 
-#: db/options.xml.h:9
+#: ../db/options.xml.h:9
 #, c-format
 msgid "Internet"
 msgstr "Internet"
 
-#: db/options.xml.h:10
+#: ../db/options.xml.h:10
+#, c-format
+msgid "Game"
+msgstr ""
+
+#: ../db/options.xml.h:11
+#, c-format
+msgid "Sport"
+msgstr ""
+
+#: ../db/options.xml.h:12
 #, c-format
 msgid "Entertain"
 msgstr "Divertissement"
 
-#: db/options.xml.h:11
+#: ../db/options.xml.h:13 ../db/options.xml.h:46
 #, c-format
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: db/options.xml.h:12
+#: ../db/options.xml.h:14
 #, c-format
 msgid "Super Bright Mode"
 msgstr "Mode \"Super Bright\""
 
-#: db/options.xml.h:13
+#: ../db/options.xml.h:15
 #, c-format
 msgid "One"
 msgstr "Un"
 
-#: db/options.xml.h:14
+#: ../db/options.xml.h:16
 #, c-format
 msgid "Two"
 msgstr "Deux"
 
-#: db/options.xml.h:15
+#: ../db/options.xml.h:17
 #, c-format
 msgid "Three"
 msgstr "Trois"
 
-#: db/options.xml.h:16
+#: ../db/options.xml.h:18 ../db/options.xml.h:19
+#, c-format
+msgid "Gamma"
+msgstr ""
+
+#: ../db/options.xml.h:20
+#, c-format
+msgid "-0.5"
+msgstr ""
+
+#: ../db/options.xml.h:21
+#, c-format
+msgid "-0.3"
+msgstr ""
+
+#: ../db/options.xml.h:22
+#, c-format
+msgid "-0.1"
+msgstr ""
+
+#: ../db/options.xml.h:23
+#, c-format
+msgid "0"
+msgstr ""
+
+#: ../db/options.xml.h:24
+#, c-format
+msgid "+0.1"
+msgstr ""
+
+#: ../db/options.xml.h:25
+#, c-format
+msgid "+0.3"
+msgstr ""
+
+#: ../db/options.xml.h:26
+#, c-format
+msgid "+0.5"
+msgstr ""
+
+#: ../db/options.xml.h:27
+#, c-format
+msgid "+0.7"
+msgstr ""
+
+#: ../db/options.xml.h:28
+#, c-format
+msgid "+0.9"
+msgstr ""
+
+#: ../db/options.xml.h:29
+#, c-format
+msgid "Mode 1"
+msgstr ""
+
+#: ../db/options.xml.h:30
+#, c-format
+msgid "Mode 2"
+msgstr ""
+
+#: ../db/options.xml.h:31
+#, c-format
+msgid "Mode 3"
+msgstr ""
+
+#: ../db/options.xml.h:32
 #, c-format
 msgid "Color maximum level"
 msgstr "Niveau maximum de couleur"
 
-#: db/options.xml.h:17
+#: ../db/options.xml.h:33
 #, c-format
 msgid "Red maximum level"
 msgstr "Niveau maximum de rouge"
 
-#: db/options.xml.h:18
+#: ../db/options.xml.h:34
 #, c-format
 msgid "Green maximum level"
 msgstr "Niveau maximum de vert"
 
-#: db/options.xml.h:19
+#: ../db/options.xml.h:35
 #, c-format
 msgid "Blue maximum level"
 msgstr "Niveau maximum de bleu"
 
-#: db/options.xml.h:20
+#: ../db/options.xml.h:36
 #, c-format
 msgid "Color minimum level"
 msgstr "Niveau minimum de couleur"
 
-#: db/options.xml.h:21
+#: ../db/options.xml.h:37
 #, c-format
 msgid "Red minimum level"
 msgstr "Niveau minimum de rouge"
 
-#: db/options.xml.h:22
+#: ../db/options.xml.h:38
 #, c-format
 msgid "Green minimum level"
 msgstr "Niveau minimum de vert"
 
-#: db/options.xml.h:23
+#: ../db/options.xml.h:39
 #, c-format
 msgid "Blue minimum level"
 msgstr "Niveau minimum de bleu"
 
-#: db/options.xml.h:24
+#: ../db/options.xml.h:40
 #, c-format
 msgid "Various color settings"
 msgstr "Paramètres de couleur divers"
 
-#: db/options.xml.h:25
+#: ../db/options.xml.h:41
 #, c-format
 msgid "Hue"
 msgstr "Teinte"
 
-#: db/options.xml.h:26
+#: ../db/options.xml.h:42
 #, c-format
 msgid "Saturation"
 msgstr "Saturation"
 
-#: db/options.xml.h:27
+#: ../db/options.xml.h:43
 #, c-format
 msgid "Color curve adjust"
 msgstr "Ajustement de la courbe de couleur"
 
-#: db/options.xml.h:28
+#: ../db/options.xml.h:44
 #, c-format
 msgid "Color Preset"
 msgstr "Paramètres de couleur prédéfinis"
 
-#: db/options.xml.h:29 db/options.xml.h:120
+#: ../db/options.xml.h:45 ../db/options.xml.h:151
 #, c-format
 msgid "Normal"
 msgstr "Normal"
 
-#: db/options.xml.h:30
+#: ../db/options.xml.h:47
 #, c-format
 msgid "Warm"
 msgstr "Chaud"
 
-#: db/options.xml.h:31
+#: ../db/options.xml.h:48
 #, c-format
 msgid "Cool"
 msgstr "Froid"
 
-#: db/options.xml.h:32
+#: ../db/options.xml.h:49
+#, fuzzy, c-format
+msgid "Warm1"
+msgstr "Chaud"
+
+#: ../db/options.xml.h:50
+#, fuzzy, c-format
+msgid "Warm2"
+msgstr "Chaud"
+
+#: ../db/options.xml.h:51
+#, fuzzy, c-format
+msgid "Cool1"
+msgstr "Froid"
+
+#: ../db/options.xml.h:52
+#, fuzzy, c-format
+msgid "Cool2"
+msgstr "Froid"
+
+#: ../db/options.xml.h:53
+#, fuzzy, c-format
+msgid "Cool3"
+msgstr "Froid"
+
+#: ../db/options.xml.h:54
+#, fuzzy, c-format
+msgid "Cool4"
+msgstr "Froid"
+
+#: ../db/options.xml.h:55
+#, fuzzy, c-format
+msgid "Cool5"
+msgstr "Froid"
+
+#: ../db/options.xml.h:56
+#, fuzzy, c-format
+msgid "Cool6"
+msgstr "Froid"
+
+#: ../db/options.xml.h:57
+#, fuzzy, c-format
+msgid "Cool7"
+msgstr "Froid"
+
+#: ../db/options.xml.h:58
 #, c-format
 msgid "sRGB"
 msgstr "sRGB"
 
-#: db/options.xml.h:33
+#: ../db/options.xml.h:59
 #, c-format
 msgid "4000K"
 msgstr "4000K"
 
-#: db/options.xml.h:34
+#: ../db/options.xml.h:60
 #, c-format
 msgid "5000K"
 msgstr "5000K"
 
-#: db/options.xml.h:35
+#: ../db/options.xml.h:61
 #, c-format
 msgid "6500K"
 msgstr "6500K"
 
-#: db/options.xml.h:36
+#: ../db/options.xml.h:62
 #, c-format
 msgid "7500K"
 msgstr "7500K"
 
-#: db/options.xml.h:37
+#: ../db/options.xml.h:63
 #, c-format
 msgid "8200K"
 msgstr "8200K"
 
-#: db/options.xml.h:38
+#: ../db/options.xml.h:64
 #, c-format
 msgid "9300K"
 msgstr "9300K"
 
-#: db/options.xml.h:39
+#: ../db/options.xml.h:65
 #, c-format
 msgid "10000K"
 msgstr "10000K"
 
-#: db/options.xml.h:40
+#: ../db/options.xml.h:66
 #, c-format
 msgid "11500K"
 msgstr "115000K"
 
-#: db/options.xml.h:41
+#: ../db/options.xml.h:67
 #, c-format
 msgid "Native"
 msgstr "Natif"
 
-#: db/options.xml.h:42
+#: ../db/options.xml.h:68
 #, c-format
 msgid "User 1"
 msgstr "Utilisateur 1"
 
-#: db/options.xml.h:43
+#: ../db/options.xml.h:69
 #, c-format
 msgid "User 2"
 msgstr "Utilisateur 2"
 
-#: db/options.xml.h:44
+#: ../db/options.xml.h:70
 #, c-format
 msgid "User 3"
 msgstr "Utilisateur 3"
 
-#: db/options.xml.h:45
+#: ../db/options.xml.h:71
 #, c-format
 msgid "User 4"
 msgstr "Utilisateur 4"
 
-#: db/options.xml.h:46
+#: ../db/options.xml.h:72
+#, c-format
+msgid "MagicColor"
+msgstr ""
+
+#: ../db/options.xml.h:73 ../db/options.xml.h:181 ../db/options.xml.h:190
+#, c-format
+msgid "Off"
+msgstr "Éteint"
+
+#: ../db/options.xml.h:74
+#, c-format
+msgid "Demo"
+msgstr ""
+
+#: ../db/options.xml.h:75
+#, c-format
+msgid "Full"
+msgstr ""
+
+#: ../db/options.xml.h:76
+#, fuzzy, c-format
+msgid "Intelligent"
+msgstr "Internet"
+
+#: ../db/options.xml.h:77
 #, c-format
 msgid "Color temperature"
 msgstr "Température de couleur"
 
-#: db/options.xml.h:47
+#: ../db/options.xml.h:78
 #, c-format
 msgid "Position and size"
 msgstr "Position et dimension"
 
-#: db/options.xml.h:48
+#: ../db/options.xml.h:79
 #, c-format
 msgid "Position"
 msgstr "Position"
 
-#: db/options.xml.h:49
+#: ../db/options.xml.h:80
 #, c-format
 msgid "Horizontal Position"
 msgstr "Position horizontale"
 
-#: db/options.xml.h:50
+#: ../db/options.xml.h:81
 #, c-format
 msgid "Vertical Position"
 msgstr "Position verticale"
 
-#: db/options.xml.h:51
+#: ../db/options.xml.h:82
 #, c-format
 msgid "Size"
 msgstr "Taille"
 
-#: db/options.xml.h:52
+#: ../db/options.xml.h:83
 #, c-format
 msgid "Horizontal Size"
 msgstr "Taille horizontale"
 
-#: db/options.xml.h:53
+#: ../db/options.xml.h:84
 #, c-format
 msgid "Vertical Size"
 msgstr "Taille verticale"
 
-#: db/options.xml.h:54
+#: ../db/options.xml.h:85
 #, c-format
 msgid "Automatic adjustments"
 msgstr "Ajustements automatiques"
 
-#: db/options.xml.h:55
+#: ../db/options.xml.h:86
 #, c-format
 msgid "Auto Size Center"
 msgstr "Centrage et redimensionnement automatique"
 
-#: db/options.xml.h:56 db/options.xml.h:127
+#: ../db/options.xml.h:87 ../db/options.xml.h:158 ../db/options.xml.h:162
 #, c-format
 msgid "Enable"
 msgstr "Activer"
 
-#: db/options.xml.h:57 db/options.xml.h:126
+#: ../db/options.xml.h:88 ../db/options.xml.h:157 ../db/options.xml.h:161
 #, c-format
 msgid "Disable"
 msgstr "Désactiver"
 
-#: db/options.xml.h:58
+#: ../db/options.xml.h:89
 #, c-format
 msgid "Automatically adjust"
 msgstr "Ajustements automatiques"
 
-#: db/options.xml.h:59
+#: ../db/options.xml.h:90
 #, c-format
 msgid "H/V Position"
 msgstr "Position H/V"
 
 # Pas sûr du tout...
-#: db/options.xml.h:60
+#: ../db/options.xml.h:91
 #, c-format
 msgid "Clock and clock phase"
 msgstr "Boucle d'image (horloge et phase d'horloge)"
 
-#: db/options.xml.h:61
+#: ../db/options.xml.h:92
+#, fuzzy, c-format
+msgid "H/V Position (fast mode)"
+msgstr "Position H/V"
+
+#: ../db/options.xml.h:93
 #, c-format
 msgid "Geometry"
 msgstr "Géométrie"
 
-#: db/options.xml.h:62
+#: ../db/options.xml.h:94
 #, c-format
 msgid "Pincushion"
 msgstr "Coussin"
 
-#: db/options.xml.h:63
+#: ../db/options.xml.h:95
 #, c-format
 msgid "Horizontal Pincushion"
 msgstr "Coussin horizontal"
 
-#: db/options.xml.h:64
+#: ../db/options.xml.h:96
 #, c-format
 msgid "Horizontal Pincushion Balance"
 msgstr "Balance du coussin horizontal"
 
-#: db/options.xml.h:65
+#: ../db/options.xml.h:97
 #, c-format
 msgid "Vertical Pincushion"
 msgstr "Coussin vertical"
 
-#: db/options.xml.h:66
+#: ../db/options.xml.h:98
 #, c-format
 msgid "Vertical Pincushion Balance"
 msgstr "Balance du coussin horizontal"
 
-#: db/options.xml.h:67
+#: ../db/options.xml.h:99
 #, c-format
 msgid "Center Pincushion"
 msgstr "Coussin central"
 
-#: db/options.xml.h:68
+#: ../db/options.xml.h:100
 #, c-format
 msgid "Linearity"
 msgstr "Linéarité"
 
-#: db/options.xml.h:69
+#: ../db/options.xml.h:101
 #, c-format
 msgid "Horizontal Linearity"
 msgstr "Linéarité horizontale"
 
-#: db/options.xml.h:70
+#: ../db/options.xml.h:102
 #, c-format
 msgid "Horizontal Linearity Balance"
 msgstr "Balance de la linéarité horizontale"
 
-#: db/options.xml.h:71
+#: ../db/options.xml.h:103
 #, c-format
 msgid "Vertical Linearity"
 msgstr "Linéarité verticale"
 
-#: db/options.xml.h:72
+#: ../db/options.xml.h:104
 #, c-format
 msgid "Vertical Linearity Balance"
 msgstr "Balance de la linéarité horizontale"
 
 # A vérifier...
-#: db/options.xml.h:73
+#: ../db/options.xml.h:105
 #, c-format
 msgid "Misconvergence"
 msgstr "Déconvergence"
 
 # A vérifier...
-#: db/options.xml.h:74
+#: ../db/options.xml.h:106
 #, c-format
 msgid "Horizontal Misconvergence"
 msgstr "Déconvergence horizontale"
 
 # A vérifier
-#: db/options.xml.h:75
+#: ../db/options.xml.h:107
 #, c-format
 msgid "Vertical Misconvergence"
 msgstr "Déconvergence verticale"
 
-#: db/options.xml.h:76
+#: ../db/options.xml.h:108
 #, c-format
 msgid "General distortion"
 msgstr "Distorsion générale"
 
-#: db/options.xml.h:77
+#: ../db/options.xml.h:109
 #, c-format
 msgid "Parallelogram Distortion (Key Balance)"
 msgstr "Distorsion en parallélogramme"
 
-#: db/options.xml.h:78
+#: ../db/options.xml.h:110
 #, c-format
 msgid "Trapezoidal Distortion (Key)"
 msgstr "Distorsion trapézoïdale"
 
-#: db/options.xml.h:79
+#: ../db/options.xml.h:111
 #, c-format
 msgid "Corners distortion"
 msgstr "Distorsion des coins"
 
-#: db/options.xml.h:80
+#: ../db/options.xml.h:112
 #, c-format
 msgid "Top Corner Distortion Control"
 msgstr "Contrôle de la distorsion des coins supérieurs"
 
-#: db/options.xml.h:81
+#: ../db/options.xml.h:113
 #, c-format
 msgid "Top Corner Distortion Balance"
 msgstr "Balance de la distorsion des coins supérieurs"
 
-#: db/options.xml.h:82
+#: ../db/options.xml.h:114
 #, c-format
 msgid "Bottom Corner Distortion Control"
 msgstr "Contrôle de la distorsion des coins inférieurs"
 
-#: db/options.xml.h:83
+#: ../db/options.xml.h:115
 #, c-format
 msgid "Bottom Corner Distortion Balance"
 msgstr "Balance de la distorsion des coins inférieurs"
 
-#: db/options.xml.h:84
+#: ../db/options.xml.h:116
 #, c-format
 msgid "Rotation"
 msgstr "Rotation"
 
-#: db/options.xml.h:85
+#: ../db/options.xml.h:117
 #, c-format
 msgid "Rotation (Tilt)"
 msgstr "Rotation"
 
-#: db/options.xml.h:86
+#: ../db/options.xml.h:118
 #, c-format
 msgid "Screen purity"
 msgstr "Pureté de l'écran"
 
-#: db/options.xml.h:87
+#: ../db/options.xml.h:119
 #, c-format
 msgid "Moire"
 msgstr "Moiré"
 
-#: db/options.xml.h:88
+#: ../db/options.xml.h:120
 #, c-format
 msgid "Horizontal Moire"
 msgstr "Moiré horizontal"
 
-#: db/options.xml.h:89
+#: ../db/options.xml.h:121
 #, c-format
 msgid "Vertical Moire"
 msgstr "Moiré vertical"
 
-#: db/options.xml.h:90
+#: ../db/options.xml.h:122
 #, c-format
 msgid "Image setup"
 msgstr "Paramètre de l'image"
 
-#: db/options.xml.h:91 db/options.xml.h:100
+#: ../db/options.xml.h:123
 #, c-format
 msgid "Focus"
 msgstr "Netteté"
 
 # Pas sûr du tout...
-#: db/options.xml.h:92
+#: ../db/options.xml.h:124
 #, c-format
 msgid "Image Lock Coarse (Clock)"
 msgstr "Ajustement grossier de la boucle d'image (Horloge)"
 
 # Pas sûr du tout...
-#: db/options.xml.h:93
+#: ../db/options.xml.h:125
 #, c-format
 msgid "Image Lock Fine (Clock Phase)"
 msgstr "Ajustement fin de la boucle d'image (phase d'horloge)"
 
-#: db/options.xml.h:94
+#: ../db/options.xml.h:126
 #, c-format
 msgid "Corners purity"
 msgstr "Pureté des coins"
 
-#: db/options.xml.h:95
+#: ../db/options.xml.h:127
 #, c-format
 msgid "Top left screen purity"
 msgstr "Pureté du coin supérieur gauche"
 
-#: db/options.xml.h:96
+#: ../db/options.xml.h:128
 #, c-format
 msgid "Top right screen purity"
 msgstr "Pureté du coin supérieur droit"
 
-#: db/options.xml.h:97
+#: ../db/options.xml.h:129
 #, c-format
 msgid "Bottom left screen purity"
 msgstr "Pureté du coin inférieur gauche"
 
-#: db/options.xml.h:98
+#: ../db/options.xml.h:130
 #, c-format
 msgid "Bottom right screen purity"
 msgstr "Pureté du coin inférieur droit"
 
-#: db/options.xml.h:99
+#: ../db/options.xml.h:131
 #, c-format
 msgid "Various"
 msgstr "Divers"
 
-#: db/options.xml.h:101
+#: ../db/options.xml.h:132
 #, c-format
 msgid "Landing Adjust (RGB alignment)"
 msgstr "Ajustement de l'alignement RVB"
 
-#: db/options.xml.h:102
+#: ../db/options.xml.h:133
 #, c-format
 msgid "Sharpness"
 msgstr "Netteté"
 
-#: db/options.xml.h:103
+#: ../db/options.xml.h:134
 #, c-format
 msgid "Others"
 msgstr "Autres"
 
-#: db/options.xml.h:104
+#: ../db/options.xml.h:135
 #, c-format
 msgid "Restore defaults"
 msgstr "Restaurer les paramètres par défaut"
 
-#: db/options.xml.h:105
+#: ../db/options.xml.h:136
 #, c-format
 msgid "Restore Factory Defaults"
 msgstr "Restaurer les paramètres d'usine"
 
-#: db/options.xml.h:106
+#: ../db/options.xml.h:137
 #, c-format
 msgid "Restore Brightness and Contrast"
 msgstr "Restaurer les paramètres de luminosité et de contraste par défaut"
 
-#: db/options.xml.h:107
+#: ../db/options.xml.h:138
 #, c-format
 msgid "Restore Factory Default Geometry"
 msgstr "Restaurer les paramètres d'usine de géométrie"
 
-#: db/options.xml.h:108
+#: ../db/options.xml.h:139
 #, c-format
 msgid "Restore Factory Default Color"
 msgstr "Restaurer les paramètres d'usine de couleur"
 
-#: db/options.xml.h:109
+#: ../db/options.xml.h:140
 #, c-format
 msgid "Restore Factory Default Position"
 msgstr "Restaurer les paramètres d'usine de position"
 
-#: db/options.xml.h:110
+#: ../db/options.xml.h:141
 #, c-format
 msgid "Restore Factory Default Size"
 msgstr "Restaurer les paramètres d'usine de taille"
 
-#: db/options.xml.h:111
+#: ../db/options.xml.h:142
 #, c-format
 msgid "Restore Factory Default Size and Position"
 msgstr "Restaurer les paramètres d'usine de position et de taille"
 
-#: db/options.xml.h:112
+#: ../db/options.xml.h:143
 #, c-format
 msgid "Settings"
 msgstr "Paramètres"
 
-#: db/options.xml.h:113
+#: ../db/options.xml.h:144
 #, c-format
 msgid "Save Current Settings"
 msgstr "Sauver les paramètres actuels"
 
-#: db/options.xml.h:114
+#: ../db/options.xml.h:145
 #, c-format
 msgid "Restore Factory Settings"
 msgstr "Restaurer les paramètres d'usine"
 
-#: db/options.xml.h:115
+#: ../db/options.xml.h:146
 #, c-format
 msgid "Audio"
 msgstr "Audio"
 
-#: db/options.xml.h:116
+#: ../db/options.xml.h:147
 #, c-format
 msgid "Audio Speaker Volume Adjust"
 msgstr "Volume des haut-parleurs"
 
-#: db/options.xml.h:117
+#: ../db/options.xml.h:148
 #, c-format
 msgid "Audio Microphone Volume Adjust"
 msgstr "Volume du microphone"
 
-#: db/options.xml.h:118 db/options.xml.h:119
+#: ../db/options.xml.h:149 ../db/options.xml.h:150
 #, c-format
 msgid "Mute"
 msgstr "Muet"
 
-#: db/options.xml.h:121 db/options.xml.h:122
+#: ../db/options.xml.h:152 ../db/options.xml.h:153
 #, c-format
 msgid "Degauss"
 msgstr "Démagnétiser"
 
-#: db/options.xml.h:123
+#: ../db/options.xml.h:154
 #, c-format
 msgid "Secondary Degauss"
 msgstr "Démagnétiser (contrôle secondaire)"
 
-#: db/options.xml.h:124
+#: ../db/options.xml.h:155
 #, c-format
 msgid "OSD"
 msgstr "Affichage à l'écran (OSD)"
 
-#: db/options.xml.h:125
+#: ../db/options.xml.h:156
 #, c-format
 msgid "On Screen Display"
 msgstr "Affichage à l'écran (OSD)"
 
-#: db/options.xml.h:128
+#: ../db/options.xml.h:159
 #, c-format
 msgid "Enable only brightness/contrast settings"
 msgstr "Activer seulement le contrôle de la luminosité et du contraste"
 
-#: db/options.xml.h:129
+#: ../db/options.xml.h:160
+#, fuzzy, c-format
+msgid "On Screen Display (Samsung)"
+msgstr "Affichage à l'écran (OSD)"
+
+#: ../db/options.xml.h:163
 #, c-format
 msgid "OSD Orientation"
 msgstr "Orientation de l'affichage à l'écran (OSD)"
 
-#: db/options.xml.h:130
+#: ../db/options.xml.h:164
 #, c-format
 msgid "Landscape"
 msgstr "Paysage"
 
-#: db/options.xml.h:131
+#: ../db/options.xml.h:165
 #, c-format
 msgid "Portrait"
 msgstr "Portrait"
 
-#: db/options.xml.h:132
+#: ../db/options.xml.h:166
 #, c-format
 msgid "Language select"
 msgstr "Choix de langue"
 
-#: db/options.xml.h:133
+#: ../db/options.xml.h:167
 #, c-format
 msgid "English"
 msgstr "Anglais"
 
-#: db/options.xml.h:134
+#: ../db/options.xml.h:168
 #, c-format
 msgid "French"
 msgstr "Français"
 
-#: db/options.xml.h:135
+#: ../db/options.xml.h:169
 #, c-format
 msgid "German"
 msgstr "Allemand"
 
-#: db/options.xml.h:136
+#: ../db/options.xml.h:170
 #, c-format
 msgid "Italian"
 msgstr "Italien"
 
-#: db/options.xml.h:137
+#: ../db/options.xml.h:171
 #, c-format
 msgid "Russian"
 msgstr "Russe"
 
-#: db/options.xml.h:138
+#: ../db/options.xml.h:172
 #, c-format
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: db/options.xml.h:139
+#: ../db/options.xml.h:173
 #, c-format
 msgid "Swedish"
 msgstr "Suédois"
 
-#: db/options.xml.h:140
+#: ../db/options.xml.h:174
 #, c-format
 msgid "Chinese"
 msgstr "Chinois"
 
-#: db/options.xml.h:141
+#: ../db/options.xml.h:175
 #, c-format
 msgid "Dutch"
 msgstr "Hollandais"
 
-#: db/options.xml.h:142
+#: ../db/options.xml.h:176
+#, c-format
+msgid "Japanese"
+msgstr ""
+
+#: ../db/options.xml.h:177
 #, c-format
 msgid "Input settings"
 msgstr "Paramètres d'entrée"
 
-#: db/options.xml.h:143
+#: ../db/options.xml.h:178
 #, c-format
 msgid "Input level Select"
 msgstr "Niveau de l'entrée"
 
-#: db/options.xml.h:144
+#: ../db/options.xml.h:179
 #, c-format
 msgid "Display Resolution Notifier"
 msgstr "Affichage de la résolution"
 
-#: db/options.xml.h:145 db/options.xml.h:152 db/options.xml.h:156
+#: ../db/options.xml.h:180 ../db/options.xml.h:187 ../db/options.xml.h:191
 #, c-format
 msgid "On"
 msgstr "Allumé"
 
-#: db/options.xml.h:146 db/options.xml.h:155
-#, c-format
-msgid "Off"
-msgstr "Éteint"
-
-#: db/options.xml.h:147
+#: ../db/options.xml.h:182
 #, c-format
 msgid "Input Source Select"
 msgstr "Source de l'entrée"
 
-#: db/options.xml.h:148
+#: ../db/options.xml.h:183
 #, c-format
 msgid "Analog"
 msgstr "Analogique"
 
-#: db/options.xml.h:149
+#: ../db/options.xml.h:184
 #, c-format
 msgid "Digital"
 msgstr "Digital"
 
-#: db/options.xml.h:150 db/options.xml.h:154
+#: ../db/options.xml.h:185 ../db/options.xml.h:189
 #, c-format
 msgid "Power control"
 msgstr "Allumer/éteindre"
 
-#: db/options.xml.h:151
+#: ../db/options.xml.h:186
 #, c-format
 msgid "DPMS Control"
 msgstr "Contrôle DPMS"
 
-#: db/options.xml.h:153
+#: ../db/options.xml.h:188
 #, c-format
 msgid "Standby"
 msgstr "En veille"

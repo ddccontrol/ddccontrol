@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--- NOCHECKDB -->
+<monitor name="Samsung LCD 9-value gamma">
+	<controls>
+		<control id="gamma" type ="list" address="0xf2" >
+			<value id="-0.5" value="0"/>
+			<value id="-0.3" value="1"/>
+			<value id="-0.1" value="2"/>
+			<value id="0" value="3"/>
+			<value id="+0.1" value="4"/>
+			<value id="+0.3" value="5"/>
+			<value id="+0.5" value="6"/>
+			<value id="+0.7" value="7"/>
+			<value id="+0.9" value="8"/>
+		</control>
+	</controls>
+</monitor>

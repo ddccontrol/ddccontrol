@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--- NOCHECKDB -->
+<monitor name="Samsung LCD 10-value colorpreset">
+	<controls>
+		<control id="colorpreset" type="list" address="0xe0">
+			<value id="normal" value="0"/>
+			<value id="warm1" value="1"/>
+			<value id="warm2" value="2"/>
+			<value id="cool1" value="3"/>
+			<value id="cool2" value="4"/>
+			<value id="cool3" value="5"/>
+			<value id="cool4" value="6"/>
+			<value id="cool5" value="7"/>
+			<value id="cool6" value="8"/>
+			<value id="cool7" value="9"/>
+		</control>
+	</controls>
+</monitor>

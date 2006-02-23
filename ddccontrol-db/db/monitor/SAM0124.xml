@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!---The Samsung 712N is identical to 173P -->
+<!---The Samsung 712N is identical to 912N -->
 <monitor name="Samsung SyncMaster 712N">
-	<include file="SAM00D3"/>
+	<include file="SAM011F"/>
 </monitor>
