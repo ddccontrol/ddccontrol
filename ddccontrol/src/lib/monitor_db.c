@@ -45,12 +45,6 @@ char* datadir = NULL;
 
 xmlDocPtr options_doc = NULL;
 
-/* Structure to store CAPS entry (control and related values) */
-struct caps_entry {
-	int values_len; /* -1 if values were not specified */
-	unsigned short* values;
-};
-
 int get_verbosity(); /* Defined in ddcci.c */
 
 /* See documentation Appendix D.
@@ -286,7 +280,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	return 0;
 }
 
-int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, struct subgroup_db *current_group, struct caps_entry** caps, char* defined, char *matchedcontrols, int faulttolerance) {
+int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, 
+		struct subgroup_db *current_group, struct caps_entry** caps, char* defined, char *matchedcontrols, int faulttolerance) {
 	xmlNodePtr cur;
 	xmlChar *mon_ctrlid;
 	xmlChar *options_ctrlid, *options_ctrlname;
@@ -296,8 +291,14 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
 	int i;
 	
 	struct control_db *current_control = malloc(sizeof(struct control_db));
-	struct control_db **last_control_ref = &current_group->control_list;
+	struct control_db **last_control_ref = &current_group->control_list;	
 	memset(current_control, 0, sizeof(struct control_db));
+	
+	/* TODO: fix it, don't break order. */
+	/* This might break control order, but it is no big deal... */
+	while (*last_control_ref) {
+		last_control_ref = &(*last_control_ref)->next;
+	}
 	
 	/* List controls in group (options.xml) */
 	while (control != NULL)
@@ -447,7 +448,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control, s
  */
 int ddcci_create_db_protected(
 	struct monitor_db* mon_db, const char* pnpname, int recursionlevel,
-	struct caps_entry** caps, char* defined, int faulttolerance)
+	char* defined, int faulttolerance)
 {
 	xmlDocPtr mon_doc;
 	xmlNodePtr root, mon_child, mon_control;
@@ -503,6 +504,15 @@ int ddcci_create_db_protected(
 			fprintf(stderr, "Warning: caps property is deprecated.\n");
 		else {
 			fprintf(stderr, "Error: caps property is deprecated.\n");
+			return 0;
+		}
+	}
+	
+	if ((tmp = xmlGetProp(root, BAD_CAST "include"))) {
+		if (faulttolerance)
+			fprintf(stderr, "Warning: include property is deprecated.\n");
+		else {
+			fprintf(stderr, "Error: include property is deprecated.\n");
 			return 0;
 		}
 	}
@@ -569,9 +579,9 @@ int ddcci_create_db_protected(
 			xmlChar* add = xmlGetProp(mon_child, BAD_CAST "add");
 			DDCCI_DB_RETURN_IF(!remove && !add, 0,  _("Can't find add or remove property in caps."), mon_child);
 			if (remove)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, mon_db->caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
 			if (add)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, mon_db->caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
 		}
 		else if (!xmlStrcmp(mon_child->name, (const xmlChar *) "include")) {
 			controls_or_include = 1;
@@ -583,7 +593,7 @@ int ddcci_create_db_protected(
 			
 			xmlChar* file = xmlGetProp(mon_child, BAD_CAST "file");
 			DDCCI_DB_RETURN_IF(file == NULL, 0,  _("Can't find file property."), mon_child);
-			if (!ddcci_create_db_protected(mon_db, file, recursionlevel+1, caps, defined, faulttolerance)) {
+			if (!ddcci_create_db_protected(mon_db, file, recursionlevel+1, defined, faulttolerance)) {
 				xmlFree(file);
 				return 0;
 			}
@@ -636,8 +646,8 @@ int ddcci_create_db_protected(
 					control = subgroup->xmlChildrenNode;
 					
 					DDCCI_DB_RETURN_IF(
-						!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, caps, defined, matchedcontrols, faulttolerance),
-						0,  _("Error enumerating controls in subgroup."), control);
+						!ddcci_add_controls_to_subgroup(control, mon_control, current_subgroup, mon_db->caps,
+							defined, matchedcontrols, faulttolerance), 0,  _("Error enumerating controls in subgroup."), control);
 					current_subgroup = current_subgroup->next;
 				}
 				current_group = current_group->next;
@@ -713,18 +723,13 @@ struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps
 	struct monitor_db* mon_db = malloc(sizeof(struct monitor_db));
 	memset(mon_db, 0, sizeof(struct monitor_db));
 	
-	/* Parse caps, and fill structure array. */
-	struct caps_entry* caps[256];
-	
-	memset(caps, 0, 256*sizeof(struct caps_entry*));
+	ddcci_parse_caps(default_caps, mon_db->caps, 1);
 	
 	/* defined controls, when including another file, we don't define the same control 2 times.  */
 	char defined[256];
 	memset(defined, 0, 256*sizeof(char));
 	
-	ddcci_parse_caps(default_caps, caps, 1);
-	
-	if (!ddcci_create_db_protected(mon_db, pnpname, 0, caps, defined, faulttolerance)) {
+	if (!ddcci_create_db_protected(mon_db, pnpname, 0, defined, faulttolerance)) {
 		free(mon_db);
 		mon_db = NULL;
 	}
@@ -740,45 +745,7 @@ struct monitor_db* ddcci_create_db(const char* pnpname, const char* default_caps
 			mon_db = NULL;
 		}
 	}
-	
-	int i;
-	for (i = 0; i < 256; i++) {
-		if(caps[i]) {
-			if (caps[i]->values) {
-				free(caps[i]->values);
-			}
-			free(caps[i]);
-		}
-	}
-	
-#ifdef DEBUG_DB_CREATION
-	struct monitor_db* monitor = mon_db;
-	struct group_db* group;
-	struct subgroup_db* subgroup;
-	struct control_db* control;
-	struct value_db* valued;
-	
-	/* loop through groups */
-	for (group = monitor->group_list; (group != NULL); group = group->next) 
-	{
-		printf("Group %p: %s\n", group, group->name);
-		/* loop through subgroups inside group */
-		for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next) 
-		{
-			printf("\tSubgroup %p: %s\n", subgroup, subgroup->name);
-			/* loop through controls inside subgroup */
-			for (control = subgroup->control_list; (control != NULL); control = control->next) 
-			{
-				printf("\t\tControl: %s 0x%02x\n", control->name, control->address);
-				/* look for the value */
-				for (valued = control->value_list; (valued != NULL); valued = valued->next) {
-					printf("\t\t\tValue: %s 0x%02x\n", valued->name, valued->value);
-				}
-			}
-		}
-	}
-#endif
-	
+		
 	return mon_db;
 }
 
@@ -837,7 +804,17 @@ void ddcci_free_db(struct monitor_db* monitor)
 		group = ogroup->next;
 		free(ogroup);
 	}
-
+	
+	int i;
+	for (i = 0; i < 256; i++) {
+		if(monitor->caps[i]) {
+			if (monitor->caps[i]->values) {
+				free(monitor->caps[i]->values);
+			}
+			free(monitor->caps[i]);
+		}
+	}
+	
 	free(monitor);
 }
 

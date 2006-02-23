@@ -24,7 +24,13 @@
 #include <libxml/xmlstring.h>
 
 /* Current database version */
-#define DBVERSION 2
+#define DBVERSION 3
+
+/* Structure to store CAPS entry (control and related values) */
+struct caps_entry {
+	int values_len; /* -1 if values are not specified */
+	unsigned short* values;
+};
 
 enum control_type {
 value = 0,
@@ -81,6 +87,8 @@ struct group_db {
 struct monitor_db {
 	xmlChar* name;
 	enum init_type init;
+	
+	struct caps_entry* caps[256]; /* CAPS */
 	
 	struct group_db* group_list;
 };

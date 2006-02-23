@@ -80,16 +80,16 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 					}
 				}
 				if (controlname == NULL) {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d [???]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum);
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [???]\n", _("Control"),
+						ctrl, (result > 0) ? '+' : '-', value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ');
 				}
 				else if (valuename == NULL) {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d [%s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname);
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s]\n", _("Control"),
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ', controlname);
 				}
 				else {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d [%s - %s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, controlname, valuename);
+					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s - %s]\n", _("Control"),
+						ctrl, (result > 0) ? '+' : '-',  value, maximum, (monitor->caps[ctrl]) ? 'C' : ' ', controlname, valuename);
 				}
 			}
 			break;
