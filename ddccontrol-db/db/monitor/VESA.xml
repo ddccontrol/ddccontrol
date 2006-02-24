@@ -16,7 +16,7 @@
 		<control id="green" address="0x18"/>
 		<control id="blue" address="0x1A"/>
 		<control id="focus" address="0x1C"/>
-		<control id="auto" address="0x1e">
+		<control id="auto" address="0x1e" delay="1000">
 			<value id="pos" value="1"/>
 		</control>
 		
@@ -61,7 +61,7 @@
 			<value id="portrait" value="2"/>
 		</control>
 		
-		<control id="settings" address="0xb0"/>
+		<control id="settings" address="0xb0" delay="1000"/>
 		
 		<control id="dpms" address="0xd6">
 			<value id="on" value="1"/>
