@@ -97,6 +97,35 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 	}
 }
 
+/* Find the delay we must respect after writing to an address in the database. */
+static int find_write_delay(struct monitor* mon, char ctrl) {
+	struct monitor_db* monitor = mon->db;
+	struct group_db* group;
+	struct subgroup_db* subgroup;
+	struct control_db* control;
+	
+	if (monitor)
+	{
+		/* loop through groups */
+		for (group = monitor->group_list; group != NULL; group = group->next)
+		{
+			/* loop through subgroups inside group */
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+			{
+				/* loop through controls inside subgroup */
+				for (control = subgroup->control_list; control != NULL; control = control->next)
+				{
+					/* check for control id */
+					if (control->address == ctrl) 
+					{
+						return control->delay;					}
+				}
+			}
+		}
+	}
+	return -1;
+}
+
 static void usage(char *name)
 {
 	fprintf(stderr,_(
@@ -382,9 +411,16 @@ int main(int argc, char **argv)
 		
 		if (ctrl >= 0) {
 			if (value >= 0) {
-				fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"),
-					ctrl, value, value);
-				ddcci_writectrl(&mon, ctrl, value, 0);
+				int delay = find_write_delay(&mon, ctrl);
+				if (delay >= 0) {
+					fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"),
+						ctrl, value, value, delay);
+				}
+				else {
+					fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"),
+						ctrl, value, value);
+				}
+				ddcci_writectrl(&mon, ctrl, value, delay);
 			} else {
 				fprintf(stdout, _("\nReading 0x%02x...\n"), ctrl);
 			}

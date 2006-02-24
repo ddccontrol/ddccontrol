@@ -7,6 +7,9 @@
 <listitem>
 Dell 1704FPT (DVI input)
 </listitem>
+<listitem>
+Dell 2005FPW
+</listitem>
 </itemizedlist>
 </sect3>
 <sect3>
@@ -111,6 +114,14 @@ SyncMaster 970P (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 997MB
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>SUN</title>
+<itemizedlist mark='bullet'>
+<listitem>
+GDM-5410 (Sony OEM)
 </listitem>
 </itemizedlist>
 </sect3>

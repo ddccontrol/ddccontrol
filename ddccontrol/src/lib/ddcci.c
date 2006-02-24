@@ -62,6 +62,8 @@
 #define MAX_BYTES		127	/* max message length */
 #define DELAY   		45000	/* uS to wait after write */
 
+#define CONTROL_WRITE_DELAY   80000	/* uS to wait after writing to a control (default) */
+
 /* magic numbers */
 #define MAGIC_1	0x51	/* first byte to send, host address */
 #define MAGIC_2	0x80	/* second byte to send, ored with length */
@@ -513,6 +515,10 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 	/* Do the delay */
 	if (delay > 0) {
 		usleep(1000*delay);
+	}
+	/* Default delay : 80ms (anyway we won't get below 45ms (due to DELAY)) */
+	else if (delay < 0) {
+		usleep(CONTROL_WRITE_DELAY);
 	}
 	
 	return ret;
