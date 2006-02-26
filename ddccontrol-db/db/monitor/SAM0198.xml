@@ -3,7 +3,7 @@
 	  C6 C8 C9 D6(1 4) DC(1 2 3 4 5 6) DF F8 F0(0 1 2 3 4) F2 87 F9 FA FB FC FD FE 
 	  E0 )) -->
 <monitor name="Samsung SyncMaster 193P Plus (VGA)">
-	<caps add="(vcp(CA))"/>
+	<caps add="(vcp(CA E2))"/>
 	<include file="SAMg9"/>
 	<include file="SAMcp10"/>
 	<include file="SAMmb6"/>

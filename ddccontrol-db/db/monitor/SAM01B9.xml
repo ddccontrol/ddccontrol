@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 740T (DVI)">
+	<include file="SAM01B8"/>
+</monitor>

@@ -31,9 +31,6 @@
 				<value id="+0.5" name="+0.5"/>
 				<value id="+0.7" name="+0.7"/>
 				<value id="+0.9" name="+0.9"/>
-				<value id="mode1" name="Mode 1"/>
-				<value id="mode2" name="Mode 2"/>
-				<value id="mode3" name="Mode 3"/>
 			</control>
 		</subgroup>
 		<subgroup name="Color maximum level">
@@ -228,6 +225,10 @@
 			<control id="inputsource" type="list" name="Input Source Select" address="0x60">
 				<value id="analog" name="Analog"/>
 				<value id="digital" name="Digital"/>
+			</control>
+			<control id="autosource" type="list" name="Autoselect Input Source" address="0xe2">
+				<value id="auto" name="Automatic" value="0"/>
+				<value id="manual" name="Manual" value="1"/>
 			</control>
 		</subgroup>
 		<subgroup name="Power control">
