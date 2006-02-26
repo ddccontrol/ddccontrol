@@ -1,3 +1,14 @@
+2006-02-26 14:40  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/SAM00BA.xml, monitor/SAM00D3.xml, monitor/SAM010D.xml,
+	  monitor/SAM010F.xml, monitor/SAM0115.xml, monitor/SAM011F.xml,
+	  monitor/SAM017C.xml, monitor/SAM0191.xml, monitor/SAM0198.xml,
+	  monitor/SAM01B4.xml, monitor/SAM01B8.xml, monitor/SAM01B9.xml,
+	  monitor/SAM01E3.xml, monitor/SAMlcd.xml: Add support for Samsung
+	  740T, and Samsung 0xE2 control (source autoselect). Thanks to
+	  Guryanov Dmitry.
+
 2006-02-24 21:48  nboichat
 
 	* db/monitor/: SAMlcd.xml, VESA.xml: Add delay to some "complex"
