@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<monitor name="Dell 2405FPW (DVI)" init="standard">
+        <!--- vcp(page0(04 05 06 08 0E 10 12 14(01 04 05 08) 16 18 1A 1E 20 30 3E 60)) -->
+        <controls>
+                <control id="colorpreset" address="0x14">
+                        <value id="warm"  value="0x04"/>
+                        <value id="srgb"  value="0x05"/>
+                        <value id="cool"  value="0x08"/>
+                </control>
+
+        </controls>
+        <include file="VESA"/>
+</monitor>
