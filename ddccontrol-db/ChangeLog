@@ -1,3 +1,8 @@
+2006-02-28 12:47  nboichat
+
+	* db/monitor/DELA010.xml: Add support for Dell 2405FPW (Thanks to
+	  Alexander McLeay)
+
 2006-02-26 14:40  nboichat
 
 	* db/: options.xml, options.xml.h, options.xml.in,
