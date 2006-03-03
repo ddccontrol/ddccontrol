@@ -40,6 +40,8 @@ card_open cards_open[] = {
 	&nvidia_open,
 	&radeon_open,
 	&i810_open,
+	&via_open,
+	&sis_open,
 	NULL
 };
 
@@ -47,6 +49,8 @@ card_close cards_close[] = {
 	&nvidia_close,
 	&radeon_close,
 	&i810_close,
+	&via_close,
+	&sis_close,
 	NULL
 };
 /* end of card list */

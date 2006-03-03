@@ -248,7 +248,7 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <title>Intel</title>
 <sect2>
 <title>i810/i815/i830/i845/i855/i865/i915/i945 with Integrated Graphics Controller</title>
-<para>Intel integrated graphics controllers only works with direct PCI memory access, so you
+<para>Intel integrated graphics controllers only work with direct PCI memory access, so you
 don't have to have any kernel module built or loaded.</para>
 </sect2>
 <sect3>
@@ -279,6 +279,83 @@ mailing lists (see <xref linkend="report"/>).</para>
 </row>
 <row>
   <entry>Intel i865G (82865G)</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
+<title>SiS</title>
+<para>SiS graphics controllers only work with direct PCI memory access, so you
+don't have to have any kernel module built or loaded.</para>
+<sect3>
+<title>SiS chipset support table</title>
+<para>These SiS chipsets have been reported to work.
+If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>SiS [M]661xX/[M]741[GX]/[M]760 PCI/AGP VGA Adapter</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</sect3>
+</sect1>
+
+<sect1>
+<title>VIA</title>
+<para>VIA graphics controllers only work with direct PCI memory access, so you
+don't have to have any kernel module built or loaded.</para>
+<sect3>
+<title>VIA chipset support table</title>
+<para>These VIA chipsets have been reported to work.
+If yours is not listed, please send a message to one of the DDCcontrol
+mailing lists (see <xref linkend="report"/>).</para>
+<informaltable frame="all">
+<tgroup cols='3'>
+<colspec colname='name' align="left"/>
+<colspec colname='i2c' align="center" class="yesno"/>
+<colspec colname='pci' align="center" class="yesno"/>
+<thead>
+<row>
+  <entry morerows='1' valign='middle'>Name</entry>
+  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+</row>
+<row>
+  <entry>dev</entry>
+  <entry>PCI</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>VIA VT8623 [Apollo CLE266] integrated CastleRock graphics</entry>
+  <entry class="no">No</entry>
+  <entry class="yes">Yes</entry>
+</row>
+<row>
+  <entry>VIA S3 Unichrome Pro VGA Adapter</entry>
   <entry class="no">No</entry>
   <entry class="yes">Yes</entry>
 </row>

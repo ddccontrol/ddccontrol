@@ -56,4 +56,13 @@ void         radeon_close(struct card* radeon_card);
 struct card* i810_open (struct pci_dev *dev);
 void         i810_close(struct card* intel810_card);
 
+/* Via Unichrome functions */
+
+struct card* via_open(struct pci_dev*dev);
+void	     via_close(struct card* via_card);
+
+/* SIS functions */
+struct card* sis_open(struct pci_dev*dev);
+void	     sis_close(struct card* sis_card);
+
 #endif //DDCPCI_H

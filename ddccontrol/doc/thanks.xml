@@ -19,6 +19,10 @@ Thanks to <personname><firstname>Chernyavskyy</firstname><surname>Valentin</surn
 </personname>, for testing Intel graphics chipset support.
 </para>
 <para>
+Thanks to <personname><firstname>Johannes</firstname><surname>Deisenhofer</surname>
+</personname>, for providing a patch to add VIA and SiS graphics chipset support.
+</para>
+<para>
 Thanks to all users that reported if DDCcontrol works on their hardware.
 </para>
 <para>
