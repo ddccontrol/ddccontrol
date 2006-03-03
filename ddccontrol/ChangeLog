@@ -1,3 +1,10 @@
+2006-03-03 21:08  nboichat
+
+	* doc/supportedgc.xml, doc/supportedmonitors.xml, doc/thanks.xml,
+	  src/ddcpci/Makefile.am, src/ddcpci/ddcpci.h, src/ddcpci/main.c,
+	  src/ddcpci/sis.c, src/ddcpci/via.c: Add support for VIA and SiS
+	  chipsets (Thanks to Johannes Deisenhofer)
+
 2006-02-24 21:49  nboichat
 
 	* doc/supportedmonitors.xml, src/ddccontrol/main.c,
