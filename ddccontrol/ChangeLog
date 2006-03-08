@@ -1,3 +1,17 @@
+2006-03-08 21:36  nboichat
+
+	* NEWS, TODO, doc/Makefile.am, doc/main.xml, po/ddccontrol.pot:
+	  Prepare Release 0.4
+
+2006-03-08 21:12  nboichat
+
+	* doc/supportedmonitors.xml, po/ddccontrol.pot, po/de.po, po/fr.po,
+	  po/pl.po, po/ru.po, po/zh_CN.po: Update French translation.
+
+2006-03-08 21:11  nboichat
+
+	* src/ddcpci/ddcpci.h: Fix a problem with uxx types in pci/pci.h.
+
 2006-03-03 21:08  nboichat
 
 	* doc/supportedgc.xml, doc/supportedmonitors.xml, doc/thanks.xml,
