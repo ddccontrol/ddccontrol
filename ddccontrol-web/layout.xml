@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!DOCTYPE layout PUBLIC "-//Norman Walsh//DTD Website Layout V2.5.0//EN"
-            "http://docbook.sourceforge.net/release/website/2.5.0/schema/dtd/layout.dtd">
+<!DOCTYPE layout PUBLIC "-//Norman Walsh//DTD Website Layout V2.6//EN"
+            "http://docbook.sourceforge.net/release/website/2.6.0/schema/dtd/layout.dtd">
 <layout>
   <style src="ddccontrol.css" type="text/css"/>
 
