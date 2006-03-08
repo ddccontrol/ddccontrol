@@ -1,3 +1,17 @@
+2006-03-08 20:54  nboichat
+
+	* db/Makefile.in, po/ddccontrol-db.pot: Prepare release 20060308
+	  (and CVS cleanup)
+
+2006-03-08 20:52  nboichat
+
+	* Makefile.am, NEWS, configure.ac, db/Makefile.in, db/options.xml:
+	  Prepare release 20060308
+
+2006-03-08 20:26  nboichat
+
+	* po/fr.po: Update French translation.
+
 2006-03-08 20:22  nboichat
 
 	* db/monitor/SAM01F9.xml, po/ddccontrol-db.pot, po/fr.po, po/pl.po,
