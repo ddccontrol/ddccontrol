@@ -1,3 +1,8 @@
+2006-03-08 20:22  nboichat
+
+	* db/monitor/SAM01F9.xml, po/ddccontrol-db.pot, po/fr.po, po/pl.po,
+	  po/ru.po, po/zh_CN.po: Add support for Samsung 920N
+
 2006-02-28 12:47  nboichat
 
 	* db/monitor/DELA010.xml: Add support for Dell 2405FPW (Thanks to
