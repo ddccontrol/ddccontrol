@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: DDC/CI control tool database\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-03-04 15:50+0100\n"
-"PO-Revision-Date: 2006-02-23 22:43+0100\n"
+"PO-Revision-Date: 2006-03-08 21:26+0100\n"
 "Last-Translator: Nicolas Boichat <nicolas@boichat.ch>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,8 @@ msgstr "Sport"
 msgid "Entertain"
 msgstr "Divertissement"
 
-#: ../db/options.xml.h:13 ../db/options.xml.h:44
+#: ../db/options.xml.h:13
+#: ../db/options.xml.h:44
 #, c-format
 msgid "Custom"
 msgstr "Personnalisé"
@@ -95,9 +96,10 @@ msgstr "Trois"
 #: ../db/options.xml.h:18
 #, c-format
 msgid "Auto Level (Needs a blank line to work)"
-msgstr ""
+msgstr "Auto Level (nécessite une ligne blanche pour fonctionner)"
 
-#: ../db/options.xml.h:19 ../db/options.xml.h:20
+#: ../db/options.xml.h:19
+#: ../db/options.xml.h:20
 #, c-format
 msgid "Gamma"
 msgstr "Gamma"
@@ -212,7 +214,8 @@ msgstr "Ajustement de la courbe de couleur"
 msgid "Color Preset"
 msgstr "Paramètres de couleur prédéfinis"
 
-#: ../db/options.xml.h:43 ../db/options.xml.h:149
+#: ../db/options.xml.h:43
+#: ../db/options.xml.h:149
 #, c-format
 msgid "Normal"
 msgstr "Normal"
@@ -347,7 +350,9 @@ msgstr "Utilisateur 4"
 msgid "MagicColor"
 msgstr "MagicColor"
 
-#: ../db/options.xml.h:71 ../db/options.xml.h:179 ../db/options.xml.h:191
+#: ../db/options.xml.h:71
+#: ../db/options.xml.h:179
+#: ../db/options.xml.h:191
 #, c-format
 msgid "Off"
 msgstr "Éteint"
@@ -417,12 +422,16 @@ msgstr "Ajustements automatiques"
 msgid "Auto Size Center"
 msgstr "Centrage et redimensionnement automatique"
 
-#: ../db/options.xml.h:85 ../db/options.xml.h:156 ../db/options.xml.h:160
+#: ../db/options.xml.h:85
+#: ../db/options.xml.h:156
+#: ../db/options.xml.h:160
 #, c-format
 msgid "Enable"
 msgstr "Activer"
 
-#: ../db/options.xml.h:86 ../db/options.xml.h:155 ../db/options.xml.h:159
+#: ../db/options.xml.h:86
+#: ../db/options.xml.h:155
+#: ../db/options.xml.h:159
 #, c-format
 msgid "Disable"
 msgstr "Désactiver"
@@ -733,12 +742,14 @@ msgstr "Volume des haut-parleurs"
 msgid "Audio Microphone Volume Adjust"
 msgstr "Volume du microphone"
 
-#: ../db/options.xml.h:147 ../db/options.xml.h:148
+#: ../db/options.xml.h:147
+#: ../db/options.xml.h:148
 #, c-format
 msgid "Mute"
 msgstr "Muet"
 
-#: ../db/options.xml.h:150 ../db/options.xml.h:151
+#: ../db/options.xml.h:150
+#: ../db/options.xml.h:151
 #, c-format
 msgid "Degauss"
 msgstr "Démagnétiser"
@@ -853,7 +864,9 @@ msgstr "Niveau de l'entrée"
 msgid "Display Resolution Notifier"
 msgstr "Affichage de la résolution"
 
-#: ../db/options.xml.h:178 ../db/options.xml.h:188 ../db/options.xml.h:192
+#: ../db/options.xml.h:178
+#: ../db/options.xml.h:188
+#: ../db/options.xml.h:192
 #, c-format
 msgid "On"
 msgstr "Allumé"
@@ -876,19 +889,20 @@ msgstr "Digital"
 #: ../db/options.xml.h:183
 #, c-format
 msgid "Autoselect Input Source"
-msgstr ""
+msgstr "Choisir automatiquement la source d'entrée."
 
 #: ../db/options.xml.h:184
-#, fuzzy, c-format
+#, c-format
 msgid "Automatic"
-msgstr "Ajustements automatiques"
+msgstr "Automatique"
 
 #: ../db/options.xml.h:185
 #, c-format
 msgid "Manual"
-msgstr ""
+msgstr "Manuel"
 
-#: ../db/options.xml.h:186 ../db/options.xml.h:190
+#: ../db/options.xml.h:186
+#: ../db/options.xml.h:190
 #, c-format
 msgid "Power control"
 msgstr "Allumer/éteindre"
@@ -905,9 +919,8 @@ msgstr "En veille"
 
 #~ msgid "Mode 1"
 #~ msgstr "Mode 1"
-
 #~ msgid "Mode 2"
 #~ msgstr "Mode 2"
-
 #~ msgid "Mode 3"
 #~ msgstr "Mode 3"
+
