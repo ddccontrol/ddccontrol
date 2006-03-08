@@ -1,3 +1,9 @@
+2006-03-08 22:10  nboichat
+
+	* configure.ac, doc/main.xml: Prepare next version.
+
+2006-03-08 21:36  tag Release-0_4
+
 2006-03-08 21:36  nboichat
 
 	* NEWS, TODO, doc/Makefile.am, doc/main.xml, po/ddccontrol.pot:
