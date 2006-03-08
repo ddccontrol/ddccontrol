@@ -9,7 +9,7 @@
   <head>
     <title>DDCcontrol homepage</title>
     <summary>Introduction</summary>
-    <keywords>DDCcontrol, DDC/CI, ddcci, magictune linux, linux ddc, linux magictune, magictune</keywords>
+    <keywords>DDCcontrol, DDC/CI, ddcci, magictune linux, linux ddc, linux magictune, magictune, linux monitor control, monitor control</keywords>
   </head>
 
 <section><title>What is a DDCcontrol?</title>
@@ -22,6 +22,52 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+	<varlistentry><term>8 Mar 2006: Version 0.4 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>New database version (3), supporting generic profiles for monitors.</listitem>
+					<listitem>Add support for VIA and SiS chipsets (Thanks to Johannes Deisenhofer)</listitem>
+					<listitem>Fix memory leaks using valgrind.</listitem>
+					<listitem>Fix various compilation errors.</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>8 Mar 2006: Database version 20060308 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>New database format, using generic profiles.</listitem>
+					<listitem>Add support for new monitors:
+						<itemizedlist mark='opencircle'>
+							<listitem>Samsung Syncmaster 970P (Thanks to Martin Kalkman)</listitem>
+							<listitem>Dell 2005FPW (Thanks to Miguel)</listitem>
+							<listitem>Samsung 770P (Thanks to Mateusz Drach)</listitem>
+							<listitem>Samsung 970P analog</listitem>
+							<listitem>Samsung 701T</listitem>
+							<listitem>Samsung 760BF</listitem>
+							<listitem>Samsung 910T</listitem>
+							<listitem>Samsung 960BF</listitem>
+							<listitem>Samsung SyncMaster 913V (Thanks to Hubai Tamas)</listitem>
+							<listitem>Samsung SyncMaster 730BF (Thanks to Gergely Nagy)</listitem>
+							<listitem>SUN GDM-5410 (Thanks to "bman")</listitem>
+							<listitem>Samsung 740T (Thanks to Guryanov Dmitry)</listitem>
+							<listitem>Dell 2405FPW (Thanks to Alexander McLeay)</listitem>
+							<listitem>Samsung 920N</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>Complete support for these monitors:
+						<itemizedlist mark='opencircle'>
+							<listitem>Samsung 171P (Thanks to Radoslaw Marcinkowski)</listitem>
+						</itemizedlist>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
 	<varlistentry><term>11 Nov 2005: Version 0.3 released.</term>
 		<listitem>
 			<para>
