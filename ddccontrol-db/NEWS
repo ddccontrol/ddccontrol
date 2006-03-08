@@ -1,3 +1,23 @@
+Version 20060308:
+ - New database format, using generic profiles.
+ - Add support for new monitors:
+   + Samsung Syncmaster 970P (Thanks to Martin Kalkman)
+   + Dell 2005FPW (Thanks to Miguel)
+   + Samsung 770P (Thanks to Mateusz Drach)
+   + Samsung 970P analog
+   + Samsung 701T
+   + Samsung 760BF
+   + Samsung 910T
+   + Samsung 960BF
+   + Samsung SyncMaster 913V (Thanks to Hubai Tamas)
+   + Samsung SyncMaster 730BF (Thanks to Gergely Nagy)
+   + SUN GDM-5410 (Thanks to "bman")
+   + Samsung 740T (Thanks to Guryanov Dmitry)
+   + Dell 2405FPW (Thanks to Alexander McLeay)
+   + Samsung 920N
+ - Complete support for these monitors:
+   + Samsung 171P (Thanks to Radoslaw Marcinkowski)
+
 Version 20051114:
  - Add support for new monitors:
    + Dell 1704FPT (Digital).
