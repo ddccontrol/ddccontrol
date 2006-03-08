@@ -1,3 +1,9 @@
+Version 0.4 - 2006-03-08
+ - New database version (3), supporting generic profiles for monitors.
+ - Add support for VIA and SiS chipsets (Thanks to Johannes Deisenhofer)
+ - Fix memory leaks using valgrind.
+ - Fix various compilation errors.
+
 Version 0.3 - 2005-11-14
  - Use GTK/GDK high-level API to determine current screen (instead of Xinerama API).
  - Add Chinese translation (Thanks to "waq_cn").

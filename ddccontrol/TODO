@@ -1,10 +1,9 @@
 Nicolas:
- - Read EDID info
- - Use this instead of Xinerama ?
-   http://developer.gnome.org/doc/API/2.0/gdk/multihead.html
+ - Read EDID info, show it in gddccontrol
  - Add support for more than 2 monitors
  - See what to do with engineering VCP.
- - Show a nice message when a monitor is not supported and allow at least brightness/contrast to be controlled.
+ - Better handling of --enable-doc.
+ - Use rsync for SF file transfers.
 
 BUGS:
  - When changing a control value quickly (moving the mouse outside the control),

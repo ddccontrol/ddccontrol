@@ -4,7 +4,7 @@ XHTML_STYLESHEET=style.xsl
 
 htmldir = $(prefix)/share/doc/@PACKAGE@/html
 dist_html_DATA = html/*
-EXTRA_DIST = main.xml gpl.xml style.xsl style-fo.xsl
+EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml supportedmonitors.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl
 
 if BUILD_DOC
 html/*: main.xml *.xml style.xsl

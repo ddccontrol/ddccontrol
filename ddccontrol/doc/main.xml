@@ -22,7 +22,7 @@
 <email>nicolas@boichat.ch</email>
 </author>
 
-<copyright><year>2005</year>
+<copyright><year>2005-2006</year>
 <holder>Nicolas Boichat</holder>
 </copyright>
 
@@ -32,7 +32,7 @@ $Id$
 
 <abstract>
 <para>
-Documentation for DDCcontrol version 0.3.1.
+Documentation for DDCcontrol version 0.4.
 </para>
 </abstract>
 
