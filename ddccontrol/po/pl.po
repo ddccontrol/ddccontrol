@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-23 23:15+0100\n"
+"POT-Creation-Date: 2006-03-04 15:48+0100\n"
 "PO-Revision-Date: 2005-11-18 21:28+0100\n"
 "Last-Translator: Radek Marcinkowski <radek@cbk.waw.pl>\n"
 "Language-Team: Polish\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Control"
 msgstr "Control"
 
-#: ../src/ddccontrol/main.c:103
+#: ../src/ddccontrol/main.c:132
 #, c-format
 msgid ""
 "Usage:\n"
@@ -52,22 +52,22 @@ msgstr ""
 "\t-v : gadatliwy (wiêcj -v, bardziej gadatliwy)\n"
 "\t-b : katalog basy monitorów ddccontrol-db (je¿eli inny ni¿ %s)\n"
 
-#: ../src/ddccontrol/main.c:121 ../src/ddccontrol/main.c:143
+#: ../src/ddccontrol/main.c:150 ../src/ddccontrol/main.c:172
 #, c-format
 msgid "Checking %s integrity...\n"
 msgstr "Sprawdznie integralno¶ci %s...\n"
 
-#: ../src/ddccontrol/main.c:123 ../src/ddccontrol/main.c:145
+#: ../src/ddccontrol/main.c:152 ../src/ddccontrol/main.c:174
 #, c-format
 msgid "[ FAILED ]\n"
 msgstr "[ B£¡D ]\n"
 
-#: ../src/ddccontrol/main.c:127 ../src/ddccontrol/main.c:150
+#: ../src/ddccontrol/main.c:156 ../src/ddccontrol/main.c:179
 #, c-format
 msgid "[ OK ]\n"
 msgstr "[ OK ]\n"
 
-#: ../src/ddccontrol/main.c:186
+#: ../src/ddccontrol/main.c:215
 #, fuzzy, c-format
 msgid ""
 "ddccontrol version %s\n"
@@ -86,73 +86,73 @@ msgstr ""
 "General Public License.\n"
 "\n"
 
-#: ../src/ddccontrol/main.c:205
+#: ../src/ddccontrol/main.c:234
 #, c-format
 msgid "'%s' does not seem to be a valid register name\n"
 msgstr "'%s' nie jest zarejestrowan± nazw±\n"
 
-#: ../src/ddccontrol/main.c:211
+#: ../src/ddccontrol/main.c:240
 #, c-format
 msgid "You cannot use -w parameter without -r.\n"
 msgstr "Nie mo¿esz u¿yæ -w bez -r.\n"
 
-#: ../src/ddccontrol/main.c:216
+#: ../src/ddccontrol/main.c:245
 #, c-format
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "%s' nie jest poprawn± warto¶ci±.\n"
 
-#: ../src/ddccontrol/main.c:261 ../src/gddccontrol/main.c:412
+#: ../src/ddccontrol/main.c:290 ../src/gddccontrol/main.c:412
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Biblioteka ddcci nie zosta³a zainicjalizowana.\n"
 
-#: ../src/ddccontrol/main.c:273
+#: ../src/ddccontrol/main.c:302
 #, c-format
 msgid "Detected monitors :\n"
 msgstr "Wykryte monitory:\n"
 
-#: ../src/ddccontrol/main.c:278
+#: ../src/ddccontrol/main.c:307
 #, c-format
 msgid " - Device: %s\n"
 msgstr " - Urz±dzenie: %s\n"
 
-#: ../src/ddccontrol/main.c:279
+#: ../src/ddccontrol/main.c:308
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr "   Obsluguj±ce DDC/CI: %s\n"
 
-#: ../src/ddccontrol/main.c:279
+#: ../src/ddccontrol/main.c:308
 msgid "Yes"
 msgstr "Tak"
 
-#: ../src/ddccontrol/main.c:279
+#: ../src/ddccontrol/main.c:308
 msgid "No"
 msgstr "Nie"
 
-#: ../src/ddccontrol/main.c:280
+#: ../src/ddccontrol/main.c:309
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr "   Nazwa monitora: %s\n"
 
-#: ../src/ddccontrol/main.c:281
+#: ../src/ddccontrol/main.c:310
 #, c-format
 msgid "   Input type: %s\n"
 msgstr "   Typ wej¶cia: %s\n"
 
-#: ../src/ddccontrol/main.c:281 ../src/ddccontrol/main.c:319
+#: ../src/ddccontrol/main.c:310 ../src/ddccontrol/main.c:348
 msgid "Digital"
 msgstr "Cyfrowe"
 
-#: ../src/ddccontrol/main.c:281 ../src/ddccontrol/main.c:319
+#: ../src/ddccontrol/main.c:310 ../src/ddccontrol/main.c:348
 msgid "Analog"
 msgstr "Analogowe"
 
-#: ../src/ddccontrol/main.c:285
+#: ../src/ddccontrol/main.c:314
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr "  (Zaznaczony automatycznie)\n"
 
-#: ../src/ddccontrol/main.c:295
+#: ../src/ddccontrol/main.c:324
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
@@ -163,12 +163,12 @@ msgstr ""
 "Karta graficzna mo¿e wymagaæ dodatkowych modu³ów kernela (i2c-dev, i "
 "framebuffer)\n"
 
-#: ../src/ddccontrol/main.c:308
+#: ../src/ddccontrol/main.c:337
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr "Czyta EDID i inicjalizuje DDC/CI na magistrali %s...\n"
 
-#: ../src/ddccontrol/main.c:312
+#: ../src/ddccontrol/main.c:341
 #, c-format
 msgid ""
 "\n"
@@ -181,7 +181,7 @@ msgstr ""
 "Karta graficzna mo¿e wymagaæ dodatkowych modu³ów kernela (i2c-dev, i "
 "framebuffer).\n"
 
-#: ../src/ddccontrol/main.c:316
+#: ../src/ddccontrol/main.c:345
 #, c-format
 msgid ""
 "\n"
@@ -190,22 +190,22 @@ msgstr ""
 "\n"
 "EDID zaczyta³:\n"
 
-#: ../src/ddccontrol/main.c:317
+#: ../src/ddccontrol/main.c:346
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr "\tPlug and Play ID: %s [%s]\n"
 
-#: ../src/ddccontrol/main.c:319
+#: ../src/ddccontrol/main.c:348
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr "\tType wej¶cia: %s\n"
 
 #. Put a big warning (in red if we are writing to a terminal).
-#: ../src/ddccontrol/main.c:323 ../src/ddccontrol/main.c:342
+#: ../src/ddccontrol/main.c:352 ../src/ddccontrol/main.c:371
 msgid "=============================== WARNING ==============================="
 msgstr ""
 
-#: ../src/ddccontrol/main.c:326
+#: ../src/ddccontrol/main.c:355
 #, c-format
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is\n"
@@ -213,7 +213,7 @@ msgid ""
 "may not be supported, or may not work as expected.\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:332
+#: ../src/ddccontrol/main.c:361
 #, c-format
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is\n"
@@ -221,7 +221,7 @@ msgid ""
 "some controls may not work as expected.\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:337
+#: ../src/ddccontrol/main.c:366
 #, c-format
 msgid ""
 "Please update ddccontrol-db, or, if you are already using the latest\n"
@@ -229,54 +229,63 @@ msgid ""
 "ddccontrol-users@lists.sourceforge.net:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:341 ../src/gddccontrol/notebook.c:695
+#: ../src/ddccontrol/main.c:370 ../src/gddccontrol/notebook.c:695
 #, c-format
 msgid "Thank you.\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:346
+#: ../src/ddccontrol/main.c:375
 #, c-format
 msgid ""
 "\n"
 "Capabilities:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:350
+#: ../src/ddccontrol/main.c:379
 #, c-format
 msgid "Raw output: %s\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:352
+#: ../src/ddccontrol/main.c:381
 #, c-format
 msgid "Parsed output: \n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:361
+#: ../src/ddccontrol/main.c:390
 #, c-format
 msgid "\tType: "
 msgstr ""
 
-#: ../src/ddccontrol/main.c:364
+#: ../src/ddccontrol/main.c:393
 #, c-format
 msgid "LCD"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:367
+#: ../src/ddccontrol/main.c:396
 #, c-format
 msgid "CRT"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:370
+#: ../src/ddccontrol/main.c:399
 #, c-format
 msgid "Unknown"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:379
+#: ../src/ddccontrol/main.c:408
 #, c-format
 msgid "Capabilities read fail.\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:385
+#: ../src/ddccontrol/main.c:416
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d) (%dms delay)...\n"
+msgstr ""
+"\n"
+"Zapis: 0x%02x, 0x%02x(%d)...\n"
+
+#: ../src/ddccontrol/main.c:420
 #, c-format
 msgid ""
 "\n"
@@ -285,7 +294,7 @@ msgstr ""
 "\n"
 "Zapis: 0x%02x, 0x%02x(%d)...\n"
 
-#: ../src/ddccontrol/main.c:389
+#: ../src/ddccontrol/main.c:425
 #, c-format
 msgid ""
 "\n"
@@ -294,39 +303,39 @@ msgstr ""
 "\n"
 "Odczyt 0x%02x...\n"
 
-#: ../src/ddccontrol/main.c:396
+#: ../src/ddccontrol/main.c:432
 #, c-format
 msgid ""
 "\n"
 "Controls (valid/current/max) [Description - Value name]:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:420
+#: ../src/ddccontrol/main.c:456
 #, c-format
 msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
 msgstr "\t\t> id=%s, nazwa=%s, adres=%#x, opó¼nienie=%dms, typ=%d\n"
 
-#: ../src/ddccontrol/main.c:425
+#: ../src/ddccontrol/main.c:461
 #, c-format
 msgid "\t\t  Possible values:\n"
 msgstr "\t\t  Mo¿liwe warto¶ci:\n"
 
-#: ../src/ddccontrol/main.c:429
+#: ../src/ddccontrol/main.c:465
 #, c-format
 msgid "\t\t\t> id=%s - name=%s, value=%d\n"
 msgstr "\t\t\t> id=%s - nazwa=%s, warto¶æ=%d\n"
 
-#: ../src/ddccontrol/main.c:439
+#: ../src/ddccontrol/main.c:475
 #, c-format
 msgid "\t\t  supported, value=%d, maximum=%d\n"
 msgstr "\t\t  suportowane, warto¶æ=%d, maksimum=%d\n"
 
-#: ../src/ddccontrol/main.c:440
+#: ../src/ddccontrol/main.c:476
 #, c-format
 msgid "\t\t  not supported, value=%d, maximum=%d\n"
 msgstr "\t\t  not supported, value=%d, maximum=%d\n"
 
-#: ../src/ddccontrol/main.c:451
+#: ../src/ddccontrol/main.c:487
 #, c-format
 msgid ""
 "\n"
@@ -386,48 +395,48 @@ msgstr ""
 msgid "i810_open: mmap failed"
 msgstr ""
 
-#: ../src/ddcpci/main.c:150
+#: ../src/ddcpci/main.c:154
 msgid "==>Error while sending open message"
 msgstr "==>B³±d podczas wysy³ania open message"
 
-#: ../src/ddcpci/main.c:174 ../src/ddcpci/main.c:180 ../src/ddcpci/main.c:198
+#: ../src/ddcpci/main.c:178 ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:202
 msgid "==>Error while sending data answer message"
 msgstr "==>B³±d podczas wysy³ania data answer message"
 
-#: ../src/ddcpci/main.c:247 ../src/ddcpci/main.c:262
+#: ../src/ddcpci/main.c:251 ../src/ddcpci/main.c:266
 msgid "==>Error while sending list message"
 msgstr "==>B³±d podczas wysy³ania list message"
 
-#: ../src/ddcpci/main.c:280
+#: ../src/ddcpci/main.c:284
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "B³êdne argumenty.\n"
 
-#: ../src/ddcpci/main.c:286
+#: ../src/ddcpci/main.c:290
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr ""
 
-#: ../src/ddcpci/main.c:293
+#: ../src/ddcpci/main.c:297
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr ""
 
-#: ../src/ddcpci/main.c:298
+#: ../src/ddcpci/main.c:302
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr ""
 
-#: ../src/ddcpci/main.c:312
+#: ../src/ddcpci/main.c:316
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr ""
 
-#: ../src/ddcpci/main.c:320
+#: ../src/ddcpci/main.c:324
 msgid "==>Error while receiving query\n"
 msgstr ""
 
-#: ../src/ddcpci/main.c:355
+#: ../src/ddcpci/main.c:359
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr ""
@@ -799,7 +808,7 @@ msgid "Monitor Profile Switcher Properties"
 msgstr ""
 
 #: ../src/lib/conf.c:69 ../src/lib/conf.c:266 ../src/lib/conf.c:316
-#: ../src/lib/ddcci.c:1142
+#: ../src/lib/ddcci.c:1148
 msgid "Cannot create filename (buffer too small)\n"
 msgstr ""
 
@@ -916,187 +925,187 @@ msgstr ""
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:139
+#: ../src/lib/ddcci.c:141
 msgid "Error while initialisating the message queue"
 msgstr ""
 
-#: ../src/lib/ddcci.c:168
+#: ../src/lib/ddcci.c:170
 msgid "Error while sending quit message"
 msgstr ""
 
-#: ../src/lib/ddcci.c:214
+#: ../src/lib/ddcci.c:216
 msgid "Error while sending heartbeat message"
 msgstr ""
 
-#: ../src/lib/ddcci.c:232
+#: ../src/lib/ddcci.c:234
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:265 ../src/lib/ddcci.c:335
+#: ../src/lib/ddcci.c:267 ../src/lib/ddcci.c:337
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:288
+#: ../src/lib/ddcci.c:290
 msgid "Error while sending write message"
 msgstr ""
 
-#: ../src/lib/ddcci.c:297
+#: ../src/lib/ddcci.c:299
 msgid "Error while reading write message answer"
 msgstr ""
 
-#: ../src/lib/ddcci.c:359
+#: ../src/lib/ddcci.c:361
 msgid "Error while sending read message"
 msgstr ""
 
-#: ../src/lib/ddcci.c:368
+#: ../src/lib/ddcci.c:370
 msgid "Error while reading read message answer"
 msgstr ""
 
-#: ../src/lib/ddcci.c:458
+#: ../src/lib/ddcci.c:460
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:467
+#: ../src/lib/ddcci.c:469
 #, c-format
 msgid "Invalid response, magic is 0x%02x\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:475
+#: ../src/lib/ddcci.c:477
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:488
+#: ../src/lib/ddcci.c:490
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:636 ../src/lib/ddcci.c:655
+#: ../src/lib/ddcci.c:642 ../src/lib/ddcci.c:661
 msgid "Can't convert value to int, invalid CAPS."
 msgstr ""
 
-#: ../src/lib/ddcci.c:736
+#: ../src/lib/ddcci.c:742
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:781
+#: ../src/lib/ddcci.c:787
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:793
+#: ../src/lib/ddcci.c:799
 #, c-format
 msgid "Serial number: %d\n"
 msgstr "Numer seryjny: %d\n"
 
-#: ../src/lib/ddcci.c:796
+#: ../src/lib/ddcci.c:802
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
 msgstr "Wyprodukowany: Tydzieñ %d, %d\n"
 
-#: ../src/lib/ddcci.c:799
+#: ../src/lib/ddcci.c:805
 #, c-format
 msgid "EDID version: %d.%d\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:802
+#: ../src/lib/ddcci.c:808
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
 msgstr "Maksymalny rozmiar: %d x %d (cm)\n"
 
-#: ../src/lib/ddcci.c:813
+#: ../src/lib/ddcci.c:819
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr ""
 
-#: ../src/lib/ddcci.c:843
+#: ../src/lib/ddcci.c:849
 #, c-format
 msgid "Device: %s\n"
 msgstr "Urz±dzenie: %s\n"
 
-#: ../src/lib/ddcci.c:857
+#: ../src/lib/ddcci.c:863
 msgid "Error while sending open message"
 msgstr "B³±d podczas wysy³ania open message"
 
-#: ../src/lib/ddcci.c:865
+#: ../src/lib/ddcci.c:871
 msgid "Error while reading open message answer"
 msgstr "B³±d podczas czytania data answer message"
 
-#: ../src/lib/ddcci.c:873
+#: ../src/lib/ddcci.c:879
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr "Niepoprawna nazwa pliku (%s).\n"
 
-#: ../src/lib/ddcci.c:989
+#: ../src/lib/ddcci.c:995
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr "ddcci_open zwróci³ warto¶æ %d\n"
 
-#: ../src/lib/ddcci.c:1002
+#: ../src/lib/ddcci.c:1008
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr "Nieznany monitor (%s)"
 
-#: ../src/lib/ddcci.c:1023
+#: ../src/lib/ddcci.c:1029
 #, c-format
 msgid "Probing for available monitors"
 msgstr "Skanowanie w poszukiwaniu znanych monitorów"
 
-#: ../src/lib/ddcci.c:1037
+#: ../src/lib/ddcci.c:1043
 msgid "Error while sending list message"
 msgstr "B³±d podczas wysy³ania list message"
 
-#: ../src/lib/ddcci.c:1046
+#: ../src/lib/ddcci.c:1052
 msgid "Error while reading list entry"
 msgstr ""
 
-#: ../src/lib/ddcci.c:1063
+#: ../src/lib/ddcci.c:1069
 #, c-format
 msgid "Found PCI device (%s)\n"
 msgstr "Znaleziono urz±dznie PCI (%s)\n"
 
-#: ../src/lib/ddcci.c:1097
+#: ../src/lib/ddcci.c:1103
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr "Znaleziono urz±dzenie I2C (%s)\n"
 
-#: ../src/lib/ddcci.c:1146
+#: ../src/lib/ddcci.c:1152
 msgid "Error while getting informations about ddccontrol home directory."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1151
+#: ../src/lib/ddcci.c:1157
 msgid "Error while creating ddccontrol home directory."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1156
+#: ../src/lib/ddcci.c:1162
 msgid ""
 "Error while getting informations about ddccontrol home directory after "
 "creating it."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1163
+#: ../src/lib/ddcci.c:1169
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1171
+#: ../src/lib/ddcci.c:1177
 msgid "Error while getting informations about ddccontrol profile directory."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1176
+#: ../src/lib/ddcci.c:1182
 msgid "Error while creating ddccontrol profile directory."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1181
+#: ../src/lib/ddcci.c:1187
 msgid ""
 "Error while getting informations about ddccontrol profile directory after "
 "creating it."
 msgstr ""
 
-#: ../src/lib/ddcci.c:1188
+#: ../src/lib/ddcci.c:1194
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr ""
