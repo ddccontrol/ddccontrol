@@ -20,11 +20,6 @@
 #ifndef DDCPCI_H
 #define DDCPCI_H
 
-#define __KERNEL__
-#include <asm/types.h>
-#undef __KERNEL__
-#define PCI_HAVE_Uxx_TYPES
-
 #include <pci/pci.h>
 
 #include "i2c-algo-bit.h"

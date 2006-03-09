@@ -22,9 +22,12 @@ AC_LANG([C])
 AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
+AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+
 support_i2c_dev=no
-AC_MSG_CHECKING([if linux/i2c-dev.h works alone])
+AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
 AC_COMPILE_IFELSE([
+[#include <linux/types.h>]
 [#include <linux/i2c-dev.h>]
 [const int a = I2C_RDWR + I2C_M_RD;]
 [struct i2c_msg i2cmsg;]
@@ -35,7 +38,6 @@ AC_MSG_RESULT(no)
 )
 
 if test "x$support_i2c_dev" = "xno" ; then
-  AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
   AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
   AC_COMPILE_IFELSE([
   [#define HAVE_BUGGY_I2C_DEV 1]

@@ -8,8 +8,16 @@ Release Check List (Nicolas Boichat)
 - update NEWS
 - update version in configure.ac
 - update version in doc/main.xml
-- make clean
-- make
+- make clean all
+
+# Test with other distributions linux headers
+# Fedora: glibc-kernheaders package
+- CFLAGS="-I/home/nicolas/dev/ddcci/headers/FC4/include" ./configure --disable-gnome --disable-gnome-applet && make clean all
+# Debian: http://packages.debian.org/testing/devel/linux-kernel-headers
+- CFLAGS="-I/home/nicolas/dev/ddcci/headers/Debian/include" ./configure --disable-gnome --disable-gnome-applet && make clean all
+
+# Set back default config
+- ./configure --enable-maintainter-mode --enable-doc
 
 - make distdir
 - in ddccontrol-0.x/:

@@ -53,6 +53,7 @@ struct i2c_rdwr_ioctl_data {
 
 #else
 
+#include <linux/types.h>
 #include <linux/i2c-dev.h>
 
 #endif
