@@ -1,3 +1,9 @@
+2006-03-09 21:18  nboichat
+
+	* CheckList, configure.ac, src/ddcpci/ddcpci.h,
+	  src/ddcpci/intel810.c, src/lib/i2c-dev.h: Fix compile error on
+	  FC4.
+
 2006-03-08 22:10  nboichat
 
 	* configure.ac, doc/main.xml: Prepare next version.
