@@ -1,3 +1,7 @@
+2006-03-10 19:24  nboichat
+
+	* CheckList, NEWS: Prepare release 0.4.1
+
 2006-03-09 21:18  nboichat
 
 	* CheckList, configure.ac, src/ddcpci/ddcpci.h,
