@@ -755,7 +755,40 @@ int ddcci_caps(struct monitor* mon)
 		retries = 3;
 	} while (len != 3);
 
+#if 0
+	/* Test CAPS with binary data */
+	realloc(mon->caps.raw_caps, 2048);
+	strcpy(mon->caps.raw_caps, "( prot(monitor) type(crt) edid bin(128(");
+	bufferpos = strlen(mon->caps.raw_caps);
+	for (i = 0; i < 128; i++) {
+		mon->caps.raw_caps[bufferpos++] = i;
+	}
+	strcpy(&mon->caps.raw_caps[bufferpos], ")) vdif bin(128(");
+	bufferpos += strlen(")) vdif bin(128(");	
+	for (i = 0; i < 128; i++) {
+		mon->caps.raw_caps[bufferpos++] = i;
+	}
+	strcpy(&mon->caps.raw_caps[bufferpos], ")) vcp (10 12 16 18 1A 50 92)))");
+	bufferpos += strlen(")) vcp (10 12 16 18 1A 50 92)))");
+	/* End */
+#endif
+	
 	mon->caps.raw_caps[bufferpos] = 0;
+
+	char* last_substr = mon->caps.raw_caps;
+	char* endptr;
+	while ((last_substr = strstr(last_substr, "bin("))) {
+		last_substr += 4;
+		len = strtol(last_substr, &endptr, 0);
+		if (*endptr != '(') {
+			printf("Invalid bin in CAPS.\n");
+			continue;
+		}
+		for (i = 0; i < len; i++) {
+			*(++endptr) = '#';
+		}
+		last_substr += len;
+	}
 	
 	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
 	
