@@ -22,6 +22,16 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+	<varlistentry><term>10 Mar 2006: Version 0.4.1 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>Fix compilation error in Fedora Core 4 (may affect other distributions).</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
 	<varlistentry><term>8 Mar 2006: Version 0.4 released.</term>
 		<listitem>
 			<para>
