@@ -17,7 +17,7 @@ Release Check List (Nicolas Boichat)
 - CFLAGS="-I/home/nicolas/dev/ddcci/headers/Debian/include" ./configure --disable-gnome --disable-gnome-applet && make clean all
 
 # Set back default config
-- ./configure --enable-maintainter-mode --enable-doc
+- ./configure --enable-maintainter-mode --enable-doc && make
 
 - make distdir
 - in ddccontrol-0.x/:

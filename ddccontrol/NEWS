@@ -1,3 +1,6 @@
+Version 0.4.1 - 2006-03-10
+ - Fix compilation error in Fedora Core 4 (may affect other distributions)
+
 Version 0.4 - 2006-03-08
  - New database version (3), supporting generic profiles for monitors.
  - Add support for VIA and SiS chipsets (Thanks to Johannes Deisenhofer)
