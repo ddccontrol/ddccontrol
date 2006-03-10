@@ -1,3 +1,9 @@
+2006-03-10 23:32  nboichat
+
+	* src/lib/ddcci.c: Allow binary data in CAPS.
+
+2006-03-10 19:24  tag Release-0_4_1
+
 2006-03-10 19:24  nboichat
 
 	* CheckList, NEWS: Prepare release 0.4.1
