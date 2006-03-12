@@ -1,18 +1,10 @@
 <?xml version="1.0"?>
-<!--- SUN GDM-5410 is a CRT (Thanks to "bman" for providing this file) -->
+<!--- SUN GDM-5410 is a CRT (Thanks to Miroslav Hostinsky for providing this file) -->
 <monitor name="SUN GDM-5410" init="standard">
+<!--- Invalid CAPS : (prot(monitor)  type(crt) model( SUN7705           edid bin(128(################################################################################################################################))
+cmds(01020304050608090A0B0C4F)vcp(00010810121416181A20222426283032384042445456686C6E70E0E2F1F2F3F4F5F6F7) -->
+	<caps add="(vcp(00010810121416181A20222426283032384042445456686C6E70E0E2F1F2F3F4F5F6F7))"/>
 	<controls>
-		<control id="colorpreset" address="0x14">
-			<value id="5000k"  value="0x0"/>
-			<value id="6500k"  value="0x1"/>
-			<value id="9300k"  value="0x2"/>
-		</control>
-
-		<control id="tlpurity" address="0xF1"/>
-		<control id="trpurity" address="0xF2"/>
-		<control id="blpurity" address="0xF4"/>
-		<control id="brpurity" address="0xF3"/>
-
 		<control id="language" type="list" address="0x68">
 			<value id="chinese" value="0"/>
 			<value id="english" value="1"/>
@@ -29,5 +21,5 @@
 <!--		<control id="vbotmisconvergence" address="0xF7"/>	-->
 
 	</controls>
-	<include file="VESA"/>
+	<include file="SUNcrt.xml"/>
 </monitor>

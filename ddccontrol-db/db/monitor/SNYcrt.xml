@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<monitor name="Sony standard CRT">
+	<controls>
+		<control id="colorpreset" address="0x14">
+			<value id="5000k"  value="0x0"/>
+			<value id="6500k"  value="0x1"/>
+			<value id="9300k"  value="0x2"/>
+		</control>
+
+		<control id="tlpurity" address="0xF1"/>
+		<control id="trpurity" address="0xF2"/>
+		<control id="blpurity" address="0xF4"/>
+		<control id="brpurity" address="0xF3"/>
+	</controls>
+	<include file="VESA"/>
+</monitor>

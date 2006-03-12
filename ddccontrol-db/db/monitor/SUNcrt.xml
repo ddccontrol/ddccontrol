@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="SUN standard CRT">
+	<include file="SNYcrt.xml"/>
+</monitor>

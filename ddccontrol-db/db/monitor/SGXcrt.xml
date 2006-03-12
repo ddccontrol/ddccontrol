@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="SGI standard CRT">
+	<include file="VESA"/>
+</monitor>

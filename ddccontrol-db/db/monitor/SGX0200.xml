@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--- Two monitors on the same PNP id ?? Really strange... -->
+<monitor name="SGI GDM-5011P or GDM-5411">
+	<!--- SGI GDM-5011P : (prot(monitor)  type(crt) model(SGX0002 ) edid
+	bin(128(################################################################################################################################))
+	cmds(01020304050608090A0B0C4F)vcp(00010810121416181A20222426283032384042445660686C6E70E0F1F2F3F4) vcpname(14(Color1 Color2 Color3)))
+	-->
+	<!--- SGI GDM-5411 (invalid EDID) : (prot(monitor)  type(crt) model( SGX0002           edid
+	bin(128(################################################################################################################################))
+	cmds(01020304050608090A0B0C4F)vcp(00010810121416181A20222426283032384042445456686C6E70E0E2F1F2F3F4F5F6F7)
+	-->
+	<caps add="(vcp(00010810121416181A20222426283032384042445660686C6E70E0F1F2F3F4))"/> <!--- ddccontrol <= 0.4.1 do not support binary content in CAPS strings -->
+
+	<!--- Control 0x68: +/1/5 C [Language], but what the values mean ? -->
+
+	<include file="SGXcrt"/>
+</monitor>
