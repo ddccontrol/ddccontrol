@@ -606,7 +606,7 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 		else if (caps_str[pos] != ' ')
 		{
 			if (level == 1) {
-				if (strncmp(caps_str+pos, "vcp", 3) == 0) {
+				if ((strncmp(caps_str+pos, "vcp(", 4) == 0) || (strncmp(caps_str+pos, "vcp ", 4) == 0)) {
 					svcp = 1;
 					pos += 2;
 				}
@@ -639,7 +639,10 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				buf[1] = caps_str[++pos];
 				buf[2] = 0;
 				ind = strtol(buf, &endptr, 16);
-				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
+				if (*endptr != 0) {
+					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					return -1;
+				}
 				if (add) {
 					caps->vcp[ind] = malloc(sizeof(struct vcp_entry));
 					caps->vcp[ind]->values_len = -1;
@@ -658,7 +661,10 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				}
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
-				DDCCI_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int, invalid CAPS."));
+				if (*endptr != 0) {
+					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					return -1;
+				}
 				if (add) {
 					if (caps->vcp[ind]->values_len == -1) {
 						caps->vcp[ind]->values_len = 1;
@@ -757,7 +763,7 @@ int ddcci_caps(struct monitor* mon)
 
 #if 0
 	/* Test CAPS with binary data */
-	realloc(mon->caps.raw_caps, 2048);
+	mon->caps.raw_caps = realloc(mon->caps.raw_caps, 2048);
 	strcpy(mon->caps.raw_caps, "( prot(monitor) type(crt) edid bin(128(");
 	bufferpos = strlen(mon->caps.raw_caps);
 	for (i = 0; i < 128; i++) {
