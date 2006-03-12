@@ -1,7 +1,15 @@
+2006-03-12 14:54  nboichat
+
+	* db/: .cvsignore, monitor/SGX0200.xml, monitor/SGXcrt.xml,
+	  monitor/SNYcrt.xml, monitor/SUN0577.xml, monitor/SUNcrt.xml: Add
+	  SGI GDM-5011P and GDM-5411, and fix SUN GDM-5410.
+
 2006-03-08 20:54  nboichat
 
 	* db/Makefile.in, po/ddccontrol-db.pot: Prepare release 20060308
 	  (and CVS cleanup)
+
+2006-03-08 20:52  tag Release-20060308
 
 2006-03-08 20:52  nboichat
 
