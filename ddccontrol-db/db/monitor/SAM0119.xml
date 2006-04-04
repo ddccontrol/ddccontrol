@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!---Samsung 797MB is a CRT 
+(prot(monitor)type(crt)model(LEO96k(LEO Series))cmds(01 02 03 E3 F3)
+vcp(01 05 06 08 10 0B 0C 12 14(1 8 5 4) 16 18 1A 20 22 24 26 30 32 3A 40 42 44 
+46 48 4a 4c 6C 6E 70 AC AE B0 E5 E6 E7 56 58 DC(1 2 3 5))vcpname(14(9300 6500)))0
+-->
+<monitor name="Samsung SyncMaster 797MB" init="standard">
+	<include file="SAM0109"/>
+</monitor>
