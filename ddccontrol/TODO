@@ -6,6 +6,8 @@ Nicolas:
  - Use rsync for SF file transfers.
 
 BUGS:
+ - Fix Samsung 720T (not detected as LCD as type is "LCD CM")
+
  - When changing a control value quickly (moving the mouse outside the control),
    the value on the scale does not correspond to the real value.
  - "My only criticism is that the slider
