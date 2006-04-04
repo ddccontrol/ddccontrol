@@ -21,5 +21,5 @@ cmds(01020304050608090A0B0C4F)vcp(00010810121416181A2022242628303238404244545668
 <!--		<control id="vbotmisconvergence" address="0xF7"/>	-->
 
 	</controls>
-	<include file="SUNcrt.xml"/>
+	<include file="SUNcrt"/>
 </monitor>
