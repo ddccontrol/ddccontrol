@@ -1,5 +1,93 @@
 <appendix id="techdocs">
 <title>Documents for developers</title>
+<sect1 id="translators">
+<title>Translation (I18N) guide</title>
+<para>Author: Nicolas Boichat &lt;nicolas -at- boichat.ch&gt;</para>
+<para>
+You want to translate ddccontrol to your favorite language? Then, this guide is for you!
+</para>
+<para>
+The distribution is splitted in two packages, <filename>ddccontrol</filename>
+(the main program), and <filename>ddccontrol-db</filename> (monitor database).
+</para>
+<para>
+Tools you need: <filename>cvs</filename>,
+<filename>automake</filename>/<filename>autoconf</filename>,
+<filename>gettext</filename>, <filename>make</filename>,
+<filename>poedit</filename> (or another tool, or a simple text editor).
+</para>
+<para>
+First, you need to check-out the sources from the CVS repository
+(see
+<ulink url="http://sourceforge.net/cvs/?group_id=117933">project CVS page</ulink>,
+Anonymous CVS Access section). Note you need to perform this operation,
+and the following ones, on both ddccontrol and ddccontrol-db modules (there are
+strings to translate in the main program, and in the database).
+</para>
+<para>
+Then run:
+<screen format='linespecific'>
+# ./autogen.sh
+# ./configure (maybe you will need some devel package to make it working)
+# cd po
+# make update-po
+</screen>
+</para>
+<para>
+If the po file for your language doesn't exist, simply copy
+<filename>ddccontrol.pot</filename> to <filename>LANG.po</filename> 
+(for example, for French, it is <filename>fr.po</filename>) and update the
+fields in it (like <sgmltag class="attribute">AUTHOR</sgmltag>,
+<sgmltag class="attribute">CHARSET</sgmltag>, etc...)
+</para>
+<para>
+Then open your <filename>.po</filename> file, and translate the strings! I
+recommend that you use a tool like <ulink url="http://poedit.sf.net/">poedit</ulink>
+to edit it, as it warns visually you when strings are wrong, and offers spellcheck,
+but it's your choice .-)
+</para>
+<para>
+When you are finished, it would be nice to test if it works by installing and
+running the software, but it is not mandatory, particularly if you don't have
+the needed hardware (i.e. a monitor supporting DDC/CI).
+</para>
+<para>
+Then, I give you two possibilities for sending the completed
+<filename>.po</filename> files, either you send them to
+<ulink url="mailto:bacula-devel@lists.sourceforge.net">bacula-devel</ulink>,
+or I give you a CVS write access (in this case, please send me your SourceForge
+ID). The later (CVS) is of course my prefered, as it is less work for me, but if
+you don't feel comfortable with CVS, and don't have time to learn, e-mail is ok too.
+</para>
+<para>
+I suggest that you subscribe to <filename>ddccontrol-devel</filename>,
+particularly if you have problems to translate some technical strings. So
+I don't have to explain many times the same terms to all translators .-)
+</para>
+<para>
+Also, as some of you probably have a better English level than mine, it
+would be really nice to report English mistakes in the original strings
+if you find some.
+</para>
+<para>
+List of languages with active translators:
+<itemizedlist mark='bullet'>
+<listitem>
+French: Nicolas Boichat
+</listitem>
+<listitem>
+Russian: Sergei Epiphanov
+</listitem>
+</itemizedlist>
+</para>
+<para>
+I hope my explanations were complete, otherwise do not hesitate to contact me
+(cc-ing the devel list) if you have questions.
+</para>
+<para>
+THANK YOU.
+</para>
+</sect1>
 <sect1 id="dbstruct">
 <title>Monitor database structure</title>
 <para>The monitor database is written in XML, it can be found in the
