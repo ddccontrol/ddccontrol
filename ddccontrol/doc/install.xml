@@ -25,7 +25,9 @@
 packages, which are not usually installed. For example, on Debian, their names
 are <filename>libxml2-dev</filename>, <filename>pciutils-dev</filename> and
 <filename>libgtk2.0-dev</filename>. Others distributions probably have similar
-packages names.</para>
+packages names. On Fedora Core 5, you will also need
+<filename>gnome-panel-devel</filename> package.
+</para>
 <note>
 <para>
 You don't need pci-utils if you don't use direct PCI memory access, and you 
