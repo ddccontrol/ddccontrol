@@ -465,10 +465,10 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 
 	if ((_buf[1] & MAGIC_2) == 0) {
+		/* Fujitsu Siemens P19-2 and NEC LCD 1970NX send wrong magic when reading caps. */
 		if (!mon->probing || verbosity) {
-			fprintf(stderr, _("Invalid response, magic is 0x%02x\n"), _buf[1]);
+			fprintf(stderr, _("Non-fatal error: Invalid response, magic is 0x%02x\n"), _buf[1]);
 		}
-		return -1;
 	}
 
 	_len = _buf[1] & ~MAGIC_2;
