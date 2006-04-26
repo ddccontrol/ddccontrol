@@ -206,10 +206,12 @@ int main(int argc, char **argv)
 	int verbosity = 0;
 	int probe = 0;
 	
+#ifdef HAVE_GETTEXT
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bindtextdomain("ddccontrol-db", LOCALEDIR);
 	textdomain(PACKAGE);
+#endif
 	
 	fprintf(stdout,
 		_("ddccontrol version %s\n"

@@ -21,13 +21,18 @@
 #ifndef DDCCI_H
 #define DDCCI_H
 
-//#include "config.h"
+#include "config.h"
 
+#ifdef HAVE_GETTEXT
 #include <libintl.h>
 #include <locale.h>
 #define _(String) gettext (String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
+#else
+#define _(String) String
+#define N_(String) String
+#endif
 
 #include <time.h>
 #include <sys/time.h>

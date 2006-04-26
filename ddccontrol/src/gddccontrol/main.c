@@ -378,13 +378,15 @@ int main( int   argc, char *argv[] )
 	mon = NULL;
 	monitor_manager = NULL;
 	
+#ifdef HAVE_GETTEXT
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bindtextdomain("ddccontrol-db", LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 	bind_textdomain_codeset("ddccontrol-db", "UTF-8");
 	textdomain(PACKAGE);
-	
+#endif
+
 	while ((i=getopt(argc,argv,"v")) >= 0)
 	{
 		switch(i) {

@@ -22,6 +22,9 @@
  * Includes
  * ****************/
 
+/* config */
+#include "config.h"
+
 /* libddccontrol */
 #include "ddcci.h"
 #include "conf.h"
@@ -41,9 +44,8 @@
 /* libddccontrol ipc */
 #include "ddcpci-ipc.h"
 
-/* config */
-#include "config.h"
-
+#define GETTEXT_PACKAGE PACKAGE
+#define GNOMELOCALEDIR LOCALEDIR
 
 /* ****************
  * Constants
