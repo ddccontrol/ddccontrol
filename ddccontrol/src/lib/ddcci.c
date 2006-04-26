@@ -27,10 +27,15 @@
 #include <sys/ioctl.h>
 #include <string.h>
 
+#ifdef HAVE_I2C_DEV
 #include "i2c-dev.h"
+#endif
 #include <unistd.h>
 #include <dirent.h>
 #include <stdlib.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "ddcci.h"
 
@@ -81,15 +86,6 @@ int get_verbosity() {
 	return verbosity;
 }
 
-/* IPC functions */
-#ifdef HAVE_DDCPCI
-#include "ddcpci-ipc.h"
-#include <sys/msg.h>
-#include <sys/ipc.h>
-
-#define DDCPCI_RETRY_DELAY 10000 /* in us */
-#define DDCPCI_RETRIES 100000
-
 /* debugging */
 static void dumphex(FILE *f, char *text, unsigned char *buf, int len)
 {
@@ -125,6 +121,15 @@ static void dumphex(FILE *f, char *text, unsigned char *buf, int len)
 		fprintf(f, "\n");
 	}
 }
+
+/* IPC functions */
+#ifdef HAVE_DDCPCI
+#include "ddcpci-ipc.h"
+#include <sys/msg.h>
+#include <sys/ipc.h>
+
+#define DDCPCI_RETRY_DELAY 10000 /* in us */
+#define DDCPCI_RETRIES 100000
 
 static int msqid = -2;
 
@@ -246,7 +251,10 @@ void ddcci_release() {
 /* return 0 on success, -1 on failure */
 static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf, unsigned char len)
 {
-	if (mon->type == dev) {
+	switch (mon->type) {
+#ifdef HAVE_I2C_DEV
+	case dev:
+	{	
 		int i;
 		struct i2c_rdwr_ioctl_data msg_rdwr;
 		struct i2c_msg             i2cmsg;
@@ -275,8 +283,10 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 
 		return i;
 	}
+#endif
 #ifdef HAVE_DDCPCI
-	else if (mon->type == pci) {
+	case pci:
+	{
 		struct query qdata;
 		memset(&qdata, 0, sizeof(struct query));
 		qdata.mtype = 1;
@@ -308,7 +318,7 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		return adata.status;
 	}
 #endif
-	else {
+	default:
 		return -1;
 	}
 }
@@ -317,7 +327,10 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 /* return -1 on failure */
 static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, unsigned char len)
 {
-	if (mon->type == dev) {
+	switch (mon->type) {
+#ifdef HAVE_I2C_DEV
+	case dev:
+	{
 		struct i2c_rdwr_ioctl_data msg_rdwr;
 		struct i2c_msg             i2cmsg;
 		int i;
@@ -345,8 +358,10 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 
 		return i;
 	}
+#endif
 #ifdef HAVE_DDCPCI
-	else if (mon->type == pci) {
+	case pci:
+	{
 		int ret;
 		struct query qdata;
 		memset(&qdata, 0, sizeof(struct query));
@@ -381,7 +396,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		return ret - ANSWER_SIZE;
 	}
 #endif
-	else {
+	default:
 		return -1;
 	}
 }

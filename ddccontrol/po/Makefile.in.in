@@ -73,7 +73,7 @@ EXTRA_DISTFILES = POTFILES.skip Makevars LINGUAS
 POTFILES = \
 
 CATALOGS = @CATALOGS@
-CATOBJEXT = .gmo
+CATOBJEXT = @CATOBJEXT@
 
 .SUFFIXES:
 .SUFFIXES: .c .o .po .pox .gmo .mo .msg .cat

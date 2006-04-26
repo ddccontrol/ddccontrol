@@ -22,37 +22,48 @@ AC_LANG([C])
 AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
-AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+# /dev/i2c-* check
+i2c_dev_val=1
+AC_ARG_ENABLE(i2cdev,
+  [  --disable-i2c	  enable /dev/i2c-* busses (enabled) ],
+  [if test x$enableval = xno; then
+    i2c_dev_val=0
+  fi])
 
-support_i2c_dev=no
-AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
-AC_COMPILE_IFELSE([
-[#include <linux/types.h>]
-[#include <linux/i2c-dev.h>]
-[const int a = I2C_RDWR + I2C_M_RD;]
-[struct i2c_msg i2cmsg;]
-],
-support_i2c_dev=yes
-AC_MSG_RESULT(yes),
-AC_MSG_RESULT(no)
-)
+if test "x$i2c_dev_val" = "x1" ; then
+	AC_DEFINE_UNQUOTED(HAVE_I2C_DEV, 1, [Define if ddccontrol is built with /dev/i2c-* support.])
+	AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
 
-if test "x$support_i2c_dev" = "xno" ; then
-  AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
-  AC_COMPILE_IFELSE([
-  [#define HAVE_BUGGY_I2C_DEV 1]
-  [#include "src/lib/i2c-dev.h"]
-  [const int a = I2C_RDWR + I2C_M_RD;]
-  [struct i2c_msg i2cmsg;]
-  ],
-  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [Define if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
-  support_i2c_dev=yes
-  AC_MSG_RESULT(yes),
-  AC_MSG_RESULT(no)
-  )
-  if test "x$support_i2c_dev" = "xno" ; then
-   AC_MSG_ERROR([Unable to use neither linux/i2c-dev.h nor src/lib/i2c-dev.h on your system, kernel headers may be more buggy than usual, or inexistant, try to (re-)install kernel headers.], [1])
-  fi
+	support_i2c_dev_works=no
+	AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
+	AC_COMPILE_IFELSE([
+	[#include <linux/types.h>]
+	[#include <linux/i2c-dev.h>]
+	[const int a = I2C_RDWR + I2C_M_RD;]
+	[struct i2c_msg i2cmsg;]
+	],
+	support_i2c_dev_works=yes
+	AC_MSG_RESULT(yes),
+	AC_MSG_RESULT(no)
+	)
+
+	if test "x$support_i2c_dev_noworkaround" = "xno" ; then
+	  AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
+	  AC_COMPILE_IFELSE([
+	  [#define HAVE_BUGGY_I2C_DEV 1]
+	  [#include "src/lib/i2c-dev.h"]
+	  [const int a = I2C_RDWR + I2C_M_RD;]
+	  [struct i2c_msg i2cmsg;]
+	  ],
+	  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [Define if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
+	  support_i2c_dev_works=yes
+	  AC_MSG_RESULT(yes),
+	  AC_MSG_RESULT(no)
+	  )
+	  if test "x$support_i2c_dev_works" = "xno" ; then
+	   AC_MSG_ERROR([Unable to use neither linux/i2c-dev.h nor src/lib/i2c-dev.h on your system, kernel headers may be more buggy than usual, or inexistant, try to (re-)install kernel headers.], [1])
+	  fi
+	fi
 fi
 
 AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.])
@@ -81,14 +92,12 @@ AC_ARG_ENABLE(ddcpci,
   fi])
 
 DDCPCI=
-ddcpci_val=0
 if test x$support_ddcpci = xyes; then
    AC_CHECK_HEADERS([pci/pci.h], [], [AC_MSG_ERROR([PCI utils headers not found, please install pci-utils.], [1])], [])
    AC_CHECK_LIB([pci], [pci_alloc], [], [AC_MSG_ERROR([PCI utils library not found, please install pci-utils.], [1])])
    DDCPCI=ddcpci
-   ddcpci_val=1
+   AC_DEFINE_UNQUOTED(HAVE_DDCPCI, 1, [Define if ddccontrol is built with ddcpci support.])
 fi
-AC_DEFINE_UNQUOTED(HAVE_DDCPCI, $ddcpci_val, [Define if ddccontrol is built with ddcpci support.])
 
 AC_SUBST([DDCPCI])
 
@@ -132,8 +141,11 @@ AC_ARG_ENABLE(	gnome-applet,
 
 GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
-	GNOME_APPLET="gnome-ddcc-applet"
-	PKG_CHECK_MODULES(GNOME, libpanelapplet-2.0 >= 2.10,,GNOME_APPLET="")
+	if pkg-config --atleast-version=2.10 libpanelapplet-2.0 ; then
+		GNOME_APPLET="gnome-ddcc-applet"
+	else
+		GNOME_APPLET=""
+	endif
     GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
     GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
 fi
@@ -207,7 +219,7 @@ AC_SUBST(XSLTPROC_FLAGS)
 AC_SUBST(DOCBOOK_ROOT)
 AC_SUBST(DOC)
 
-AC_CONFIG_FILES([
+AC_CONFIG_FILES([ m4/Makefile
 	po/Makefile.in
 	Makefile
 	src/Makefile

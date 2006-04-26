@@ -38,6 +38,9 @@
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
+/* Define if ddccontrol is built with /dev/i2c-* support. */
+#undef HAVE_I2C_DEV
+
 /* Define if you have the iconv() function. */
 #undef HAVE_ICONV
 
