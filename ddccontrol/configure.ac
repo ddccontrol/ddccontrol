@@ -23,14 +23,14 @@ AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
 # /dev/i2c-* check
-i2c_dev_val=1
+support_i2c_dev=yes
 AC_ARG_ENABLE(i2cdev,
   [  --disable-i2c	  enable /dev/i2c-* busses (enabled) ],
   [if test x$enableval = xno; then
-    i2c_dev_val=0
+    support_i2c_dev=no
   fi])
 
-if test "x$i2c_dev_val" = "x1" ; then
+if test "x$support_i2c_dev" = "xyes" ; then
 	AC_DEFINE_UNQUOTED(HAVE_I2C_DEV, 1, [Define if ddccontrol is built with /dev/i2c-* support.])
 	AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
 
@@ -47,7 +47,7 @@ if test "x$i2c_dev_val" = "x1" ; then
 	AC_MSG_RESULT(no)
 	)
 
-	if test "x$support_i2c_dev_noworkaround" = "xno" ; then
+	if test "x$support_i2c_dev_works" = "xno" ; then
 	  AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
 	  AC_COMPILE_IFELSE([
 	  [#define HAVE_BUGGY_I2C_DEV 1]
@@ -143,11 +143,9 @@ GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
 	if pkg-config --atleast-version=2.10 libpanelapplet-2.0 ; then
 		GNOME_APPLET="gnome-ddcc-applet"
-	else
-		GNOME_APPLET=""
-	endif
-    GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
-    GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+	    GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+	    GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+	fi
 fi
 
 
@@ -219,7 +217,7 @@ AC_SUBST(XSLTPROC_FLAGS)
 AC_SUBST(DOCBOOK_ROOT)
 AC_SUBST(DOC)
 
-AC_CONFIG_FILES([ m4/Makefile
+AC_CONFIG_FILES([
 	po/Makefile.in
 	Makefile
 	src/Makefile
