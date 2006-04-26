@@ -38,7 +38,7 @@ void cancelprofile_callback(GtkWidget *widget, gpointer data)
 
 void saveprofile_callback(GtkWidget *widget, gpointer data)
 {
-	char controls[256];
+	unsigned char controls[256];
 	int size;
 	struct profile* profile;
 	
@@ -186,7 +186,7 @@ void fill_profile_manager() {
 	table = gtk_table_new(count == 0 ? 1 : (count*2)-1, 5, FALSE);
 	
 	while (profile != NULL) {
-		label = gtk_label_new(profile->name);
+		label = gtk_label_new((gchar*)profile->name);
 		gtk_table_attach(GTK_TABLE(table), label, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 5);
 		gtk_widget_show(label);
 		
@@ -372,7 +372,7 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 							{
 								if (value_db->value == profile->value[i])
 								{
-									tmp3 = g_strdup(value_db->name);
+									tmp3 = g_strdup((gchar*)value_db->name);
 								}
 							}
 							if (!tmp)
@@ -476,7 +476,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	gtk_widget_show(label);
 	
 	entry = gtk_entry_new();
-	gtk_entry_set_text(GTK_ENTRY(entry), profile->name);
+	gtk_entry_set_text(GTK_ENTRY(entry), (gchar*)profile->name);
 	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, FALSE, 5);
 	g_signal_connect(GTK_ENTRY(entry), "changed", G_CALLBACK(entry_modified_callback), dialog);
 	gtk_widget_show(entry);

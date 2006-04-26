@@ -58,7 +58,7 @@ struct caps {
 struct monitor {
 	int fd;
 	unsigned int addr;
-	unsigned char pnpid[8];
+	char pnpid[8];
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
 	struct monitor_db* db;

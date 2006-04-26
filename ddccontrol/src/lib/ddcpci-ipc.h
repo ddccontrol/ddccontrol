@@ -58,7 +58,7 @@ struct query {
 	int addr;
 	int flags;
 	int len; /* only for read queries, number of bytes to read */
-	char buffer[MAX_BUFFER_SIZE];
+	unsigned char buffer[MAX_BUFFER_SIZE];
 };
 
 /* ddcpci to ddccontrol messages (answers) */
@@ -68,7 +68,7 @@ struct answer {
 	
 	int last; /* 0 - Last message, no bus to read, 1 - Other messages follows (for QUERY_LIST) */
 	struct i2c_bus bus; /* For answers to QUERY_LIST */
-	char buffer[MAX_BUFFER_SIZE]; /* For answers to QUERY_DATA, read operations */
+	unsigned char buffer[MAX_BUFFER_SIZE]; /* For answers to QUERY_DATA, read operations */
 };
 
 #endif //DDCPCI_IPC_H

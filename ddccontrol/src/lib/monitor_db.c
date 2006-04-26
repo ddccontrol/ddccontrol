@@ -105,13 +105,13 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"value"))) {
 					mon_valueid = xmlGetProp(cur, BAD_CAST "id");
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
-						current_value->id   = xmlCharStrdup(options_valueid);
-						current_value->name = _D(options_valuename);
+						current_value->id   = xmlStrdup(options_valueid);
+						current_value->name = _D((char*)options_valuename);
 						
 						tmp = xmlGetProp(cur, BAD_CAST "value");
 						
 						DDCCI_DB_RETURN_IF(tmp == NULL, -1, _("Can't find value property."), cur);
-						current_value->value = strtol(tmp, &endptr, 0);
+						current_value->value = strtol((char*)tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int."), cur);
 						xmlFree(tmp);
 						
@@ -228,7 +228,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
 						tmp = xmlGetProp(cur, BAD_CAST "address");
 						DDCCI_DB_RETURN_IF(tmp == NULL, 0, _("Can't find address property."), cur);
-						current_control->address = strtol(tmp, &endptr, 0);
+						current_control->address = strtol((char*)tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF(*endptr != 0, 0, _("Can't convert address to int."), cur);
 						xmlFree(tmp);
 						
@@ -250,13 +250,13 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 							break;
 						}
 						
-						current_control->id   = xmlCharStrdup(options_ctrlid);
-						current_control->name = _D(options_ctrlname);
+						current_control->id   = xmlStrdup(options_ctrlid);
+						current_control->name = _D((char*)options_ctrlname);
 						current_control->refresh = options_refresh;
 						
 						tmp = xmlGetProp(cur, BAD_CAST "delay");
 						if (tmp) {
-							current_control->delay = strtol(tmp, &endptr, 10);
+							current_control->delay = strtol((char*)tmp, &endptr, 10);
 							DDCCI_DB_RETURN_IF(*endptr != 0, 0, _("Can't convert delay to int."), cur);
 							xmlFree(tmp);
 						}
@@ -277,7 +277,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
 								struct value_db *current_value = malloc(sizeof(struct value_db));
 								current_value->id = xmlCharStrdup("default");
-								current_value->name = _D(options_ctrlname);
+								current_value->name = _D((char*)options_ctrlname);
 								current_value->value = 0x01;
 								current_value->next = NULL;
 								current_control->value_list = current_value;
@@ -425,7 +425,7 @@ int ddcci_create_db_protected(
 			
 			options_groupname = xmlGetProp(group, BAD_CAST "name");
 			DDCCI_DB_RETURN_IF(options_groupname == NULL, 0,  _("Can't find name property."), group);
-			current_group->name = _D(options_groupname); /* Note: copy string, so we can free options_groupname */
+			current_group->name = _D((char*)options_groupname); /* Note: copy string, so we can free options_groupname */
 			xmlFree(options_groupname);
 			
 			struct subgroup_db *current_subgroup;
@@ -447,7 +447,7 @@ int ddcci_create_db_protected(
 				options_subgroupname = xmlGetProp(subgroup, BAD_CAST "name");
 				DDCCI_DB_RETURN_IF(options_subgroupname == NULL, 0,  _("Can't find name property."), subgroup);
 				
-				current_subgroup->name = _D(options_subgroupname); /* Note: copy string, so we can free options_subgroupname */
+				current_subgroup->name = _D((char*)options_subgroupname); /* Note: copy string, so we can free options_subgroupname */
 				xmlFree(options_subgroupname);
 				current_subgroup->pattern = xmlGetProp(subgroup, BAD_CAST "pattern");
 			}
@@ -464,9 +464,9 @@ int ddcci_create_db_protected(
 			xmlChar* add = xmlGetProp(mon_child, BAD_CAST "add");
 			DDCCI_DB_RETURN_IF(!remove && !add, 0,  _("Can't find add or remove property in caps."), mon_child);
 			if (remove)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(remove, caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps((char*)remove, caps, 0) <= 0, 0,  _("Invalid remove caps."), mon_child);
 			if (add)
-				DDCCI_DB_RETURN_IF(ddcci_parse_caps(add, caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
+				DDCCI_DB_RETURN_IF(ddcci_parse_caps((char*)add, caps, 1) <= 0, 0,  _("Invalid add caps."), mon_child);
 		}
 		else if (!xmlStrcmp(mon_child->name, (const xmlChar *) "include")) {
 			controls_or_include = 1;
@@ -478,7 +478,7 @@ int ddcci_create_db_protected(
 			
 			xmlChar* file = xmlGetProp(mon_child, BAD_CAST "file");
 			DDCCI_DB_RETURN_IF(file == NULL, 0,  _("Can't find file property."), mon_child);
-			if (!ddcci_create_db_protected(mon_db, file, caps, recursionlevel+1, defined, faulttolerance)) {
+			if (!ddcci_create_db_protected(mon_db, (char*)file, caps, recursionlevel+1, defined, faulttolerance)) {
 				xmlFree(file);
 				return 0;
 			}
@@ -749,7 +749,7 @@ int ddcci_init_db(char* usedatadir) {
 		return 0;
 	}
 	
-	iversion = strtol(version, &endptr, 0);
+	iversion = strtol((char*)version, &endptr, 0);
 	DDCCI_DB_RETURN_IF(*endptr != 0, 0, _("Can't convert version to int."), cur);
 	
 	if (iversion > DBVERSION) {

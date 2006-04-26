@@ -56,7 +56,7 @@ void create_monitor_manager(struct monitorlist* monitor);
 void delete_monitor_manager();
 
 void show_profile_checks(gboolean show);
-int get_profile_checked_controls(char* controls);
+int get_profile_checked_controls(unsigned char* controls);
 
 void refresh_all_controls(GtkWidget *widget, gpointer nval);
 

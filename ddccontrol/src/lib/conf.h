@@ -39,13 +39,13 @@ struct profile {
 	xmlChar* pnpid;
 	
 	int size; /* Number of controls */
-	char address[256];
-	short value[256];
+	unsigned char address[256];
+	unsigned short value[256];
 	
 	struct profile* next; /* Next profile in the list (used by get_all_profiles) */
 };
 
-struct profile* ddcci_create_profile(struct monitor* mon, const char* address, int size);
+struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* address, int size);
 int ddcci_apply_profile(struct profile* profile, struct monitor* mon);
 
 void ddcci_set_profile_name(struct profile* profile, const char* name);

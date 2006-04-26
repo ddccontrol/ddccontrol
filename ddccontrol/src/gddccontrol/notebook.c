@@ -330,7 +330,7 @@ void show_profile_checks(gboolean show) {
 }
 
 /* returns: Number of selected controls */
-int get_profile_checked_controls(char* controls) {
+int get_profile_checked_controls(unsigned char* controls) {
 	int current = 0;
 	
 	GSList* list = all_controls;
@@ -414,7 +414,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 				struct value_db* value;
 				for (value = control->value_list; value != NULL; value = value->next)
 				{
-					GtkWidget* button = gtk_button_new_with_label(value->name);
+					GtkWidget* button = gtk_button_new_with_label((char*)value->name);
 					g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(command_callback),value);
 					g_object_set_data(G_OBJECT(button),"ddc_control",control);
 					gtk_widget_show(button);
@@ -429,7 +429,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 				GSList* group = NULL;
 				for (value = control->value_list; value != NULL; value = value->next)
 				{
-					GtkWidget* radio = gtk_radio_button_new_with_label(group, value->name);
+					GtkWidget* radio = gtk_radio_button_new_with_label(group, (char*)value->name);
 					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (value->value == currentDefault));
 					g_object_set_data(G_OBJECT(radio), "ddc_value", value);
 					gtk_widget_show(radio);
@@ -479,7 +479,7 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	struct control_db* control;
 	for (control = subgroup->control_list; control != NULL; control = control->next)
 	{
-		frame = gtk_frame_new(control->name);
+		frame = gtk_frame_new((char*)control->name);
 		gtk_container_set_border_width(GTK_CONTAINER(frame),5);
 		createControl(frame,control);
 		gtk_widget_show(frame);
@@ -505,7 +505,7 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	gtk_widget_show(vbox);
 	
 	GtkWidget* label;
-	label = gtk_label_new(subgroup->name);
+	label = gtk_label_new((char*)subgroup->name);
 	gtk_widget_show(label);
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), mainvbox, label);
 	gtk_widget_show(mainvbox);

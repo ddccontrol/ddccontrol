@@ -91,7 +91,7 @@ int get_verbosity() {
 #define DDCPCI_RETRIES 100000
 
 /* debugging */
-static void dumphex(FILE *f, unsigned char *text, unsigned char *buf, int len)
+static void dumphex(FILE *f, char *text, unsigned char *buf, int len)
 {
 	int i, j;
 
@@ -1039,8 +1039,8 @@ void ddcci_probe_device(char* filename, struct monitorlist** current, struct mon
 		(*current)->filename = filename;
 		(*current)->supported = (ret == 0);
 		if (mon.db) {
-			(*current)->name = malloc(strlen(mon.db->name)+1);
-			strcpy((char*)(*current)->name, mon.db->name);
+			(*current)->name = malloc(strlen((char*)mon.db->name)+1);
+			strcpy((char*)(*current)->name, (char*)mon.db->name);
 		}
 		else {
 			(*current)->name = malloc(32);

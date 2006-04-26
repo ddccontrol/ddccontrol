@@ -226,7 +226,7 @@ int ddcci_save_list(struct monitorlist* monlist) {
 
 /* Profile functions */
 
-struct profile* ddcci_create_profile(struct monitor* mon, const char* address, int size)
+struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* address, int size)
 {
 	int retry, i;
 	

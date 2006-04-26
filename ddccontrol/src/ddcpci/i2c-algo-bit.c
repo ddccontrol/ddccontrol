@@ -349,8 +349,8 @@ static inline int try_address(struct i2c_algo_bit_data *adap, unsigned char addr
 
 int sendbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 {
-	char c;
-	const char *temp = msg->buf;
+	unsigned char c;
+	const unsigned char *temp = msg->buf;
 	int count = msg->len;
 	unsigned short nak_ok = msg->flags & I2C_M_IGNORE_NAK; 
 	int retval;
@@ -382,7 +382,7 @@ inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 {
 	int inval;
 	int rdcount=0;   	/* counts bytes read */
-	char *temp = msg->buf;
+	unsigned char *temp = msg->buf;
 	int count = msg->len;
 
 	while (count > 0) {
