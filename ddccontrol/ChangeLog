@@ -1,3 +1,9 @@
+2006-04-26 19:01  nboichat
+
+	* src/: ddccontrol/main.c, gddccontrol/main.c,
+	  gnome-ddcc-applet/ddcc-applet.c, lib/conf.c, lib/ddcci.h,
+	  lib/monitor_db.c: Allow building without gettext.
+
 2006-04-26 16:14  nboichat
 
 	* src/: ddcpci/i2c-algo-bit.c, gddccontrol/gprofile.c,
