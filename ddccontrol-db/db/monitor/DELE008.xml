@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<monitor name="Dell 2005FPW (Analog)" init="standard">
+	<!--- vcp(page0(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E B0 CC(2 3 4 6 0A) E3)asset_eep(40)mccs_ver(1.0)type(LCD): INVALID -->
+	<caps add="(vcp(04 05 06 08 0E 10 12 14(01 04 05 08 0B) 16 18 1A 1E 20 30 3E 60 B0 CC(2 3 4 6 A) E1)"/>
+	<include file="DELE009"/>
+</monitor>
+
