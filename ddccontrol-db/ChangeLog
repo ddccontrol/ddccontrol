@@ -1,3 +1,7 @@
+2006-06-19 18:28  nboichat
+
+	* db/monitor/: PHL0833.xml, SAM00A3.xml: Fix DB integrity.
+
 2006-06-19 18:25  nboichat
 
 	* po/Makefile.in.in: [no log message]
