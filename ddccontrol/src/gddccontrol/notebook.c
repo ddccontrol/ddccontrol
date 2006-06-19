@@ -678,13 +678,13 @@ void create_monitor_manager(struct monitorlist* monitor)
 				"using a generic profile for your monitor's manufacturer. Some controls "
 				"may not be supported, or may not work as expected.\n"));
 		}
-		else if (mon->fallback == 2) {
+		else { /*if (mon->fallback == 2) {*/
 			message = g_strdup(_(
 				"There is no support for your monitor in the database, but ddccontrol is "
 				"using a basic generic profile. Many controls will not be supported, and "
 				"some controls may not work as expected.\n"));
 		}
-		
+
 		gchar* tmp = g_strconcat("<span size='large' weight='ultrabold'>", _("Warning!"), "</span>\n\n", 
 				message, _(
 				"Please update ddccontrol-db, or, if you are already using the latest "
