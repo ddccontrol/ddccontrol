@@ -56,6 +56,17 @@ Multisync 2080UX+ (VGA and DVI inputs)
 </itemizedlist>
 </sect3>
 <sect3>
+<title>Philips</title>
+<itemizedlist mark='bullet'>
+<listitem>
+170C6
+</listitem>
+<listitem>
+200P6
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
 <title>Samsung</title>
 <itemizedlist mark='bullet'>
 <listitem>
@@ -66,6 +77,9 @@ SyncMaster 173P (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 173P Plus (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 173s
 </listitem>
 <listitem>
 SyncMaster 173T (VGA input only)
@@ -111,6 +125,9 @@ SyncMaster 913V
 </listitem>
 <listitem>
 SyncMaster 930BF (at least VGA input)
+</listitem>
+<listitem>
+SyncMaster 940B
 </listitem>
 <listitem>
 SyncMaster 960BF (VGA and DVI inputs)
