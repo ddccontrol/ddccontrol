@@ -1,3 +1,52 @@
+2006-06-19 18:25  nboichat
+
+	* po/Makefile.in.in: [no log message]
+
+2006-06-19 18:17  nboichat
+
+	* db/monitor/PHL0833.xml: Add support for Philips 200P6 (Thanks to
+	  podolany).
+
+2006-06-19 18:03  nboichat
+
+	* db/monitor/SAM01BB.xml: Add support for Samsung SyncMaster 940B
+	  (Thanks to Jörg Evers)
+
+2006-06-19 17:56  nboichat
+
+	* db/monitor/: PHLC011.xml, SAM00A3.xml: Add support for Samsung
+	  Syncmaster 173s (Thanks to Artur Flinta)
+
+2006-06-19 17:43  nboichat
+
+	* db/monitor/PHLC011.xml: Add support for Philips 170C6 (Thanks to
+	  Dmitry Artamonow)
+
+2006-05-08 08:16  nboichat
+
+	* db/monitor/DELE008.xml: Add support for Dell 2005FPW (Thanks to
+	  Christian Abegg)
+
+2006-04-04 22:06  nboichat
+
+	* db/monitor/SAM0109.xml: Fix Samsung 997mb comments.
+
+2006-04-04 22:06  nboichat
+
+	* db/monitor/SAM0149.xml: Add Samsung 720T (Thanks to Piotr)
+
+2006-04-04 22:05  nboichat
+
+	* db/monitor/SAM0119.xml: Add Samsung 797mb (Thanks to Evgeniy)
+
+2006-04-04 22:04  nboichat
+
+	* db/monitor/: SUN0577.xml, SUNcrt.xml: Fix Sun files.
+
+2006-03-22 19:44  nboichat
+
+	* db/monitor/SAM0197.xml: Add support for Samsung 173P+ (DVI).
+
 2006-03-12 14:54  nboichat
 
 	* db/: .cvsignore, monitor/SGX0200.xml, monitor/SGXcrt.xml,
