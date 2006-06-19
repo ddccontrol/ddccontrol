@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--- Samsung SyncMaster 173s has some partial DDC/CI support (no caps) -->
 <monitor name="Samsung Syncmaster 173s" init="standard">
-	<caps add="(vcp(10 12 16 18 1a 20 30 62 d0 d2))">
+	<caps add="(vcp(10 12 16 18 1a 20 30 62 d0 d2))"/>
 	<control id="fine"       address="0xd0"/>
 	<control id="coarse"     address="0xd2"/>
 	<!--- Control 0xdc: +/116/255   [???] -->
