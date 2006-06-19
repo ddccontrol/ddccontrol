@@ -1,3 +1,23 @@
+2006-06-19 18:48  nboichat
+
+	* doc/supportedmonitors.xml: Update doc
+
+2006-06-19 18:44  nboichat
+
+	* src/gddccontrol/notebook.c: Fix gcc 4.1.1 compilation warning.
+
+2006-04-26 19:54  nboichat
+
+	* configure.ac, po/Makefile.in.in,
+	  src/gnome-ddcc-applet/Makefile.am: Fix small problems added by
+	  the last commit.
+
+2006-04-26 19:11  nboichat
+
+	* configure.ac, po/Makefile.in.in, src/config.h.in,
+	  src/lib/ddcci.c: Allow disabling /dev/i2c-* devices (useful for
+	  OSes other than Linux)
+
 2006-04-26 19:01  nboichat
 
 	* src/: ddccontrol/main.c, gddccontrol/main.c,
@@ -38,8 +58,6 @@
 
 	* src/lib/ddcci.c: Allow binary data in CAPS.
 
-2006-03-10 19:24  tag Release-0_4_1
-
 2006-03-10 19:24  nboichat
 
 	* CheckList, NEWS: Prepare release 0.4.1
@@ -53,8 +71,6 @@
 2006-03-08 22:10  nboichat
 
 	* configure.ac, doc/main.xml: Prepare next version.
-
-2006-03-08 21:36  tag Release-0_4
 
 2006-03-08 21:36  nboichat
 
@@ -107,8 +123,6 @@
 	* configure.ac, doc/techdocs.xml, src/ddccontrol/main.c,
 	  src/lib/monitor_db.c, src/lib/monitor_db.h: Database version 3
 	  (support of generic profiles).
-
-2006-02-22 13:27  tag Before_db_version_3
 
 2006-02-22 13:27  nboichat
 
@@ -169,8 +183,6 @@
 2005-11-14 18:51  nboichat
 
 	* CheckList: Update CheckList
-
-2005-11-14 18:48  tag Release-0_3
 
 2005-11-14 18:48  nboichat
 
@@ -284,8 +296,6 @@
 	  src/gnome-ddcc-applet/ddcc-applet.h, src/lib/Makefile.in:
 	  intltool integration, menu entry
 
-2005-09-13 22:03  tag before_intltool
-
 2005-09-13 22:03  cs123
 
 	* src/: gnome-ddcc-applet/ddcc-applet.c, lib/Makefile.am: applet:
@@ -371,8 +381,6 @@
 	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
 	  src/lib/Makefile.in: made libddccontrol a shared library
 
-2005-08-18 15:14  tag before_shared_lib
-
 2005-08-18 15:14  nboichat
 
 	* src/: gddccontrol/main.c, gddccontrol/notebook.c,
@@ -386,8 +394,6 @@
 	* configure, configure.ac, doc/main.xml,
 	  src/gddccontrol/fspatterns.c: Add moire, clock and misconvergence
 	  patterns.
-
-2005-08-13 12:37  tag Release-0_2
 
 2005-08-13 12:37  nboichat
 
@@ -498,8 +504,6 @@
 
 	* src/lib/: ddcci.c, ddcci.h: Implement delay parameter.
 
-2005-07-28 18:20  tag Before_dbversion_2
-
 2005-07-28 18:20  nboichat
 
 	* doc/supportedgc.xml, src/gddccontrol/notebook.c: Restore buttons
@@ -540,8 +544,6 @@
 	* NEWS, configure, configure.ac, doc/main.xml,
 	  doc/supportedmonitors.xml, po/ru.gmo, po/ru.po: Update Russian
 	  translation.
-
-2005-07-15 15:47  tag Release-0_1_3
 
 2005-07-15 15:47  nboichat
 
@@ -623,8 +625,6 @@
 
 	* CheckList: [no log message]
 
-2005-06-08 18:44  tag Release-0_1_2
-
 2005-06-08 18:44  nboichat
 
 	* CheckList, NEWS, configure, configure.ac, doc/main.xml: Prepare
@@ -646,8 +646,6 @@
 	  src/gddccontrol/.cvsignore, src/gddccontrol/Makefile.in,
 	  src/gddccontrol/.deps/.cvsignore, src/lib/Makefile.in: Fix typo
 	  in config.h.
-
-2005-06-07 08:39  tag Release-0_1_1
 
 2005-06-07 08:39  nboichat
 
@@ -744,8 +742,6 @@
 
 	* doc/: Makefile.am, Makefile.in: Add style-fo.xsl to dist.
 
-2005-03-28 23:02  tag Release-0_1
-
 2005-03-28 23:02  nboichat
 
 	* doc/: .cvsignore, Makefile.am, Makefile.in, main.xml,
@@ -830,8 +826,6 @@
 	  controls are updated when list or command controls are toggeled
 	  - Restore buttons are temporaly removed
 
-2005-01-10 00:16  tag Before_new_gddccontrol_tag
-
 2005-01-10 00:16  nboichat
 
 	* configure, configure.ac, src/config.h.in,
@@ -915,8 +909,6 @@
 	  src/ddccontrol/Makefile.in, src/ddccontrol/main.c,
 	  src/gddccontrol/Makefile.in, src/lib/Makefile.am,
 	  src/lib/Makefile.in, src/lib/ddcci.c, src/lib/ddcci.h: -m
-
-2004-10-09 15:36  tag BEFORE_DDCPCI
 
 2004-10-09 15:36  nboichat
 
@@ -1094,8 +1086,6 @@
 
 	* .cvsignore, src/.cvsignore, src/ddccontrol/.cvsignore,
 	  src/lib/.cvsignore: Add .cvsignore files.
-
-2004-08-30 21:19  tag start
 
 2004-08-30 21:19  nboichat
 
