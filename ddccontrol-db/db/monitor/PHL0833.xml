@@ -2,6 +2,5 @@
 <monitor name="Philips 200P6" init="standard">
 	<!--- CAPS: prot(monitor)type(lcd)model(PHILIPS 200P6)cmds(01 02 03 07 0C 4E E3 F3)vcp(04 05 0E 10 12 14(01 02 05 08 0B) 16 18 1A 1E 20 30 3E 62 68(1) B6 C0)SmartManage(1.0) (INVALID, no surrounding parenthesis) -->
 	<caps add="(type(lcd)vcp(01 02 03 07 0C 4E E3 F3)vcp(04 05 0E 10 12 14(01 02 05 08 0B) 16 18 1A 1E 20 30 3E 62 68(1) B6 C0))"/>
-	<!--- Control 0x14: +/5/11   [???] Color Preset : unknown values -->
-	<include file="VESA"/>
+	<include file="PHLlcd"/>
 </monitor>
