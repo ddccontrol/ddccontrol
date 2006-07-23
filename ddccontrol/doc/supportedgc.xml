@@ -126,20 +126,25 @@ mailing lists (see <xref linkend="report"/>).</para>
 <sect1>
 <title>nVidia</title>
 <sect2>
-<title>Direct PCI memory access support</title>
-<para>Almost every nVidia cards work with direct PCI memory access, and this
-method is compatible with the nVidia proprietary drivers.</para>
-<para>To use it, you have nothing special to do, everything is done by 
-DDCcontrol.</para>
-</sect2>
-<sect2>
 <title><filename>/dev/i2c-*</filename> devices support</title>
-<note>To use <filename>/dev/i2c-*</filename> devices with nVidia cards, you must
-have a rather recent kernel (at least version 2.6.9).</note>
-<para>Most nVidia cards, starting with TNT, but excluding the most recent
-GeForce FX series, work with <filename>/dev/i2c-*</filename> devices. To use
-them, you must load the <filename>rivafb</filename> module by typing, as
-root:</para>
+<sect3>
+<title>Using proprietary drivers</title>
+<para>Starting with the proprietary drivers version 8762, nVidia provides access
+to the i2c bus through standard <filename>/dev/i2c-*</filename> interface.</para>
+<para>To use it, nothing special has to be done, just install and run the
+proprietary drivers. Then, when <filename>nvidia</filename> driver is loaded,
+the correct devices are accessible as with standard framebuffer drivers.</para>
+</sect3>
+<sect3>
+<title>Using <filename>rivafb</filename> or <filename>nvidiafb</filename></title>
+<para>Most nVidia cards, starting with TNT, work with
+<filename>/dev/i2c-*</filename> devices. To use them, you must load the
+<filename>nvidiafb</filename> (or <filename>rivafb</filename> for old cards)
+module by typing, as root:</para>
+<screen format="linespecific">
+# modprobe nvidiafb
+</screen>
+or
 <screen format="linespecific">
 # modprobe rivafb
 </screen>
@@ -150,27 +155,35 @@ I2C support are:</para>
 <menuchoice>
   <guimenu>Devices drivers</guimenu>
   <guimenuitem>Graphics support</guimenuitem>
-  <guimenuitem>Framebuffer support</guimenuitem>
-  <guimenuitem>nVidia Riva support</guimenuitem>
+  <guimenuitem>Support for frame buffer devices</guimenuitem>
+  <guimenuitem>nVidia Framebuffer support (or nVidia Riva support)</guimenuitem>
 </menuchoice>.
 </listitem>
 <listitem>
 <menuchoice>
   <guimenu>Devices drivers</guimenu>
   <guimenuitem>Graphics support</guimenuitem>
-  <guimenuitem>Framebuffer support</guimenuitem>
-  <guimenuitem>nVidia Riva support</guimenuitem>
+  <guimenuitem>Support for frame buffer devices</guimenuitem>
+  <guimenuitem>nVidia Framebuffer support (or nVidia Riva support)</guimenuitem>
   <guimenuitem>Enable DDC Support</guimenuitem>
 </menuchoice>.
 </listitem>
 </itemizedlist>
 <warning>
-<para>The <filename>rivafb</filename> kernel module is <emphasis>not</emphasis>
-compatible with the binary nVidia X drivers, which are the only drivers for
-nVidia cards to provide 3D acceleration.</para>
-<para>This is why we recommend that you use direct PCI memory access with 
-nVidia cards.</para>
+<para>These kernel modules is <emphasis>not</emphasis> compatible with binary
+nVidia X drivers, which are the only drivers for nVidia cards to provide 3D
+acceleration.</para>
+<para>This is why we recommend that you either use direct PCI memory access with 
+nVidia cards, or i2c-dev access through the proprietary drivers.</para>
 </warning>
+</sect3>
+</sect2>
+<sect2>
+<title>Direct PCI memory access support</title>
+<para>Almost every nVidia cards work with direct PCI memory access, and this
+method is compatible with the nVidia proprietary drivers.</para>
+<para>To use it, you have nothing special to do, everything is done by 
+DDCcontrol.</para>
 </sect2>
 <sect3>
 <title>nVidia cards support table</title>
@@ -182,14 +195,16 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <colspec colname='name' align="left"/>
 <colspec colname='i2c' align="center" class="yesno"/>
 <colspec colname='pci' align="center" class="yesno"/>
+<colspec colname='i2c2' align="center" class="yesno"/>
 <thead>
 <row>
   <entry morerows='1' valign='middle'>Name</entry>
-  <entry namest="i2c" nameend="pci" align="center">Works</entry>
+  <entry namest="i2c" nameend="i2c2" align="center">Works</entry>
 </row>
 <row>
-  <entry>dev</entry>
+  <entry>dev/framebuffer</entry>
   <entry>PCI</entry>
+  <entry>dev/proprietary</entry>
 </row>
 </thead>
 <tbody>
@@ -197,46 +212,55 @@ DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
   <entry>GeForce Ti 200</entry>
   <entry class="yes">Yes</entry>
   <entry class="yes">Yes</entry>
+  <entry class="yes">Yes</entry>
 </row>
 <row>
   <entry>GeForce FX 5600</entry>
   <entry class="no">No</entry>
   <entry class="yes">Yes</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>GeForce FX 5700</entry>
   <entry class="no">No</entry>
   <entry class="yes">Yes</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>GeForce FX 5700 LE</entry>
   <entry class="unknown">???</entry>
   <entry class="yes">Yes</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
   <entry>GeForce FX 5950 Ultra</entry>
   <entry class="unknown">???</entry>
   <entry class="yes">Yes</entry>
+  <entry class="unknown">???</entry>
 </row>
 <row>
         <entry>GeForce 6200 TC</entry>
         <entry class="unknown">???</entry>
         <entry class="yes">Yes</entry>
+	<entry class="unknown">???</entry>
 </row>
 <row>
         <entry>GeForce 6600</entry>
         <entry class="unknown">???</entry>
         <entry class="yes">Yes</entry>
+	<entry class="unknown">???</entry>
 </row>
 <row>
         <entry>GeForce 6800 GT</entry>
         <entry class="unknown">???</entry>
         <entry class="yes">Yes</entry>
+	<entry class="unknown">???</entry>
 </row>
 <row>
   <entry>nForce 2 IGP</entry>
   <entry class="no">No</entry>
   <entry class="no">No</entry>
+  <entry class="unknown">???</entry>
 </row>
 </tbody>
 </tgroup>
