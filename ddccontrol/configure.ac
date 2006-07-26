@@ -22,6 +22,13 @@ AC_LANG([C])
 AC_STDC_HEADERS
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
+check_xsltproc=yes
+AC_ARG_ENABLE(xsltproc-check,
+  [  --disable-xsltproc-check omit check to see if xsltproc works (enabled)],
+  [if test x$enableval = xno; then
+    check_xsltproc=no
+  fi])
+
 # /dev/i2c-* check
 support_i2c_dev=yes
 AC_ARG_ENABLE(i2cdev,
@@ -192,22 +199,24 @@ if test x$support_doc = xyes; then
          AC_MSG_ERROR([tidy does not exists, install it or disable doc building])
       fi
                   
-      AC_MSG_CHECKING([whether xsltproc works])
-
-      DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
-      DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
-
-      $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
+      if test x$check_xsltproc = xyes ; then
+         AC_MSG_CHECKING([whether xsltproc works])
+   
+         DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
+         DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
+   
+         $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
 <?xml version="1.0" encoding='ISO-8859-1'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <book id="test">
 </book>
 END
-      if test "$?" = 0; then
-         AC_MSG_RESULT(yes)
-         DOC=doc
-      else
-         AC_MSG_ERROR([xsltproc does not work, fix this problem or disable doc building])
+         if test "$?" = 0; then
+            AC_MSG_RESULT(yes)
+            DOC=doc
+         else
+            AC_MSG_ERROR([xsltproc does not work, fix this problem or disable doc building])
+         fi
       fi
    fi
 fi
@@ -226,5 +235,6 @@ AC_CONFIG_FILES([
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile
 	src/gnome-ddcc-applet/Makefile
-	doc/Makefile])
+	doc/Makefile
+	man/Makefile])
 AC_OUTPUT
