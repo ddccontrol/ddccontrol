@@ -132,7 +132,7 @@ static void usage(char *name)
 		"Usage:\n"
 		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
 		"\tdev: device, e.g. dev:/dev/i2c-0\n"
-		"\t-p : probe I2C devices to find monitor busses.\n"
+		"\t-p : probe I2C devices to find monitor buses\n"
 		"\t-c : query capability\n"
 		"\t-d : query ctrls 0 - 255\n"
 		"\t-r : query ctrl\n"

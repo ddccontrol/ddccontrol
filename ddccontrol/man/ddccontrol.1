@@ -1,0 +1,78 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH DDCCONTROL 1 "July 26, 2006"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+ddccontrol \- A utility to control monitor parameters via software
+.SH SYNOPSIS
+.B ddccontrol
+.RI [\-b\ datadir]\ [\-v]\ [\-c]\ [\-d]\ [\-f]\ [\-s]\ [\-r\ ctrl\ [\-w\ value]]\ [\-p\ |\ dev]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B ddccontrol
+command.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+\fBddccontrol\fP is an open source utility which allows controlling monitor parameters via software.
+.SH OPTIONS
+A summary of options is included below.
+.TP
+.B dev
+device, e.g. dev:/dev/i2c-0
+.TP
+.B \-p
+probe I2C devices to find monitor buses
+.TP
+.B \-c
+query capability
+.TP
+.B \-d
+query ctrls 0 - 255
+.TP
+.B \-r
+query ctrl
+.TP
+.B \-w
+value to write to ctrl
+.TP
+.B \-f
+force (avoid validity checks)
+.TP
+.B \-s
+save settings
+.TP
+.B \-v
+verbosity (specify more to increase)
+.TP
+.B \-b
+ddccontrol-db directory (if other than /usr/share/ddccontrol-db)
+.SH SEE ALSO
+The program is documented fully in
+.br
+/usr/share/doc/ddccontrol/html/index.html
+.PP
+The project homepage: http://ddccontrol.sourceforge.net
+.SH AUTHOR
+ddccontrol was written by Oleg I. Vdovikin and Nicolas Boichat.
+.br
+Copyright 2004\-2005 Oleg I. Vdovikin (oleg@cs.msu.su)
+.br
+Copyright 2004\-2006 Nicolas Boichat (nicolas@boichat.ch)
+.PP
+This manual page was written by Roberto C. Sanchez <roberto@familiasanchez.net>.
+
