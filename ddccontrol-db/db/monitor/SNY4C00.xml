@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!--- Invalid CAPS (no surrounding parenthesis):
+prot(monitor)type(lcd)model(SDM-S205)cmds(0102030CE3F3)vcp(0410121314(0508010B)
+16181A6C6E7072(0A78FA5064788CA0)B6C0C9DC(00080904)DF)mccs_ver(0201)
+-->
+<monitor name="Sony SDM-S205K (DVI)">
+	<caps add="(prot(monitor)type(lcd)model(SDM-S205)cmds(0102030CE3F3)vcp(04 10 12 13 14(05 08 01 0B) 16 18 1A 6C 6E 70 72(0A 78 FA 50 64 78 8C A0) B6 C0 C9 DC(00 08 09 04) DF)mccs_ver(0201))"/>
+	<include file="SNYlcd"/>
+</monitor>
