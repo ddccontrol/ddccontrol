@@ -38,8 +38,8 @@ website.database.xml:  autolayout.xml Makefile
 
 update:
 #	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/; cvs update -d"
-	scp htdocs/* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs
-	scp htdocs/doc* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc
+	scp htdocs/* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs || true
+	scp htdocs/doc* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc || true
 
 spell:
 	aspell --mode=sgml check website.xml

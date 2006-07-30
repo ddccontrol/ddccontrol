@@ -9,14 +9,14 @@
   <toc page="website.xml" filename="index.html">
     <tocentry id="doc" page="doc.xml" filename="doc/index.html">
       <title>Documentation</title>
-      <tocentry id="doccurrent" href="/doc/0.4"><title>Current release (0.4)</title></tocentry>
+      <tocentry id="doccurrent" href="/doc/0.4.2"><title>Current release (0.4.2)</title></tocentry>
       <tocentry id="doclatest" href="/doc/latest"><title>Development</title></tocentry>
     </tocentry>
     <tocentry id="download" page="download.xml" filename="download.html">
       <title>Download</title>
       <tocentry id="downcurrent"
           href="http://sourceforge.net/project/showfiles.php?group_id=117933">
-        <title>Current release (0.4.1)</title>
+        <title>Current release (0.4.2)</title>
       </tocentry>
       <tocentry id="downlatest"
           href="http://sourceforge.net/cvs/?group_id=117933">
