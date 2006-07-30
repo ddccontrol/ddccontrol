@@ -39,8 +39,12 @@
 				<value id="+0.5" name="+0.5"/>
 				<value id="+0.7" name="+0.7"/>
 				<value id="+0.9" name="+0.9"/>
+				<value id="1.8" name="1.8"/>
+				<value id="2.0" name="2.0"/>
+				<value id="2.2" name="2.2"/>
+				<value id="2.4" name="2.4"/>
+				<value id="2.6" name="2.6"/>
 			</control>
-			<control id="gammacont" type="value" name="Gamma" address="0x72"/>
 		</subgroup>
 		<subgroup name="Color maximum level">
 			<control id="red" type="value" name="Red maximum level" address="0x16"/>

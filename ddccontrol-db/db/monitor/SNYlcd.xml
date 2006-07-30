@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--- Created with the help of very good document by lardhan. -->
+<!--- Created with the help of a very good document by lardhan. -->
 <monitor name="Sony Standard LCD" init="standard">
 	<controls>
 		<!--- Control 0x02: +/255/65535 [Didn't see changes.] -->
@@ -11,12 +11,19 @@
 		<control id="colorpreset" address="0x14">
 			<value id="srgb"   value="0x1"/>
 			<value id="6500k"  value="0x5"/>
+			<value id="9300k"  value="0x8"/>
 			<value id="user1"  value="0xB"/>
 		</control>
 		
 		<!--- Control 0x1e: +/0/65535 [Didn't see changes.] -->
 		
-		<control id="gammacont" address="0x72"/>
+		<control id="gamma" address="0x72">
+			<value id="1.8" value="80"/>
+			<value id="2.0" value="100"/>
+			<value id="2.2" value="120"/>
+			<value id="2.4" value="140"/>
+			<value id="2.6" value="160"/>
+		</control>
 		
 		<!--- Control 0xb6: +/3/8 [Didn't see changes, monitor type.] -->
 		<!--- Control 0xc0: +/2951/65535   [Seems to be "Display usage time".] -->
