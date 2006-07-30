@@ -22,6 +22,31 @@ documentation</olink>.</para>
 
 <section><title>News</title>
 <variablelist>
+	<varlistentry><term>30 Jul 2006: Database version 20060730 released.</term>
+		<listitem>
+			<para>
+				ChangeLog:
+				<itemizedlist mark='bullet'>
+					<listitem>Add support for new monitors:
+						<itemizedlist mark='opencircle'>
+							<listitem>SGI GDM-5011P and GDM-5411 (Thanks to Florin Andrei)</listitem>
+							<listitem>Samsung SyncMaster 173P+ (DVI) (Thanks to KRZYzaK)</listitem>
+							<listitem>Samsung SyncMaster 797mb (Thanks to Evgeniy)</listitem>
+							<listitem>Samsung SyncMaster 720T (Thanks to Piotr)</listitem>
+							<listitem>Dell 2005FPW (Thanks to Christian Abegg)</listitem>
+							<listitem>Philips 170C6 (Thanks to Dmitry Artamonow)</listitem>
+							<listitem>Samsung SyncMaster 173s (Thanks to Artur Flinta)</listitem>
+							<listitem>Samsung SyncMaster 940B (Thanks to Jörg Evers)</listitem>
+							<listitem>Philips 200P6 (Thanks to podolany).</listitem>
+							<listitem>Samsung SyncMaster 215TW (thanks to David R Mulligan).</listitem>
+							<listitem>Sony SDM-S205K, and generic profile for Sony LCD monitors (thanks to lardhan)</listitem>
+							<listitem>Samsung Syncmaster 760BF VGA (thanks to John Kent).</listitem>
+						</itemizedlist>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</varlistentry>
 	<varlistentry><term>10 Mar 2006: Version 0.4.1 released.</term>
 		<listitem>
 			<para>
