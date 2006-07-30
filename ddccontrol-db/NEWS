@@ -1,3 +1,18 @@
+Version 20060730:
+ - Add support for new monitors:
+   + SGI GDM-5011P and GDM-5411 (Thanks to Florin Andrei)
+   + Samsung SyncMaster 173P+ (DVI) (Thanks to KRZYzaK)
+   + Samsung SyncMaster 797mb (Thanks to Evgeniy)
+   + Samsung SyncMaster 720T (Thanks to Piotr)
+   + Dell 2005FPW (Thanks to Christian Abegg)
+   + Philips 170C6 (Thanks to Dmitry Artamonow)
+   + Samsung SyncMaster 173s (Thanks to Artur Flinta)
+   + Samsung SyncMaster 940B (Thanks to Jörg Evers)
+   + Philips 200P6 (Thanks to podolany).
+   + Samsung SyncMaster 215TW (thanks to David R Mulligan).
+   + Sony SDM-S205K, and generic profile for Sony LCD monitors (thanks to lardhan)
+   + Samsung Syncmaster 760BF VGA (thanks to John Kent).
+
 Version 20060308:
  - New database format, using generic profiles.
  - Add support for new monitors:

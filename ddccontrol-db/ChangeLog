@@ -1,3 +1,35 @@
+2006-07-30 17:18  nboichat
+
+	* po/: .cvsignore, fr.po, pl.po, ru.po, zh_CN.po: Update French
+	  translation.
+
+2006-07-30 17:05  nboichat
+
+	* db/monitor/: SAM01E2.xml, SAM01E3.xml: Add Samsung Syncmaster
+	  760BF VGA (thanks to John Kent).
+
+2006-07-30 16:57  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/SNYlcd.xml: Fix Sony.
+
+2006-07-27 21:49  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/SNY4C00.xml, monitor/SNY4D00.xml, monitor/SNYlcd.xml: Add
+	  support for Sony SDM-S205K, and generic profile for Sony LCD
+	  monitors (thanks to lardhan)
+
+2006-07-27 21:09  nboichat
+
+	* db/monitor/SAM0213.xml: Add Samsung SyncMaster 215TW (thanks to
+	  David R Mulligan).
+
+2006-06-25 19:56  nboichat
+
+	* db/monitor/: PHL0833.xml, PHLC011.xml, PHLlcd.xml: Add support
+	  for Philips color presets.
+
 2006-06-19 18:28  nboichat
 
 	* db/monitor/: PHL0833.xml, SAM00A3.xml: Fix DB integrity.
@@ -61,8 +93,6 @@
 
 	* db/Makefile.in, po/ddccontrol-db.pot: Prepare release 20060308
 	  (and CVS cleanup)
-
-2006-03-08 20:52  tag Release-20060308
 
 2006-03-08 20:52  nboichat
 
@@ -157,8 +187,6 @@
 	  db/monitor/SAM01E5.xml, db/monitor/SUN0577.xml,
 	  po/Makefile.in.in: Database version 3 (add VESA generic profile).
 
-2006-02-22 13:34  tag Before_db_version_3
-
 2006-02-22 13:34  nboichat
 
 	* db/monitor/SUN0577.xml: Add support for SUN GDM-5410 (Thanks to
@@ -235,8 +263,6 @@
 
 	* CheckList: Update Checklist.
 
-2005-11-14 17:59  tag Release-20051114
-
 2005-11-14 17:59  nboichat
 
 	* NEWS, configure.ac, db/Makefile.in, db/options.xml,
@@ -256,8 +282,6 @@
 
 	* po/: LINGUAS, Makefile.in.in, zh.po, zh_CN.po: Update Chinese
 	  translation.
-
-2005-11-06 19:49  tag Release-20050813-Debian-packaging_20050813-1
 
 2005-11-06 19:49  el_cubano
 
@@ -327,8 +351,6 @@
 	* db/: options.xml, options.xml.h, options.xml.in: Add moire, clock
 	  and misconvergence patterns.
 
-2005-08-13 12:45  tag Release-20050813
-
 2005-08-13 12:45  nboichat
 
 	* NEWS, configure, configure.ac, db/options.xml: Prepare release
@@ -353,8 +375,6 @@
 	* db/: options.xml, options.xml.h, options.xml.in,
 	  monitor/MEL4513.xml: New db version (add refresh parameter).
 
-2005-07-28 18:17  tag Before_dbversion_2
-
 2005-07-28 18:17  nboichat
 
 	* db/monitor/MEL4513.xml: Fix Mitsubishi Diamond Pro 2060u.
@@ -367,8 +387,6 @@
 2005-07-23 21:27  nboichat
 
 	* po/: ru.gmo, ru.po: Update Russian translation.
-
-2005-07-15 14:28  tag Release-20050715
 
 2005-07-15 14:28  nboichat
 
@@ -425,8 +443,6 @@
 	  db/Makefile.am, db/Makefile.in, db/options.xml, db/options.xml.h,
 	  po/.cvsignore: Do not check for gcc when configuring and various
 	  other minor fixes.
-
-2005-03-29 08:30  tag Release-20050329
 
 2005-03-29 08:30  nboichat
 
@@ -566,8 +582,6 @@
 
 	* .cvsignore, db/.cvsignore: Remove autom4te cache and add
 	  cvsignore files
-
-2004-08-31 16:55  tag start
 
 2004-08-31 16:55  nboichat
 
