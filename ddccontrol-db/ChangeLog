@@ -1,3 +1,7 @@
+2006-07-30 17:27  nboichat
+
+	* NEWS, configure.ac, db/options.xml: Prepare release 20060730
+
 2006-07-30 17:18  nboichat
 
 	* po/: .cvsignore, fr.po, pl.po, ru.po, zh_CN.po: Update French
