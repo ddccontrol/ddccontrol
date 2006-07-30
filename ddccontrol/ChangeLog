@@ -1,3 +1,11 @@
+2006-07-30 19:36  nboichat
+
+	* NEWS: Prepare release 0.4.2
+
+2006-07-30 17:56  nboichat
+
+	* doc/supportedmonitors.xml: Update supported monitors
+
 2006-07-30 17:50  nboichat
 
 	* man/.cvsignore, po/.cvsignore, po/de.po, po/fr.po, po/pl.po,
