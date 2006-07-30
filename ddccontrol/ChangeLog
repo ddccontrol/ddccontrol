@@ -1,3 +1,27 @@
+2006-07-30 17:50  nboichat
+
+	* man/.cvsignore, po/.cvsignore, po/de.po, po/fr.po, po/pl.po,
+	  po/ru.po, po/zh_CN.po: Update French translation, and CVS
+	  cleanup.
+
+2006-07-26 22:02  el_cubano
+
+	* Makefile.am, configure.ac, man/Makefile.am, man/ddccontrol.1:
+	  Fixed man page, added Makefile.am for man directory and fixed
+	  configure.ac to allow an option to circumvent checking for
+	  whether or not xsltproc works (default is still to perform
+	  check).
+
+2006-07-26 17:33  el_cubano
+
+	* man/ddccontrol.1, man/gddccontrol.1, src/ddccontrol/main.c: Added
+	  manual pages and fixed type in ddccontrol usage summary.
+
+2006-07-23 09:00  nboichat
+
+	* doc/supportedgc.xml: Update documentation (nVidia /dev/i2c-*
+	  devices support through proprietary drivers)
+
 2006-06-19 18:48  nboichat
 
 	* doc/supportedmonitors.xml: Update doc
