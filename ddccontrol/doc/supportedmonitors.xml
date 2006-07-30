@@ -94,6 +94,9 @@ SyncMaster 193P (VGA and DVI inputs)
 SyncMaster 193P Plus (VGA and DVI inputs)
 </listitem>
 <listitem>
+SyncMaster 215TW
+</listitem>
+<listitem>
 SyncMaster 701T
 </listitem>
 <listitem>
@@ -106,10 +109,16 @@ SyncMaster 710TM
 SyncMaster 712N (at least VGA input)
 </listitem>
 <listitem>
+SyncMaster 720T
+</listitem>
+<listitem>
 SyncMaster 730BF
 </listitem>
 <listitem>
-SyncMaster 760BF
+SyncMaster 760BF (VGA and DVI inputs)
+</listitem>
+<listitem>
+SyncMaster 797MB
 </listitem>
 <listitem>
 SyncMaster 910T
@@ -137,6 +146,25 @@ SyncMaster 970P (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 997MB
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>SGI</title>
+<itemizedlist mark='bullet'>
+<listitem>
+GDM-5011P
+</listitem>
+<listitem>
+GDM-5411
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3>
+<title>Sony</title>
+<itemizedlist mark='bullet'>
+<listitem>
+SDM-S205K
 </listitem>
 </itemizedlist>
 </sect3>
