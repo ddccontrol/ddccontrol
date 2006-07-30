@@ -37,7 +37,9 @@ website.database.xml:  autolayout.xml Makefile
 .PHONY : clean
 
 update:
-	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/; cvs update -d"
+#	ssh $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/; cvs update -d"
+	scp htdocs/* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs
+	scp htdocs/doc* $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc
 
 spell:
 	aspell --mode=sgml check website.xml
