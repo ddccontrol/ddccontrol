@@ -7,4 +7,5 @@ remove-potcdate.sed
 Makevars.template
 *.gmo
 .intltool-merge-cache
-
+ddccontrol-db.pot
+stamp-it
