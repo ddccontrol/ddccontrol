@@ -1,3 +1,9 @@
+Version 0.4.2 - 2006-07-30
+ - Allow binary data in CAPS.
+ - Add more I2C busses to Intel 810-like chips.
+ - Fix gcc 4.0 and 4.1 compilation warnings.
+ - Added manual pages.
+
 Version 0.4.1 - 2006-03-10
  - Fix compilation error in Fedora Core 4 (may affect other distributions)
 
