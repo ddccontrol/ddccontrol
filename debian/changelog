@@ -1,0 +1,7 @@
+ddccontrol-db (20060730-1) unstable; urgency=low
+
+  * Initial Release.
+  * Resolve ITP (closes: #322978)
+
+ -- Roberto C. Sanchez <roberto@familiasanchez.net>  Sun, 30 Jul 2006 21:53:16 -0400
+

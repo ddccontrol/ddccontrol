@@ -1,0 +1,15 @@
+Source: ddccontrol-db
+Section: utils
+Priority: optional
+Maintainer: Roberto C. Sanchez <roberto@familiasanchez.net>
+Build-Depends-Indep: debhelper (>= 4.0.0), autotools-dev, intltool
+Standards-Version: 3.7.2
+
+Package: ddccontrol-db
+Architecture: all
+Depends: 
+Description: monitor database for ddccontrol
+ Database of monitors used by ddccontrol.  This is mostly useless without
+ ddccontrol.
+ .
+ Homepage: http://ddccontrol.sourceforge.net/

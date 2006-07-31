@@ -1,0 +1,9 @@
+# Example watch control file for uscan
+# Rename this file to "watch" and then you can run the "uscan" command
+# to check for upstream updates and more.
+# See uscan(1) for format
+
+# Compulsory line, this is a version 2 file
+version=2
+
+ftp://ftp.jaist.ac.jp/pub/sourceforge/d/dd/ddccontrol/ddccontrol-db-(.*)\.tar\.bz2 debian uupdate
