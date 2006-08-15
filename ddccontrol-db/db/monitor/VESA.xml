@@ -4,10 +4,10 @@
 	<controls>
 		<control id="degauss" address="0x00"/>
 		
-		<control id="defaults" address="0x04" delay="1000"/>
-		<control id="defaultluma" address="0x05" delay="1000"/>
-		<control id="defaultgeom" address="0x06" delay="1000"/>
-		<control id="defaultcolor" address="0x08" delay="1000"/>
+		<control id="defaults" address="0x04" delay="2000"/>
+		<control id="defaultluma" address="0x05" delay="2000"/>
+		<control id="defaultgeom" address="0x06" delay="2000"/>
+		<control id="defaultcolor" address="0x08" delay="2000"/>
 		<control id="coarse" address="0x0E"/>
 		
 		<control id="brightness" address="0x10"/>
