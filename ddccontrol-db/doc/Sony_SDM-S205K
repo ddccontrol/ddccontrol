@@ -1,0 +1,153 @@
+Monitor: Sony SDM-S205K - 20" S-IPS 1600x1200 DDC2B
+
+GPU: Asus nVidia 7600GT Silent
+Motherboard: Asus A8N32-SLI Deluxe
+Mandriva Linux 2006 - kernel 2.6.12-22  - "nvidia" driver
+ddccontrol + ddccontrol-db version: 0.4cvs05072006
+===============
+
+- There is also a S205F model without pivot nor USB hub-KVM.
+- The output of ddccontrol with different monitor settings seems to fit quite well the information of options.xml . This is what I saw, and below, the OSD menu tree.
+
+
+Controls (valid/current/max) [OSD title]     [OSD section/Remarks]
+==========================================================================
+Control 0x02: +/255/65535    [???]           === Didn't see changes. ==
+Control 0x03: +/255/65535    [???]           === Didn't see changes. ==
+Control 0x04: +/0/65535      [???]           === Didn't see changes. ==
+Control 0x05: +/0/65535      [???]           === Didn't see changes. ==
+Control 0x08: +/0/65535      [???]           === Didn't see changes. ==
+Control 0x0e: +/224/448      [PITCH]         SCREEN
+Control 0x10: +/50/100       [BRIGHTNESS]    PICTURE ADJUST
+Control 0x12: +/90/100       [CONTRAST]      PICTURE ADJUST
+Control 0x13: +/100/100      [BACKLIGHT]**   PICTURE ADJUST    OSD item disabled in mode AUTO (controlled by light sensor)
+Control 0x14: +/5/13         [COLOR]         PICTURE ADJUST    Values: 9300K = 8, 6500K = 5, sRGB = 1, USER = 11
+
+Control 0x16: +/128/255      [R]             GAIN ADJUSTMENT
+Control 0x18: +/123/255      [G]             GAIN ADJUSTMENT
+Control 0x1a: +/126/255      [B]             GAIN ADJUSTMENT
+
+Control 0x1e: +/0/65535      [???]           === Didn't see changes. ==
+Control 0x20: +/248/496      [H CENTER]      SCREEN
+Control 0x30: +/47/94        [V CENTER]      SCREEN
+Control 0x3e: +/32/63        [PHASE]         SCREEN
+
+Control 0x6c: +/128/255      [R]             BIAS ADJUSTMENT
+Control 0x6e: +/128/255      [G]             BIAS ADJUSTMENT
+Control 0x70: +/128/255      [B]             BIAS ADJUSTMENT
+
+Control 0x72: +/120/160      [USER]**        GAMMA
+Control 0xb6: +/3/8          [???]           === Didn't see changes. ==
+Control 0xc0: +/2951/65535   [???]           Sequential increments. Seems to be "Display usage time".
+Control 0xc8: +/5/65535      [???]           === Didn't see changes. ==
+Control 0xc9: +/259/4095     [???]           === Didn't see changes. ==
+Control 0xdc: +/0/9          [MODE]          PICTURE ADJUST    Values: HIGH=0, MIDDLE=8, LOW=9, AUTO =4
+Control 0xdf: +/512/65535    [???]           === Didn't see changes. ==
+
+
+
+
+OSD tree:
+----------------
+PICTURE ADJUST
+    |_ "$MODE"                1)          # Value of the current MODE (also called "ECO mode")
+    |    |_  HIGH 
+    |    |_  MIDDLE 
+    |    |_  LOW 
+    |    |_  AUTO 
+    |_ BACKLIGHT              1)
+    |_ CONTRAST               1) 2)
+    |_ BRIGHTNESS
+    |_ GAMMA                     2)
+    |    |_ USER                 2)
+    |    |_ CAL.                 2)      # Raw gamma for use with external calibrators.
+    |_ COLOR
+    |    |_ 9300K
+    |    |_ 6500K
+    |    |_ sRGB                 2)
+    |    |_ USER
+    |         |_ GAIN 
+    |         |   |_ GAIN ADJUSTMENT
+    |         |       |_  R
+    |         |       |_  G
+    |         |       |_  B
+    |         |_ BIAS
+    |             |_ BIAS ADJUSTMENT
+    |                 |_  R
+    |                 |_  G
+    |                 |_  B
+    |_ SMOOTHING                          # Available for non native resolutions
+    |     |_ TEXT
+    |     |_ STANDARD
+    |     |_ GRAPHICS
+    |_ MODE RESET
+
+SCREEN
+    |_ AUTO
+    |_ PHASE
+    |_ PITCH
+    |_ H CENTER
+    |_ V CENTER
+
+ZOOM
+    |_ FULL
+    |_ ASPECT KEEP
+    |_ REAL
+
+MENU POSITION
+
+INPUT SENSING
+    |_ AUTO ON
+    |_ INPUT1
+    |_ INPUT2
+    |_ AUTO OFF
+
+LANGUAGE
+    |_ ENGLISH
+    |_ FRANCAIS
+    |_ DEUTSCH
+    |_ ESPANOL
+    |_ ITALIANO
+    |_ NEDERLANDS
+    |_ SVENSKA
+    |_ PYCCKNN
+    |_ (Asian)
+    |_ (Asian2)
+
+RESET
+    |_ OK
+    |_ CANCEL
+
+MENU LOCK
+    |_ ON
+    |_ OFF
+
+OPTION       # Not in SDM-S205F
+    |_ MENU ROTATION
+          |_ LANDSCAPE
+          |_ PORTRAIT
+
+----------------
+
+Notes from the manual:
+1) When the ECO mode is set to AUTO you cannot adjust BACKLIGHT.
+2) CONTRAST, BRIGHTNESS, and GAMMA are not adjustable when sRGB selected.
+
+----------------
+
+There were no changes in the ddccontrol output when messing with
+- - SMOOTHING
+- - GAMMA-CAL
+- ZOOM
+- MENU POSITION
+- INPUT SENSING
+- LANGUAGE
+- MENU LOCK
+- - MENU ROTATION
+
+
+I couldn't access the user's manual in the Sony website to drop a link here. If anybody wants it, just ask (s_205_gb.pdf, ~500 KB).
+
+
+
+
