@@ -1,3 +1,8 @@
+2006-08-29 11:02  nboichat
+
+	* po/: fr.po, pl.po, ru.po, zh_CN.po: Update Polish translation,
+	  thanks to Jakub Bogusz.
+
 2006-08-29 10:56  nboichat
 
 	* db/monitor/: GSM4AEF.xml, GSMlcd.xml: Add support for LG Flatron

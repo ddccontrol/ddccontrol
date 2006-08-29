@@ -1,3 +1,8 @@
+2006-08-29 11:03  nboichat
+
+	* po/: de.po, fr.po, pl.po, ru.po, zh_CN.po: Update Polish
+	  translation, thanks to Jakub Bogusz.
+
 2006-07-30 19:36  nboichat
 
 	* NEWS: Prepare release 0.4.2
