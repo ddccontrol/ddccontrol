@@ -1,3 +1,12 @@
+2006-08-29 10:56  nboichat
+
+	* db/monitor/: GSM4AEF.xml, GSMlcd.xml: Add support for LG Flatron
+	  L1952HM (thanks to Evgeny Stambulchik)
+
+2006-08-15 02:09  nboichat
+
+	* doc/Sony_SDM-S205K: Add Sony SDM-S205K doc by lardhan.
+
 2006-08-15 01:53  nboichat
 
 	* db/monitor/VESA.xml: Increase defaults control delay.
