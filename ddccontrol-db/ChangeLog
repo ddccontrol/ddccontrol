@@ -1,3 +1,8 @@
+2006-08-29 11:18  nboichat
+
+	* db/monitor/SAM0027.xml: Add support for Samsung SyncMaster 753V
+	  (thanks to Luis Augusto Perles)
+
 2006-08-29 11:02  nboichat
 
 	* po/: fr.po, pl.po, ru.po, zh_CN.po: Update Polish translation,
