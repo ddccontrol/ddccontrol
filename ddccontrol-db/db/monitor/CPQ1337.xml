@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!---Compaq P1100 is a CRT. CAPS invalid
+(prot(monitor)  type(crt) model( CPQ3713 edid bin(128(####))
+cmds(01020304050608090A0B0C4F)vcp(00010810121416181A20222426283032384042445456686C6E70E0E2F1F2F3F4F5F6F7)
+Looks like a clone of SUN GDM-5410 (same bugs in CAPS).
+-->
+<monitor name="Compaq P1100" init="standard">
+	<include file="SUN0577"/>
+</monitor>
