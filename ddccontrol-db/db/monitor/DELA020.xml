@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!--- type(LCD)vcp(page0(02 04 05 08 0E 10 12 14(01 06 08 0B) 16 
+18 1A 1D 1E 20 30 3E 52 AC AE B2 B6 C0 C6 C8 C9 CA D6(01 02 03 04) DF)) -->
+<monitor name="Dell 2007FP (VGA)" init="standard">
+	<caps add="(vcp(12)"/>
+        <include file="DELA021"/>
+</monitor>
