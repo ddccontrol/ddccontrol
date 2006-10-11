@@ -10,10 +10,23 @@
 			<value id="9300k"  value="0x8"/>
 			<value id="user1"  value="0xB"/>
 		</control>
-		
+
 		<!-- Control 0xb6: +/3/8 [Monitor Type, RO] -->
 		<!-- Control 0xdf: +/512/65535   [VCP version] -->
 
+		<control id="powerled" address="0xfd">
+			<value id="off"   value="0x0"/>
+			<value id="on"    value="0x1"/>
+		</control>
+       
+		<control id="gamma" address="0xfe">
+			<value id="-0.5"   value="0x0"/>
+			<value id="0"      value="0x1"/>
+			<value id="+0.5"   value="0x2"/>
+		</control>
+       
+		<control id="sharpness" address="0xff"/>
+		
 		<!-- Control 0xfd: +/1/1   [???] -->
 		<!-- Control 0xfe: +/1/2   [???] -->
 		<!-- Control 0xff: +/5/10   [???] -->

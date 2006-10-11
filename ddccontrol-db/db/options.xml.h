@@ -201,4 +201,7 @@ printf(_("Standby"));
 printf(_("Power control"));
 printf(_("Off"));
 printf(_("On"));
+printf(_("Power LED"));
+printf(_("Off"));
+printf(_("On"));
 }

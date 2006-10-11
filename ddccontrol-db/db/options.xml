@@ -253,6 +253,12 @@
 				<value id="off" name="Off"/>
 				<value id="on" name="On"/>
 			</control>
+			<!-- a switch to enable/disable the power led only (no other functionality,
+				it seems) -->
+			<control id="powerled" type="list" name="Power LED" address="0xfd">
+				<value id="off" name="Off"/>
+				<value id="on" name="On"/>
+			</control>
 		</subgroup>
 	</group>
 </options>
