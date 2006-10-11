@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--- INVALID : vcp(02 04 05 08 10 12 14(05 06 08 0B) 16 18 1A 52 AC AE B2
+B6 C0 C6 C8 C9 CA D6 DF) type(LCD) mccs_ver(1.1) asset_eep(32) -->
+<monitor name="Dell 1907FP (Digital)" init="standard">
+	<caps add="(vcp(02 04 05 08 10 12 14(05 06 08 0B) 16 18 1A 52 AC AE B2 B6 C0 C6 C8 C9 CA D6 DF) 68)"/>
+	<controls>
+		<!--- Control 0x02: +/1/65535   [???] -->
+		<control id="colorpreset" address="0x14">
+			<value id="srgb"  value="0x05"/>
+			<!--- missing value for 0x06 -->
+			<value id="cool"  value="0x08"/>
+			<value id="user1" value="0x0b"/>
+		</control>
+
+		<!--- Control 0x52: +/0/65535   [???] -->
+
+		<control id="language" type="list" address="0x68">
+			<!--- Copied from NEC662B, needs to be checked -->
+			<value id="english" value="1"/>
+			<value id="german"  value="2"/>
+			<value id="french"  value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="chinese" value="5"/>
+			<value id="italian" value="6"/>
+			<value id="swedish" value="7"/>
+			<value id="dutch"   value="8"/>
+			<value id="russian" value="9"/>
+		</control>
+
+		<!--- Control 0xa8: +/1/1   [Sync type, RO] -->
+		<!--- Control 0xac: +/79/65535   [Horizontal freq???, RO] -->
+		<!--- Control 0xae: +/75/65535   [Vertical freq???, RO] -->
+		<!--- Control 0xb2: +/0/8   [???] -->
+		<!--- Control 0xb4: +/1/1   [RGB Ordering, RO] -->
+		<!--- Control 0xb6: +/3/3   [Monitor Type, RO] -->
+		<!--- Control 0xc0: +/76/65535   [Display usage time [h]] -->
+		<!--- Control 0xc6: +/0/65535   [???] -->
+		<!--- Control 0xc8: +/2/65535   [???] -->
+		<!--- Control 0xc9: +/0/65535   [???] -->
+
+		<!--- Control 0xca: +/2/65535   [???] -->
+		<control id="osd" type="list" address="0xca">
+			<value id="disable" value="1"/>
+			<value id="enable" value="2"/>
+		</control>
+
+		<!--- Control 0xd7: +/0/1   [???] -->
+		<!--- Control 0xdf: +/513/65535   [???] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
