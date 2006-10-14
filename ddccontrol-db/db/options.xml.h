@@ -74,6 +74,7 @@ printf(_("9300K"));
 printf(_("10000K"));
 printf(_("11500K"));
 printf(_("Native"));
+printf(_("User"));
 printf(_("User 1"));
 printf(_("User 2"));
 printf(_("User 3"));

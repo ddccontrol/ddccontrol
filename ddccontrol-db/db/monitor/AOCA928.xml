@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--- vcp(04 0E 10 12 14(08 05 0B 00) 16 18 1A 20 30 68 B6)
+vcp_p2(37 38 39 3B) type(LCD) mccs_ver(1.1) asset_eep(64) mpu(0.04) -->
+<!--- Based on a file provided by Michael G. Hansen -->
+<monitor name="AOC LM928 (Analog)" init="standard">
+	<caps add="(vcp(04 0E 10 12 14(08 05 0B 00) 16 18 1A 20 30 68 B6))"/>
+	<controls>
+		<control id="colorpreset" type="list" address="0x14">
+			<value id="warm" value="5"/>
+			<value id="cool" value="8"/>
+			<value id="user" value="11"/>
+		</control>
+
+<!-- WARNING: My monitor didn't switch the language when correctly when I set
+     these values via ddccontrol. For example, even though the OSD said English
+     was selected, it still displayed German. -->
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="0"/>
+			<value id="german" value="1"/>
+			<value id="french" value="2"/>
+			<value id="spanish" value="3"/>
+			<value id="italian" value="4"/>
+			<value id="chinese" value="5"/>
+		</control>
+	</controls>
+	
+	<include file="VESA"/>
+</monitor>
