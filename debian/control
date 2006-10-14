@@ -9,6 +9,7 @@ Standards-Version: 3.7.2
 Package: ddccontrol-db
 Architecture: all
 Depends: 
+Recommends: ddccontrol
 Description: monitor database for ddccontrol
  Database of monitors used by ddccontrol.  This is mostly useless without
  ddccontrol.
