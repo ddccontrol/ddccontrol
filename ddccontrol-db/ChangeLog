@@ -1,3 +1,7 @@
+2006-10-14 06:36  nboichat
+
+	* NEWS, configure.ac, db/options.xml: Prepare release 20061014
+
 2006-10-14 06:27  nboichat
 
 	* po/: fr.po, pl.po, ru.po, zh_CN.po: Update translations.
