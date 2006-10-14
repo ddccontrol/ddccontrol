@@ -47,6 +47,14 @@
 			<value id="auto" value="0"/>
 			<value id="manual" value="1"/>
 		</control>
+
+		<control id="customkey" type="list" address="0xe8">
+			<value id="magicbright" value="0"/>
+			<value id="magiccolor" value="1"/>
+			<value id="autosetup" value="2"/>
+			<value id="inputsource" value="3"/>
+			<value id="colortone" value="4"/>
+		</control>
 		
 		<control id="magiccolor" type="list" address="0xf0">
 			<value id="off" value="0"/>

@@ -258,6 +258,17 @@
 				<value id="off" name="Off"/>
 				<value id="on" name="On"/>
 			</control>
+		</subgroup>
+		<subgroup name="Buttons and leds">
+			<!-- button on the left side of the monitor stand can be customised -->
+			<control id="customkey" type="list" name="Custom key" address="0xe8">
+				<value id="magicbright" name="MagicBright"/>
+				<value id="magiccolor" name="MagicColor"/>
+				<value id="autosetup" name="Automatic setup"/>
+				<value id="inputsource" name="Input Source Select"/>
+				<value id="colortone" name="Color Tone"/>
+			</control>
+
 			<!-- a switch to enable/disable the power led only (no other functionality,
 				it seems) -->
 			<control id="powerled" type="list" name="Power LED" address="0xfd">
