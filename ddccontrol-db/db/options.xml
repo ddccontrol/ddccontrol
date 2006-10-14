@@ -32,11 +32,15 @@
 			<control id="gamma" type="list" name="Gamma" address="0xF2" >
 				<value id="-0.5" name="-0.5"/>
 				<value id="-0.3" name="-0.3"/>
+				<value id="-0.2" name="-0.2"/>
 				<value id="-0.1" name="-0.1"/>
 				<value id="0" name="0"/>
 				<value id="+0.1" name="+0.1"/>
+				<value id="+0.2" name="+0.2"/>
 				<value id="+0.3" name="+0.3"/>
+				<value id="+0.4" name="+0.4"/>
 				<value id="+0.5" name="+0.5"/>
+				<value id="+0.6" name="+0.6"/>
 				<value id="+0.7" name="+0.7"/>
 				<value id="+0.9" name="+0.9"/>
 				<value id="1.8" name="1.8"/>
