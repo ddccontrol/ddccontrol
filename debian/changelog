@@ -2,8 +2,9 @@ ddccontrol-db (20061014-1) unstable; urgency=low
 
   * New upstream release
   * Update maintainer email address
+  * Update watch file compatibility
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 14 Oct 2006 07:42:26 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 14 Oct 2006 07:51:20 -0400
 
 ddccontrol-db (20060730-1) unstable; urgency=low
 
