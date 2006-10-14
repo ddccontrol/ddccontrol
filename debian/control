@@ -1,7 +1,7 @@
 Source: ddccontrol-db
 Section: utils
 Priority: optional
-Maintainer: Roberto C. Sanchez <roberto@familiasanchez.net>
+Maintainer: Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 4.0.0)
 Build-Depends-Indep: autotools-dev, intltool
 Standards-Version: 3.7.2
