@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<!--- Another ID for a slightly different 170B -->
+<monitor name="Philips 170B" init="standard">
+	<include file="PHL081D"/>
+</monitor>
