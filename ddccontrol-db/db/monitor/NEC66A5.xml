@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--- Invalid CAPS: type(LCD) mccs_ver(2.0) vcp(02 04 05 06 08 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 62 68(01 02 03 04 05 06 07) A8 B0 B6 D6 DF E3 FA FC FF) vcp_p02(37 47 64 65) prot(monitor) cmds(01 02 03 07 0C F3) asset_eep(20) mpu_ver(1.12A) -->
+<monitor name="NEC LCD175VXM" init="standard">
+	<caps add="(vcp(02 04 05 06 08 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 62 68(01 02 03 04 05 06 07) A8 B0 B6 D6 DF E3 FA FC FF))"/>
+	<controls>
+		<!--- Control 0x02: +/2/2   [???] -->
+		<control id="colorpreset" address="0x14">
+			<value id="6500k"  value="0x5"/>
+			<value id="7500k"  value="0x6"/>
+			<value id="9300k"  value="0x8"/>
+			<value id="user1"  value="0xB"/>
+		</control>
+
+		<!-- Control 0x52: +/32/65535   [???] -->		
+
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="1"/>
+			<value id="german"  value="2"/>
+			<value id="french"  value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="chinese" value="5"/>
+			<value id="italian" value="6"/>
+			<value id="swedish" value="7"/>
+		</control>
+
+		<!-- Control 0x9b: +/83/150   [Six Axis Color Control - Red] -->
+		<!-- Control 0x9d: +/93/150   [Six Axis Color Control - Green] -->
+		<!-- Control 0x9f: +/78/150   [Six Axis Color Control - Blue] -->
+		<!-- Control 0xb6: +/3/8   [Monitor Type, RO] -->
+		<!-- Control 0xdf: +/512/0   [VCP Version] -->
+		<!-- Control 0xfa: +/3170/65535   [Total Power Time in 30 min, RO] -->
+		<!-- Control 0xfc: +/0/22   [OSD Turn Off Delay] -->
+		<!-- Control 0xff: +/937/65535   [Power On Time in 30 min, RO] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
