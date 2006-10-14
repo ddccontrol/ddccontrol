@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!--- (type(LCD)vcp(04 05 08 10 12 59 5A 5B 5C 5D 5E 60(1 3) 9B 9C 9D 9E 9F
+    A0 B0(1 2) B6 C6 C8 C9 D6(1 5) DC(1 2 3 4) DF F2 F0(0 1 2 3) F8 E0 )) -->
+<monitor name="Samsung SyncMaster 244T (DVI)">
+	<include file="SAM01E6"/>
+</monitor>

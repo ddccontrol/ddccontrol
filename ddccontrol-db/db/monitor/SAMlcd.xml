@@ -56,7 +56,8 @@
 		</control>
 		
 		<!--- Some monitors use a 9-value gamma, in this case include
-			  SAMg9.xml before including this file. -->
+		      SAMg9.xml before including this file. Some monitors
+                      may also have a different 9-value gamma, see SAM01E6.xml -->
 		<control id="gamma" type="list" address="0xf2">
 			<value id="0" value="0"/>
 			<value id="+0.5" value="1"/>

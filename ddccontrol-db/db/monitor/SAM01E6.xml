@@ -1,7 +1,28 @@
 <?xml version="1.0"?>
 <!--- (type(LCD)vcp(04 05 06 08 0E 10 12 1E 20 30 3E 59 5A 5B 5C 5D 5E 60(1 3) 9B 9C 9D 9E 9F A0 B0(1 2) B6 C6 C8 C9 D6(1 5) DC(1 2 3 4) DF F2 F0(0 1 2 3) F8 87 E0 )) -->
+<!--- File provided by Oleg Artamonov -->
 <monitor name="Samsung SyncMaster 244T (VGA)">
-	<!--- Control 0xe0: +/2/6 C : Strange colorpreset (not 10 or 4 possible values) -->
-	<include file="SAMg9"/>
+	<controls>
+	    <control id="colorpreset" type="list" address="0xe0">
+		<value id="warm2" value="0" />
+		<value id="warm1" value="1" />
+		<value id="normal" value="2" />
+		<value id="cool1" value="3" />
+		<value id="cool2" value="4" />
+		<value id="cool3" value="5" />
+		<value id="cool4" value="6" />
+	    </control>
+	    <control id="gamma" type="list" address="0xf2">
+		<value id="-0.2" value="0" />
+		<value id="-0.1" value="1" />
+		<value id="0" value="2" />
+		<value id="+0.1" value="3" />
+		<value id="+0.2" value="4" />
+		<value id="+0.3" value="5" />
+		<value id="+0.4" value="6" />
+		<value id="+0.5" value="7" />
+		<value id="+0.6" value="8" />
+	    </control>
+	</controls>
 	<include file="SAMlcd"/>
 </monitor>
