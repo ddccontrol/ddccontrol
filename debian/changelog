@@ -1,3 +1,11 @@
+ddccontrol (0.4.2-2) unstable; urgency=low
+
+  * Updated maintainer email address
+  * Restrict architectures to i386 and amd64 (Closes: #385812)
+  * Document why "I/O warning" sometimes occurs (Closes: #386235)
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 21 Oct 2006 03:36:47 -0400
+
 ddccontrol (0.4.2-1) unstable; urgency=low
 
   * Initial Release.
