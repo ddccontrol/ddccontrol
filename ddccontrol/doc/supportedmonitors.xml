@@ -2,19 +2,47 @@
 <title>Supported monitors</title>
 <para>The following monitors are supported by DDCcontrol:</para>
 <sect3>
+<title>AOC</title>
+<itemizedlist mark='bullet'>
+<listitem>
+AOC LM928
+</listitem>
+</itemizedlist>
+</sect3>
+
+<sect3>
+<title>Compaq</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Compaq P1100
+</listitem>
+</itemizedlist>
+</sect3>
+
+<sect3>
 <title>Dell</title>
 <itemizedlist mark='bullet'>
 <listitem>
 Dell 1704FPT (DVI input)
 </listitem>
 <listitem>
+Dell 1905FP
+</listitem>
+<listitem>
+Dell 1907FP
+</listitem>
+<listitem>
 Dell 2005FPW
+</listitem>
+<listitem>
+Dell 2007FP
 </listitem>
 <listitem>
 Dell 2405FPW
 </listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>Fujitsu Siemens</title>
 <itemizedlist mark='bullet'>
@@ -29,43 +57,61 @@ P20-2 (VGA and DVI inputs)
 </listitem>
 </itemizedlist>
 </sect3>
+
+<sect3>
+<title>LG</title>
+<itemizedlist mark='bullet'>
+<listitem>
+Flatron L1952HM
+</listitem>
+</itemizedlist>
+</sect3>
+
 <sect3>
 <title>Mitsubishi</title>
 <itemizedlist mark='bullet'>
 <listitem>
 Diamond Plus 92
 </listitem>
-</itemizedlist>
-<itemizedlist mark='bullet'>
 <listitem>
 Diamond Pro 2060u (VGA input B only)
 </listitem>
-</itemizedlist>
-<itemizedlist mark='bullet'>
 <listitem>
 Diamond Pro 2070sb
 </listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>NEC</title>
 <itemizedlist mark='bullet'>
+<listitem>
+LCD175VXM
+</listitem>
 <listitem>
 Multisync 2080UX+ (VGA and DVI inputs)
 </listitem>
 </itemizedlist>
 </sect3>
 <sect3>
+
 <title>Philips</title>
 <itemizedlist mark='bullet'>
+<listitem>
+170B
+</listitem>
 <listitem>
 170C6
 </listitem>
 <listitem>
 200P6
 </listitem>
+<listitem>
+200W6
+</listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>Samsung</title>
 <itemizedlist mark='bullet'>
@@ -94,7 +140,13 @@ SyncMaster 193P (VGA and DVI inputs)
 SyncMaster 193P Plus (VGA and DVI inputs)
 </listitem>
 <listitem>
-SyncMaster 215TW
+SyncMaster 204B
+</listitem>
+<listitem>
+SyncMaster 244T
+</listitem>
+<listitem>
+SyncMaster 215TW (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 701T
@@ -113,6 +165,9 @@ SyncMaster 720T
 </listitem>
 <listitem>
 SyncMaster 730BF
+</listitem>
+<listitem>
+SyncMaster 753V
 </listitem>
 <listitem>
 SyncMaster 760BF (VGA and DVI inputs)
@@ -139,16 +194,23 @@ SyncMaster 930BF (at least VGA input)
 SyncMaster 940B
 </listitem>
 <listitem>
+SyncMaster 940BF
+</listitem>
+<listitem>
 SyncMaster 960BF (VGA and DVI inputs)
 </listitem>
 <listitem>
 SyncMaster 970P (VGA and DVI inputs)
 </listitem>
 <listitem>
+SyncMaster 971P
+</listitem>
+<listitem>
 SyncMaster 997MB
 </listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>SGI</title>
 <itemizedlist mark='bullet'>
@@ -160,6 +222,7 @@ GDM-5411
 </listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>Sony</title>
 <itemizedlist mark='bullet'>
@@ -168,6 +231,7 @@ SDM-S205K
 </listitem>
 </itemizedlist>
 </sect3>
+
 <sect3>
 <title>SUN</title>
 <itemizedlist mark='bullet'>

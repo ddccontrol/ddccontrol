@@ -101,7 +101,10 @@ AC_ARG_ENABLE(ddcpci,
 DDCPCI=
 if test x$support_ddcpci = xyes; then
    AC_CHECK_HEADERS([pci/pci.h], [], [AC_MSG_ERROR([PCI utils headers not found, please install pci-utils.], [1])], [])
-   AC_CHECK_LIB([pci], [pci_alloc], [], [AC_MSG_ERROR([PCI utils library not found, please install pci-utils.], [1])])
+   AC_CHECK_LIB([pci], [pci_alloc], [], [
+      AC_CHECK_LIB([z], [gzopen], [], [AC_MSG_ERROR([PCI utils library not found, please install pci-utils.], [1])])
+      AC_CHECK_LIB([pci], [pci_fill_info], [], [AC_MSG_ERROR([PCI utils library not found, please install pci-utils.], [1])], [-lz])
+   ])
    DDCPCI=ddcpci
    AC_DEFINE_UNQUOTED(HAVE_DDCPCI, 1, [Define if ddccontrol is built with ddcpci support.])
 fi
