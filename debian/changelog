@@ -3,8 +3,9 @@ ddccontrol (0.4.2-2) unstable; urgency=low
   * Updated maintainer email address
   * Restrict architectures to i386 and amd64 (Closes: #385812)
   * Document why "I/O warning" sometimes occurs (Closes: #386235)
+  * debian/rules: make debhelper commands apply to all binary packages
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 21 Oct 2006 03:36:47 -0400
+ -- Roberto C. Sanchez <roberto@cienfuegos.connexer.com>  Sun, 01 Apr 2007 12:13:15 -0400
 
 ddccontrol (0.4.2-1) unstable; urgency=low
 
