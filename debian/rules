@@ -67,14 +67,14 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs ChangeLog
-	dh_installdocs
-	dh_installman
-	dh_installexamples
-	dh_installmenu
+	dh_installchangelogs -A ChangeLog
+	dh_installdocs -A
+	dh_installman -A
+	dh_installexamples -A
+	dh_installmenu -A
 	cp debian/lintian-overrides \
 		debian/ddccontrol/usr/share/lintian/overrides/ddccontrol
-	dh_desktop
+	dh_desktop -A
 	dh_link
 	dh_strip
 	dh_compress
