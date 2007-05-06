@@ -1,3 +1,10 @@
+ddccontrol-db (20061014-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+  * Updated to debhelper compatibility level 5.
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat,  5 May 2007 20:54:07 -0400
+
 ddccontrol-db (20061014-1) unstable; urgency=low
 
   * New upstream release
