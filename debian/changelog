@@ -1,3 +1,10 @@
+ddccontrol (0.4.2-3) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+  * Updated to debhelper compatibility level 5.
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat,  5 May 2007 20:52:39 -0400
+
 ddccontrol (0.4.2-2) unstable; urgency=low
 
   * Updated maintainer email address

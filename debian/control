@@ -2,7 +2,7 @@ Source: ddccontrol
 Section: utils
 Priority: optional
 Maintainer: Roberto C. Sanchez <roberto@connexer.com>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, pciutils-dev, libpanel-applet2-dev, intltool, libxml2-dev, xml-core, xsltproc, tidy, zlib1g-dev
+Build-Depends: debhelper (>= 5), autotools-dev, pciutils-dev, libpanel-applet2-dev, intltool, libxml2-dev, xml-core, xsltproc, tidy, zlib1g-dev
 Standards-Version: 3.7.2
 
 Package: gddccontrol
