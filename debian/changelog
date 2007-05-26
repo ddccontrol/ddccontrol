@@ -1,9 +1,9 @@
-ddccontrol (0.4.2-3) UNRELEASED; urgency=low
+ddccontrol (0.4.2-3) unstable; urgency=low
 
-  * NOT RELEASED YET
   * Updated to debhelper compatibility level 5.
+  * Update architecture list (Closes: #423796).
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat,  5 May 2007 20:52:39 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 26 May 2007 12:55:35 -0400
 
 ddccontrol (0.4.2-2) unstable; urgency=low
 

@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 5), autotools-dev, pciutils-dev, libpanel-applet2-d
 Standards-Version: 3.7.2
 
 Package: gddccontrol
-Architecture: i386 amd64
+Architecture: i386 amd64 ia64 alpha arm
 Depends: ddccontrol (= ${Source-Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: a program to control monitor parameters
  DDCcontrol is a tool used to control monitor parameters, like brightness
@@ -16,7 +16,7 @@ Description: a program to control monitor parameters
  Homepage: http://ddccontrol.sourceforge.net/
 
 Package: ddccontrol
-Architecture: i386 amd64
+Architecture: i386 amd64 ia64 alpha arm
 Depends: ddccontrol-db (>= 20060308), ${shlibs:Depends}, ${misc:Depends}
 Description: a program to control monitor parameters
  DDCcontrol is a tool used to control monitor parameters, like brightness
@@ -27,7 +27,7 @@ Description: a program to control monitor parameters
 
 Package: libddccontrol-dev
 Section: libdevel
-Architecture: i386 amd64
+Architecture: i386 amd64 ia64 alpha arm
 Depends: libddccontrol0 (= ${Source-Version})
 Description: development library for ddccontrol
  Header files and static library for compiling against libddccontrol.
@@ -36,7 +36,7 @@ Description: development library for ddccontrol
 
 Package: libddccontrol0
 Section: libs
-Architecture: i386 amd64
+Architecture: i386 amd64 ia64 alpha arm
 Depends: ${shlibs:Depends}
 Description: shared library for ddccontrol
  Shared library for use by ddccontrol.
