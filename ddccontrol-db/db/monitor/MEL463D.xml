@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="Mitsubishi DiamondPro 930SB" init="standard">
+	<include file="MELcrt"/>
+</monitor>
