@@ -1,4 +1,8 @@
 <?xml version="1.0"?>
 <monitor name="Mitsubishi DiamondPro 930SB" init="standard">
+<!---  type(CRT_AG)  vcp(00 01 04 06 08 10 12 14(01 04 06 07 08) 16 18 1A 1E 20
+	22 24 26 28 30 32 38 3A 3C 40 42 44 46 4A 54 56     68 A8 B6 E1 E2 E3 E8
+	E9 EA EB EF F6 F9 FA FC FF) vcp_p02(3B 3C  42 43 46)       mccs_ver(1.1)
+	asset_eep(20)  mpu_ver(3.2))    -->
 	<include file="MELcrt"/>
 </monitor>
