@@ -39,10 +39,11 @@ grep -q " 0xdc" tmp
 if [ $? = 0 ]; then
 	COUNT=`grep "0xdc" tmp | sed -e "s:.*/[0-9]*/\([0-9]*\) .*$:\1:"`
 	case $COUNT in
+		7) echo "Will include SAMmb6. Altought maximum is 7."; SAMmb6=1 ;;
 		6) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		5) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		4) SAMmb6=0 ;;
-		*) echo "Unable to detect SAMmb6 ($COUNT)"; exit 0; ;;
+		*) echo "Unable to detect SAMmb6 ($COUNT), please put a note in the file." ;;
 	esac
 fi
 
@@ -54,7 +55,7 @@ if [ $? = 0 ]; then
 		10) echo "Will include SAMcp10."; SAMcp10=1 ;;
 		3) SAMcp10=0 ;;
 		2) SAMcp10=0 ;;
-		*) echo "Unable to detect SAMcp10 ($COUNT)"; exit 0; ;;
+		*) echo "Unable to detect SAMcp10 ($COUNT), please put a note in the file." ;;
 	esac
 fi
 
@@ -65,7 +66,7 @@ if [ $? = 0 ]; then
 	case $COUNT in
 		9) echo "Will include SAMg9, WARNING, there are 2 kinds of 9-values gamma controls."; SAMg9=1 ;;
 		2) SAMg9=0 ;;
-		*) echo "Unable to detect SAMg9 ($COUNT)"; exit 0; ;;
+		*) echo "Unable to detect SAMg9 ($COUNT), please put a note in the file." ;;
 	esac
 fi
 
