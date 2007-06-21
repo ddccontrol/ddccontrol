@@ -13,6 +13,7 @@
 				<value id="sport" name="Sport"/>
 				<value id="entertain" name="Entertain"/>
 				<value id="custom" name="Custom"/>
+				<value id="dynamic" name="Dynamic Contrast" /> 
 			</control>
 			<control id="superbright" type="list" name="Super Bright Mode" address="0xF9">
 				<value id="one" name="One" value="0"/>
@@ -26,6 +27,12 @@
 				<value id="middle" name="Middle"/>
 				<value id="low" name="Low"/>
 				<value id="auto" name="Auto"/>
+			</control>
+			<control id="fengine" type="list" name="f-Engine">
+				<value id="normal" name="Normal" />
+				<value id="user" name="User" />
+				<value id="text" name="Text" />
+				<value id="movie" name="Movie" />
 			</control>
 		</subgroup>
 		<subgroup name="Gamma" > 

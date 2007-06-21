@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 225BW (Digital)">
+	<include file="SAMmb6"/>
+	<include file="SAMlcd"/>
+</monitor>
