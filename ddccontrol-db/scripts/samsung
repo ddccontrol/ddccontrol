@@ -39,6 +39,7 @@ grep -q " 0xdc" tmp
 if [ $? = 0 ]; then
 	COUNT=`grep "0xdc" tmp | sed -e "s:.*/[0-9]*/\([0-9]*\) .*$:\1:"`
 	case $COUNT in
+		6) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		5) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		4) SAMmb6=0 ;;
 		*) echo "Unable to detect SAMmb6 ($COUNT)"; exit 0; ;;
