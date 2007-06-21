@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 931c" init="standard">
+	<include file="SAM0259"/>
+</monitor>
