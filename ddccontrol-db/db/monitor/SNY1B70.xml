@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!--- Invalid CAPS:
+Sortie brute : (prot(monitor)  type(crt) model(SNY1B70 )          edid bin(128
+(
+-->
+<monitor name="SONY HMD-A230">
+	<caps add="(prot(monitor)  type(crt) model(SNY1B70 ) vcp( 00 01 10 11 12 13 14 15 20 21 22 23 24 25 26 27 28 29 30 31 32 33 38 39 40 41 42 43 44 45 54 55 56 57 ))"/>
+	<include file="SNYcrt"/>
+</monitor>
