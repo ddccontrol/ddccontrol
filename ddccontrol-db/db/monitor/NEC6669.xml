@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--- Invalid CAPS:
+vcp(04 06 08 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 68 A8 
+FA FF) vcp_p2(38 39 47 64 65) prot(monitor) type(LCD) mccs_ver(2.0) cmds(01 
+02 03 07 0C 4E C0 C1 C4 C5 C6 C7 C8 E3 F3) asset_eep(20) mpu_ver(2.13) -->
+<monitor name="NEC AccuSync LCD92V" init="standard">
+	<caps add="(vcp(04 06 08 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 68 A8 FA FF))"/>
+	<include file="VESA"/>
+</monitor>
+
+
