@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 172X" init="standard">
+	<!--- (type(LCD)vcp(04 05 06 08 0E 10 12 16 18 1A 1E 20 30 3E 60(1
+3) B0(1 2) B6 C6 C8 C9 D6(1 4) DC(1 2 3 4) DF E0(0 1 2))) -->
+	<caps add="(vcp( CA CC E2))"/>
+	<include file="SAMlcd"/>
+</monitor>
