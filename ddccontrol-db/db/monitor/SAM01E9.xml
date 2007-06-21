@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 940FN" init="standard">
+	<!--- (type(LCD)vcp(04 05 06 08 10 12 16 18 1A 60(F0 ) 87 B0(1 2) B6 C6 
+C8 C9 D6(1 4) DC(1 2 3 4 5 6) DF F0(0 1 2 3 4) F2 F8 F9 FA FB FC FD FE E0(0 1 
+2 3))) -->
+	<caps add="(vcp( CA CC E2 F5))"/>
+	<include file="SAMmb6"/>
+	<include file="SAMlcd"/>
+</monitor>
