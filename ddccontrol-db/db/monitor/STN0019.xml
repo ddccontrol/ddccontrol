@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--- File provided by Peter -->
+<!--- Samtron 91S has some primitive DDC/CI support (no caps, only a few controls) -->
+<monitor name="Samtron 91S (VGA)" init="standard">
+	<caps add="(vcp(10 12 16 18 1a 20 30 d0 d2))"/>
+	<controls>
+		<!-- <control id="brightness" address="0x10"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+		<!-- <control id="contrast"   address="0x12"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+
+		<!-- <control id="red"        address="0x16"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+		<!-- <control id="green"      address="0x18"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+		<!-- <control id="blue"       address="0x1a"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+
+		<!-- <control id="hpos"       address="0x20"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+		<!-- <control id="vpos"       address="0x30"/> max should be 100 instead of 255 (as recognised by ddccontrol -p -c -d) -->
+
+		<!-- The following two controls corresponds to menu -->
+		<!-- "Image Lock: Fine/Coarse", they change left-right position and size -->
+		<!-- of the screen with some narrow distorteded areas from top to bottom -->
+		<control id="fine"       address="0xd0"/>
+		<control id="coarse"     address="0xd2"/>
+
+		<!-- Still unknown -->
+		<!--- Control 0xdc: +/15/150 [???] -->
+		<!--- Control 0xdd: +/31/150 [???] -->
+		<!--- Control 0xde: +/16/150 [???] -->
+		<!--- Control 0xe4: +/163/63 [???] -->
+		<!--- Control 0xe6: +/163/63 [???] -->
+		<!--- Control 0xe8: +/165/63 [???] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
