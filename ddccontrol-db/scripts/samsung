@@ -40,6 +40,7 @@ if [ $? = 0 ]; then
 	COUNT=`grep "0xdc" tmp | sed -e "s:.*/[0-9]*/\([0-9]*\) .*$:\1:"`
 	case $COUNT in
 		7) echo "Will include SAMmb6. Altought maximum is 7."; SAMmb6=1 ;;
+		240) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		6) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		5) echo "Will include SAMmb6."; SAMmb6=1 ;;
 		4) SAMmb6=0 ;;
@@ -53,6 +54,7 @@ if [ $? = 0 ]; then
 	COUNT=`grep "0xe0" tmp | sed -e "s:.*/[0-9]*/\([0-9]*\) .*$:\1:"`
 	case $COUNT in
 		10) echo "Will include SAMcp10."; SAMcp10=1 ;;
+		4) SAMcp10=0 ;;
 		3) SAMcp10=0 ;;
 		2) SAMcp10=0 ;;
 		*) echo "Unable to detect SAMcp10 ($COUNT), please put a note in the file." ;;
