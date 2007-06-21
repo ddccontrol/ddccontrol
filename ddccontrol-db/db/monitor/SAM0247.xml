@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 971P (VGA)">
+	<include file="SAM0248"/>
+</monitor>
