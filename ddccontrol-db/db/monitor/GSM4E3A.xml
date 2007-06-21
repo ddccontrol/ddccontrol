@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--- File provided by Oleg Artamonov -->
 <!--- There are more than 5 languages (control 0xCC) but I can't set them with ddccontrol, may be it's a bug in my monitor's firmware. -->
 <monitor name="LG Flatron L2000C (Digital)">
 	<caps add="(vcp(02 04 05 08 0B 0C 10 12 14(04 05 06 07 08 0B) 16 18 1A 60 FC FD FE)"/>

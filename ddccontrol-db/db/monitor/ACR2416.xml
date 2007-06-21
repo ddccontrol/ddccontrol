@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--- File provided by Oleg Artamonov -->
 <!---
   1. There's no brightness control via DDC/CI. Control 0x10 is useless, it
      adjusts "something" that's not brightness.

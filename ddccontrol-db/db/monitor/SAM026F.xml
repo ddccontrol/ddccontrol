@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--- File provided by Oleg Artamonov -->
 <monitor name="Samsung SyncMaster 932B (Digital)">
 	<include file="SAMmb6"/>
 	<include file="SAMlcd"/>
