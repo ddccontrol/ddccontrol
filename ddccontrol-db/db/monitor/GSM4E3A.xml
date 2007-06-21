@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--- There are more than 5 languages (control 0xCC) but I can't set them with ddccontrol, may be it's a bug in my monitor's firmware. -->
+<monitor name="LG Flatron L2000C (Digital)">
+	<caps add="(vcp(02 04 05 08 0B 0C 10 12 14(04 05 06 07 08 0B) 16 18 1A 60 FC FD FE)"/>
+	<controls>
+		<control id="language" type="list" address="0xcc">
+			<value id="english" value="2"/>
+			<value id="french"  value="3"/>
+			<value id="german"  value="4"/>
+			<value id="italian" value="5"/>
+			<value id="russian" value="9"/>
+		</control>
+		
+		<control id="fengine" type="list" address="0xfc">
+			<value id="normal" value="0"/>
+			<value id="user" value="3"/>
+			<value id="text" value="2"/>
+			<value id="movie" value="1"/>
+		</control>
+		
+		<control id="colorpreset" type="list" address="0x14">
+			<value id="srgb" value="4"/>
+			<value id="6500k" value="5"/>
+			<value id="7500k" value="6"/>
+			<value id="8200k" value="7"/>
+			<value id="9300k" value="8" />
+		</control>
+		
+		<control id="gamma" type="list" address="0xfe">
+			<value id="0" value="1"/>
+			<value id="+0.5" value="2"/>
+			<value id="-0.5" value="0"/>
+		</control>
+		
+		<control id="powerled" type="list" address="0xfd">
+			<value id="off" value="0"/>
+			<value id="on" value="1"/>
+		</control>
+	</controls>
+	<include file="VESA"/>
+</monitor>
