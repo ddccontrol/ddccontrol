@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!---DELL P1100 is a CRT. CAPS invalid
+(prot(monitor)  type(crt) model( DELAB50           edid bin(128(################################################################################################################################))cmds(01020304050608090A0B0C4F)vcp(00010810121416181A20222426283032384042445456686C6E70E0E2F1F2F3F4F5F6F7)
+-->
+<monitor name="DELL P1100" init="standard">
+	<include file="SUN0577"/>
+	<controls>
+	    <control id="autosize" address="0xe0" />
+	    <control id="colorreturn" address="0xe2" />
+	    
+	    <control id="colorpreset" address="0xf5">
+		<value id="easy" value="0" />
+		<value id="expert" value="1" />
+		<value id="srgb" value="2" />
+	    </control>
+	    <control id="vtopmisconvergence" address="0xf6" />
+	    <control id="vbottommisconvergence" address="0xf7" />
+	</controls>
+</monitor>

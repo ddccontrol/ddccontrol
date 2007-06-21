@@ -101,6 +101,8 @@
 				<value id="user2" name="User 2"/>
 				<value id="user3" name="User 3"/>
 				<value id="user4" name="User 4"/>
+				<value id="easy" name="Easy"/>
+				<value id="expert" name="Expert"/>
 			</control>
 			<control id="magiccolor" type="list" name="MagicColor" address="0xF0">
 				<value id="off" name="Off"/>
@@ -109,6 +111,7 @@
 				<value id="intelligent" name="Intelligent"/>
 			</control>
 			<control id="colortemp" type="value" name="Color temperature" address="0x54"/>
+			<control id="colorreturn" type="value" name="Color Return"/>
 		</subgroup>
 	</group>
 	<group name="Position and size">
@@ -149,6 +152,8 @@
 		<subgroup name="Misconvergence" pattern="misconvergence">
 			<control id="hmisconvergence" type="value" name="Horizontal Misconvergence" address="0x28"/>
 			<control id="vmisconvergence" type="value" name="Vertical Misconvergence" address="0x38"/>
+			<control id="vtopmisconvergence" type="value" name="Vertical Top Misconvergence"/>
+			<control id="vbottommisconvergence" type="value" name="Vertical Bottom Misconvergence"/>
 		</subgroup>
 		<subgroup name="General distortion">
 			<control id="keybalance" type="value" name="Parallelogram Distortion (Key Balance)" address="0x40"/>
