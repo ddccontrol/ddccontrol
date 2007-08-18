@@ -2,8 +2,9 @@ ddccontrol-db (20061014-2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   * Updated to debhelper compatibility level 5.
+  * Recommends applies only to alpha, amd64, arm, i386, ia64 (Closes: #436649)
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat,  5 May 2007 20:54:07 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Fri, 10 Aug 2007 14:32:55 -0400
 
 ddccontrol-db (20061014-1) unstable; urgency=low
 
