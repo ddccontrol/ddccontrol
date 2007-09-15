@@ -6,4 +6,4 @@
 # Compulsory line, this is a version 3 file
 version=3
 
-http://sf.net/ddccontrol/ddccontrol-db-(.*)\.tar\.gz
+http://sf.net/ddccontrol/ddccontrol-db-(.*)\.tar\.bz2
