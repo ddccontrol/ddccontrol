@@ -6,4 +6,4 @@
 # Compulsory line, this is a version 3 file
 version=3
 
-ftp://ftp.jaist.ac.jp/pub/sourceforge/d/dd/ddccontrol/ddccontrol-db-(.*)\.tar\.bz2 debian uupdate
+http://sf.net/ddccontrol/ddccontrol-db-(.*)\.tar\.gz
