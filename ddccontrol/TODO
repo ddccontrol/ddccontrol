@@ -7,6 +7,8 @@ Nicolas:
 
 BUGS:
  - Fix Samsung 720T (not detected as LCD as type is "LCD CM")
+ - Fix Samsung 740BF (not detected as LCD)
+ - Fix Mitsubishi DiamondPro 930SB (not detected as CRT (type(CRT_AG)))
 
  - When changing a control value quickly (moving the mouse outside the control),
    the value on the scale does not correspond to the real value.
