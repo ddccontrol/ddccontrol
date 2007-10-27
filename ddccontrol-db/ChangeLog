@@ -1,3 +1,140 @@
+2007-10-27 02:22  el_cubano
+
+	* db/monitor/NEC6605.xml, po/Makefile.in.in: Add support for NEC
+	  2080UX (Thanks to Robert Schedel)
+
+2007-06-21 12:34  nboichat
+
+	* db/monitor/SAM0161.xml: Add support for Samsung SyncMaster 931BF,
+	  thanks to Tobias Niemann.
+
+2007-06-21 12:31  nboichat
+
+	* db/monitor/SAM0258.xml: Improve support for Samsung SyncMaster
+	  931C. Thanks to Jan Wagner.
+
+2007-06-21 12:29  nboichat
+
+	* db/monitor/SAM0259.xml, db/monitor/SAM027D.xml, scripts/samsung:
+	  Add support for Samsung SyncMaster 931c, thanks to Tomasz Moń.
+
+2007-06-21 12:25  nboichat
+
+	* db/monitor/SAM0225.xml: Add support for Samsung Syncmaster 940BW,
+	  thanks to Thomas Raffler.
+
+2007-06-21 12:24  nboichat
+
+	* db/monitor/SAM0219.xml: Add support for Samsung SyncMaster 960BG,
+	  thanks to Serge Fedotov.
+
+2007-06-21 12:22  nboichat
+
+	* db/monitor/SAM0216.xml: Add support for Samsung Syncmaster 731BF,
+	  thanks to Judit Nagy.
+
+2007-06-21 12:20  nboichat
+
+	* db/monitor/SAM0218.xml, db/monitor/SAMmb6.xml, scripts/samsung:
+	  Add support for Samsung SyncMaster 931BF. Thanks to Johannes
+	  Raspe.
+
+2007-06-21 11:59  nboichat
+
+	* db/monitor/SAM01C2.xml: Add support for Samsung SyncMaster 750B,
+	  thanks to Alex V Breger.
+
+2007-06-21 11:59  nboichat
+
+	* db/monitor/SAM021D.xml: Add support for Samsung SyncMaster 205BW,
+	  thanks to Erik Martens.
+
+2007-06-21 11:57  nboichat
+
+	* db/monitor/SAM0226.xml, scripts/samsung: Add support for Samsung
+	  SyncMaster 940BW, thanks to David Chang.
+
+2007-06-21 11:50  nboichat
+
+	* db/monitor/SAM01E9.xml: Add support for Samsung SyncMaster 940FN,
+	  thanks to Paweł Wasylewicz.
+
+2007-06-21 11:49  nboichat
+
+	* db/monitor/SAM01E1.xml: Add support for Samsung SyncMaster 940N,
+	  thanks to Jan Dumon.
+
+2007-06-21 11:47  nboichat
+
+	* db/monitor/STN0019.xml: Add support for Samsung Samtron 91S.
+	  Thanks to Peter.
+
+2007-06-21 11:45  nboichat
+
+	* db/monitor/SAM0247.xml: Add support for Samsung SyncMaster 971P
+	  (VGA). Thanks to Mark.
+
+2007-06-21 11:42  nboichat
+
+	* db/monitor/: ACR2416.xml, DEL50AB.xml, GSM4E3A.xml, SAM0255.xml,
+	  SAM026F.xml, SAM027D.xml: Add credits in db files.
+
+2007-06-21 11:34  nboichat
+
+	* scripts/samsung: Add script to auto-generate Samsung database
+	  files.
+
+2007-06-21 11:33  nboichat
+
+	* db/monitor/SAM00C8.xml: Add support for Samsung SyncMaster 172X,
+	  thanks to Sergey Lenkov.
+
+2007-06-21 10:40  nboichat
+
+	* db/monitor/: MEL463D.xml, SAM01DD.xml: Samsung SyncMaster 740BF
+	  (DVI). Thanks to "basic".
+
+2007-06-21 10:30  nboichat
+
+	* db/monitor/NEC6669.xml: Add support for NEC AccuSync LCD92V.
+	  Thanks to Francois.
+
+2007-06-21 10:26  nboichat
+
+	* db/monitor/SNY1B70.xml: SONY HMD-A230. Thanks to François
+	  Blasin.
+
+2007-06-21 10:18  nboichat
+
+	* db/monitor/MEL463D.xml: Add support for Mitsubishi DiamondPro
+	  930SB, thanks to "gpe92".
+
+2007-06-21 10:12  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/DEL50AB.xml: Add support for DELL P1100, thanks to
+	  Grzegorz Kurtyka.
+
+2007-06-21 10:02  nboichat
+
+	* db/: options.xml, options.xml.h, options.xml.in,
+	  monitor/SAM0255.xml, monitor/SAM027D.xml: Add support for Samsung
+	  SyncMaster 225BW.  SAM027D.xml was for  Samsung SyncMaster 206BW
+	  and not for Samsung SyncMaster 226BW.  Thanks to Oleg Artamonov.
+
+2007-06-21 09:59  nboichat
+
+	* db/monitor/: GSM4E3A.xml, SAM026F.xml, SAM027D.xml: Add support
+	  for:	- Samsung SyncMaster 932B (Digital)  - Samsung SyncMaster
+	  226BW (Digital)  - LG Flatron L2000C (Digital)
+
+	  Thanks to Oleg Artamonov.
+
+2007-06-21 09:50  nboichat
+
+	* db/monitor/ACR2416.xml: Add support for Acer AL2416Ws, thanks to
+	  Oleg Artamonov.
+
 2006-10-14 06:36  nboichat
 
 	* NEWS, configure.ac, db/options.xml: Prepare release 20061014
