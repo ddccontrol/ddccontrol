@@ -1,3 +1,8 @@
+2007-10-27 03:53  el_cubano
+
+	* db/monitor/SAM01B7.xml: Add support for Samsung SyncMaster N740
+	  (Thanks to Ramadhian Moestafa)
+
 2007-10-27 02:22  el_cubano
 
 	* db/monitor/NEC6605.xml, po/Makefile.in.in: Add support for NEC
