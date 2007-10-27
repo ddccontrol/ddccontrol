@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<monitor name="NEC Multisync 2080UX" init="standard">
+	<controls>
+		<control id="colorpreset" address="0x14">
+			<value id="5000k"  value="4"/>
+			<value id="6500k"  value="1"/>
+			<value id="7500k"  value="6"/>
+			<value id="8200k"  value="7"/>
+			<value id="9300k"  value="8"/>
+			<value id="native" value="2"/>
+		</control>
+		
+		<control id="language" type="list" address="0x68">
+			<value id="english" value="1"/>
+			<value id="german"  value="2"/>
+			<value id="french"  value="3"/>
+			<value id="spanish" value="4"/>
+			<value id="chinese" value="5"/>
+			<value id="italian" value="6"/>
+			<value id="swedish" value="7"/>
+		</control>
+		
+		<control id="saturation" address="0x8a"/> <!-- Control 0x8a: +/5/10 [Color Temperature], working only in user color presets-->
+		
+		<control id="sharpness" address="0x8c"/>
+		
+		<!-- Control 0x9b: +/128/256 [Six Axis Color Control - Red], not working -->
+		<!-- Control 0x9c: +/128/256 [Six Axis Color Control - Yellow] -->
+		<!-- Control 0x9d: +/128/256 [Six Axis Color Control - Green] -->
+		<!-- Control 0x9e: +/128/256 [Six Axis Color Control - Cyan] -->
+		<!-- Control 0x9f: +/128/256 [Six Axis Color Control - Blue] -->
+		<!-- Control 0xa0: +/128/256 [Six Axis Color Control - Magenta] -->
+		
+		<!-- Control 0xa8: +/1/3 [Sync type, RO] -->
+		<!-- Control 0xb1: +/0/1 [???] Not in CAPS -->
+		
+		<!-- Control 0xb4: +/1/2 [RGB Ordering, RO] -->
+		<!-- Control 0xb6: +/3/5 [Monitor Type, RO] -->
+		<!-- Control 0xf6: +/0/1 [Refresh Notifier] Not in CAPS -->
+		<!-- Control 0xfa: +/766/65535 [Total Power Time in 30 min, RO] -->
+		<control id="osd" type="list" address="0xfb"> <!--- USB specifies address 0xCA -->
+			<value id="enable" value="0"/>
+			<value id="partenable" value="1"/>
+		</control>
+		<!-- Control 0xff: +/587/65535 [Power On Time in 30 min, RO] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
