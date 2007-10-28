@@ -1,3 +1,8 @@
+2007-10-28 02:40  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r723] AUTHORS, COPYING, commit.sh: Update FSF address and fix
+	  commit script to work with subversion
+
 2007-10-27 03:53  el_cubano
 
 	* db/monitor/SAM01B7.xml: Add support for Samsung SyncMaster N740
