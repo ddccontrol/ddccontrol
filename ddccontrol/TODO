@@ -7,6 +7,7 @@ Nicolas:
 
 Roberto:
  - Update supportedmonitors.xml to list all the new monitors.
+ - Fix vpath building
 
 BUGS:
  - Fix Samsung 720T (not detected as LCD as type is "LCD CM")
