@@ -13,10 +13,3 @@ BUGS:
  - Fix Samsung 740BF (not detected as LCD)
  - Fix Mitsubishi DiamondPro 930SB (not detected as CRT (type(CRT_AG)))
 
- - When changing a control value quickly (moving the mouse outside the control),
-   the value on the scale does not correspond to the real value.
- - "My only criticism is that the slider
-   controls in the GUI seem a bit "jittery."  They jump a little when you
-   slide them.  This is most noticable if you are trying to move it only a
-   short distance.  I am not sure what the cause of this is, but I though I
-   should let you know."

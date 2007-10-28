@@ -401,11 +401,11 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 				
 				gtk_range_set_increments(GTK_RANGE(widget),
 						100.0/(double)currentMaximum,
-						10.0*100.0/(double)currentMaximum);
+						100.0/(double)currentMaximum);
 				gtk_range_set_value(GTK_RANGE(widget),
 						(double)100.0*currentDefault/(double)currentMaximum);
 						
-				g_signal_connect_after(G_OBJECT(widget), "value-changed", G_CALLBACK(range_callback), NULL);
+				g_signal_connect_after(G_OBJECT(widget), "change-value", G_CALLBACK(range_callback), NULL);
 			}
 			break;
 		case command:
