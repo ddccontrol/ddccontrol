@@ -1,6 +1,16 @@
-2007-10-27 16:33  Nicolas Boichat <nicolas@boichat.ch>
+2007-10-28 01:50  Roberto C. Sanchez <roberto@connexer.com>
 
-	* [r579] TODO: Old modification to TODO I forgot to commit.
+        * [r715] AUTHORS, COPYING, commit.sh, doc/gpl.xml,
+          src/ddccontrol/main.c, src/ddcpci/ddcpci.h,
+          src/ddcpci/intel740.c, src/ddcpci/intel810.c, src/ddcpci/main.c,
+          src/ddcpci/nvidia.c, src/ddcpci/sis.c, src/ddcpci/via.c,
+          src/gddccontrol/fspatterns.c, src/gddccontrol/gprofile.c,
+          src/gddccontrol/main.c, src/gddccontrol/notebook.c,
+          src/gddccontrol/notebook.h, src/gnome-ddcc-applet/ddcc-applet.c,
+          src/gnome-ddcc-applet/ddcc-applet.h, src/lib/conf.c,
+          src/lib/conf.h, src/lib/ddcci.c, src/lib/ddcci.h,
+          src/lib/ddcpci-ipc.h, src/lib/i2c-dev.h, src/lib/monitor_db.c,
+          src/lib/monitor_db.h: Update FSF address
 
 2006-08-29 11:03  nboichat
 
