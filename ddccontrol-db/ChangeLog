@@ -1,3 +1,8 @@
+2007-10-28 03:06  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r726] db/monitor/SAM021A.xml: Support for Samsung SyncMaster
+	  960BG variant
+
 2007-10-28 02:40  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r723] AUTHORS, COPYING, commit.sh: Update FSF address and fix
