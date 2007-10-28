@@ -5,6 +5,9 @@ Nicolas:
  - Better handling of --enable-doc.
  - Use rsync for SF file transfers.
 
+Roberto:
+ - Update supportedmonitors.xml to list all the new monitors.
+
 BUGS:
  - Fix Samsung 720T (not detected as LCD as type is "LCD CM")
  - Fix Samsung 740BF (not detected as LCD)
