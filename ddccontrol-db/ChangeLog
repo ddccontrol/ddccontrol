@@ -1,3 +1,8 @@
+2007-10-28 03:42  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r729] db/monitor/SAM027F.xml: Add support for Samsung SyncMaster
+	  226BW, thanks to Den Jean
+
 2007-10-28 03:06  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r726] db/monitor/SAM021A.xml: Support for Samsung SyncMaster
