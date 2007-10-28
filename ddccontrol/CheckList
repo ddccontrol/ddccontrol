@@ -4,7 +4,7 @@ Release Check List (Nicolas Boichat)
   - make update-po
   - poedit fr.po
 
-- cvs commit
+- svn commit
 - update NEWS
 - update version in configure.ac
 - update version in doc/main.xml
@@ -29,7 +29,7 @@ Release Check List (Nicolas Boichat)
 
 - in doc/: make publish publish-release
 - ./commit.sh "Prepare release 0.xx"
-- cvs tag Release-0_xx
+- svn cp https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol/trunk/ddccontrol https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol/tags/ddccontrol-0.xx -m "Tag release 0.xx"
 
 - make dist-bzip2
 - ftp upload.sourceforge.net:
