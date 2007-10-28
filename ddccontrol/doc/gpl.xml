@@ -9,10 +9,10 @@
     <legalnotice id="gpl-legalnotice">
       <para>	
 	<address>Free Software Foundation, Inc. 
-	  <street>59 Temple Place, Suite 330</street>, 
+	  <street>51 Franklin Street, Fifth Floor</street>, 
 	  <city>Boston</city>, 
 	  <state>MA</state> 
-	  <postcode>02111-1307</postcode>
+	  <postcode>02110-1301</postcode>
 	  <country>USA</country>
 	</address>
       </para>
@@ -378,7 +378,7 @@
     <para>
       You should have received a copy of the GNU General Public License
       along with this program; if not, write to the Free Software
-      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
     </para>
     <para>
       Also add information on how to contact you by electronic and paper mail.
