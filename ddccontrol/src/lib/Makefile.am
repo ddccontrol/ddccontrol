@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-INCLUDES = -I.. -DLOCALEDIR=\"$(localedir)\"
+INCLUDES = -I@top_srcdir@/src -DLOCALEDIR=\"$(localedir)\"
 
 pkginclude_HEADERS = conf.h monitor_db.h ddcci.h ddcpci-ipc.h
 

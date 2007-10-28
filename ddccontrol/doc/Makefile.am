@@ -7,11 +7,11 @@ dist_html_DATA = html/*
 EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml supportedmonitors.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl
 
 if BUILD_DOC
-html/*: main.xml *.xml style.xsl
+html/*: main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml supportedmonitors.xml thanks.xml techdocs.xml usage.xml style.xsl
 	rm -rf html.old
 	true `mv -f html html.old`
 	mkdir html
-	cd html; $(XSLTPROC) $(XSLTPROC_FLAGS) ../$(XHTML_STYLESHEET) ../$<
+	$(XSLTPROC) $(XSLTPROC_FLAGS) -o html/ @top_srcdir@/doc/$(XHTML_STYLESHEET) $<
 	-@TIDY@ -q -raw -im html/*.html
 
 publish: all

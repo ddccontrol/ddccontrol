@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-INCLUDES = -I../lib -DLOCALEDIR=\"$(localedir)\"
+INCLUDES = -I@top_srcdir@/src/lib -DLOCALEDIR=\"$(localedir)\"
 
 LDADD = ../lib/libddccontrol.la
 

@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-INCLUDES = -I../lib -I.. -DLOCALEDIR=\"$(localedir)\"
+INCLUDES = -I@top_srcdir@/src/lib -I@top_srcdir@/src -DLOCALEDIR=\"$(localedir)\"
 
 EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png
 
