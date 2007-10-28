@@ -55,10 +55,10 @@ if test "x$support_i2c_dev" = "xyes" ; then
 	)
 
 	if test "x$support_i2c_dev_works" = "xno" ; then
-	  AC_MSG_CHECKING([if src/lib/i2c-dev.h works instead])
+	  AC_MSG_CHECKING([if $srcdir/src/lib/i2c-dev.h works instead])
 	  AC_COMPILE_IFELSE([
 	  [#define HAVE_BUGGY_I2C_DEV 1]
-	  [#include "src/lib/i2c-dev.h"]
+	  [#include "$srcdir/src/lib/i2c-dev.h"]
 	  [const int a = I2C_RDWR + I2C_M_RD;]
 	  [struct i2c_msg i2cmsg;]
 	  ],
