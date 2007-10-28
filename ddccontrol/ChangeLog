@@ -1,3 +1,7 @@
+2007-10-28 02:34  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r720] commit.sh: Tweak script to get correct log entry
+
 2007-10-28 01:53  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r717] ChangeLog: Update ChangeLog
