@@ -1,8 +1,12 @@
 #!/bin/sh
+echo "Updating working copy..."
+svn update || exit 1
 echo "Committing your changes (message: '$1')..."
-cvs commit -m "$1"
+svn commit -m "$1"
 echo "Updating ChangeLog..."
-cvs2cl.pl -T --gmt -I ChangeLog
+svn update
+REVISION=$(svn info |grep ^Revision |cut -f2 -d' ')
+(TZ=GMT svn2cl -i -r $REVISION --authors=AUTHORS --stdout; cat ChangeLog) >ChangeLog.tmp && mv -f ChangeLog.tmp ChangeLog
 echo "Committing ChangeLog..."
-cvs commit -m "Update ChangeLog" ChangeLog
+svn commit -m "Update ChangeLog" ChangeLog
 echo "OK"
