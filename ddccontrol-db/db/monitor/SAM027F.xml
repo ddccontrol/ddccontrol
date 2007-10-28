@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<monitor name="Samsung SyncMaster 226BW" init="standard">
+	<!--- (prot(monitor)type(LCD)model(Mendel)mccs_ver(2.0)vcp(04 05 08 10 12 14(02 03 0A 0B) 16 18 1A 60(01 03) 87 B0(01 02) B6 C6 C8 C9 D6(01 04) DC(01 02 03 04 05 06 F0) DF F0(00 01 02 03 09) F2 )mswhql(1)) -->
+	<caps add="(vcp( CA E2 F5))"/>
+	<include file="SAMmb6"/>
+	<include file="SAMlcd"/>
+</monitor>
