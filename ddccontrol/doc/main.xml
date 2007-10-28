@@ -21,8 +21,18 @@
 <surname>Boichat</surname>
 <email>nicolas@boichat.ch</email>
 </author>
+<author>
+<firstname>Roberto</firstname>
+<othername>C.</othername>
+<surname>Sanchez</surname>
+<email>roberto@connexer.com</email>
+</author>
 
-<copyright><year>2005-2006</year>
+<copyright><year>2007</year>
+<holder>Roberto C. Sanchez</holder>
+</copyright>
+<copyright>
+<year>2005-2006</year>
 <holder>Nicolas Boichat</holder>
 </copyright>
 

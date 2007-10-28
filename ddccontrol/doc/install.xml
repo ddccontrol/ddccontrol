@@ -2,7 +2,7 @@
 <title>Install notes</title>
 
 <sect1 id="requirement">
-<title>Software Requirement</title>
+<title>Software Requirements</title>
 <para>To compile and run DDCcontrol, you need to have these packages installed:</para>
 <itemizedlist mark='bullet'>
 <listitem>
@@ -24,15 +24,15 @@
 <para>In addition to the library packages, you also need the development
 packages, which are not usually installed. For example, on Debian, their names
 are <filename>libxml2-dev</filename>, <filename>pciutils-dev</filename> and
-<filename>libgtk2.0-dev</filename>. Others distributions probably have similar
-packages names. On Fedora Core 5, you will also need
+<filename>libgtk2.0-dev</filename>. Other distributions probably have similar
+package names. On Fedora Core 5, you will also need
 <filename>gnome-panel-devel</filename> package.
 </para>
 <note>
 <para>
 You don't need pci-utils if you don't use direct PCI memory access, and you 
 don't need gtk+ if you don't plan to use the Gnome GUI. Usually, this is not the
-case, so you will need these packages.
+case, so you will almost certainly want these packages for compiling ddccontrol.
 </para>
 </note>
 </sect1>
@@ -127,5 +127,15 @@ and a specific driver for your graphic card (see <xref linkend="supportedgc"/>).
 </listitem>
 </itemizedlist>
 </sect2>
+</sect1>
+
+<sect1 id="debian">
+<title>Installation on Debian (and derivatives)</title>
+<para>The ddccontrol and ddccontrol-db packages are available in Debian (and
+derivatives).  You simply need to install the ddccontrol package and all the
+proper dependencies will be installed along with it.  For example:</para>
+<screen format="linespecific">
+# apt-get install ddccontrol
+</screen>
 </sect1>
 </chapter>

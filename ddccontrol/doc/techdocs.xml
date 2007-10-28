@@ -4,24 +4,26 @@
 <title>Translation (I18N) guide</title>
 <para>Author: Nicolas Boichat &lt;nicolas -at- boichat.ch&gt;</para>
 <para>
-You want to translate ddccontrol to your favorite language? Then, this guide is for you!
+Do you want to translate ddccontrol to your favorite language? Then, this guide is for you!
 </para>
 <para>
-The distribution is splitted in two packages, <filename>ddccontrol</filename>
+The distribution is split in two packages: <filename>ddccontrol</filename>
 (the main program), and <filename>ddccontrol-db</filename> (monitor database).
 </para>
 <para>
-Tools you need: <filename>cvs</filename>,
+Tools you need: <filename>subversion</filename>,
 <filename>automake</filename>/<filename>autoconf</filename>,
 <filename>gettext</filename>, <filename>make</filename>,
 <filename>poedit</filename> (or another tool, or a simple text editor).
 </para>
 <para>
-First, you need to check-out the sources from the CVS repository
+First, you need to check-out the sources from the Subversion repository
 (see
-<ulink url="http://sourceforge.net/cvs/?group_id=117933">project CVS page</ulink>,
-Anonymous CVS Access section). Note you need to perform this operation,
-and the following ones, on both ddccontrol and ddccontrol-db modules (there are
+<ulink url="http://sourceforge.net/svn/?group_id=117933">project Subversion page</ulink>,
+Subversion Access section).
+</para>
+<para>Note you need to perform the following operations
+in both the trunk/ddccontrol and trunk/ddccontrol-db directories (there are
 strings to translate in the main program, and in the database).
 </para>
 <para>
@@ -42,32 +44,25 @@ fields in it (like <sgmltag class="attribute">AUTHOR</sgmltag>,
 </para>
 <para>
 Then open your <filename>.po</filename> file, and translate the strings! I
-recommend that you use a tool like <ulink url="http://poedit.sf.net/">poedit</ulink>
-to edit it, as it warns visually you when strings are wrong, and offers spellcheck,
-but it's your choice .-)
+recommend that you use a tool like <ulink url="http://poedit.sf.net/">poedit</ulink>,
+as it warns you visually when strings are wrong, and offers spellcheck.
+But it's your choice .
 </para>
 <para>
 When you are finished, it would be nice to test if it works by installing and
 running the software, but it is not mandatory, particularly if you don't have
-the needed hardware (i.e. a monitor supporting DDC/CI).
+the needed hardware (i.e. a monitor supporting DDC/CI).  Then, sending the completed
+<filename>.po</filename> files to
+<ulink url="mailto:ddccontrol-devel@lists.sourceforge.net">ddccontrol-devel</ulink>.
 </para>
 <para>
-Then, I give you two possibilities for sending the completed
-<filename>.po</filename> files, either you send them to
-<ulink url="mailto:bacula-devel@lists.sourceforge.net">bacula-devel</ulink>,
-or I give you a CVS write access (in this case, please send me your SourceForge
-ID). The later (CVS) is of course my prefered, as it is less work for me, but if
-you don't feel comfortable with CVS, and don't have time to learn, e-mail is ok too.
+It is a good idea that you subscribe to <filename>ddccontrol-devel</filename>,
+particularly if you have problems to translate some technical strings.
+This way it is not necessary to explain the same terms repeatedly to all translators .
 </para>
 <para>
-I suggest that you subscribe to <filename>ddccontrol-devel</filename>,
-particularly if you have problems to translate some technical strings. So
-I don't have to explain many times the same terms to all translators .-)
-</para>
-<para>
-Also, as some of you probably have a better English level than mine, it
-would be really nice to report English mistakes in the original strings
-if you find some.
+Also, if you encounter mistakes in the original English strings, please report those
+as well.
 </para>
 <para>
 List of languages with active translators:

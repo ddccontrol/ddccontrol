@@ -4,12 +4,12 @@
 <sect1 id="ddccontrol">
 <title>About DDCcontrol</title>
 <para>DDCcontrol is a tool used to control monitor parameters, like brightness 
-and contrast, without using the OSD (On Screen Display) and the buttons in front
+and contrast, without using the OSD (On Screen Display) or the buttons in front
 of the monitor.</para>
 <para>All the software provided by monitor manufacturers (NEC/Mitsubishi NaviSet
 and Samsung MagicTune) are closed-source and only runs on Windows.
 DDCcontrol is open-source and runs on Linux.</para>
-<para>There is two versions of this tool, a command line version, and an 
+<para>There are two parts to this tool: a command line version, and a 
 user-friendly Gnome GUI.</para>
 </sect1>
  

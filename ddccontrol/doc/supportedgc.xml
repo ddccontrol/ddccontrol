@@ -2,18 +2,18 @@
 <title>Supported graphics cards</title>
 <sect2>
 <title><filename>/dev/i2c-*</filename> versus PCI memory</title>
-<para>To control a monitor, DDCcontrol must access to the I2C bus of the
+<para>To control a monitor, DDCcontrol must access the I2C bus of the
 graphics card. There are two methods to do so: the first one uses
 <filename>/dev/i2c-*</filename> devices provided by kernel drivers (abbreviated
-by dev in tables), the second one reads and writes directly in the card PCI
-memory (abbreviated by PCI in the tables).</para>
-<para>Depending on your hardware, one method or the other works, or even both.</para>
+as dev in tables), the second one reads and writes directly in the card PCI
+memory (abbreviated as PCI in the tables).</para>
+<para>Depending on your hardware, one method or the other may work.  Even both may work.</para>
 </sect2>
 <sect1>
 <title>ATI Radeon series</title>
 <sect2>
 <title>Direct PCI memory access support</title>
-<para>Almost every ATI cards should work with direct PCI memory access, even if it has not been very extensively tested.</para>
+<para>Almost every ATI card should work with direct PCI memory access, even if it has not been very extensively tested.</para>
 <para>To use it, you have nothing special to do, everything is done by DDCcontrol.</para>
 </sect2>
 <sect2>
@@ -44,7 +44,7 @@ driver and I2C support are:</para>
   <guimenuitem>DDC/I2C for ATI Radeon support</guimenuitem>
 </menuchoice>.
 <warning>
-	<para>The <filename>radeonfb</filename> kernel module may cause system instability (crashes or screen corruption) when used at the same time as used the ATI closed source drivers.</para>
+	<para>The <filename>radeonfb</filename> kernel module may cause system instability (crashes or screen corruption) when used at the same time as the ATI closed source drivers.</para>
 	<para>This is why we recommend that you use direct PCI memory access with 
 		ATI cards.</para>
 </warning>
@@ -170,7 +170,7 @@ I2C support are:</para>
 </listitem>
 </itemizedlist>
 <warning>
-<para>These kernel modules is <emphasis>not</emphasis> compatible with binary
+<para>These kernel modules are <emphasis>not</emphasis> compatible with binary
 nVidia X drivers, which are the only drivers for nVidia cards to provide 3D
 acceleration.</para>
 <para>This is why we recommend that you either use direct PCI memory access with 
@@ -180,14 +180,14 @@ nVidia cards, or i2c-dev access through the proprietary drivers.</para>
 </sect2>
 <sect2>
 <title>Direct PCI memory access support</title>
-<para>Almost every nVidia cards work with direct PCI memory access, and this
+<para>Almost every nVidia card works with direct PCI memory access, and this
 method is compatible with the nVidia proprietary drivers.</para>
 <para>To use it, you have nothing special to do, everything is done by 
 DDCcontrol.</para>
 </sect2>
 <sect3>
 <title>nVidia cards support table</title>
-<para>Most of these nVidia cards have been reported to work, but others models
+<para>Most of these nVidia cards have been reported to work, but other models
 should also work. If yours is not listed, please send a message to one of the
 DDCcontrol mailing lists (see <xref linkend="report"/>).</para>
 <informaltable frame="all">
