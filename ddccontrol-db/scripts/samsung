@@ -102,6 +102,6 @@ echo "</monitor>" >> $FILE
 echo "Done!"
 
 echo "You should now run:"
-echo "cvs add $FILE && cvs ci -m \"Add support for $NAME, thanks to $AUTHOR.\""
+echo "svn add $FILE && svn ci -m \"Add support for $NAME, thanks to $AUTHOR.\""
 
 rm tmp
