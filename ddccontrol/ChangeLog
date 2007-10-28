@@ -1,3 +1,9 @@
+2007-10-28 08:39  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r749] ., doc/about.xml, doc/install.xml, doc/main.xml,
+	  doc/supportedgc.xml, doc/techdocs.xml: Review and update
+	  documentation
+
 2007-10-28 02:31  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r718] commit.sh: Fix commit script to work with subversion
