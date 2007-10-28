@@ -2,6 +2,7 @@ Source: ddccontrol-db
 Section: utils
 Priority: optional
 Maintainer: Roberto C. Sanchez <roberto@connexer.com>
+Homepage: http://ddccontrol.sourceforge.net/
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: autotools-dev, intltool
 Standards-Version: 3.7.2
@@ -13,5 +14,3 @@ Recommends: ddccontrol [alpha amd64 arm i386 ia64]
 Description: monitor database for ddccontrol
  Database of monitors used by ddccontrol.  This is mostly useless without
  ddccontrol.
- .
- Homepage: http://ddccontrol.sourceforge.net/
