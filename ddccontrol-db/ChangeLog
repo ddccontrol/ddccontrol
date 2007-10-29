@@ -1,3 +1,7 @@
+2007-10-29 07:06  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r756] po/LINGUAS, po/es.po: Add Spanish translation
+
 2007-10-28 04:20  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r735] db/monitor/SAM0107.xml: Add support for Samsung SyncMaster
