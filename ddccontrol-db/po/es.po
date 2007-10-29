@@ -1,0 +1,1052 @@
+# ddccontrol-db
+# Copyright (C) 2007 Roberto C. Sánchez
+# This file is distributed under the same license as the PACKAGE package.
+# Roberto C. Sánchez <roberto@connexer.com>, 2007
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 20061014\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-29 00:51-0400\n"
+"PO-Revision-Date: 2007-10-29 00:51-0400\n"
+"Last-Translator: Roberto C. Sánchez <roberto@connexer.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../po/../db/options.xml.h:3
+#, c-format
+msgid "Color settings"
+msgstr "Ajuste de Color"
+
+#: ../../po/../db/options.xml.h:4
+#, c-format
+msgid "Brightness and Contrast"
+msgstr "Viveza y Contraste"
+
+#: ../../po/../db/options.xml.h:5
+#, c-format
+msgid "Brightness"
+msgstr "Viveza"
+
+#: ../../po/../db/options.xml.h:6
+#, c-format
+msgid "Contrast"
+msgstr "Contraste"
+
+#: ../../po/../db/options.xml.h:7
+#, c-format
+msgid "Magic Bright Mode"
+msgstr "Modalidad Magico de Viveza"
+
+#: ../../po/../db/options.xml.h:8 ../../po/../db/options.xml.h:29
+#, c-format
+msgid "Text"
+msgstr "Texto"
+
+#: ../../po/../db/options.xml.h:9
+#, c-format
+msgid "Internet"
+msgstr "Internet"
+
+#: ../../po/../db/options.xml.h:10
+#, c-format
+msgid "Game"
+msgstr "Juego"
+
+#: ../../po/../db/options.xml.h:11
+#, c-format
+msgid "Sport"
+msgstr "Deporte"
+
+#: ../../po/../db/options.xml.h:12
+#, c-format
+msgid "Entertain"
+msgstr "Entretener"
+
+#: ../../po/../db/options.xml.h:13 ../../po/../db/options.xml.h:65
+#, c-format
+msgid "Custom"
+msgstr "De Medida"
+
+#: ../../po/../db/options.xml.h:14
+#, c-format
+msgid "Dynamic Contrast"
+msgstr "Contraste Dinámico"
+
+#: ../../po/../db/options.xml.h:15
+#, c-format
+msgid "Super Bright Mode"
+msgstr "Modalidad de Super-viveza"
+
+#: ../../po/../db/options.xml.h:16
+#, c-format
+msgid "One"
+msgstr "Uno"
+
+#: ../../po/../db/options.xml.h:17
+#, c-format
+msgid "Two"
+msgstr "Dos"
+
+#: ../../po/../db/options.xml.h:18
+#, c-format
+msgid "Three"
+msgstr "Tres"
+
+#: ../../po/../db/options.xml.h:19
+#, c-format
+msgid "Auto Level (Needs a blank line to work)"
+msgstr "Nivel Automático (le hace falta una linea blanca para funcionar)"
+
+#: ../../po/../db/options.xml.h:20
+#, c-format
+msgid "Backlight"
+msgstr "Contraluz"
+
+#: ../../po/../db/options.xml.h:21
+#, c-format
+msgid "ECO Mode"
+msgstr "Modalidad ECO"
+
+#: ../../po/../db/options.xml.h:22
+#, c-format
+msgid "High"
+msgstr "Alto"
+
+#: ../../po/../db/options.xml.h:23
+#, c-format
+msgid "Middle"
+msgstr "Mediano"
+
+#: ../../po/../db/options.xml.h:24
+#, c-format
+msgid "Low"
+msgstr "Bajo"
+
+#: ../../po/../db/options.xml.h:25
+#, c-format
+msgid "Auto"
+msgstr "Automático"
+
+#: ../../po/../db/options.xml.h:26
+#, c-format
+msgid "f-Engine"
+msgstr "f-Engine"
+
+#: ../../po/../db/options.xml.h:27 ../../po/../db/options.xml.h:64
+#: ../../po/../db/options.xml.h:176
+#, c-format
+msgid "Normal"
+msgstr "Normal"
+
+#: ../../po/../db/options.xml.h:28 ../../po/../db/options.xml.h:87
+#, c-format
+msgid "User"
+msgstr "Usuario"
+
+#: ../../po/../db/options.xml.h:30
+#, c-format
+msgid "Movie"
+msgstr "Pelicula"
+
+#: ../../po/../db/options.xml.h:31 ../../po/../db/options.xml.h:32
+#, c-format
+msgid "Gamma"
+msgstr "Gamma"
+
+#: ../../po/../db/options.xml.h:33
+#, c-format
+msgid "-0.5"
+msgstr "-0.5"
+
+#: ../../po/../db/options.xml.h:34
+#, c-format
+msgid "-0.3"
+msgstr "-0.3"
+
+#: ../../po/../db/options.xml.h:35
+#, c-format
+msgid "-0.2"
+msgstr "-0.2"
+
+#: ../../po/../db/options.xml.h:36
+#, c-format
+msgid "-0.1"
+msgstr "-0.1"
+
+#: ../../po/../db/options.xml.h:37
+#, c-format
+msgid "0"
+msgstr "0"
+
+#: ../../po/../db/options.xml.h:38
+#, c-format
+msgid "+0.1"
+msgstr "+0.1"
+
+#: ../../po/../db/options.xml.h:39
+#, c-format
+msgid "+0.2"
+msgstr "+0.2"
+
+#: ../../po/../db/options.xml.h:40
+#, c-format
+msgid "+0.3"
+msgstr "+0.3"
+
+#: ../../po/../db/options.xml.h:41
+#, c-format
+msgid "+0.4"
+msgstr "+0.4"
+
+#: ../../po/../db/options.xml.h:42
+#, c-format
+msgid "+0.5"
+msgstr "+0.5"
+
+#: ../../po/../db/options.xml.h:43
+#, c-format
+msgid "+0.6"
+msgstr "+0.6"
+
+#: ../../po/../db/options.xml.h:44
+#, c-format
+msgid "+0.7"
+msgstr "+0.7"
+
+#: ../../po/../db/options.xml.h:45
+#, c-format
+msgid "+0.9"
+msgstr "+0.9"
+
+#: ../../po/../db/options.xml.h:46
+#, c-format
+msgid "1.8"
+msgstr "1.8"
+
+#: ../../po/../db/options.xml.h:47
+#, c-format
+msgid "2.0"
+msgstr "2.0"
+
+#: ../../po/../db/options.xml.h:48
+#, c-format
+msgid "2.2"
+msgstr "2.2"
+
+#: ../../po/../db/options.xml.h:49
+#, c-format
+msgid "2.4"
+msgstr "2.4"
+
+#: ../../po/../db/options.xml.h:50
+#, c-format
+msgid "2.6"
+msgstr "2.6"
+
+#: ../../po/../db/options.xml.h:51
+#, c-format
+msgid "Color maximum level"
+msgstr "Nivel máximo de color"
+
+#: ../../po/../db/options.xml.h:52
+#, c-format
+msgid "Red maximum level"
+msgstr "Nivel máximo de rojo"
+
+#: ../../po/../db/options.xml.h:53
+#, c-format
+msgid "Green maximum level"
+msgstr "Nivel máximo de verde"
+
+#: ../../po/../db/options.xml.h:54
+#, c-format
+msgid "Blue maximum level"
+msgstr "Nivel máximo de azul"
+
+#: ../../po/../db/options.xml.h:55
+#, c-format
+msgid "Color minimum level"
+msgstr "Nivel mínimo de color"
+
+#: ../../po/../db/options.xml.h:56
+#, c-format
+msgid "Red minimum level"
+msgstr "Nivel mínimo de rojo"
+
+#: ../../po/../db/options.xml.h:57
+#, c-format
+msgid "Green minimum level"
+msgstr "Nivel mínimo de verde"
+
+#: ../../po/../db/options.xml.h:58
+#, c-format
+msgid "Blue minimum level"
+msgstr "Nivel mínimo de azul"
+
+#: ../../po/../db/options.xml.h:59
+#, c-format
+msgid "Various color settings"
+msgstr "Varios ajustes de color"
+
+#: ../../po/../db/options.xml.h:60
+#, c-format
+msgid "Hue"
+msgstr "Tinte"
+
+#: ../../po/../db/options.xml.h:61
+#, c-format
+msgid "Saturation"
+msgstr "Saturación"
+
+#: ../../po/../db/options.xml.h:62
+#, c-format
+msgid "Color curve adjust"
+msgstr "Ajuste de curva de color"
+
+#: ../../po/../db/options.xml.h:63
+#, c-format
+msgid "Color Preset"
+msgstr "Color Preprogramado"
+
+#: ../../po/../db/options.xml.h:66
+#, c-format
+msgid "Warm"
+msgstr "Cálido"
+
+#: ../../po/../db/options.xml.h:67
+#, c-format
+msgid "Cool"
+msgstr "Fresco"
+
+#: ../../po/../db/options.xml.h:68
+#, c-format
+msgid "Warm1"
+msgstr "Cálido1"
+
+#: ../../po/../db/options.xml.h:69
+#, c-format
+msgid "Warm2"
+msgstr "Cálido2"
+
+#: ../../po/../db/options.xml.h:70
+#, c-format
+msgid "Cool1"
+msgstr "Fresco1"
+
+#: ../../po/../db/options.xml.h:71
+#, c-format
+msgid "Cool2"
+msgstr "Fresco2"
+
+#: ../../po/../db/options.xml.h:72
+#, c-format
+msgid "Cool3"
+msgstr "Fresco3"
+
+#: ../../po/../db/options.xml.h:73
+#, c-format
+msgid "Cool4"
+msgstr "Fresco4"
+
+#: ../../po/../db/options.xml.h:74
+#, c-format
+msgid "Cool5"
+msgstr "Fresco5"
+
+#: ../../po/../db/options.xml.h:75
+#, c-format
+msgid "Cool6"
+msgstr "Fresco6"
+
+#: ../../po/../db/options.xml.h:76
+#, c-format
+msgid "Cool7"
+msgstr "Fresco7"
+
+#: ../../po/../db/options.xml.h:77
+#, c-format
+msgid "sRGB"
+msgstr "sRGB"
+
+#: ../../po/../db/options.xml.h:78
+#, c-format
+msgid "4000K"
+msgstr "4000K"
+
+#: ../../po/../db/options.xml.h:79
+#, c-format
+msgid "5000K"
+msgstr "5000K"
+
+#: ../../po/../db/options.xml.h:80
+#, c-format
+msgid "6500K"
+msgstr "6500K"
+
+#: ../../po/../db/options.xml.h:81
+#, c-format
+msgid "7500K"
+msgstr "7500K"
+
+#: ../../po/../db/options.xml.h:82
+#, c-format
+msgid "8200K"
+msgstr "8200K"
+
+#: ../../po/../db/options.xml.h:83
+#, c-format
+msgid "9300K"
+msgstr "9300K"
+
+#: ../../po/../db/options.xml.h:84
+#, c-format
+msgid "10000K"
+msgstr "10000K"
+
+#: ../../po/../db/options.xml.h:85
+#, c-format
+msgid "11500K"
+msgstr "11500K"
+
+#: ../../po/../db/options.xml.h:86
+#, c-format
+msgid "Native"
+msgstr "Natal"
+
+#: ../../po/../db/options.xml.h:88
+#, c-format
+msgid "User 1"
+msgstr "Usuario 1"
+
+#: ../../po/../db/options.xml.h:89
+#, c-format
+msgid "User 2"
+msgstr "Usuario 2"
+
+#: ../../po/../db/options.xml.h:90
+#, c-format
+msgid "User 3"
+msgstr "Usuario 3"
+
+#: ../../po/../db/options.xml.h:91
+#, c-format
+msgid "User 4"
+msgstr "Usuario 4"
+
+#: ../../po/../db/options.xml.h:92
+#, c-format
+msgid "Easy"
+msgstr "Fácil"
+
+#: ../../po/../db/options.xml.h:93
+#, c-format
+msgid "Expert"
+msgstr "Experto"
+
+#: ../../po/../db/options.xml.h:94 ../../po/../db/options.xml.h:223
+#, c-format
+msgid "MagicColor"
+msgstr "ColorMagico"
+
+#: ../../po/../db/options.xml.h:95 ../../po/../db/options.xml.h:206
+#: ../../po/../db/options.xml.h:218 ../../po/../db/options.xml.h:228
+#, c-format
+msgid "Off"
+msgstr "Apagado"
+
+#: ../../po/../db/options.xml.h:96
+#, c-format
+msgid "Demo"
+msgstr "Demostración"
+
+#: ../../po/../db/options.xml.h:97
+#, c-format
+msgid "Full"
+msgstr "Entero"
+
+#: ../../po/../db/options.xml.h:98
+#, c-format
+msgid "Intelligent"
+msgstr "Inteligente"
+
+#: ../../po/../db/options.xml.h:99
+#, c-format
+msgid "Color temperature"
+msgstr "Temperatura de color"
+
+#: ../../po/../db/options.xml.h:100
+#, c-format
+msgid "Color Return"
+msgstr "Regreso de color"
+
+#: ../../po/../db/options.xml.h:101
+#, c-format
+msgid "Position and size"
+msgstr "Posición y Tamaño"
+
+#: ../../po/../db/options.xml.h:102
+#, c-format
+msgid "Position"
+msgstr "Posición"
+
+#: ../../po/../db/options.xml.h:103
+#, c-format
+msgid "Horizontal Position"
+msgstr "Posición Horizontal"
+
+#: ../../po/../db/options.xml.h:104
+#, c-format
+msgid "Vertical Position"
+msgstr "Posición Vertical"
+
+#: ../../po/../db/options.xml.h:105
+#, c-format
+msgid "Size"
+msgstr "Tamaño"
+
+#: ../../po/../db/options.xml.h:106
+#, c-format
+msgid "Horizontal Size"
+msgstr "Tamaño Horizontal"
+
+#: ../../po/../db/options.xml.h:107
+#, c-format
+msgid "Vertical Size"
+msgstr "Tamaño Vertical"
+
+#: ../../po/../db/options.xml.h:108
+#, c-format
+msgid "Automatic adjustments"
+msgstr "Ajustos Automáticos"
+
+#: ../../po/../db/options.xml.h:109
+#, c-format
+msgid "Auto Size Center"
+msgstr "Tamaño Centro Automático"
+
+#: ../../po/../db/options.xml.h:110 ../../po/../db/options.xml.h:183
+#: ../../po/../db/options.xml.h:187
+#, c-format
+msgid "Enable"
+msgstr "Permitir"
+
+#: ../../po/../db/options.xml.h:111 ../../po/../db/options.xml.h:182
+#: ../../po/../db/options.xml.h:186
+#, c-format
+msgid "Disable"
+msgstr "Prohibir"
+
+#: ../../po/../db/options.xml.h:112
+#, c-format
+msgid "Automatically adjust"
+msgstr "Ajustar Automáticamente"
+
+#: ../../po/../db/options.xml.h:113
+#, c-format
+msgid "H/V Position"
+msgstr "Posición H/V"
+
+#: ../../po/../db/options.xml.h:114
+#, c-format
+msgid "Clock and clock phase"
+msgstr "Reloj y fase de reloj"
+
+#: ../../po/../db/options.xml.h:115
+#, c-format
+msgid "H/V Position (fast mode)"
+msgstr "Posición H/V (modalidad rapido)"
+
+#: ../../po/../db/options.xml.h:116
+#, c-format
+msgid "Geometry"
+msgstr "Geometría"
+
+#: ../../po/../db/options.xml.h:117
+#, c-format
+msgid "Pincushion"
+msgstr "Acerico"
+
+#: ../../po/../db/options.xml.h:118
+#, c-format
+msgid "Horizontal Pincushion"
+msgstr "Acerico Horizontal"
+
+#: ../../po/../db/options.xml.h:119
+#, c-format
+msgid "Horizontal Pincushion Balance"
+msgstr "Balance de Acerico Horizontal"
+
+#: ../../po/../db/options.xml.h:120
+#, c-format
+msgid "Vertical Pincushion"
+msgstr "Acerico Vertical"
+
+#: ../../po/../db/options.xml.h:121
+#, c-format
+msgid "Vertical Pincushion Balance"
+msgstr "Balance de Acerico Vertical"
+
+#: ../../po/../db/options.xml.h:122
+#, c-format
+msgid "Center Pincushion"
+msgstr "Acerico Centro"
+
+#: ../../po/../db/options.xml.h:123
+#, c-format
+msgid "Linearity"
+msgstr "Linearidad"
+
+#: ../../po/../db/options.xml.h:124
+#, c-format
+msgid "Horizontal Linearity"
+msgstr "Linearidad Horizontal"
+
+#: ../../po/../db/options.xml.h:125
+#, c-format
+msgid "Horizontal Linearity Balance"
+msgstr "Balance de Linearidad Horizontal"
+
+#: ../../po/../db/options.xml.h:126
+#, c-format
+msgid "Vertical Linearity"
+msgstr "Linearidad Vertical"
+
+#: ../../po/../db/options.xml.h:127
+#, c-format
+msgid "Vertical Linearity Balance"
+msgstr "Balance de Linearidad Vertical"
+
+#: ../../po/../db/options.xml.h:128
+#, c-format
+msgid "Misconvergence"
+msgstr "Misconvergencia"
+
+#: ../../po/../db/options.xml.h:129
+#, c-format
+msgid "Horizontal Misconvergence"
+msgstr "Misconvergencia Horizontal"
+
+#: ../../po/../db/options.xml.h:130
+#, c-format
+msgid "Vertical Misconvergence"
+msgstr "Misconvergencia Vertical"
+
+#: ../../po/../db/options.xml.h:131
+#, c-format
+msgid "Vertical Top Misconvergence"
+msgstr "Misconvergencia Vertical de Parte Superior"
+
+#: ../../po/../db/options.xml.h:132
+#, c-format
+msgid "Vertical Bottom Misconvergence"
+msgstr "Misconvergencia Vertical de Parte Inferior"
+
+#: ../../po/../db/options.xml.h:133
+#, c-format
+msgid "General distortion"
+msgstr "Deformación General"
+
+#: ../../po/../db/options.xml.h:134
+#, c-format
+msgid "Parallelogram Distortion (Key Balance)"
+msgstr "Deformación Paralelogramo (Balance Clave)"
+
+#: ../../po/../db/options.xml.h:135
+#, c-format
+msgid "Trapezoidal Distortion (Key)"
+msgstr "Deformación de Trapezoide (Clave)"
+
+#: ../../po/../db/options.xml.h:136
+#, c-format
+msgid "Corners distortion"
+msgstr "Deformación de Esquinas"
+
+#: ../../po/../db/options.xml.h:137
+#, c-format
+msgid "Top Corner Distortion Control"
+msgstr "Control de Deformación de Esquina de Parte Superior"
+
+#: ../../po/../db/options.xml.h:138
+#, c-format
+msgid "Top Corner Distortion Balance"
+msgstr "Balance de Deformación de Esquina de Parte Superior"
+
+#: ../../po/../db/options.xml.h:139
+#, c-format
+msgid "Bottom Corner Distortion Control"
+msgstr "Control de Deformación de Esquina de Parte Inferior"
+
+#: ../../po/../db/options.xml.h:140
+#, c-format
+msgid "Bottom Corner Distortion Balance"
+msgstr "Balance de Deformación de Esquina de Parte Inferior"
+
+#: ../../po/../db/options.xml.h:141
+#, c-format
+msgid "Rotation"
+msgstr "Rotación"
+
+#: ../../po/../db/options.xml.h:142
+#, c-format
+msgid "Rotation (Tilt)"
+msgstr "Rotación (Inclinación)"
+
+#: ../../po/../db/options.xml.h:143
+#, c-format
+msgid "Screen purity"
+msgstr "Pureza de la Pantalla"
+
+#: ../../po/../db/options.xml.h:144
+#, c-format
+msgid "Moire"
+msgstr "Moire"
+
+#: ../../po/../db/options.xml.h:145
+#, c-format
+msgid "Horizontal Moire"
+msgstr "Moire Horizontal"
+
+#: ../../po/../db/options.xml.h:146
+#, c-format
+msgid "Vertical Moire"
+msgstr "Moire Vertical"
+
+#: ../../po/../db/options.xml.h:147
+#, c-format
+msgid "Image setup"
+msgstr "Montaje de Imagen"
+
+#: ../../po/../db/options.xml.h:148
+#, c-format
+msgid "Focus"
+msgstr "Foco"
+
+#: ../../po/../db/options.xml.h:149
+#, c-format
+msgid "Image Lock Coarse (Clock)"
+msgstr "Seguro Grueso de Imagen (Reloj)"
+
+#: ../../po/../db/options.xml.h:150
+#, c-format
+msgid "Image Lock Fine (Clock Phase)"
+msgstr "Seguro Fino de Imagen (Fase de Reloj)"
+
+#: ../../po/../db/options.xml.h:151
+#, c-format
+msgid "Corners purity"
+msgstr "Pureza de Esquinas"
+
+#: ../../po/../db/options.xml.h:152
+#, c-format
+msgid "Top left screen purity"
+msgstr "Pureza de la Parte Superior Izquierda de la Pantalla"
+
+#: ../../po/../db/options.xml.h:153
+#, c-format
+msgid "Top right screen purity"
+msgstr "Pureza de la Parte Superior Derecha de la Pantalla"
+
+#: ../../po/../db/options.xml.h:154
+#, c-format
+msgid "Bottom left screen purity"
+msgstr "Pureza de la Parte Inferior Izquierda de la Pantalla"
+
+#: ../../po/../db/options.xml.h:155
+#, c-format
+msgid "Bottom right screen purity"
+msgstr "Pureza de la Parte Inferior Derecha de la Pantalla"
+
+#: ../../po/../db/options.xml.h:156
+#, c-format
+msgid "Various"
+msgstr "Varios"
+
+#: ../../po/../db/options.xml.h:157
+#, c-format
+msgid "Landing Adjust (RGB alignment)"
+msgstr "Ajuste de Descansillo (alineación de RGB)"
+
+#: ../../po/../db/options.xml.h:158
+#, c-format
+msgid "Sharpness"
+msgstr "Agudeza"
+
+#: ../../po/../db/options.xml.h:159
+#, c-format
+msgid "Others"
+msgstr "Otros"
+
+#: ../../po/../db/options.xml.h:160
+#, c-format
+msgid "Restore defaults"
+msgstr "Restablecer valores por omisión"
+
+#: ../../po/../db/options.xml.h:161
+#, c-format
+msgid "Restore Factory Defaults"
+msgstr "Restablecer Valores por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:162
+#, c-format
+msgid "Restore Brightness and Contrast"
+msgstr "Restablecer Viveza y Contraste"
+
+#: ../../po/../db/options.xml.h:163
+#, c-format
+msgid "Restore Factory Default Geometry"
+msgstr "Restablecer Geometría por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:164
+#, c-format
+msgid "Restore Factory Default Color"
+msgstr "Restablecer Color por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:165
+#, c-format
+msgid "Restore Factory Default Position"
+msgstr "Restablecer Posición por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:166
+#, c-format
+msgid "Restore Factory Default Size"
+msgstr "Restablecer Tamaño por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:167
+#, c-format
+msgid "Restore Factory Default Size and Position"
+msgstr "Restablecer Tamaño y Posición por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:168
+#, c-format
+msgid "Settings"
+msgstr "Ajustos"
+
+#: ../../po/../db/options.xml.h:169
+#, c-format
+msgid "Save Current Settings"
+msgstr "Guardar Ajustos Actuales"
+
+#: ../../po/../db/options.xml.h:170
+#, c-format
+msgid "Restore Factory Settings"
+msgstr "Restablecer Ajustos por omisión de la Fabrica"
+
+#: ../../po/../db/options.xml.h:171
+#, c-format
+msgid "Audio"
+msgstr "Audio"
+
+#: ../../po/../db/options.xml.h:172
+#, c-format
+msgid "Audio Speaker Volume Adjust"
+msgstr "Ajusto de Volumen de Altavoz"
+
+#: ../../po/../db/options.xml.h:173
+#, c-format
+msgid "Audio Microphone Volume Adjust"
+msgstr "Ajusto de Volumen de Micrófono"
+
+#: ../../po/../db/options.xml.h:174 ../../po/../db/options.xml.h:175
+#, c-format
+msgid "Mute"
+msgstr "Mudo"
+
+#: ../../po/../db/options.xml.h:177 ../../po/../db/options.xml.h:178
+#, c-format
+msgid "Degauss"
+msgstr "Degauss"
+
+#: ../../po/../db/options.xml.h:179
+#, c-format
+msgid "Secondary Degauss"
+msgstr "Degauss Secundario"
+
+#: ../../po/../db/options.xml.h:180
+#, c-format
+msgid "OSD"
+msgstr "OSD"
+
+#: ../../po/../db/options.xml.h:181
+#, c-format
+msgid "On Screen Display"
+msgstr "Visualización en Pantalla"
+
+#: ../../po/../db/options.xml.h:184
+#, c-format
+msgid "Enable only brightness/contrast settings"
+msgstr "Permitir solamente ajusto de viveza/contraste"
+
+#: ../../po/../db/options.xml.h:185
+#, c-format
+msgid "On Screen Display (Samsung)"
+msgstr "Visualización en Pantalla (Samsung)"
+
+#: ../../po/../db/options.xml.h:188
+#, c-format
+msgid "OSD Orientation"
+msgstr "Orientación de Visualización en Pantalla"
+
+#: ../../po/../db/options.xml.h:189
+#, c-format
+msgid "Landscape"
+msgstr "Horizontal"
+
+#: ../../po/../db/options.xml.h:190
+#, c-format
+msgid "Portrait"
+msgstr "Vertical"
+
+#: ../../po/../db/options.xml.h:191
+#, c-format
+msgid "Language select"
+msgstr "Seleccionar Idioma"
+
+#: ../../po/../db/options.xml.h:192
+#, c-format
+msgid "English"
+msgstr "inglés"
+
+#: ../../po/../db/options.xml.h:193
+#, c-format
+msgid "French"
+msgstr "francés"
+
+#: ../../po/../db/options.xml.h:194
+#, c-format
+msgid "German"
+msgstr "alemán"
+
+#: ../../po/../db/options.xml.h:195
+#, c-format
+msgid "Italian"
+msgstr "italiano"
+
+#: ../../po/../db/options.xml.h:196
+#, c-format
+msgid "Russian"
+msgstr "ruso"
+
+#: ../../po/../db/options.xml.h:197
+#, c-format
+msgid "Spanish"
+msgstr "español"
+
+#: ../../po/../db/options.xml.h:198
+#, c-format
+msgid "Swedish"
+msgstr "sueco"
+
+#: ../../po/../db/options.xml.h:199
+#, c-format
+msgid "Chinese"
+msgstr "chino"
+
+#: ../../po/../db/options.xml.h:200
+#, c-format
+msgid "Dutch"
+msgstr "holandés"
+
+#: ../../po/../db/options.xml.h:201
+#, c-format
+msgid "Japanese"
+msgstr "japonés"
+
+#: ../../po/../db/options.xml.h:202
+#, c-format
+msgid "Input settings"
+msgstr "Ajustos de Entrada"
+
+#: ../../po/../db/options.xml.h:203
+#, c-format
+msgid "Input level Select"
+msgstr "Selección de Nivel de Entrada"
+
+#: ../../po/../db/options.xml.h:204
+#, c-format
+msgid "Display Resolution Notifier"
+msgstr "Notificador de Resolución de Visualización"
+
+#: ../../po/../db/options.xml.h:205 ../../po/../db/options.xml.h:215
+#: ../../po/../db/options.xml.h:219 ../../po/../db/options.xml.h:229
+#, c-format
+msgid "On"
+msgstr "Prendido"
+
+#: ../../po/../db/options.xml.h:207 ../../po/../db/options.xml.h:225
+#, c-format
+msgid "Input Source Select"
+msgstr "Selección Fuente de Entrada"
+
+#: ../../po/../db/options.xml.h:208
+#, c-format
+msgid "Analog"
+msgstr "Analógico"
+
+#: ../../po/../db/options.xml.h:209
+#, c-format
+msgid "Digital"
+msgstr "Digital"
+
+#: ../../po/../db/options.xml.h:210
+#, c-format
+msgid "Autoselect Input Source"
+msgstr "Selección Automático de Fuente de Entrada"
+
+#: ../../po/../db/options.xml.h:211
+#, c-format
+msgid "Automatic"
+msgstr "Automático"
+
+#: ../../po/../db/options.xml.h:212
+#, c-format
+msgid "Manual"
+msgstr "Manual"
+
+#: ../../po/../db/options.xml.h:213 ../../po/../db/options.xml.h:217
+#, c-format
+msgid "Power control"
+msgstr "Control de Energía"
+
+#: ../../po/../db/options.xml.h:214
+#, c-format
+msgid "DPMS Control"
+msgstr "Control de DPMS"
+
+#: ../../po/../db/options.xml.h:216
+#, c-format
+msgid "Standby"
+msgstr "Inactivo"
+
+#: ../../po/../db/options.xml.h:220
+#, c-format
+msgid "Buttons and leds"
+msgstr "Botones y luces"
+
+#: ../../po/../db/options.xml.h:221
+#, c-format
+msgid "Custom key"
+msgstr "Tecla de medida"
+
+#: ../../po/../db/options.xml.h:222
+#, c-format
+msgid "MagicBright"
+msgstr "VivezaMagico"
+
+#: ../../po/../db/options.xml.h:224
+#, c-format
+msgid "Automatic setup"
+msgstr "Ajusto Automático"
+
+#: ../../po/../db/options.xml.h:226
+#, c-format
+msgid "Color Tone"
+msgstr "Tono de Color"
+
+#: ../../po/../db/options.xml.h:227
+#, c-format
+msgid "Power LED"
+msgstr "Luz de Energía"
