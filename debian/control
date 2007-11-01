@@ -6,6 +6,8 @@ Homepage: http://ddccontrol.sourceforge.net/
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: autotools-dev, intltool
 Standards-Version: 3.7.2
+Vcs-Browser: http://ddccontrol.svn.sourceforge.net/viewvc/ddccontrol/
+Vcs-Svn: https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol
 
 Package: ddccontrol-db
 Architecture: all
