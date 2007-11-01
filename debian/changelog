@@ -2,8 +2,9 @@ ddccontrol (0.4.2-4) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   * debian/watch: Switch to Debian QA's SourceForge redirector.
+  * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 15 Sep 2007 10:51:49 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 31 Oct 2007 22:27:30 -0400
 
 ddccontrol (0.4.2-3) unstable; urgency=low
 

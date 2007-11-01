@@ -5,6 +5,8 @@ Maintainer: Roberto C. Sanchez <roberto@connexer.com>
 Homepage: http://ddccontrol.sourceforge.net/
 Build-Depends: debhelper (>= 5), autotools-dev, pciutils-dev, libpanel-applet2-dev, intltool, libxml2-dev, xml-core, xsltproc, tidy, zlib1g-dev
 Standards-Version: 3.7.2
+Vcs-Browser: http://ddccontrol.svn.sourceforge.net/viewvc/ddccontrol/
+Vcs-Svn: https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol
 
 Package: gddccontrol
 Architecture: i386 amd64 ia64 alpha arm
