@@ -5,8 +5,9 @@ ddccontrol-db (20061014-2) UNRELEASED; urgency=low
   * Recommends applies only to alpha, amd64, arm, i386, ia64 (Closes: #436649)
   * debian/watch: Switch to Debian QA's SourceForge redirector
   * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
+  * debian/rules: placate lintian by properly calling '$(MAKE) distclean'
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 31 Oct 2007 22:27:37 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 17 Nov 2007 16:02:41 -0500
 
 ddccontrol-db (20061014-1) unstable; urgency=low
 
