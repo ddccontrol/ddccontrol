@@ -1,4 +1,4 @@
-ddccontrol (0.4.2-4) UNRELEASED; urgency=low
+ddccontrol (0.4.2-4) unstable; urgency=low
 
   * debian/watch: Switch to Debian QA's SourceForge redirector.
   * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
