@@ -1,2 +1,2 @@
-?package(ddccontrol):needs="text" section="Apps/System"\
+?package(ddccontrol):needs="text" section="Applications/System"\
   title="DDCcontrol" command="/usr/bin/ddccontrol"

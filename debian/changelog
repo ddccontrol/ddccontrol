@@ -7,8 +7,11 @@ ddccontrol (0.4.2-4) unstable; urgency=low
   * debian/control: Update to modern substvars (e.g., ${source:Version})
   * debian/gddccontrol.menu: Update to comply with new menu policy
   * debian/control: Add armel to arch list (Closes: #461089)
+  * debian/control: Update to Standards-Version 3.7.3 (no changes)
+  * debian/ddccontrol.menu: Don't use obsolete Apps section
+  * debian/control: Make gddccontrol bin-nmuable
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 16 Jan 2008 22:15:15 -0500
+ -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 16 Jan 2008 22:44:36 -0500
 
 ddccontrol (0.4.2-3) unstable; urgency=low
 
