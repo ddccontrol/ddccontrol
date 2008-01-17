@@ -1,7 +1,7 @@
 ddccontrol (0.4.2-4) unstable; urgency=low
 
   * debian/watch: Switch to Debian QA's SourceForge redirector.
-  * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
+  * debian/control: Add Vcs-Browser and Vcs-Svn fields.
   * debian/ddccontrol.doc-base: add file
   * debian/rules: placate lintian by properly calling '$(MAKE) distclean'
   * debian/control: Update to modern substvars (e.g., ${source:Version})
