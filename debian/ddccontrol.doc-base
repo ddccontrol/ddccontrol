@@ -1,6 +1,6 @@
 Document: ddccontrol
 Title: DDCControl Documentation
-Athor: Nicolas Boichat (2004-2006)
+Author: Nicolas Boichat (2004-2006)
 Abstract: Documentation on how to use DDCControl and what devices are supported.
 Section: Apps/System
 
@@ -8,4 +8,3 @@ Format: HTML
 Index: /usr/share/doc/ddccontrol/html/index.html
 Files: /usr/share/doc/ddccontrol/html/*.html
 
-  
