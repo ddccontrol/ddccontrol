@@ -1,14 +1,14 @@
 ddccontrol (0.4.2-4) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
   * debian/watch: Switch to Debian QA's SourceForge redirector.
   * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
   * debian/ddccontrol.doc-base: add file
   * debian/rules: placate lintian by properly calling '$(MAKE) distclean'
   * debian/control: Update to modern substvars (e.g., ${source:Version})
   * debian/gddccontrol.menu: Update to comply with new menu policy
+  * debian/control: Add armel to arch list (Closes: #461089)
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 17 Nov 2007 16:19:34 -0500
+ -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 16 Jan 2008 22:15:15 -0500
 
 ddccontrol (0.4.2-3) unstable; urgency=low
 
