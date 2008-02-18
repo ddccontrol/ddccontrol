@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<monitor name="BenQ FP222WH" init="standard">
+	<!--- CAPS: (vcp(02 04 05 06 08 0E 10 12 14(02 04 05 08) 16 18 1A 1E 20 30 3E 52 6C 6E 70 AC AE B2 B6 C6 C8 C9 CA D6(01 05) DF)type(LCD)mccs_ver(2.0)mswhql(1)) -->
+	<caps add="(vcp(02 04 05 06 08 0e 10 12 14 16 18 1a 1e 20 30 3e 52 6c 6e 70 ac ae b2 b6 c6 c8 c9 ca d6 df))"/>
+	<!--- Control 0x02: +/1/65535 C [???] -->
+	<!--- Control 0x14: +/2/8 C [???] -->
+	<!--- Control 0x52: +/0/65535 C [???] -->
+	<!--- Control 0xac: +/65/65535 C [???] -->
+	<!--- Control 0xae: +/59/65535 C [???] -->
+	<!--- Control 0xb2: +/1/8 C [???] -->
+	<!--- Control 0xb6: +/3/5 C [???] -->
+	<!--- Control 0xc6: +/90/255 C [???] -->
+	<!--- Control 0xc8: +/5/146 C [???] -->
+	<!--- Control 0xc9: +/257/65535 C [???] -->
+	<!--- Control 0xca: +/2/2 C [???] -->
+	<!--- Control 0xdf: +/512/65535 C [???] -->
+	<include file="VESA"/>
+</monitor>
