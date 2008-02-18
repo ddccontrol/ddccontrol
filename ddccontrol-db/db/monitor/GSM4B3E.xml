@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="LG L1953S">
+	<!--- CAPS: Raw output: prot(monitor)type(lcd)model(L1x52)vcp(02 04 05 06 08 0B 0C 0E 10 12 14(01 05 06 07 08 0B) 16 18 1A 1E 20 30 3E 60 6C 6E 70 87 AC AE B6 C0 C6 C8 C9 D6(01 04) DF F1 F2(00 01 02) F3(00 01 02 03) FC(00 01 02 03) FD(00 01) FE(00 01 02) )mswhql(1)mccs_ver(2.0) -->
+	<caps add="(vcp(02 04 05 06 08 0B 0C 0E 10 12 14(01 05 06 07 08 0B) 16 18 1A 1E 20 30 3E 60 6C 6E 70 87 AC AE B6 C0 C6 C8 C9 D6(01 04) DF F1 F2(00 01 02) F3(00 01 02 03) FC(00 01 02 03) FD(00 01) FE(00 01 02))"/>
+	<include file="GSMlcd"/>
+</monitor>
