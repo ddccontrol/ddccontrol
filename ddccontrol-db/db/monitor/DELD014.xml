@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<monitor name="Dell E228WFP" init="standard">
+	<!--- CAPS: vcp(02 04 05 06 08 0B 0C 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 52 6C 6E 70 AC AE B2 B6 C0 C6 C8 C9 CA D6 DF) type(LCD) mccs_ver(2.0) asset_eep(32) mswhql(1) -->
+	<caps add="(type(lcd)vcp(02 04 05 06 08 0B 0C 0E 10 12 14(05 06 08 0B) 16 18 1A 1E 20 30 3E 52 6C 6E 70 AC AE B2 B6 C0 C6 C8 C9 CA D6 DF))"/>
+	<controls>
+		<!--- Control 0x02: +/2/2   [???] -->
+		<control id="colorpreset" address="0x14">
+			<value id="warm"  value="0x05"/>
+			<value id="srgb"  value="0x06"/>
+			<value id="cool"  value="0x08"/>
+			<value id="user1" value="0x0b"/>
+		</control>
+		<!--- Control 0x68: +/2/65535   [???] -->
+		<!--- Control 0x9b: +/255/255   [???] -->
+		<!--- Control 0x9d: +/255/255   [???] -->
+		<!--- Control 0x9f: +/255/255   [???] -->
+		<!--- Control 0xac: +/65300/65280   [???] -->
+		<!--- Control 0xae: +/6000/65535   [???] -->
+		<!--- Control 0xb2: +/0/8   [???] -->
+		<!--- Control 0xb6: +/3/8   [???] -->
+		<!--- Control 0xc0: +/0/65535   [???] -->
+		<!--- Control 0xc6: +/65535/65535   [???] -->
+		<!--- Control 0xc8: +/2/87   [???] -->
+		<!--- Control 0xc9: +/258/65535   [???] -->
+		<!--- Control 0xca: +/2/2   [???] -->
+		<!--- Control 0xcc: +/10/16   [???] -->
+		<!--- Control 0xdf: +/512/0   [???] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
