@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="Eizo FlexScan S2431W">
+	<!--- (prot(monitor)type(LCD)model(S2431W)cmds(01 02 03 07 0C E3 F3)vcp(02 04 08 10 12 14(01 02 03 04 05 06 08 09) 16 18 1A 60(01 02 03) 62 87 B6 C0 DF)ms whql(1)mccs_ver(2.0)) -->
+	<caps add="(vcp(02 04 08 10 12 14 16 18 1a 60 62 87 b6 c0 df)"/>
+	<include file="VESA"/>
+</monitor>
