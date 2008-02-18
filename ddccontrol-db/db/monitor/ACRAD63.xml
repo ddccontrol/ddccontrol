@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<monitor name="Acer AL1916" init="standard">
+	<!--- CAPS: (prot(monitor)type(lcd)model(AL1917)cmds(01 02 03 07 0C E3 F3)vcp(02 04 05 06 08 0B 0C 0E 10 12 14(01 02 05 08 0B) 16 18 1A 1E 20 30 3E 6C 6E 70 AC AE B2 B6 C6 C8 C9 D6(01 04) DF FF)mswhql(1)mccs_ver(2.0)asset_eep(64)mpu(01)) -->
+	<caps add="(vcp(02 04 05 06 08 0b 0c 0e 10 12 14 16 18 1a 1e 20 30 3e 6c 6e 70 ac ae b2 b6 c6 c8 c9 d6 df ff))" />
+	<!--- Control 0x02: +/1/2 C [???] -->
+	<!--- Control 0x0b: +/100/0 C [???] -->
+	<!--- Control 0x0c: +/63/63 C [???] -->
+	<!--- Control 0x14: +/8/13 C [???] -->
+	<!--- Control 0xac: +/8000/0 C [???] -->
+	<!--- Control 0xae: +/7500/0 C [???] -->
+	<!--- Control 0xb2: +/1/0 C [???] -->
+	<!--- Control 0xb6: +/3/0 C [???] -->
+	<!--- Control 0xc6: +/0/0 C [???] -->
+	<!--- Control 0xc8: +/5/0 C [???] -->
+	<!--- Control 0xc9: +/256/0 C [???] -->
+	<!--- Control 0xdf: +/512/0 C [???] -->
+	<include file="VESA"/>
+</monitor>
