@@ -1,3 +1,8 @@
+2008-02-18 22:29  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r780] db/monitor/SNY07B0.xml: Add support for Sony G520, thanks
+	  to Gavin Dunse
+
 2008-02-18 22:21  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r778] db/monitor/BNQ76CD.xml: Add support for BenQ FP222WH
