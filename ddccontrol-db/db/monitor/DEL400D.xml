@@ -2,7 +2,7 @@
 <!--- File provided by David R. Piegdon -->
 <monitor name="Dell 1905FP (digital)" init="standard">
 	<caps add="(vcp(04 06 08 10 14 16 18 1A 68))"/>
-	<!-- DVI: the following do not work or do not make sence
+	<!-- DVI: the following do not work or do not make sense
 		0x0e	coarse
 		0x12	contrast
 		0x1e	auto
