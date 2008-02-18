@@ -1,3 +1,8 @@
+2008-02-18 23:46  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r794] db/monitor/VSCE41B.xml: Add support for ViewSonic VP930,
+	  thanks to Wolfgang Frisch
+
 2008-02-18 23:38  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r792] db/monitor/ENC1887.xml: Add support for Eizo FlexScan
