@@ -1,3 +1,8 @@
+2008-02-18 22:49  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r786] db/monitor/MED89DD.xml: Add support for Medion MD30699,
+	  thanks to Carsten Raehder
+
 2008-02-18 22:41  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r784] db/monitor/HWP0A72.xml: Add support for HP LP2065, thanks
