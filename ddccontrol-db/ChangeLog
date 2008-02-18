@@ -1,3 +1,7 @@
+2008-02-18 22:35  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r782] db/monitor/GSM4B3E.xml: Add support for LG 1953S
+
 2008-02-18 22:29  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r780] db/monitor/SNY07B0.xml: Add support for Sony G520, thanks
