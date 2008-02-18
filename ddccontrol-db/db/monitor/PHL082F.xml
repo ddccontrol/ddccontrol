@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="Philips 190S6" init="standard">
+<!--- CAPS: prot(monitor)type(lcd)model(PHILIPS 190S6)cmds(01 02 03 07 0C 4E F3 E3)vcp(04 05 0E 10 12 14(01 02 05 08 0B) 16 18 1A 1E 20 30 3E)SmartManage(1.0) (INVALID, no surrounding parenthesis) -->
+<caps add="(vcp(04 05 0E 10 12 14(01 02 05 08 0B) 16 18 1A 1E 20 30 3E)"/>
+<include file="PHLlcd"/>
+</monitor>
