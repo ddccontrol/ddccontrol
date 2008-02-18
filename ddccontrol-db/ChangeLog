@@ -1,3 +1,8 @@
+2008-02-18 23:38  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r792] db/monitor/ENC1887.xml: Add support for Eizo FlexScan
+	  S2431W, thanks to Robert Siemer
+
 2008-02-18 23:01  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r790] db/monitor/PHL082F.xml: Add support for Philips 190S6,
