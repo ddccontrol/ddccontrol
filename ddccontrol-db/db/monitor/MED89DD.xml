@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<monitor name="Medion MD30699">
+	<!--- CAPS: (prot(monitor)type(LCD)model(LCD-DVI)cmds(01 02 03 07 0C F3)vcp(02 04 05 06 08 0B 0C 0E 10 12 14(01 02 05 08 0B) 16 18 1A 60 68(01 02 03 04 05 06 0A) 6C 6E 70 A8 AC AE B0 B2 B6 C0 C6 C8 C9 CA D6 DF)mccs_ver(2)mswhql(1)) -->
+	<caps add="(vcp(02 04 05 06 08 0b 0c 0e 10 12 14 16 18 1a 60 68 6c 6e 70 a8 ac ae b0 b2 b6 c0 c6 c8 c9 ca d6 df))"/>
+	<controls>
+		<!--- Control 0x02: +/1/255 C [???] -->
+		<control id="colorpreset" address="0x14">
+			<value id="warm"  value="0x04"/>
+			<value id="srgb"  value="0x05"/>
+			<value id="cool"  value="0x08"/>
+			<value id="user1" value="0x0b"/>
+		</control>
+		<!--- Control 0x0b: +/100/255 C [???] -->
+		<!--- Control 0x0c: +/6500/10000 C [???] -->
+		<!--- Control 0x68: +/1/10 C [???] -->
+		<!--- Control 0xa8: +/0/3 C [???] -->
+		<!--- Control 0xac: +/80/65535 C [???] -->
+		<!--- Control 0xae: +/3095/65535 C [???] -->
+		<!--- Control 0xb2: +/1/8 C [???] -->
+		<!--- Control 0xb4: +/1/2 [???] -->
+		<!--- Control 0xb6: +/3/5 C [???] -->
+		<!--- Control 0xc0: +/268/65535 C [???] -->
+		<!--- Control 0xc8: +/5/65535 C [???] -->
+		<!--- Control 0xc9: +/40/65535 C [???] -->
+		<!--- Control 0xca: +/2/2 C [???] -->
+		<!--- Control 0xdf: +/514/65535 C [???] -->
+		<!--- Control 0xe3: +/0/1 [???] -->
+		<!--- Control 0xfa: +/0/65535 [???] -->
+		<!--- Control 0xff: +/0/65535 [???] -->
+	</controls>
+	<include file="VESA"/>
+</monitor>
