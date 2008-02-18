@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="HP LP2065">
+	<!--- CAPS: prot(monitor)type(lcd)cmds(010203070CE3F3)vcp(02 04 05 08 0B 0C 10 12 14(01 05 08 0B) 16 18 1A 1E 52 60(01 02 03 04) 6C 6E 70 86(01 02 07) AC AE B2 B6 C0 C6 C8 C9 CA D6(01 05) DF FA(00 01 02) FB FC FD FE(00 01 02) )mswhql(1)model(LP2065N)mccs_ver(2.0) -->
+	<caps add="(vcp(02 04 05 08 0B 0C 10 12 14(01 05 08 0B) 16 18 1A 1E 52 60(01 02 03 04) 6C 6E 70 86(01 02 07) AC AE B2 B6 C0 C6 C8 C9 CA D6(01 05) DF FA(00 01 02) FB FC FD FE(00 01 02))"/>
+	<include file="VESA"/>
+</monitor>
