@@ -1,3 +1,8 @@
+2008-02-18 23:01  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r790] db/monitor/PHL082F.xml: Add support for Philips 190S6,
+	  thanks to Nicolas Damgaard Larsen
+
 2008-02-18 22:57  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r788] db/monitor/DEL5000.xml: Add support for Dell P1100, thanks
