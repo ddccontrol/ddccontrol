@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<monitor name="HP VS17E">
+	<!--- CAPS: vcp(02 04 05 08 0E 10 12 14(08 05 0B 01) 16 18 1A 1E 20 30 3E 52
+	AC AE B2 B6 C0 C6 C8 C9 CA D6 DF) vcp_p2(37 38 39 3B) type(LCD) mccs_ver(1.1)
+	asset_eep(64) mpu(0.04) -->
+	<caps add="(vcp(02 04 05 08 0E 10 12 14(08 05 0B 01) 16 18 1A 1E 20 30 3E 52 AC AE B2 B6 C0 C6 C8 C9 CA D6 DF))"/>
+	<include file="VESA"/>
+</monitor>
