@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<monitor name="DELL P1130" init="standard">
+	<!--- CAPS: (prot(monitor) type(crt) model(DEL0050 ) edid bin(128
+	(################################################################################################################################))cmds(01 02 03 04 05 06 0C)
+	vcp(00 01 04 06 08 10 12 14 16 18 1A 20 22 24 26 28 30 32 38 40 42 44 54 56 68 6C 6E 70 E0 E2 F1 F2 F3 F4 F5 F6 F7)) -->
+	<caps add="(prot(monitor) type(crt) model(DEL0050 ) vcp(00 01 04 06 08 10 12 14 16 18 1a 20 22 24 26 28 30 32 38 40 42 44 54 56 68 6c 6e 70 e0 e2 f1 f2 f3 f4 f5 f6 f7))"/>
+
+	<include file="VESA"/>
+</monitor>
