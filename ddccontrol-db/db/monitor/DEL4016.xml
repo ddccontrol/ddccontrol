@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="Dell 3007WFP" init="standard">
+	<!--- CAPS: prot(monitor)type(LCD)model(DELL3007)cmds(01 03 0C F3)vcp(04 10 ) -->
+	<caps add="(type(lcd)vcp(01 03 0C F3)vcp(04 10))"/>
+	<include file="VESA"/>
+</monitor>
