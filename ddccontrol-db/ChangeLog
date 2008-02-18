@@ -1,3 +1,8 @@
+2008-02-18 23:50  Roberto C. Sanchez <roberto@connexer.com>
+
+	* [r796] db/monitor/HWP2647.xml: Add support for HP VS17E, thanks
+	  to Ramadhian Moestafa
+
 2008-02-18 23:46  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r794] db/monitor/VSCE41B.xml: Add support for ViewSonic VP930,
