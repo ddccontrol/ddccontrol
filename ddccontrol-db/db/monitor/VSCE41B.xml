@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="ViewSonic VP930">
+	<!--- CAPS: vcp(02 04 05 08 0B 0C 10 12 14(01 04 05 06 08 0B 0C)16 18 1A 60(01 02 03) 87 AA AC AE B6 C0 C6 C8 C9 CA D6(01 04) DF E5 FA FB FC FD FE) -->
+	<caps add="(vcp(02 04 05 08 0B 0C 10 12 14(01 04 05 06 08 0B 0C)16 18 1A 60(01 02 03) 87 AA AC AE B6 C0 C6 C8 C9 CA D6(01 04) DF E5 FA FB FC FD FE))"/>
+	<include file="VESA"/>
+</monitor>
