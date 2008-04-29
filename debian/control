@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Roberto C. Sanchez <roberto@connexer.com>
 Homepage: http://ddccontrol.sourceforge.net/
-Build-Depends: debhelper (>= 5), autotools-dev, pciutils-dev, libpanel-applet2-dev, intltool, libxml2-dev, xml-core, xsltproc, tidy, zlib1g-dev
+Build-Depends: debhelper (>= 5), autotools-dev, libpci-dev, libpanel-applet2-dev, intltool, libxml2-dev, xml-core, xsltproc, tidy, zlib1g-dev
 Standards-Version: 3.7.3
 Vcs-Browser: http://ddccontrol.svn.sourceforge.net/viewvc/ddccontrol/
 Vcs-Svn: https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol

@@ -1,3 +1,10 @@
+ddccontrol (0.4.2-5) unstable; urgency=low
+
+  * Change to build with libpci-dev, fixes FTBFS (Closes: #478369)
+  * Use updated doc-base section.
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Tue, 29 Apr 2008 02:02:56 -0400
+
 ddccontrol (0.4.2-4) unstable; urgency=low
 
   * debian/watch: Switch to Debian QA's SourceForge redirector.
