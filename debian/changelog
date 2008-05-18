@@ -2,12 +2,20 @@ ddccontrol-db (20061014-2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   * Updated to debhelper compatibility level 5.
-  * Recommends applies to i386 amd64 ia64 alpha arm armel (Closes: #436649)
+  * Acknowledge NMU, thanks to Amaya.
   * debian/watch: Switch to Debian QA's SourceForge redirector
   * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
   * debian/rules: placate lintian by properly calling '$(MAKE) distclean'
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Sun, 20 Jan 2008 22:03:11 -0500
+
+ddccontrol-db (20061014-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * debian/control: Add arches to the Recommends field as per release goal.
+    (Closes: #436649).
+
+ -- Amaya Rodrigo Sastre <amaya@debian.org>  Mon, 31 Mar 2008 01:22:12 +0200
 
 ddccontrol-db (20061014-1) unstable; urgency=low
 
