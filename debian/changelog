@@ -1,13 +1,14 @@
-ddccontrol-db (20061014-2) UNRELEASED; urgency=low
+ddccontrol-db (20061014-2) unstable; urgency=low
 
-  * NOT RELEASED YET
   * Updated to debhelper compatibility level 5.
   * Acknowledge NMU, thanks to Amaya.
   * debian/watch: Switch to Debian QA's SourceForge redirector
   * debian/control: Add Vcs-Browser and Vcs-Cvs fields.
   * debian/rules: placate lintian by properly calling '$(MAKE) distclean'
+  * Move rules to binary-indep target since package is arch: all
+  * Update to Standards-Version 3.7.3 (no changes required)
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Sun, 20 Jan 2008 22:03:11 -0500
+ -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 17 May 2008 23:17:53 -0400
 
 ddccontrol-db (20061014-1.1) unstable; urgency=low
 
