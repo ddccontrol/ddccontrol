@@ -1,3 +1,16 @@
+2009-03-10 03:57  Alexandre Prokoudine <alexandre.prokoudine@gmail.com>
+
+	* [r804] po/ru.po, src/gddccontrol/gddccontrol.desktop.in:
+          desktop menu item is translatable now, Russian translation is updated
+
+2009-03-10 03:37  Alexandre Prokoudine <alexandre.prokoudine@gmail.com>
+
+	* [r803] po/ru.po: updated Russian translation
+
+2009-03-10 03:27  Alexandre Prokoudine <alexandre.prokoudine@gmail.com>
+
+	* [r802] po/es.po: fixed markup errors to make 'make' finish successfully
+
 2007-10-29 04:48  Roberto C. Sanchez <roberto@connexer.com>
 
 	* [r753] po/LINGUAS, po/es.po: Add Spanish translation

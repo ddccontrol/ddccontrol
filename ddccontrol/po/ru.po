@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool 0.1\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-03-10 03:26+0300\n"
-"PO-Revision-Date: 2009-03-10 03:38+0300\n"
+"POT-Creation-Date: 2009-03-10 03:54+0300\n"
+"PO-Revision-Date: 2009-03-10 04:50+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,7 @@ msgstr ""
 "ddccontrol версии %s\n"
 "Авторские права 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Авторские права 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
-"Эта программа распространяется БЕЗ КАКИХ_ЛИБО ГАРАНТИЙ.\n"
+"Эта программа распространяется БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ.\n"
 "Вы можете распространять ее копии на условиях GNU General Public License.\n"
 "\n"
 
@@ -104,7 +104,7 @@ msgstr "'%s' не является правильным значением.\n"
 #: ../src/gddccontrol/main.c:414
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
-msgstr "Не могу инициализировать библиотеку ddcci.\n"
+msgstr "Не удалось инициализировать библиотеку ddcci.\n"
 
 #: ../src/ddccontrol/main.c:304
 #, c-format
@@ -177,7 +177,7 @@ msgid ""
 msgstr ""
 "\n"
 "DDC/CI на %s нерабочее (%d).\n"
-"Если Ваша видеокарта это требует, то проверьте, что все требуемые модули ядра загружены (i2c-dev и драйвер фрейбуфера).\n"
+"Если ваша видеокарта этого требует, проверьте загружены ли все требуемые модули ядра (i2c-dev и драйвер фреймбуфера).\n"
 
 #: ../src/ddccontrol/main.c:347
 #, c-format
@@ -346,7 +346,7 @@ msgid ""
 "Saving settings...\n"
 msgstr ""
 "\n"
-"Сохраняю значения...\n"
+"Сохраняются значения...\n"
 
 #. arbitration or no acknowledge
 #: ../src/ddcpci/i2c-algo-bit.c:368
@@ -390,12 +390,12 @@ msgstr "%s: ошибка malloc."
 
 #: ../src/ddcpci/intel810.c:171
 msgid "i810_open: cannot open /dev/mem"
-msgstr "i810_open: не могу открыть /dev/mem"
+msgstr "i810_open: не удалось открыть /dev/mem"
 
 #: ../src/ddcpci/intel810.c:206
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
-msgstr "i810_open: Ошибка: не могу найти ни одной правильной области MMIO PCI.\n"
+msgstr "i810_open: Ошибка: не удалось найти ни одной правильной области MMIO PCI.\n"
 
 #: ../src/ddcpci/intel810.c:213
 msgid "i810_open: mmap failed"
@@ -424,22 +424,22 @@ msgstr "Неверные аргументы.\n"
 #: ../src/ddcpci/main.c:290
 #, c-format
 msgid "==>Can't read verbosity.\n"
-msgstr "==>Не могу прочесть подробные сообщения.\n"
+msgstr "==>Не удалось прочесть подробные сообщения.\n"
 
 #: ../src/ddcpci/main.c:297
 #, c-format
 msgid "==>Can't read key.\n"
-msgstr "==>Не могу прочесть ключ.\n"
+msgstr "==>Не удалось прочесть ключ.\n"
 
 #: ../src/ddcpci/main.c:302
 #, c-format
 msgid "==>Can't open key %u\n"
-msgstr "==>Не могу открыть ключ %u.\n"
+msgstr "==>Не удалось открыть ключ %u.\n"
 
 #: ../src/ddcpci/main.c:316
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
-msgstr "==>Команда не получена в течение %ld секунд, прерываюсь.\n"
+msgstr "==>Команда не получена в течение %ld секунд, прерывание.\n"
 
 #: ../src/ddcpci/main.c:324
 msgid "==>Error while receiving query\n"
@@ -448,7 +448,7 @@ msgstr "==>Ошибка при получении очереди\n"
 #: ../src/ddcpci/main.c:359
 #, c-format
 msgid "==>Invalid query...\n"
-msgstr "==>Неверная очередь...\n"
+msgstr "==>Неправильная очередь...\n"
 
 #: ../src/ddcpci/nvidia.c:122
 #, c-format
@@ -457,7 +457,7 @@ msgstr "nvidia.c:init_i2c_bus: ошибка malloc."
 
 #: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
-msgstr "nvidia_open: не могу открыть /dev/mem"
+msgstr "nvidia_open: не удалось открыть /dev/mem"
 
 #: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
@@ -470,7 +470,7 @@ msgstr "radeon.c:init_i2c_bus: ошибка malloc."
 
 #: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
-msgstr "radeon_open: не могу открыть /dev/mem"
+msgstr "radeon_open: не удалось открыть /dev/mem"
 
 #: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
@@ -483,7 +483,7 @@ msgid ""
 " - White should be as bright as possible.\n"
 " - You must be able to distinguish each gray level (particularly 0 and 12).\n"
 msgstr ""
-"Настройте яркость и контрастность согласно этих правил:\n"
+"Настройте яркость и контрастность согласно этим правилам:\n"
 " - Чёрный должен быть максимально чёрным.\n"
 " - Белый должен быть максимально ярким.\n"
 " - Вы должны различать каждый уровень серого (в частности 0 и 12).\n"
@@ -505,13 +505,21 @@ msgstr ""
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Неизвестное имя полноэкранного шаблона: %s"
 
+#: ../src/gddccontrol/gddccontrol.desktop.in.h:1
+msgid "Monitor Settings"
+msgstr "Параметры монитора"
+
+#: ../src/gddccontrol/gddccontrol.desktop.in.h:2
+msgid "Set your monitor preferences (contrast, brightness,...) and manage your profiles"
+msgstr "Изменить параметры работы монитора (контраст, яркость, температура цвета) и переключиться между заводскими предустановками"
+
 #: ../src/gddccontrol/gprofile.c:53
 msgid "You must select at least one control to be saved in the profile."
 msgstr "Вы должны выбрать хотя бы один регистр для сохранения в профиле."
 
 #: ../src/gddccontrol/gprofile.c:61
 msgid "Creating profile..."
-msgstr "Создаю профиль..."
+msgstr "Создается профиль..."
 
 #: ../src/gddccontrol/gprofile.c:76
 msgid "Error while creating profile."
@@ -519,20 +527,20 @@ msgstr "Ошибка при создании профиля"
 
 #: ../src/gddccontrol/gprofile.c:93
 msgid "Applying profile..."
-msgstr "Примененяю профиль..."
+msgstr "Применяется профиль..."
 
 #: ../src/gddccontrol/gprofile.c:116
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
-msgstr "Вы уверены в удалении профиля '%s'?"
+msgstr "Вы действительно хотите удалить профиль '%s'?"
 
 #: ../src/gddccontrol/gprofile.c:142
 msgid "Please select the controls you want to save in the profile using the checkboxes to the left of each control."
-msgstr "Пожалуйста, выберите регистры, которые хотите сохранить в профиле, отметив слева от каждого регистра."
+msgstr "Выберите регистры, которые хотите сохранить в профиле, отметив нужные слева от каждого регистра."
 
 #: ../src/gddccontrol/gprofile.c:174
 msgid "Profile Manager"
-msgstr "Менеджер профилей"
+msgstr "Управление профилями"
 
 #: ../src/gddccontrol/gprofile.c:193
 msgid "Apply profile"
@@ -587,7 +595,7 @@ msgstr "Имя профиля:"
 #. Save
 #: ../src/gddccontrol/gprofile.c:496
 msgid "Saving profile..."
-msgstr "Сохраняю профиль..."
+msgstr "Сохраняется профиль..."
 
 #: ../src/gddccontrol/gprofile.c:505
 msgid "Error while saving profile."
@@ -610,11 +618,11 @@ msgid ""
 msgstr ""
 "Не обнаружены мониторы, поддерживающие DDC/CI.\n"
 "\n"
-"Если Ваша видеокарта это требует, то проверьте, что все требуемые модули ядра загружены (i2c-dev и драйвер фрейбуфера)."
+"Если ваша видеокарта этого требует, проверьте загружены ли все требуемые модули ядра (i2c-dev и драйвер фреймбуфера)."
 
 #: ../src/gddccontrol/main.c:420
 msgid "Unable to initialize ddcci library, see console for more details.\n"
-msgstr "Не могу инициализировать библиотеку ddcci, посмотрите на консоли за пояснениями.\n"
+msgstr "Не удалось инициализировать библиотеку ddcci; пояснения выведены в консоль.\n"
 
 #: ../src/gddccontrol/main.c:430
 msgid "Monitor settings"
@@ -630,7 +638,7 @@ msgstr "Обновить список мониторов"
 
 #: ../src/gddccontrol/main.c:481
 msgid "Profile manager"
-msgstr "Менеджер профилей"
+msgstr "Управление профилями"
 
 #: ../src/gddccontrol/main.c:488
 msgid "Save profile"
@@ -673,7 +681,7 @@ msgstr "Ошибка при получении значения"
 #: ../src/gddccontrol/notebook.c:128
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
-msgstr "Обновляю значения регистров (%d%%)..."
+msgstr "Обновляются значения регистров (%d%%)..."
 
 #: ../src/gddccontrol/notebook.c:133
 msgid "Could not get the control_db struct related to a control."
@@ -695,16 +703,16 @@ msgid ""
 "\n"
 "If your monitor has two inputs, please try to connect the cable to the other input, and then click on the refresh button near the monitor list."
 msgstr ""
-"Данный монитор есть в базе данных, но не поддерживает DDC/CI.\n"
+"Этот монитор есть в базе данных, но не поддерживает DDC/CI.\n"
 "\n"
-"Часто это происходит при подключении кабеля VGA/DVI к ошибочному входу монитора, поддерживающего DDC/CI только по одному из двух входов.\n"
+"Это часто происходит при подключении кабеля VGA/DVI к не тому входу монитора, поддерживающего DDC/CI только по одному из двух входов.\n"
 "\n"
-"Если Ваш монитор имеет два входа, пожалуйста, попробуйте подключить кабель к другому входу и нажмите на кнопку обновления возле списка мониторов."
+"Если у вашего монитора два входа, попробуйте подключить кабель к другому входу и нажмите кнопку обновления возле списка мониторов."
 
 #: ../src/gddccontrol/notebook.c:583
 #, c-format
 msgid "Opening the monitor device (%s)..."
-msgstr "Открываю устройство монитора (%s)..."
+msgstr "Открывается устройство монитора (%s)..."
 
 #: ../src/gddccontrol/notebook.c:591
 msgid ""
@@ -725,17 +733,17 @@ msgstr ""
 
 #: ../src/gddccontrol/notebook.c:620
 msgid "Please click on a group name."
-msgstr "Пожалуйста, щёлкните на имени группы."
+msgstr "Щёлкните имя группы."
 
 #: ../src/gddccontrol/notebook.c:639
 #: ../src/gddccontrol/notebook.c:650
 #, c-format
 msgid "Getting controls values (%d%%)..."
-msgstr "Получаю значения регистров (%d%%)..."
+msgstr "Получаются значения регистров (%d%%)..."
 
 #: ../src/gddccontrol/notebook.c:664
 msgid "Loading profiles..."
-msgstr "Загружаю профили..."
+msgstr "Загружаются профили..."
 
 #: ../src/gddccontrol/notebook.c:677
 msgid "There is no support for your monitor in the database, but ddccontrol is using a generic profile for your monitor's manufacturer. Some controls may not be supported, or may not work as expected.\n"
@@ -786,11 +794,11 @@ msgstr ""
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:386
 msgid "Unable to initialize ddcci library"
-msgstr "Не могу инициализировать библиотеку ddcci"
+msgstr "Не удалось инициализировать библиотеку ddcci"
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:390
 msgid "No monitor configuration found. Please run gddccontrol first"
-msgstr "Не найдена конфигурация мониторов. Пожалуйста, запустите сначала gddccontrol"
+msgstr "Не найдена конфигурация мониторов. Запустите сначала gddccontrol"
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:395
 msgid "An error occured while opening the monitor device"
@@ -798,7 +806,7 @@ msgstr "Произошла ошибка при открытии устройст
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:400
 msgid "Can't find any profiles"
-msgstr "Не могу найти ни одного профиля"
+msgstr "Не удалось найти ни один профиль"
 
 #. only reached, if init was not finished
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:416
@@ -818,7 +826,7 @@ msgstr "Свойства переключателя профилей монит�
 #: ../src/lib/conf.c:308
 #: ../src/lib/ddcci.c:1202
 msgid "Cannot create filename (buffer too small)\n"
-msgstr "Не могу создать имя файла (буфер слишком мал)\n"
+msgstr "Не удалось создать имя файла (буфер слишком мал)\n"
 
 #: ../src/lib/conf.c:86
 #: ../src/lib/conf.c:363
@@ -826,7 +834,7 @@ msgstr "Не могу создать имя файла (буфер слишко�
 #: ../src/lib/monitor_db.c:714
 #, c-format
 msgid "Document not parsed successfully.\n"
-msgstr "Документ обработан неправльно.\n"
+msgstr "Не удалось разобрать документ.\n"
 
 #: ../src/lib/conf.c:93
 #: ../src/lib/conf.c:370
@@ -838,11 +846,11 @@ msgstr "пустой файл профиля\n"
 #: ../src/lib/conf.c:376
 #, c-format
 msgid "profile of the wrong type, root node %s != profile"
-msgstr "неверный тип профиля, корень %s != profile"
+msgstr "некорректный тип профиля, корень %s != profile"
 
 #: ../src/lib/conf.c:105
 msgid "Can't find ddccontrolversion property."
-msgstr "Не могу найти свойство ddccontrolversion."
+msgstr "Не удалось найти свойство ddccontrolversion."
 
 #: ../src/lib/conf.c:107
 #, c-format
@@ -851,15 +859,15 @@ msgstr "ddccontrol был обновлён с момента последнег�
 
 #: ../src/lib/conf.c:124
 msgid "Can't find filename property."
-msgstr "Не могу найти свойство filename."
+msgstr "Не удалось найти свойство filename."
 
 #: ../src/lib/conf.c:130
 msgid "Can't find supported property."
-msgstr "Не могу найти поддерживаемое свойство."
+msgstr "Не удалось найти поддерживаемое свойство."
 
 #: ../src/lib/conf.c:133
 msgid "Can't convert supported property to int."
-msgstr "Не могу преобразовать поддерживаемое свойство в int."
+msgstr "Не удалось преобразовать поддерживаемое свойство в int."
 
 #: ../src/lib/conf.c:138
 #: ../src/lib/conf.c:385
@@ -869,28 +877,28 @@ msgstr "Не могу преобразовать поддерживаемое с
 #: ../src/lib/monitor_db.c:426
 #: ../src/lib/monitor_db.c:447
 msgid "Can't find name property."
-msgstr "Не могу найти элемент name."
+msgstr "Не удалось найти элемент name."
 
 #: ../src/lib/conf.c:144
 msgid "Can't find digital property."
-msgstr "Не могу найти цифровое свойство."
+msgstr "Не удалось найти цифровое свойство."
 
 #: ../src/lib/conf.c:147
 msgid "Can't convert digital property to int."
-msgstr "Не могу пребразовать цифровое свойство в int."
+msgstr "Не удалось преобразовать цифровое свойство в int."
 
 #: ../src/lib/conf.c:175
 #: ../src/lib/conf.c:439
 msgid "Cannot create the xml writer\n"
-msgstr "Не могу создать модуль записи xml\n"
+msgstr "Не удалось создать модуль записи xml\n"
 
 #: ../src/lib/conf.c:239
 msgid "Cannot read control value\n"
-msgstr "Не могу прочесть значение регистра\n"
+msgstr "Не удалось прочесть значение регистра\n"
 
 #: ../src/lib/conf.c:276
 msgid "Cannot write control value\n"
-msgstr "Не могу записать значение регистра\n"
+msgstr "Не удалось записать значение регистра\n"
 
 #: ../src/lib/conf.c:313
 msgid "Error while opening ddccontrol home directory."
@@ -902,17 +910,17 @@ msgstr "Ошибка при чтении домашнего каталога ddc
 
 #: ../src/lib/conf.c:382
 msgid "Can't find pnpid property."
-msgstr "Не могу найти свойство pnpid."
+msgstr "Не удалось найти свойство pnpid."
 
 #: ../src/lib/conf.c:388
 #: ../src/lib/conf.c:391
 msgid "Can't find version property."
-msgstr "Не могу найти свойство version."
+msgstr "Не удалось найти свойство version."
 
 #: ../src/lib/conf.c:390
 #: ../src/lib/monitor_db.c:752
 msgid "Can't convert version to int."
-msgstr "Не могу преобразовать версию в int"
+msgstr "Не удалось преобразовать версию в int"
 
 #: ../src/lib/conf.c:393
 #, c-format
@@ -922,31 +930,31 @@ msgstr "профиль version (%d) не поддерживается (долж�
 #: ../src/lib/conf.c:407
 #: ../src/lib/monitor_db.c:229
 msgid "Can't find address property."
-msgstr "Не могу найти элемент address."
+msgstr "Не удалось найти элемент address."
 
 #: ../src/lib/conf.c:409
 #: ../src/lib/monitor_db.c:231
 msgid "Can't convert address to int."
-msgstr "Не могу преобразовать адрес в int."
+msgstr "Не удалось преобразовать адрес в int."
 
 #: ../src/lib/conf.c:413
 #: ../src/lib/monitor_db.c:112
 msgid "Can't find value property."
-msgstr "Не могу найти элемент value."
+msgstr "Не удалось найти элемент value."
 
 #: ../src/lib/conf.c:415
 #: ../src/lib/monitor_db.c:114
 msgid "Can't convert value to int."
-msgstr "Не могу пребразовать значение в int."
+msgstr "Не удалось преобразовать значение в int."
 
 #: ../src/lib/conf.c:499
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
-msgstr "ddcci_delete_profile: Ошибка, не могу удалить профиль.\n"
+msgstr "ddcci_delete_profile: Ошибка, не удалось удалить профиль.\n"
 
 #: ../src/lib/conf.c:519
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
-msgstr "ddcci_delete_profile: Ошибка, не могу найти профиль для удаления.\n"
+msgstr "ddcci_delete_profile: Ошибка, не удалось найти этот удаляемый профиль.\n"
 
 #: ../src/lib/ddcci.c:146
 msgid "Error while initialisating the message queue"
@@ -963,7 +971,7 @@ msgstr "Ошибка при отправке очередного сообщен
 #: ../src/lib/ddcci.c:239
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
-msgstr "Не могу инициализировать базу данных ddccontrol...\n"
+msgstr "Не удалось инициализировать базу данных ddccontrol...\n"
 
 #: ../src/lib/ddcci.c:275
 #: ../src/lib/ddcci.c:350
@@ -1000,12 +1008,12 @@ msgstr "Некритичная ошибка: неправильный ответ
 #: ../src/lib/ddcci.c:492
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
-msgstr "Неправльный ответ, длина %d, должна быть как минимум %d\n"
+msgstr "Неправильный ответ, длина %d, должна быть не менее %d\n"
 
 #: ../src/lib/ddcci.c:505
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
-msgstr "Неправльный ответ, разрушенные данные - xor равен 0x%02x, длина 0x%02x\n"
+msgstr "Неправильный ответ, разрушенные данные - xor равен 0x%02x, длина 0x%02x\n"
 
 #: ../src/lib/ddcci.c:658
 #: ../src/lib/ddcci.c:680
@@ -1016,7 +1024,7 @@ msgstr "Не могу преобразовать значение в int, нев
 #: ../src/lib/ddcci.c:763
 #, c-format
 msgid "Invalid sequence in caps.\n"
-msgstr "Неправльная последовательность в заголовках.\n"
+msgstr "Неправильная последовательность в заголовках.\n"
 
 #: ../src/lib/ddcci.c:841
 #, c-format
@@ -1064,7 +1072,7 @@ msgstr "Ошибка при получении ответа на сообщен�
 #: ../src/lib/ddcci.c:933
 #, c-format
 msgid "Invalid filename (%s).\n"
-msgstr "Неправльное имя файла (%s).\n"
+msgstr "Неправильное имя файла (%s).\n"
 
 #: ../src/lib/ddcci.c:1049
 #, c-format
@@ -1134,7 +1142,7 @@ msgstr "Ошибка: '.ddccontrol/profiles' в Вашем домашнем ка
 #: ../src/lib/monitor_db.c:82
 #: ../src/lib/monitor_db.c:192
 msgid "Can't find id property."
-msgstr "Не могу найти элемент id."
+msgstr "Не удалось найти элемент id."
 
 #: ../src/lib/monitor_db.c:151
 #: ../src/lib/monitor_db.c:546
@@ -1158,11 +1166,11 @@ msgstr "Регистр %s (0x%02x) уже определен.\n"
 
 #: ../src/lib/monitor_db.c:259
 msgid "Can't convert delay to int."
-msgstr "Не могу преобразовать задержку в int."
+msgstr "Не удалось преобразовать задержку в int."
 
 #: ../src/lib/monitor_db.c:267
 msgid "Can't find type property."
-msgstr "Не могу найти элемент type."
+msgstr "Не удалось найти элемент type."
 
 #: ../src/lib/monitor_db.c:292
 #: ../src/lib/monitor_db.c:381
@@ -1206,7 +1214,7 @@ msgstr "Ошибка, найдена глубина рекурсии > 15 (фа�
 
 #: ../src/lib/monitor_db.c:479
 msgid "Can't find file property."
-msgstr "Не удалось найти свойства файла."
+msgstr "Не удалось найти свойство file."
 
 #: ../src/lib/monitor_db.c:487
 msgid "Two controls part in XML file."
@@ -1234,32 +1242,32 @@ msgstr "options.xml неверного типа, root node %s != options"
 #: ../src/lib/monitor_db.c:738
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
-msgstr "В options.xml отсутствует атрибут dbversion, пожалуйста, обновите Вашу базу данных.\n"
+msgstr "В options.xml отсутствует атрибут dbversion, обновите базу данных.\n"
 
 #: ../src/lib/monitor_db.c:745
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
-msgstr "В options.xml отсутствует атрибут date, пожалуйста, обновите Вашу базу данных.\n"
+msgstr "В options.xml отсутствует атрибут date, обновите базу данных.\n"
 
 #: ../src/lib/monitor_db.c:755
 #, c-format
 msgid "options.xml dbversion (%d) is greater than the supported version (%d).\n"
-msgstr "В options.xml dbversion (%d) больше, чем поддерживаемая (%d).\n"
+msgstr "В options.xml версия базы данных (%d) больше поддерживаемой (%d).\n"
 
 #: ../src/lib/monitor_db.c:756
 #, c-format
 msgid "Please update ddccontrol program.\n"
-msgstr "Пожалуйста, обновите программу ddccontrol.\n"
+msgstr "Обновите программу ddccontrol.\n"
 
 #: ../src/lib/monitor_db.c:763
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
-msgstr "В options.xml dbversion (%d) меньше, чем поддерживаемая (%d).\n"
+msgstr "В options.xml версия базы данных (%d) меньше поддерживаемой (%d).\n"
 
 #: ../src/lib/monitor_db.c:764
 #, c-format
 msgid "Please update ddccontrol database.\n"
-msgstr "Пожалуйста, обновите базу данных ddccontrol.\n"
+msgstr "Обновите базу данных ddccontrol.\n"
 
 #~ msgid "Buffer too small to contain caps.\n"
 #~ msgstr "Буфер слишком маленький для хранения заголовков.\n"
@@ -1277,10 +1285,6 @@ msgstr "Пожалуйста, обновите базу данных ddccontrol.
 #~ msgstr "Xinerama поддерживается, но неактивна\n"
 #~ msgid "Xinerama not supported\n"
 #~ msgstr "Xinerama не поддерживается\n"
-
-#, fuzzy
-#~ msgid "Monitor Settings"
-#~ msgstr "Установки монитора"
 
 #, fuzzy
 #~ msgid "intel810.c:init_i2c_bus"

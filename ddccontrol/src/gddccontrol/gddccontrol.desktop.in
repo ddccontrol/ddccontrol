@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Monitor Settings
-Comment=Set your monitor preferences (contrast, brightness,...) and manage your profiles
+_Name=Monitor Settings
+_Comment=Set your monitor preferences (contrast, brightness,...) and manage your profiles
 Exec=gddccontrol
 Icon=gddccontrol
 Terminal=false
