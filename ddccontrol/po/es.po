@@ -63,7 +63,7 @@ msgstr "[ FALLÓ ]\n"
 #: ../../po/../src/ddccontrol/main.c:156 ../../po/../src/ddccontrol/main.c:179
 #, c-format
 msgid "[ OK ]\n"
-msgstr "[ BIEN ]n\"
+msgstr "[ BIEN ]\n"
 
 #: ../../po/../src/ddccontrol/main.c:217
 #, c-format
@@ -185,7 +185,9 @@ msgstr ""
 msgid ""
 "\n"
 "EDID readings:\n"
-msgstr "Lecturas EDID:\n"
+msgstr ""
+"\n"
+"Lecturas EDID:\n"
 
 #: ../../po/../src/ddccontrol/main.c:348
 #, c-format
@@ -619,7 +621,7 @@ msgstr ""
 "No hay monitor disponible que soporta DDC/CI.\n"
 "\n"
 "Si le hace falta a tu tarjeta de gráficos, por favor verifique que todos los "
-"módulos requeridos del núcleo están cargados (i2c-dev, y el manejador del framebuffer).\n"
+"módulos requeridos del núcleo están cargados (i2c-dev, y el manejador del framebuffer)."
 
 #: ../../po/../src/gddccontrol/main.c:420
 msgid "Unable to initialize ddcci library, see console for more details.\n"
@@ -823,11 +825,11 @@ msgstr ""
 
 #: ../../po/../src/gnome-ddcc-applet/ddcc-applet.c:386
 msgid "Unable to initialize ddcci library"
-msgstr "No se pudo inicializar la biblioteca ddcci.\n"
+msgstr "No se pudo inicializar la biblioteca ddcci."
 
 #: ../../po/../src/gnome-ddcc-applet/ddcc-applet.c:390
 msgid "No monitor configuration found. Please run gddccontrol first"
-msgstr "No se encontró configuración de monitor.  Por favor ejecute gddccontrol primero""
+msgstr "No se encontró configuración de monitor.  Por favor ejecute gddccontrol primero"
 
 #: ../../po/../src/gnome-ddcc-applet/ddcc-applet.c:395
 msgid "An error occured while opening the monitor device"
@@ -909,15 +911,15 @@ msgstr "So se puede convertir propiedad 'digital' a número entero"
 
 #: ../../po/../src/lib/conf.c:175 ../../po/../src/lib/conf.c:439
 msgid "Cannot create the xml writer\n"
-msgstr "No se pueded crear el escribidor xml"
+msgstr "No se pueded crear el escribidor xml\n"
 
 #: ../../po/../src/lib/conf.c:239
 msgid "Cannot read control value\n"
-msgstr "No se puede leer el valor del control"
+msgstr "No se puede leer el valor del control\n"
 
 #: ../../po/../src/lib/conf.c:276
 msgid "Cannot write control value\n"
-msgstr "No se puede escribir el valor del control"
+msgstr "No se puede escribir el valor del control\n"
 
 #: ../../po/../src/lib/conf.c:313
 msgid "Error while opening ddccontrol home directory."
@@ -1176,7 +1178,7 @@ msgstr "Tipo de actualización inválido (!= ninguno, != todo)."
 #: ../../po/../src/lib/monitor_db.c:238
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
-msgstr "Control %s ha sido descartado por la cadena 'caps'"
+msgstr "Control %s ha sido descartado por la cadena 'caps'.\n"
 
 #: ../../po/../src/lib/monitor_db.c:246
 #, c-format
@@ -1247,7 +1249,7 @@ msgstr "document del tipo incorrecto, no se encuentra 'controls' o 'include'.\n"
 #: ../../po/../src/lib/monitor_db.c:721
 #, c-format
 msgid "empty options.xml\n"
-msgstr "options.xml vacio"
+msgstr "options.xml vacio\n"
 
 #: ../../po/../src/lib/monitor_db.c:728
 #, c-format
