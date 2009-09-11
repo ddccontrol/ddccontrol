@@ -1,3 +1,9 @@
+ddccontrol (0.4.2-6) unstable; urgency=low
+
+  * Orphaning this package. Maintainer set to Debian QA Group.
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 10 Sep 2009 20:47:21 -0400
+
 ddccontrol (0.4.2-5) unstable; urgency=low
 
   * Change to build with libpci-dev, fixes FTBFS (Closes: #478369)
