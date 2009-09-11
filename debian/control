@@ -1,7 +1,7 @@
 Source: ddccontrol-db
 Section: utils
 Priority: optional
-Maintainer: Roberto C. Sanchez <roberto@connexer.com>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Homepage: http://ddccontrol.sourceforge.net/
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: autotools-dev, intltool

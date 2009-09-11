@@ -1,3 +1,9 @@
+ddccontrol-db (20061014-3) unstable; urgency=low
+
+  * Orphaning this package. Maintainer set to Debian QA Group.
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 10 Sep 2009 20:50:07 -0400
+
 ddccontrol-db (20061014-2) unstable; urgency=low
 
   * Updated to debhelper compatibility level 5.
