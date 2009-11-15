@@ -28,12 +28,27 @@
 				<value id="low" name="Low"/>
 				<value id="auto" name="Auto"/>
 			</control>
-			<control id="fengine" type="list" name="f-Engine">
-				<value id="normal" name="Normal" />
-				<value id="user" name="User" />
-				<value id="text" name="Text" />
-				<value id="movie" name="Movie" />
-			</control>
+		</subgroup>
+<!-- Following sub group valid for LG F-Engine monitors -->
+		<subgroup name="LG F-Engine">
+			<control id="femode" type="list" name="F-Engine Mode" address="0xFC">
+                                <value id="movie" name="Movie" value="0x01"/>
+                                <value id="text" name="Text" value="0x02"/>
+                                <value id="normal" name="Normal" value="0x00"/>
+                                <value id="user" name="User defined" value="0x03"/>
+                        </control>
+                        <control id="febrightness" type="value" name="F-Engine Brightness (User defined mode only)" address="0xF1"/>
+                        <control id="feclarity" type="list" name="F-Engine ACE Clarity Mode (User defined mode only)" address="0xF2">
+                                <value id="dark" name="Dark" value="0x01"/>
+                                <value id="normal" name="Normal" value="0x00"/>
+                                <value id="light" name="Light" value="0x02"/>
+                        </control>
+                        <control id="fecolor" type="list" name="F-Engine RCM Color Mode (User defined mode only)" address="0xF3">
+                                <value id="grey" name="Grey" value="0x00"/>
+                                <value id="green" name="Green" value="0x01"/>
+                                <value id="red" name="Red" value="0x02"/>
+                                <value id="colorful" name="Colorful" value="0x03"/>
+                        </control>
 		</subgroup>
 		<subgroup name="Gamma" > 
 			<control id="gamma" type="list" name="Gamma" address="0xF2" >

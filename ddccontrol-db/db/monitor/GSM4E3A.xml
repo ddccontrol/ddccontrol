@@ -12,7 +12,7 @@
 			<value id="russian" value="9"/>
 		</control>
 		
-		<control id="fengine" type="list" address="0xfc">
+		<control id="fmode" type="list" address="0xfc">
 			<value id="normal" value="0"/>
 			<value id="user" value="3"/>
 			<value id="text" value="2"/>

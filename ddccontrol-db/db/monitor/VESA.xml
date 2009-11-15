@@ -3,6 +3,7 @@
 <monitor name="VESA standard monitor" init="standard">
 	<controls>
 		<control id="degauss" address="0x00"/>
+		<control id="secdegauss" address="0x02"/>
 		
 		<control id="defaults" address="0x04" delay="2000"/>
 		<control id="defaultluma" address="0x05" delay="2000"/>

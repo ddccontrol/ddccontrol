@@ -1,35 +1,11 @@
 <?xml version="1.0"?>
 <monitor name="LG Standard LCD" init="standard">
 	<controls>
-		<!--- Guessed from other manufacturers. TODO: check -->
-		<control id="colorpreset" address="0x14">
-			<value id="srgb"   value="0x1"/>
-			<value id="6500k"  value="0x5"/>
-			<value id="7500k"  value="0x6"/>
-			<value id="8200k"  value="0x7"/>
-			<value id="9300k"  value="0x8"/>
-			<value id="user1"  value="0xB"/>
-		</control>
-
-		<!-- Control 0xb6: +/3/8 [Monitor Type, RO] -->
-		<!-- Control 0xdf: +/512/65535   [VCP version] -->
-
+		<!-- Control 0xfd: +/1/1   [???] -->
 		<control id="powerled" address="0xfd">
 			<value id="off"   value="0x0"/>
 			<value id="on"    value="0x1"/>
 		</control>
-       
-		<control id="gamma" address="0xfe">
-			<value id="-0.5"   value="0x0"/>
-			<value id="0"      value="0x1"/>
-			<value id="+0.5"   value="0x2"/>
-		</control>
-       
-		<control id="sharpness" address="0xff"/>
-		
-		<!-- Control 0xfd: +/1/1   [???] -->
-		<!-- Control 0xfe: +/1/2   [???] -->
-		<!-- Control 0xff: +/5/10   [???] -->
 	</controls>
 	<include file="VESA"/>
 </monitor>
