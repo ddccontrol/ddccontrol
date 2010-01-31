@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--- (type(LCD)vcp(04 05 08 10 12 14(02 03 04 07 08 09 0A 0B) 16 18 1A 59 5A 5B 5C 5D 5E 60(01 03) 9B 9C 9D 9E 9F A0 AA(01 02) B0(01 02) B6 C6 C8 C9 D6(01 05) DC(01 02 03 04 05 06 F0) DF F0(00 01 02 03 04 08) F2 )) -->
+<monitor name="Samsung SyncMaster 245T">
+	<controls>
+	    <control id="colorpreset" type="list" address="0xe0">
+		  <value id="warm2" value="0" />
+		  <value id="warm1" value="1" />
+		  <value id="normal" value="2" />
+		  <value id="cool1" value="3" />
+		  <value id="cool2" value="4" />
+		  <value id="cool3" value="5" />
+		  <value id="cool4" value="6" />
+	    </control>
+	    <control id="gamma" type="list" address="0xf2">
+		  <value id="-0.2" value="0" />
+		  <value id="-0.1" value="1" />
+		  <value id="0" value="2" />
+		  <value id="+0.1" value="3" />
+		  <value id="+0.2" value="4" />
+		  <value id="+0.3" value="5" />
+		  <value id="+0.4" value="6" />
+		  <value id="+0.5" value="7" />
+		  <value id="+0.6" value="8" />
+	    </control>
+		<control id="magicbright" type="list" address="0xdc">
+			<value id="text" value="1"/>
+			<value id="internet" value="2"/>
+			<value id="game" value="3"/>
+			<value id="sport" value="4"/>
+			<value id="entertain" value="5"/> 
+			<value id="custom" value="6"/>
+		</control>
+	</controls>
+	<include file="SAMlcd"/>
+</monitor>
