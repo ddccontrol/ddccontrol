@@ -1,7 +1,0 @@
-usr/bin/gddccontrol
-usr/lib/bonobo/servers/*
-usr/lib/ddccontrol/*
-usr/share/applications/*
-usr/share/ddccontrol/*
-usr/share/pixmaps/*
-usr/share/man/man1/gddccontrol.1

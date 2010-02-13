@@ -1,2 +1,0 @@
-?package(ddccontrol):needs="text" section="Applications/System/Hardware"\
-  title="DDCcontrol" command="/usr/bin/ddccontrol"

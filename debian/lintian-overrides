@@ -1,4 +1,0 @@
-# There is a command in /usr/bin which is not meant to be executed by the user.
-# Hopefully it will be moved under /usr/lib/ddccontrol in the future.
-ddccontrol binary: binary-without-manpage usr/bin/ddcpci
-

@@ -1,2 +1,0 @@
-?package(gddccontrol):needs="X11" section="Applications/System/Hardware"\
-  title="gDDCcontrol" command="/usr/bin/gddccontrol"
