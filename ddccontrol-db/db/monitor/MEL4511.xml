@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!---The Mitsubishi Diamond Pro 2060u has two different IDs. -->
-<monitor name="Mitsubishi Diamond Pro 2060u (4511)">
-	<include file="MEL4513"/>
-</monitor>

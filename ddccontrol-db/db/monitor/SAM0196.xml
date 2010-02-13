@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!---The Samsung 173P+ is identical to 193P+ -->
-<monitor name="Samsung SyncMaster 173P Plus (VGA)">
-	<include file="SAM0198"/>
-</monitor>

@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!---The Samsung 970P is identical to 770P -->
-<monitor name="Samsung SyncMaster 970P (Analog)">
-	<include file="SAM01B4"/>
-</monitor>

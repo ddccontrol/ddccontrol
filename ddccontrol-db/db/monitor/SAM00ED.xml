@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!---The Samsung 193P is identical to 173P -->
-<monitor name="Samsung SyncMaster 193P (DVI)">
-	<include file="SAM00D3"/>
-</monitor>

@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!--- CC, E1 and F5 are not in caps (language, power and OSD enable) -->
-<monitor name="Samsung SyncMaster 730BF (DVI)">
-	<include file="SAM0191"/>
-</monitor>

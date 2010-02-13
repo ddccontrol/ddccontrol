@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<!---The Samsung 710T is identical to 910T -->
-<monitor name="Samsung SyncMaster 710T">
-	<include file="SAM010F"/>
-</monitor>

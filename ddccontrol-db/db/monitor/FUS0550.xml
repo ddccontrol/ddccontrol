@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<monitor name="Fujitsu Siemens P17-2">
-	<include file="FUSlcd"/>
-</monitor>

@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<monitor name="Fujitsu Siemens P20-2 (DVI)">
-	<include file="FUSlcd"/>
-</monitor>
