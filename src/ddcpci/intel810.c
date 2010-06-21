@@ -144,6 +144,7 @@ struct card* i810_open(struct pci_dev *dev)
 	case 0x2776: // 945G Integrated Graphics Controller
 	case 0x2782: // 82915G Express Chipset Family Graphics Controller
 	case 0x2792: // Mobile 915GM/GMS/910GML Express Graphics Controller
+	case 0x27AE: // Mobile 945GME Express Graphics Controller
 	case 0x3577: // 82830 CGC [Chipset Graphics Controller]
 	case 0x3582: // 82852/855GM Integrated Graphics Device
 	case 0x7121: // 82810 CGC [Chipset Graphics Controller]
