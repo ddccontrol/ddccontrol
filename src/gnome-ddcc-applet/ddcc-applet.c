@@ -488,7 +488,7 @@ ddcc_applet_main (PanelApplet* root_applet)
 
 	icon_theme = gtk_icon_theme_get_default();
 
-	icon = gtk_image_new_from_icon_name ("display-capplet", GTK_ICON_SIZE_BUTTON);
+	icon = gtk_image_new_from_icon_name ("gddccontrol", GTK_ICON_SIZE_BUTTON);
 	applet_hbox = gtk_hbox_new (FALSE,0);
 
 	gtk_box_pack_start (GTK_BOX (applet_hbox), icon, 0, 0, 0);

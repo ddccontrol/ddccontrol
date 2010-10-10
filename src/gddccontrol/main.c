@@ -425,6 +425,8 @@ int main( int   argc, char *argv[] )
 	
 	g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
 	
+	gtk_window_set_default_icon_name ("gddccontrol");
+
 	main_app_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	
 	gtk_window_set_title(GTK_WINDOW(main_app_window),_("Monitor settings"));

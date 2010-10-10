@@ -25,7 +25,7 @@
         <oaf_attribute name="name" type="string" _value="Monitor Profile Switcher"/>
         <oaf_attribute name="description" type="string" _value="Quickly switch monitor profiles created with gddccontrol"/>
         <oaf_attribute name="panel:category" type="string" value="System"/>
-        <oaf_attribute name="panel:icon" type="string" value="display-capplet.png"/>
+        <oaf_attribute name="panel:icon" type="string" value="gddccontrol"/>
 
 </oaf_server>
 
