@@ -2,7 +2,7 @@
 
 <oaf_server iid="OAFIID:GNOME_ddcc-applet_Factory"
             type="exe"
-            location="@PKGLIBDIR@/ddcc-applet">
+            location="@appletdir@/ddcc-applet">
 
         <oaf_attribute name="repo_ids" type="stringv">
                 <item value="IDL:Bonobo/GenericFactory:1.0"/>
