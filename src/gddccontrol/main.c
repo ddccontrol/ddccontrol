@@ -250,7 +250,8 @@ void set_message_ok(char* message, int with_ok)
 	}
 	
 	gtk_label_set_markup(GTK_LABEL(messagelabel), message);
-	
+	gtk_label_set_selectable(GTK_LABEL(messagelabel), TRUE);
+
 	widgets_set_sensitive(FALSE);
 	
 	gtk_widget_show(messagebox);
