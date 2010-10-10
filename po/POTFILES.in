@@ -5,6 +5,8 @@ src/ddcpci/intel810.c
 src/ddcpci/main.c
 src/ddcpci/nvidia.c
 src/ddcpci/radeon.c
+src/ddcpci/sis.c
+src/ddcpci/via.c
 src/gddccontrol/fspatterns.c
 src/gddccontrol/gddccontrol.desktop.in
 src/gddccontrol/gprofile.c

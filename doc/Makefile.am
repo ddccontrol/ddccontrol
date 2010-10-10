@@ -26,7 +26,7 @@ publish-release: all pdf
 spell:
 	@ASPELL@ --mode=sgml check main.xml
 
-clean:
+clean-local:
 	rm -rf html
 	rm -f ddccontrol.fo ddccontrol.pdf
 

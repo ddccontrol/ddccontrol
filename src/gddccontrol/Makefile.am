@@ -12,8 +12,9 @@ AM_CFLAGS = $(GNOME_CFLAGS)
 
 
 desktopdir = $(datadir)/applications
-Desktop_in_files = gddccontrol.desktop.in
-desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
+desktop_in_files = gddccontrol.desktop.in
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = gddccontrol.png
