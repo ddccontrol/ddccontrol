@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datarootdir = @datarootdir@
+bindir=@bindir@
+datadir=@datadir@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: ddccontrol
+Description: Display DDC/CI control
+Version: @VERSION@
+Libs: -L${libdir} -lddccontrol
+Cflags: -I${includedir}

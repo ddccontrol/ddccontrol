@@ -16,6 +16,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_PROG_INTLTOOL
+PKG_PROG_PKG_CONFIG
 
 AC_LANG([C])
 
@@ -233,7 +234,8 @@ AC_CONFIG_FILES([
 	po/Makefile.in
 	Makefile
 	src/Makefile
-	src/lib/Makefile 
+	src/lib/Makefile
+	src/lib/ddccontrol.pc
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile

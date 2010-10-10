@@ -3,6 +3,10 @@ INCLUDES = -I@top_srcdir@/src -DLOCALEDIR=\"$(localedir)\"
 
 pkginclude_HEADERS = conf.h monitor_db.h ddcci.h ddcpci-ipc.h
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = ddccontrol.pc
+
+$(pkgconfig_DATA): $(srcdir)/ddccontrol.pc.in $(top_builddir)/config.status
 
 lib_LTLIBRARIES = libddccontrol.la
 
