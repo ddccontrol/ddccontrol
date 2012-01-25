@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "ddcpci-ipc.h"
+#define IDLE_TIMEOUT 60
 
 #include "notebook.h"
 
