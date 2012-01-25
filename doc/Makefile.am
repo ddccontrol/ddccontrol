@@ -2,7 +2,6 @@ XSLTPROC=@XSLTPROC@
 XSLTPROC_FLAGS=@XSLTPROC_FLAGS@
 XHTML_STYLESHEET=style.xsl
 
-htmldir = $(prefix)/share/doc/@PACKAGE@/html
 dist_html_DATA = html/*
 EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml supportedmonitors.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl
 
