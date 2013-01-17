@@ -63,6 +63,9 @@ struct caps {
 struct monitor {
 	int fd;
 	unsigned int addr;
+#ifdef HAVE_AMDADL
+	int adl_adapter, adl_display;
+#endif
 	char pnpid[8];
 	unsigned char digital; /* 0 - digital, 1 - analog */
 	struct timeval last;
@@ -75,6 +78,9 @@ struct monitor {
 		dev
 #ifdef HAVE_DDCPCI
 		,pci
+#endif
+#ifdef HAVE_AMDADL
+		,type_adl
 #endif
 	} type;
 	int probing; /* are we probing? */

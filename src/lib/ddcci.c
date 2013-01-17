@@ -38,6 +38,7 @@
 #include <sys/stat.h>
 
 #include "ddcci.h"
+#include "amd_adl.h"
 
 #include "conf.h"
 
@@ -239,12 +240,22 @@ int ddcci_init(char* usedatadir)
 		printf(_("Failed to initialize ddccontrol database...\n"));
 		return 0;
 	}
+#ifdef HAVE_AMDADL
+	if (!amd_adl_init()){
+		if (verbosity) {
+			printf(_("Failed to initialize ADL...\n"));
+		}
+	}
+#endif
 	return ddcpci_init();
 }
 
 void ddcci_release() {
 	ddcpci_release();
 	ddcci_release_db();
+#ifdef HAVE_AMDADL
+	amd_adl_free();
+#endif
 }
 
 /* write len bytes (stored in buf) to i2c address addr */
@@ -316,6 +327,12 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		}
 
 		return adata.status;
+	}
+#endif
+#ifdef HAVE_AMDADL
+	case type_adl:
+	{
+		return amd_adl_i2c_write(mon->adl_adapter, mon->adl_display, addr, buf, len);
 	}
 #endif
 	default:
@@ -394,6 +411,12 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		}
 
 		return ret - ANSWER_SIZE;
+	}
+#endif
+#ifdef HAVE_AMDADL
+	case type_adl:
+	{
+		return amd_adl_i2c_read(mon->adl_adapter, mon->adl_display, addr, buf, len);
 	}
 #endif
 	default:
@@ -929,6 +952,23 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		mon->type = pci;
 	}
 #endif
+#ifdef HAVE_AMDADL
+	else if (strncmp(filename, "adl:", 4) == 0) {
+		mon->adl_adapter = -1;
+		mon->adl_display = -1;
+		if (sscanf(filename, "adl:%d:%d", &mon->adl_adapter, &mon->adl_display) != 2){
+			fprintf(stderr, _("Invalid filename (%s).\n"), filename);
+			return -3;
+		}
+
+		if (amd_adl_check_display(mon->adl_adapter, mon->adl_display)){
+			fprintf(stderr, _("ADL display not found (%s).\n"), filename);
+			return -3;
+		}
+
+		mon->type = type_adl;
+	}
+#endif
 	else {
 		fprintf(stderr, _("Invalid filename (%s).\n"), filename);
 		return -3;
@@ -1167,6 +1207,28 @@ struct monitorlist* ddcci_probe() {
 	
 	closedir(dirp);
 	
+#ifdef HAVE_AMDADL
+	/* ADL probe */
+	int adl_disp;
+
+	for (adl_disp=0; adl_disp<amd_adl_get_displays_count(); adl_disp++){
+		int adapter, display;
+		if (amd_adl_get_display(adl_disp, &adapter, &display))
+		    break;
+
+			filename = malloc(64);
+			snprintf(filename, 64, "adl:%d:%d", adapter, display);
+			if (verbosity) {
+				printf(_("Found ADL display (%s)\n"), filename);
+			}
+			ddcci_probe_device(filename, &current, &last);
+			if (!verbosity) {
+				printf(".");
+				fflush(stdout);
+		}
+	}
+#endif
+
 	if (!verbosity)
 		printf("\n");
 	
