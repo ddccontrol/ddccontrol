@@ -112,6 +112,39 @@ fi
 
 AC_SUBST([DDCPCI])
 
+# AMD ADL support check
+support_amdadl=
+AC_ARG_ENABLE(amdadl,
+  [  --enable-amdadl	  enable AMD Display Library support (autodetect) ],
+  [if test x$enableval = xno; then
+    support_amdadl=no
+  else
+    support_amdadl=yes
+  fi])
+
+AMDADL=
+if test x$support_amdadl = xyes; then
+   AC_CHECK_HEADERS([ADL/adl_sdk.h], [], [AC_MSG_ERROR([ADL headers not found, but ADL support requested.], [1])],
+   [#ifndef __stdcall
+    #define __stdcall
+    #endif
+    ])
+   AMDADL=amdadl
+elif test x$support_amdadl = x; then
+   AC_CHECK_HEADERS([ADL/adl_sdk.h], [
+     AMDADL=amdadl
+   ], [], [#ifndef __stdcall
+           #define __stdcall
+           #endif
+           ])
+fi
+
+if test x$AMDADL = xamdadl; then
+   AC_DEFINE_UNQUOTED(HAVE_AMDADL, 1, [Define if ddccontrol is built with ADL support.])
+fi
+
+AC_SUBST([AMDADL])
+
 # Gnome check
 support_gnome=yes
 AC_ARG_ENABLE(gnome,

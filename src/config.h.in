@@ -4,6 +4,12 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* Define to 1 if you have the <ADL/adl_sdk.h> header file. */
+#undef HAVE_ADL_ADL_SDK_H
+
+/* Define if ddccontrol is built with ADL support. */
+#undef HAVE_AMDADL
+
 /* Define if linux/i2c-dev.h is buggy on your system, so defaults constants
    and structures must be used */
 #undef HAVE_BUGGY_I2C_DEV
@@ -41,7 +47,7 @@
 /* Define if ddccontrol is built with /dev/i2c-* support. */
 #undef HAVE_I2C_DEV
 
-/* Define if you have the iconv() function. */
+/* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 
 /* Define to 1 if you have the <inttypes.h> header file. */
@@ -49,6 +55,9 @@
 
 /* Define to 1 if you have the `pci' library (-lpci). */
 #undef HAVE_LIBPCI
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
 
 /* Define to 1 if you have the <linux/types.h> header file. */
 #undef HAVE_LINUX_TYPES_H
@@ -89,6 +98,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* Name of package */
 #undef PACKAGE
 
@@ -103,6 +116,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
