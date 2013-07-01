@@ -192,13 +192,13 @@ int ddcci_save_list(struct monitorlist* monlist) {
 		rc = xmlTextWriterStartElement(writer, BAD_CAST "monitor");
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement monitor\n", {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "filename", current->filename);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "filename", "%s", current->filename);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute filename\n", {xmlFreeTextWriter(writer);})
 
 		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "supported", "%d", current->supported);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute supported\n", {xmlFreeTextWriter(writer);})
 
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "name", current->name);
+		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "name", "%s", current->name);
 		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute name\n", {xmlFreeTextWriter(writer);})
 
 		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "digital", "%d", current->digital);
