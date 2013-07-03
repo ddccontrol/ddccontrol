@@ -619,7 +619,7 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 	int svcp = 0; /* Current CAPS section is vcp */
 	int stype = 0; /* Current CAPS section is type */
 	
-	char buf[8];
+	char buf[128];
 	char* endptr;
 	int ind = -1;
 	long val = -1;
