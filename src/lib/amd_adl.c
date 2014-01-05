@@ -237,13 +237,14 @@ int amd_adl_init()
 
     for (i=0;i<adapters_count;i++){
 	int aidx = adapter_info[i].iAdapterIndex;
-	int numdisplays;
+	int numdisplays = -1;
 	int j;
-	ADLDisplayInfo *display_info;
+	ADLDisplayInfo *display_info = NULL;
 
-	if (adl->ADL_Display_DisplayInfo_Get(aidx, &numdisplays, &display_info, 0) != ADL_OK)
+	if (adl->ADL_Display_DisplayInfo_Get(aidx, &numdisplays, &display_info, 1) != ADL_OK) {
+		printf("adl error: ADL_Display_DisplayInfo_Get: %d\n", res);
 	    continue;
-
+	}
 	D(printf("\t ================================\n"));
 	D(printf("\t %d: %s - %s %d %x:%x.%x %s\n", adapter_info[i].iAdapterIndex, adapter_info[i].strAdapterName, adapter_info[i].strDisplayName,
 		adapter_info[i].iPresent,
