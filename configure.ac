@@ -78,6 +78,10 @@ AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.
 
 CFLAGS="$CFLAGS -Wall  -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
 
+# Check for extra libraries
+
+AC_SEARCH_LIBS([round],[m])
+
 # libxml2 check
 
 AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
