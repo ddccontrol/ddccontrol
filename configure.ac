@@ -1,26 +1,24 @@
-AC_INIT([DDC/CI control tool], [0.4.2],
-        [DDCControl users list <ddccontrol-users@lists.sourceforge.net>],
-        [ddccontrol])
-AM_CONFIG_HEADER(src/config.h)
-AM_INIT_AUTOMAKE
+AC_INIT([DDC/CI control tool],[0.4.2],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
+AC_CONFIG_HEADERS([src/config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE([subdir-objects -Wall])
 
-# Avoid automatic *.in file regeneration
-AM_MAINTAINER_MODE
-
+IT_PROG_INTLTOOL
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.19])
 GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
 
-AC_PROG_RANLIB
 AC_PROG_CC
+AM_PROG_AR
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
-AC_PROG_INTLTOOL
+LT_INIT
 PKG_PROG_PKG_CONFIG
 
 AC_LANG([C])
 
-AC_STDC_HEADERS
+AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
 check_xsltproc=yes

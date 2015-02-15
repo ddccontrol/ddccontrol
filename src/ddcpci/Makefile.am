@@ -1,4 +1,4 @@
-INCLUDES = -I@top_srcdir@/src -I@top_srcdir@/src/lib  -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I@top_srcdir@/src -I@top_srcdir@/src/lib  -DLOCALEDIR=\"$(localedir)\"
 
 bin_PROGRAMS = ddcpci
 ddcpci_LDFLAGS = -Wl,-z,now
