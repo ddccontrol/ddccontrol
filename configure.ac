@@ -155,6 +155,7 @@ AC_ARG_ENABLE(gnome,
     support_gnome=no
   fi])
 
+# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
 GDDCCONTROL=
 if test x$support_gnome = xyes; then
    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -185,6 +186,7 @@ AC_ARG_ENABLE(	gnome-applet,
 		fi])
 
 
+# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
 GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
 	if pkg-config --atleast-version=2.10 libpanelapplet-2.0 ; then
