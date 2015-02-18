@@ -548,7 +548,7 @@
 2005-08-04 16:25  nboichat
 
 	* src/: gddccontrol/gprofile.c, gddccontrol/notebook.c,
-	  gddccontrol/notebook.h, lib/ddcci.c: Show more detailled profile
+	  gddccontrol/notebook.h, lib/ddcci.c: Show more detailed profile
 	  information (control list).
 
 2005-08-04 14:49  nboichat
