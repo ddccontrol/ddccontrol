@@ -1121,7 +1121,7 @@ msgid "Found I2C device (%s)\n"
 msgstr "Se encontró dispositivo I2C (%s)\n"
 
 #: ../../po/../src/lib/ddcci.c:1206
-msgid "Error while getting informations about ddccontrol home directory."
+msgid "Error while getting information about ddccontrol home directory."
 msgstr "Error obteniendo información sobre el directorio casero de ddccontrol."
 
 #: ../../po/../src/lib/ddcci.c:1211
@@ -1130,7 +1130,7 @@ msgstr "Error creando el directorio casero de ddccontrol."
 
 #: ../../po/../src/lib/ddcci.c:1216
 msgid ""
-"Error while getting informations about ddccontrol home directory after "
+"Error while getting information about ddccontrol home directory after "
 "creating it."
 msgstr ""
 "Error obteniendo información sobre el directorio casero de ddccontrol "
@@ -1141,7 +1141,7 @@ msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "Error: '.ddccontro' en tu directorio casero no es un directorio."
 
 #: ../../po/../src/lib/ddcci.c:1231
-msgid "Error while getting informations about ddccontrol profile directory."
+msgid "Error while getting information about ddccontrol profile directory."
 msgstr "Error obteniendo información sobre el directorio de perfíl de ddccontrol."
 
 #: ../../po/../src/lib/ddcci.c:1236
@@ -1150,7 +1150,7 @@ msgstr "Error creando el directorio de perfíl de ddccontrol."
 
 #: ../../po/../src/lib/ddcci.c:1241
 msgid ""
-"Error while getting informations about ddccontrol profile directory after "
+"Error while getting information about ddccontrol profile directory after "
 "creating it."
 msgstr ""
 "Error obteniendo información sobre el directorio de perfíl de ddccontrol"

@@ -1265,7 +1265,7 @@ int ddcci_create_config_dir()
 	
 	if (stat(filename, &buf) < 0) {
 		if (errno != ENOENT) {
-			perror(_("Error while getting informations about ddccontrol home directory."));
+			perror(_("Error while getting information about ddccontrol home directory."));
 			return 0;
 		}
 		
@@ -1275,7 +1275,7 @@ int ddcci_create_config_dir()
 		}
 		
 		if (stat(filename, &buf) < 0) {
-			perror(_("Error while getting informations about ddccontrol home directory after creating it."));
+			perror(_("Error while getting information about ddccontrol home directory after creating it."));
 			return 0;
 		}
 	}
@@ -1290,7 +1290,7 @@ int ddcci_create_config_dir()
 	
 	if (stat(filename, &buf) < 0) {
 		if (errno != ENOENT) {
-			perror(_("Error while getting informations about ddccontrol profile directory."));
+			perror(_("Error while getting information about ddccontrol profile directory."));
 			return 0;
 		}
 		
@@ -1300,7 +1300,7 @@ int ddcci_create_config_dir()
 		}
 		
 		if (stat(filename, &buf) < 0) {
-			perror(_("Error while getting informations about ddccontrol profile directory after creating it."));
+			perror(_("Error while getting information about ddccontrol profile directory after creating it."));
 			return 0;
 		}
 	}

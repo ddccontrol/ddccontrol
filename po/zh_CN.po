@@ -1087,7 +1087,7 @@ msgid "Found I2C device (%s)\n"
 msgstr "找到 I2C 设备 (%s)\n"
 
 #: ../src/lib/ddcci.c:1206
-msgid "Error while getting informations about ddccontrol home directory."
+msgid "Error while getting information about ddccontrol home directory."
 msgstr "获取ddccontrol的目录信息时出错."
 
 #: ../src/lib/ddcci.c:1211
@@ -1096,7 +1096,7 @@ msgstr "创建ddccontrol的目录时出错."
 
 #: ../src/lib/ddcci.c:1216
 msgid ""
-"Error while getting informations about ddccontrol home directory after "
+"Error while getting information about ddccontrol home directory after "
 "creating it."
 msgstr "创建ddccontrol的目录后再获取目录信息时出错."
 
@@ -1105,7 +1105,7 @@ msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "错误: 你目录的中'.ddccontrol'不是一个目录."
 
 #: ../src/lib/ddcci.c:1231
-msgid "Error while getting informations about ddccontrol profile directory."
+msgid "Error while getting information about ddccontrol profile directory."
 msgstr "获取ddccontrol的预设目录信息时出错."
 
 #: ../src/lib/ddcci.c:1236
@@ -1114,7 +1114,7 @@ msgstr "创建ddccontrol的预设目录时出错."
 
 #: ../src/lib/ddcci.c:1241
 msgid ""
-"Error while getting informations about ddccontrol profile directory after "
+"Error while getting information about ddccontrol profile directory after "
 "creating it."
 msgstr "创建ddccontrol的预设文件目录后再获取目录信息时出错."
 
