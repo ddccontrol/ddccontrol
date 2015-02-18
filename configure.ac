@@ -150,7 +150,7 @@ AC_SUBST([AMDADL])
 # Gnome check
 support_gnome=yes
 AC_ARG_ENABLE(gnome,
-  [  --disable-gnome	  disable build of gnome-console GUI (enabled)],
+  AS_HELP_STRING([--disable-gnome],[disable build of gnome-console GUI (enabled)]),
   [if test x$enableval = xno; then
     support_gnome=no
   fi])
@@ -179,7 +179,7 @@ fi
 
 support_gnome_applet=yes
 AC_ARG_ENABLE(	gnome-applet,
-		[  --disable-gnome-applet	disable build of gnome panel applet (enabled)],
+		AS_HELP_STRING([--disable-gnome-applet],[disable build of gnome panel applet (enabled)]),
 		[if test x$enableval = xno; then
 			support_gnome_applet=no
 		fi])
@@ -203,7 +203,7 @@ AC_SUBST([GNOME_APPLET])
 # Doc check
 support_doc=no
 AC_ARG_ENABLE(doc,
-  [  --enable-doc	  enable build of the documentation (disabled)],
+  AS_HELP_STRING([--enable-doc],[enable build of the documentation (disabled)]),
   [if test x$enableval = xyes; then
     support_doc=yes
   fi])
