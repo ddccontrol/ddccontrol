@@ -222,12 +222,12 @@ if test x$support_doc = xyes; then
 
    AC_MSG_CHECKING([whether /etc/xml/catalog exists])
    if test ! -f /etc/xml/catalog; then
-      AC_MSG_ERROR([/etc/xml/catalog does not exists, fix this problem or disable doc building])
+      AC_MSG_ERROR([/etc/xml/catalog not found, fix this problem or disable doc building])
    else
       AC_MSG_RESULT(yes)
       AC_PATH_PROG(XSLTPROC,xsltproc,no)
       if test "x$XSLTPROC" = "xno" ; then
-         AC_MSG_ERROR([xsltproc does not exists, install it or disable doc building])
+         AC_MSG_ERROR([xsltproc not found, install it or disable doc building])
       fi
 
       AC_PATH_PROG(SSH,ssh,ssh)      
@@ -237,7 +237,7 @@ if test x$support_doc = xyes; then
 
       AC_PATH_PROG(TIDY,tidy,no)
       if test "x$TIDY" = "xno" ; then
-         AC_MSG_ERROR([tidy does not exists, install it or disable doc building])
+         AC_MSG_ERROR([tidy not found, install it or disable doc building])
       fi
                   
       if test x$check_xsltproc = xyes ; then
