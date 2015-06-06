@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-AM_CPPFLAGS = -I@top_srcdir@/src -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I$(top_srcdir)/src -DLOCALEDIR=\"$(localedir)\"
 
 pkginclude_HEADERS = conf.h monitor_db.h ddcci.h ddcpci-ipc.h
 
