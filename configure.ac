@@ -23,7 +23,7 @@ AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h
 
 check_xsltproc=yes
 AC_ARG_ENABLE(xsltproc-check,
-  [  --disable-xsltproc-check omit check to see if xsltproc works (enabled)],
+  [AS_HELP_STRING([--disable-xsltproc-check],[omit check to see if xsltproc works (enabled)])],
   [if test x$enableval = xno; then
     check_xsltproc=no
   fi])
@@ -31,7 +31,7 @@ AC_ARG_ENABLE(xsltproc-check,
 # /dev/i2c-* check
 support_i2c_dev=yes
 AC_ARG_ENABLE(i2cdev,
-  [  --disable-i2c	  enable /dev/i2c-* busses (enabled) ],
+  [AS_HELP_STRING([--disable-i2c],[enable /dev/i2c-* busses (enabled)])],
   [if test x$enableval = xno; then
     support_i2c_dev=no
   fi])
@@ -96,7 +96,7 @@ AC_SUBST([LIBXML2_CFLAGS])
 # Direct PCI memory access check
 support_ddcpci=yes
 AC_ARG_ENABLE(ddcpci,
-  [  --disable-ddcpci	  enable direct PCI memory access (enabled) ],
+  [AS_HELP_STRING([--disable-ddcpci],[enable direct PCI memory access (enabled)])],
   [if test x$enableval = xno; then
     support_ddcpci=no
   fi])
@@ -117,7 +117,7 @@ AC_SUBST([DDCPCI])
 # AMD ADL support check
 support_amdadl=
 AC_ARG_ENABLE(amdadl,
-  [  --enable-amdadl	  enable AMD Display Library support (autodetect) ],
+  [AS_HELP_STRING([--enable-amdadl],[enable AMD Display Library support (autodetect)])],
   [if test x$enableval = xno; then
     support_amdadl=no
   else
