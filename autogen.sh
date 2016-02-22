@@ -3,9 +3,8 @@
 echo "Running libtoolize..."
 libtoolize --copy --force --automake
 
-echo "Running gettextize..."
-gettextize --copy --force --no-changelog
-mv Makefile.am~ Makefile.am
+echo "Running autopoint..."
+autopoint --force
 
 echo "Running intltoolize..."
 intltoolize --copy --force --automake
