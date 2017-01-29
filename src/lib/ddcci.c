@@ -297,7 +297,7 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		}
 
 #ifdef __FreeBSD__
-		i = 1; // FreeBSD ioctl() returns 0
+		i = len; // FreeBSD ioctl() returns 0
 #endif
 
 		return i;
@@ -386,7 +386,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		}
 
 #ifdef __FreeBSD__
-		i = 1; // FreeBSD ioctl() returns 0
+		i = len; // FreeBSD ioctl() returns 0
 #endif
 
 		return i;
