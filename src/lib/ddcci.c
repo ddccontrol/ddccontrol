@@ -1201,9 +1201,15 @@ struct monitorlist* ddcci_probe() {
 	
 	dirp = opendir("/dev/");
 	
+#ifdef __FreeBSD__
+	const char *prefix = "iic";
+#else
+	const char *prefix = "i2c-";
+#endif
+	int prefix_len = strlen(prefix);
 	while ((direntp = readdir(dirp)) != NULL)
 	{
-		if (!strncmp(direntp->d_name, "i2c-", 4))
+		if (!strncmp(direntp->d_name, prefix, prefix_len))
 		{
 			filename = malloc(strlen(direntp->d_name)+12);
 			
