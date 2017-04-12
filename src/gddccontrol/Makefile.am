@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-INCLUDES = -I@top_srcdir@/src/lib -I@top_srcdir@/src -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I$(top_srcdir)/src/lib -I$(top_srcdir)/src -DLOCALEDIR=\"$(localedir)\"
 
 EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png
 

@@ -1108,7 +1108,7 @@ msgid "Found I2C device (%s)\n"
 msgstr "Найдено устройство I2C (%s)\n"
 
 #: ../src/lib/ddcci.c:1206
-msgid "Error while getting informations about ddccontrol home directory."
+msgid "Error while getting information about ddccontrol home directory."
 msgstr "Ошибка при получении информации о домашнем каталоге ddccontrol."
 
 #: ../src/lib/ddcci.c:1211
@@ -1116,7 +1116,7 @@ msgid "Error while creating ddccontrol home directory."
 msgstr "Ошибка при создании домашнего каталога ddccontrol."
 
 #: ../src/lib/ddcci.c:1216
-msgid "Error while getting informations about ddccontrol home directory after creating it."
+msgid "Error while getting information about ddccontrol home directory after creating it."
 msgstr "Ошибка при при получении информации о домашнем каталоге ddccontrol после его создания."
 
 #: ../src/lib/ddcci.c:1223
@@ -1124,7 +1124,7 @@ msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "Ошибка: '.ddccontrol' в Вашем домашнем каталоге не является каталогом."
 
 #: ../src/lib/ddcci.c:1231
-msgid "Error while getting informations about ddccontrol profile directory."
+msgid "Error while getting information about ddccontrol profile directory."
 msgstr "Ошибка при получении информации о каталоге профилей ddccontrol."
 
 #: ../src/lib/ddcci.c:1236
@@ -1132,7 +1132,7 @@ msgid "Error while creating ddccontrol profile directory."
 msgstr "Ошибка при создании каталога профилей ddccontrol."
 
 #: ../src/lib/ddcci.c:1241
-msgid "Error while getting informations about ddccontrol profile directory after creating it."
+msgid "Error while getting information about ddccontrol profile directory after creating it."
 msgstr "Ошибка при при получении информации о каталоге профилей ddccontrol после его создания."
 
 #: ../src/lib/ddcci.c:1248

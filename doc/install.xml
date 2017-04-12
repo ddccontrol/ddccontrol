@@ -85,7 +85,7 @@ card-specific instructions see <xref linkend="supportedgc"/>).</para>
 your distribution's documentation.</para>
 <para>On systems not using devfs, even after loading framebuffer and i2c-dev modules,
 the devices <filename>/dev/i2c/*</filename> or <filename>/dev/i2c-*</filename> does not
-exists. On Debian, these devices are created using this command :</para>
+exist. On Debian, these devices are created using this command :</para>
 <screen format="linespecific">
 # /sbin/MAKEDEV i2c
 </screen>

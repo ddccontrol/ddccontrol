@@ -1,31 +1,29 @@
-AC_INIT([DDC/CI control tool], [0.4.2],
-        [DDCControl users list <ddccontrol-users@lists.sourceforge.net>],
-        [ddccontrol])
-AM_CONFIG_HEADER(src/config.h)
-AM_INIT_AUTOMAKE
+AC_INIT([DDC/CI control tool],[0.4.2],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
+AC_CONFIG_HEADERS([src/config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE([subdir-objects -Wall])
 
-# Avoid automatic *.in file regeneration
-AM_MAINTAINER_MODE
-
+IT_PROG_INTLTOOL
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.19.7])
 GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
 
-AC_PROG_RANLIB
 AC_PROG_CC
+AM_PROG_AR
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
-AC_PROG_INTLTOOL
+LT_INIT
 PKG_PROG_PKG_CONFIG
 
 AC_LANG([C])
 
-AC_STDC_HEADERS
+AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
 check_xsltproc=yes
 AC_ARG_ENABLE(xsltproc-check,
-  [  --disable-xsltproc-check omit check to see if xsltproc works (enabled)],
+  [AS_HELP_STRING([--disable-xsltproc-check],[omit check to see if xsltproc works (enabled)])],
   [if test x$enableval = xno; then
     check_xsltproc=no
   fi])
@@ -33,7 +31,7 @@ AC_ARG_ENABLE(xsltproc-check,
 # /dev/i2c-* check
 support_i2c_dev=yes
 AC_ARG_ENABLE(i2cdev,
-  [  --disable-i2c	  enable /dev/i2c-* busses (enabled) ],
+  [AS_HELP_STRING([--disable-i2c],[enable /dev/i2c-* busses (enabled)])],
   [if test x$enableval = xno; then
     support_i2c_dev=no
   fi])
@@ -78,6 +76,10 @@ AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.
 
 CFLAGS="$CFLAGS -Wall  -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
 
+# Check for extra libraries
+
+AC_SEARCH_LIBS([round],[m])
+
 # libxml2 check
 
 AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
@@ -94,7 +96,7 @@ AC_SUBST([LIBXML2_CFLAGS])
 # Direct PCI memory access check
 support_ddcpci=yes
 AC_ARG_ENABLE(ddcpci,
-  [  --disable-ddcpci	  enable direct PCI memory access (enabled) ],
+  [AS_HELP_STRING([--disable-ddcpci],[enable direct PCI memory access (enabled)])],
   [if test x$enableval = xno; then
     support_ddcpci=no
   fi])
@@ -115,7 +117,7 @@ AC_SUBST([DDCPCI])
 # AMD ADL support check
 support_amdadl=
 AC_ARG_ENABLE(amdadl,
-  [  --enable-amdadl	  enable AMD Display Library support (autodetect) ],
+  [AS_HELP_STRING([--enable-amdadl],[enable AMD Display Library support (autodetect)])],
   [if test x$enableval = xno; then
     support_amdadl=no
   else
@@ -148,11 +150,12 @@ AC_SUBST([AMDADL])
 # Gnome check
 support_gnome=yes
 AC_ARG_ENABLE(gnome,
-  [  --disable-gnome	  disable build of gnome-console GUI (enabled)],
+  AS_HELP_STRING([--disable-gnome],[disable build of gnome-console GUI (enabled)]),
   [if test x$enableval = xno; then
     support_gnome=no
   fi])
 
+# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
 GDDCCONTROL=
 if test x$support_gnome = xyes; then
    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -177,12 +180,13 @@ fi
 
 support_gnome_applet=yes
 AC_ARG_ENABLE(	gnome-applet,
-		[  --disable-gnome-applet	disable build of gnome panel applet (enabled)],
+		AS_HELP_STRING([--disable-gnome-applet],[disable build of gnome panel applet (enabled)]),
 		[if test x$enableval = xno; then
 			support_gnome_applet=no
 		fi])
 
 
+# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
 GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
 	if pkg-config --atleast-version=2.10 libpanelapplet-2.0 ; then
@@ -201,7 +205,7 @@ AC_SUBST([GNOME_APPLET])
 # Doc check
 support_doc=no
 AC_ARG_ENABLE(doc,
-  [  --enable-doc	  enable build of the documentation (disabled)],
+  AS_HELP_STRING([--enable-doc],[enable build of the documentation (disabled)]),
   [if test x$enableval = xyes; then
     support_doc=yes
   fi])
@@ -218,12 +222,12 @@ if test x$support_doc = xyes; then
 
    AC_MSG_CHECKING([whether /etc/xml/catalog exists])
    if test ! -f /etc/xml/catalog; then
-      AC_MSG_ERROR([/etc/xml/catalog does not exists, fix this problem or disable doc building])
+      AC_MSG_ERROR([/etc/xml/catalog not found, fix this problem or disable doc building])
    else
       AC_MSG_RESULT(yes)
       AC_PATH_PROG(XSLTPROC,xsltproc,no)
       if test "x$XSLTPROC" = "xno" ; then
-         AC_MSG_ERROR([xsltproc does not exists, install it or disable doc building])
+         AC_MSG_ERROR([xsltproc not found, install it or disable doc building])
       fi
 
       AC_PATH_PROG(SSH,ssh,ssh)      
@@ -233,7 +237,7 @@ if test x$support_doc = xyes; then
 
       AC_PATH_PROG(TIDY,tidy,no)
       if test "x$TIDY" = "xno" ; then
-         AC_MSG_ERROR([tidy does not exists, install it or disable doc building])
+         AC_MSG_ERROR([tidy not found, install it or disable doc building])
       fi
                   
       if test x$check_xsltproc = xyes ; then

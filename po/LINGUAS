@@ -1,8 +1,9 @@
 # Set of available languages.
-fr
-ru
+# refresh by running: ls *.po | sed 's/[.]po$//'
+cs
 de
-zh_CN
-pl
 es
-
+fr
+pl
+ru
+zh_CN

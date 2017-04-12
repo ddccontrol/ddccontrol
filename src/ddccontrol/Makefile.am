@@ -1,5 +1,5 @@
 localedir = $(datadir)/locale
-INCLUDES = -I@top_srcdir@/src/lib -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I$(top_srcdir)/src/lib -DLOCALEDIR=\"$(localedir)\"
 
 LDADD = ../lib/libddccontrol.la
 

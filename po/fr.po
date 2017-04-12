@@ -1139,7 +1139,7 @@ msgid "Found I2C device (%s)\n"
 msgstr "Périphérique I2C trouvé (%s)\n"
 
 #: ../src/lib/ddcci.c:1206
-msgid "Error while getting informations about ddccontrol home directory."
+msgid "Error while getting information about ddccontrol home directory."
 msgstr ""
 "Erreur lors de l'obtention d'informations au sujet du dossier de ddccontrol "
 "dans le répertoire personnel."
@@ -1152,7 +1152,7 @@ msgstr ""
 
 #: ../src/lib/ddcci.c:1216
 msgid ""
-"Error while getting informations about ddccontrol home directory after "
+"Error while getting information about ddccontrol home directory after "
 "creating it."
 msgstr ""
 "Erreur lors de l'obtention d'informations au sujet du dossier de ddccontrol "
@@ -1165,7 +1165,7 @@ msgstr ""
 "répertoire."
 
 #: ../src/lib/ddcci.c:1231
-msgid "Error while getting informations about ddccontrol profile directory."
+msgid "Error while getting information about ddccontrol profile directory."
 msgstr ""
 "Erreur lors de l'obtention d'informations au sujet du dossier des profils "
 "dans le répertoire personnel."
@@ -1178,7 +1178,7 @@ msgstr ""
 
 #: ../src/lib/ddcci.c:1241
 msgid ""
-"Error while getting informations about ddccontrol profile directory after "
+"Error while getting information about ddccontrol profile directory after "
 "creating it."
 msgstr ""
 "Erreur lors de l'obtention d'informations au sujet du dossier des profils "

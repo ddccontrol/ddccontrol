@@ -1116,7 +1116,7 @@ msgid "Found I2C device (%s)\n"
 msgstr "Found I2C zařízení (%s)\n"
 
 #: ../src/lib/ddcci.c:1206
-msgid "Error while getting informations about ddccontrol home directory."
+msgid "Error while getting information about ddccontrol home directory."
 msgstr "Chyba při získávání informací o ddccontrol domovském adresáři."
 
 #: ../src/lib/ddcci.c:1211
@@ -1125,7 +1125,7 @@ msgstr "Chyba při vytváření ddccontrol domovském adresáři."
 
 #: ../src/lib/ddcci.c:1216
 msgid ""
-"Error while getting informations about ddccontrol home directory after "
+"Error while getting information about ddccontrol home directory after "
 "creating it."
 msgstr ""
 "Chyba při získávání informací o ddccontrol domovský adresář po vytvoření to."
@@ -1135,7 +1135,7 @@ msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "Error: '. ddccontrol' ve vašem domovském adresáři není adresář."
 
 #: ../src/lib/ddcci.c:1231
-msgid "Error while getting informations about ddccontrol profile directory."
+msgid "Error while getting information about ddccontrol profile directory."
 msgstr "Chyba při získávání informací o ddccontrol profilu."
 
 #: ../src/lib/ddcci.c:1236
@@ -1144,7 +1144,7 @@ msgstr "Chyba při vytváření ddccontrol profilu."
 
 #: ../src/lib/ddcci.c:1241
 msgid ""
-"Error while getting informations about ddccontrol profile directory after "
+"Error while getting information about ddccontrol profile directory after "
 "creating it."
 msgstr "Chyba při získávání informací o ddccontrol profilu po vytvoření to."
 
