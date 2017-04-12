@@ -274,7 +274,11 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		msg_rdwr.msgs = &i2cmsg;
 		msg_rdwr.nmsgs = 1;
 	
+#ifdef __FreeBSD__
+		i2cmsg.slave = addr << 1;
+#else
 		i2cmsg.addr  = addr;
+#endif
 		i2cmsg.flags = 0;
 		i2cmsg.len   = len;
 		i2cmsg.buf   = buf;
@@ -291,6 +295,10 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		if (verbosity > 1) {
 			dumphex(stderr, "Send", buf, len);
 		}
+
+#ifdef __FreeBSD__
+		i = len; // FreeBSD ioctl() returns 0
+#endif
 
 		return i;
 	}
@@ -355,7 +363,11 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		msg_rdwr.msgs = &i2cmsg;
 		msg_rdwr.nmsgs = 1;
 	
+#ifdef __FreeBSD__
+		i2cmsg.slave = addr << 1;
+#else
 		i2cmsg.addr  = addr;
+#endif
 		i2cmsg.flags = I2C_M_RD;
 		i2cmsg.len   = len;
 		i2cmsg.buf   = buf;
@@ -372,6 +384,10 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		if (verbosity > 1) {
 			dumphex(stderr, "Recv", buf, i);
 		}
+
+#ifdef __FreeBSD__
+		i = len; // FreeBSD ioctl() returns 0
+#endif
 
 		return i;
 	}
@@ -1185,9 +1201,15 @@ struct monitorlist* ddcci_probe() {
 	
 	dirp = opendir("/dev/");
 	
+#ifdef __FreeBSD__
+	const char *prefix = "iic";
+#else
+	const char *prefix = "i2c-";
+#endif
+	int prefix_len = strlen(prefix);
 	while ((direntp = readdir(dirp)) != NULL)
 	{
-		if (!strncmp(direntp->d_name, "i2c-", 4))
+		if (!strncmp(direntp->d_name, prefix, prefix_len))
 		{
 			filename = malloc(strlen(direntp->d_name)+12);
 			

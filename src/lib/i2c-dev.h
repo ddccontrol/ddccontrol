@@ -24,6 +24,18 @@
 /* If linux/i2c-dev.h is usable, use it, otherwise, define
  * the required constants and structures. */
 
+#ifdef __FreeBSD__
+
+#include <sys/types.h>
+#include <dev/iicbus/iic.h>
+
+#define I2C_M_RD   IIC_M_RD
+#define I2C_RDWR   I2CRDWR
+
+#define i2c_msg iic_msg
+#define i2c_rdwr_ioctl_data iic_rdwr_data
+
+#else
 #if HAVE_BUGGY_I2C_DEV
 #include <linux/types.h>
 
@@ -57,5 +69,6 @@ struct i2c_rdwr_ioctl_data {
 #include <linux/i2c-dev.h>
 
 #endif
+#endif // __FreeBSD__
 
 #endif //DDCCONTROL_I2C_DEV_H

@@ -38,7 +38,13 @@ AC_ARG_ENABLE(i2cdev,
 
 if test "x$support_i2c_dev" = "xyes" ; then
 	AC_DEFINE_UNQUOTED(HAVE_I2C_DEV, 1, [Define if ddccontrol is built with /dev/i2c-* support.])
-	AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+
+	AC_CANONICAL_HOST
+	case $host_os in
+		linux*)
+		AC_CHECK_HEADERS([linux/types.h], [], [AC_MSG_ERROR([Linux kernel header files not found, please install them.], [1])], [])
+		;;
+	esac
 
 	support_i2c_dev_works=no
 	AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
