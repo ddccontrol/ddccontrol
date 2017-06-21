@@ -392,7 +392,7 @@ ddcc_applet_init (DdccApplet* applet)
 	
 	TRY_INIT (ddcci_open (applet->monitor, applet->monitor_name , 0) < 0,
 		ERR_DDCCI_OPEN,
-		_("An error occured while"
+		_("An error occurred while"
 		 " opening the monitor device"))
 
 	TRY_INIT (!fill_profiles_menu (applet),

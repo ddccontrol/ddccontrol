@@ -727,7 +727,7 @@ msgstr "Otwarcie urz±dzenia monitora (%s)..."
 
 #: ../src/gddccontrol/notebook.c:591
 msgid ""
-"An error occured while opening the monitor device.\n"
+"An error occurred while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
 "the monitor list."
 msgstr ""
@@ -837,7 +837,7 @@ msgstr ""
 "Nie znaleziono konfiguracji monitora. Proszê najpierw uruchomiæ gddccontrol"
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:395
-msgid "An error occured while opening the monitor device"
+msgid "An error occurred while opening the monitor device"
 msgstr "Wyst±pi³ b³±d podczas otwierania urz±dzenia monitora"
 
 #: ../src/gnome-ddcc-applet/ddcc-applet.c:400

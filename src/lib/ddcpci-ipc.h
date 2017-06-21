@@ -64,7 +64,7 @@ struct query {
 /* ddcpci to ddccontrol messages (answers) */
 struct answer {
 	long mtype; /* Always 2 */
-	int status; /* 0 or greater - OK (bytes read/written for answers to QUERY_DATA), -1 - an error occured */
+	int status; /* 0 or greater - OK (bytes read/written for answers to QUERY_DATA), -1 - an error occurred */
 	
 	int last; /* 0 - Last message, no bus to read, 1 - Other messages follows (for QUERY_LIST) */
 	struct i2c_bus bus; /* For answers to QUERY_LIST */

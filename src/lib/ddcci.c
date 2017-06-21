@@ -621,7 +621,7 @@ int ddcci_readctrl(struct monitor* mon, unsigned char ctrl,
 
 /* See documentation Appendix D.
  * Returns :
- * -1 if an error occured 
+ * -1 if an error occurred 
  *  number of controls added
  *
  * add: if true: add caps_str to caps, otherwise remove caps_str from the caps.
