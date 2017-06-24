@@ -1,0 +1,20 @@
+language: cpp
+
+dist: precise
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - intltool
+      - autoconf
+      - autopoint
+      - libxml2-dev
+      - pciutils-dev
+      - libgtk2.0-dev
+
+script:
+  - ./autogen.sh
+  - ./configure
+  - make -j4
+
