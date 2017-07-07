@@ -1288,16 +1288,19 @@ int ddcci_create_config_dir()
 	if (stat(filename, &buf) < 0) {
 		if (errno != ENOENT) {
 			perror(_("Error while getting information about ddccontrol home directory."));
+			free(filename);
 			return 0;
 		}
 		
 		if (mkdir(filename, 0750) < 0) {
 			perror(_("Error while creating ddccontrol home directory."));
+			free(filename);
 			return 0;
 		}
 		
 		if (stat(filename, &buf) < 0) {
 			perror(_("Error while getting information about ddccontrol home directory after creating it."));
+			free(filename);
 			return 0;
 		}
 	}
@@ -1305,6 +1308,7 @@ int ddcci_create_config_dir()
 	if (!S_ISDIR(buf.st_mode)) {
 		errno = ENOTDIR;
 		perror(_("Error: '.ddccontrol' in your home directory is not a directory."));
+		free(filename);
 		return 0;
 	}
 	
@@ -1313,16 +1317,19 @@ int ddcci_create_config_dir()
 	if (stat(filename, &buf) < 0) {
 		if (errno != ENOENT) {
 			perror(_("Error while getting information about ddccontrol profile directory."));
+			free(filename);
 			return 0;
 		}
 		
 		if (mkdir(filename, 0750) < 0) {
 			perror(_("Error while creating ddccontrol profile directory."));
+			free(filename);
 			return 0;
 		}
 		
 		if (stat(filename, &buf) < 0) {
 			perror(_("Error while getting information about ddccontrol profile directory after creating it."));
+			free(filename);
 			return 0;
 		}
 	}
@@ -1330,6 +1337,7 @@ int ddcci_create_config_dir()
 	if (!S_ISDIR(buf.st_mode)) {
 		errno = ENOTDIR;
 		perror(_("Error: '.ddccontrol/profiles' in your home directory is not a directory."));
+		free(filename);
 		return 0;
 	}
 	

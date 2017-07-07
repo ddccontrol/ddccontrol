@@ -311,6 +311,7 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 	
 	if (!dir) {
 		perror(_("Error while opening ddccontrol home directory."));
+		free(dirname);
 		return 0;
 	}
 	
@@ -335,6 +336,7 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 	
 	if (errno) {
 		perror(_("Error while reading ddccontrol home directory."));
+		free(dirname);
 		free(filename);
 		closedir(dir);
 		return 0;
@@ -361,6 +363,7 @@ struct profile* ddcci_load_profile(const char* filename) {
 	profile_doc = xmlParseFile(filename);
 	if (profile_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
+		free(profile);
 		return 0;
 	}
 	
@@ -369,12 +372,14 @@ struct profile* ddcci_load_profile(const char* filename) {
 	if (root == NULL) {
 		fprintf(stderr,  _("empty profile file\n"));
 		xmlFreeDoc(profile_doc);
+		free(profile);
 		return 0;
 	}
 	
 	if (xmlStrcmp(root->name, BAD_CAST "profile")) {
 		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
 		xmlFreeDoc(profile_doc);
+		free(profile);
 		return 0;
 	}
 	
@@ -392,6 +397,7 @@ struct profile* ddcci_load_profile(const char* filename) {
 	if (itmp > PROFILEVERSION) {
 		fprintf(stderr,  _("profile version (%d) is not supported (should be %d).\n"), itmp, PROFILEVERSION);
 		xmlFreeDoc(profile_doc);
+		free(profile);
 		return 0;
 	}
 	xmlFree(tmp);
