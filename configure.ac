@@ -3,6 +3,7 @@ AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects -Wall])
+AUTOMAKE_OPTIONS = foreign
 
 IT_PROG_INTLTOOL
 AM_GNU_GETTEXT([external])
@@ -175,7 +176,7 @@ if test x$support_gnome = xyes; then
       GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
-      
+
       # Check for X11
       AC_PATH_XTRA
    else
@@ -236,8 +237,8 @@ if test x$support_doc = xyes; then
          AC_MSG_ERROR([xsltproc not found, install it or disable doc building])
       fi
 
-      AC_PATH_PROG(SSH,ssh,ssh)      
-      AC_PATH_PROG(SCP,scp,scp)      
+      AC_PATH_PROG(SSH,ssh,ssh)
+      AC_PATH_PROG(SCP,scp,scp)
       AC_PATH_PROG(ASPELL,aspell,no)
       AC_PATH_PROG(FOP,fop,no)
 
@@ -245,13 +246,13 @@ if test x$support_doc = xyes; then
       if test "x$TIDY" = "xno" ; then
          AC_MSG_ERROR([tidy not found, install it or disable doc building])
       fi
-                  
+
       if test x$check_xsltproc = xyes ; then
          AC_MSG_CHECKING([whether xsltproc works])
-   
+
          DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
          DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
-   
+
          $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
 <?xml version="1.0" encoding='ISO-8859-1'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
