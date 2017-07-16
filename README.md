@@ -23,7 +23,7 @@ Manual installation is more complicated, but contains latest version of software
 
 DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official distribution repositories with following command:
 
-* on Ubuntu: `sudo apt install ddccontrol gddccontrol ddccontrol-db`
+* on Ubuntu: `sudo apt install ddccontrol gddccontrol ddccontrol-db i2c-tools`
 * on Fedora: `TODO`
 * on openSUSE: `TODO`
 
@@ -31,7 +31,7 @@ DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official 
 
 Install build dependencies:
 
-* on Ubuntu: `sudo apt install intltool`
+* on Ubuntu: `sudo apt install intltool i2c-tools`
 * on others: `TODO`
 
 Clone, build and install built version:
@@ -50,6 +50,13 @@ sudo make install
 ### From GUI using gddccontrol
 
 `gddccontrol` is a graphical utility for monitor configuration. It is called **Monitor Settings** in list of applications.
+
+Following configuration is needed to allow non-root user to use `gddccontrol`:
+
+```shell
+sudo adduser $USER i2c
+sudo /bin/sh -c 'echo i2c-dev >> /etc/modules'
+```
 
 Utility can launched directly from commandline:
 
