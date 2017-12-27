@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ddccontrol 0.4.2\n"
+"Project-Id-Version: ddccontrol 0.4.3\n"
 "Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-01-06 18:52+0100\n"
 "PO-Revision-Date: 2010-07-07 14:57+0200\n"
