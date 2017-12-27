@@ -38,6 +38,7 @@
 #include <libxml/xmlwriter.h>
 
 #include "conf.h"
+#include "internal.h"
 
 #define RETRYS 3 // number of read retrys
 

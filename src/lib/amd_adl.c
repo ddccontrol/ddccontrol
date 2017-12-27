@@ -40,6 +40,7 @@
 
 #include "amd_adl.h"
 #include "ddcci.h"
+#include "internal.h"
 
 #if 1
 # define D(x)

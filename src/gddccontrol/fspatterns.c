@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "notebook.h"
+#include "internal.h"
+
 #include <string.h>
 
 static GtkWidget* fs_patterns_window = NULL;

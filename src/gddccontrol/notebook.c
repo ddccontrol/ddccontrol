@@ -29,6 +29,7 @@
 #include <math.h>
 
 #include "notebook.h"
+#include "internal.h"
 	
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 

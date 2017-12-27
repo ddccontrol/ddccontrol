@@ -30,6 +30,7 @@
 
 #include "monitor_db.h"
 #include "ddcci.h"
+#include "internal.h"
 
 /* Localize, and alloc in libxml */
 #ifdef HAVE_GETTEXT

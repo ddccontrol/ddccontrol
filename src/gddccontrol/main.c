@@ -27,6 +27,7 @@
 #define IDLE_TIMEOUT 60
 
 #include "notebook.h"
+#include "internal.h"
 
 GtkWidget* table;
 
