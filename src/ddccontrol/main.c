@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "ddcci.h"
+#include "internal.h"
 #include "monitor_db.h"
 
 #include <stdio.h>

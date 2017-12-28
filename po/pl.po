@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ddccontrol 0.4.2\n"
+"Project-Id-Version: ddccontrol 0.4.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-29 19:01+0800\n"
 "PO-Revision-Date: 2006-08-25 00:31+0200\n"

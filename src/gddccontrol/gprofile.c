@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "notebook.h"
+#include "internal.h"
 
 #include <string.h>
 

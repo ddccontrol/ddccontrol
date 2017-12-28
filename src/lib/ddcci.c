@@ -38,6 +38,7 @@
 #include <sys/stat.h>
 
 #include "ddcci.h"
+#include "internal.h"
 #include "amd_adl.h"
 
 #include "conf.h"

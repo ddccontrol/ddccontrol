@@ -1,3 +1,12 @@
+Version 0.4.3 - 2017-12-27
+ - Add support for Intel Mobile 945GME Express Graphics Controller.
+ - Add support for AMD ADL as a backend.
+ - Add support for FreeBSD
+ - Make desktop file conforming to standards.
+ - Create and install convenient .pc file.
+ - Use custom icon instead of depending on (obsolete) third party icon.
+ - Various build, spelling, and buffer overflow fixes.
+
 Version 0.4.2 - 2006-07-30
  - Allow binary data in CAPS.
  - Add more I2C busses to Intel 810-like chips.
