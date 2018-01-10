@@ -45,6 +45,8 @@ make
 sudo make install
 ```
 
+Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
+
 ## Usage
 
 ### From GUI using gddccontrol
