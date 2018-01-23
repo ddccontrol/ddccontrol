@@ -209,6 +209,8 @@ AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
 AC_SUBST([GNOME_APPLET])
 
+PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.30.0],[CFLAGS="${GIO_UNIX_CFLAGS} ${CFLAGS}" LIBS="${GIO_UNIX_LIBS} ${LIBS}"])
+
 # Doc check
 support_doc=no
 AC_ARG_ENABLE(doc,
@@ -223,7 +225,7 @@ DOC=
 if test x$support_doc = xyes; then
    # Docbook tests
    # Based on http://www.movement.uklinux.net/docs/docbook-autotools/configure.html
-   # Copyright © 2003 John Levon
+   # Copyright ï¿½ 2003 John Levon
    # It's just rude to go over the net to build
    XSLTPROC_FLAGS=--nonet
 
@@ -280,6 +282,7 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/lib/Makefile
 	src/lib/ddccontrol.pc
+        src/daemon/Makefile
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile

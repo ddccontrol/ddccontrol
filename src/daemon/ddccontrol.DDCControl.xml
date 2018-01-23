@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name="ddccontrol.DDCControl">
+    <method name="SetControl">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="control" type="u" direction="in"  />
+      <arg name="value"   type="u" direction="in"  />
+    </method>
+    <signal name="ControlChanged">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="control" type="u" direction="in"  />
+      <arg name="value"   type="u" direction="in"  />
+    </signal>
+  </interface>
+</node>
