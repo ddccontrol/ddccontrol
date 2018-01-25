@@ -352,7 +352,7 @@ int main(int argc, char **argv)
 		
 		if (mon.fallback) {
 			/* Put a big warning (in red if we are writing to a terminal). */
-			printf("%s%s\n", isatty(1) ? "\x1B[5;31m" : "", _("=============================== WARNING ==============================="));
+			printf("%s%s\n", isatty(1) ? "\x1B[0;31m" : "", _("=============================== WARNING ==============================="));
 			if (mon.fallback == 1) {
 				printf(_(
 					"There is no support for your monitor in the database, but ddccontrol is\n"
