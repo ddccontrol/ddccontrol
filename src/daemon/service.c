@@ -1,14 +1,12 @@
 #include "interface.h"
+
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "ddcci.h"
 #include "internal.h"
 
 #define RETRYS 3 /* number of retrys */
-
-static gchar * MONITORS[] = {
-    "dev:/dev/i2c-3",
-    "dev:/dev/i2c-7"
-};
 
 // TODO: duplicate in main.c
 /* Find the delay we must respect after writing to an address in the database. */
@@ -42,7 +40,25 @@ static int find_write_delay(struct monitor* mon, char ctrl) {
 
 static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation) {
     printf("DDCControl get monitors\n");
-    ddccontrol_complete_get_monitors(skeleton, invocation, MONITORS);
+
+    int i, count = 0;
+    struct monitorlist* monlist, *current;
+    char ** devices;
+
+    monlist = ddcci_probe();
+    for(current = monlist; current != NULL; current = current->next)
+        count += 1;
+
+    devices = malloc( sizeof(char*) * (count+1) );
+    devices[count] = NULL;
+    for (i = 0, current = monlist; current != NULL; current = current->next) {
+        devices[i] = current->filename;
+    }
+
+    ddccontrol_complete_get_monitors(skeleton, invocation, (const char **)devices);
+    ddcci_free_list(monlist);
+    free(devices);
+
     return TRUE;
 }
 
