@@ -34,6 +34,8 @@
 /po/stamp-it
 /src/config.h
 /src/config.h.in
+/src/daemon/interface.c
+/src/daemon/interface.h
 /src/ddccontrol/ddccontrol
 /src/ddcpci/ddcpci
 /src/gddccontrol/gddccontrol
