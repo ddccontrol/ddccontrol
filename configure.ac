@@ -3,7 +3,6 @@ AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects -Wall foreign])
-AUTOMAKE_OPTIONS = foreign
 
 IT_PROG_INTLTOOL
 AM_GNU_GETTEXT([external])
