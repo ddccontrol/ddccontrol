@@ -4,6 +4,10 @@ AM_CFLAGS = $(LIBXML2_CFLAGS)
 AM_CPPFLAGS = -I$(top_srcdir)/src/lib
 LDADD = ../lib/libddccontrol.la
 
+# install D-Bus API specification for ddccontrol.DDCControl.xml interface
+dbusinterfacesdir = $(datadir)/dbus-1/interfaces
+dist_dbusinterfaces_DATA = ddccontrol.DDCControl.xml
+
 # TODO: executable not intended to be run by user
 bin_PROGRAMS = ddccontrol_service
 

@@ -37,3 +37,8 @@ Test signals:
 ```
 gdbus monitor --system --dest ddccontrol.DDCControl --object-path=/ddccontrol/DDCControl 
 ```
+
+## Resources
+
+* [D-Bus Specification](https://dbus.freedesktop.org/doc/dbus-specification.htm)
+* [D-Bus API Design Guidelines](https://dbus.freedesktop.org/doc/dbus-api-design.html)
