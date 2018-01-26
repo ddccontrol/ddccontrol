@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=ddccontrol.DDCControl
+Exec=@bindir@/ddccontrol_service
+User=root
+SystemdService=ddccontrol.service

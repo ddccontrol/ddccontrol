@@ -1,12 +1,14 @@
+SUBDIRS = data
+
 AM_CFLAGS = $(LIBXML2_CFLAGS)
 AM_CPPFLAGS = -I$(top_srcdir)/src/lib
 LDADD = ../lib/libddccontrol.la
 
-bin_PROGRAMS = service client
+# TODO: executable not intended to be run by user
+bin_PROGRAMS = ddccontrol_service
 
-client_SOURCES = interface.h interface.c client.c
-service_SOURCES = interface.h interface.c service.c
-service_LDFLAGS = $(LIBXML2_LDFLAGS) $(LIBINTL)
+ddccontrol_service_SOURCES = interface.h interface.c service.c
+ddccontrol_service_LDFLAGS = $(LIBXML2_LDFLAGS) $(LIBINTL)
 
 BUILT_SOURCES = interface.h interface.c
 noinst_HEADERS = $(BUILT_SOURCES)

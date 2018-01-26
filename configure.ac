@@ -276,13 +276,29 @@ AC_SUBST(XSLTPROC_FLAGS)
 AC_SUBST(DOCBOOK_ROOT)
 AC_SUBST(DOC)
 
+
+dnl ---------------------------------------------------------------------------
+dnl - Select whether and where to install systemd system service files
+dnl ---------------------------------------------------------------------------
+
+AC_ARG_WITH([systemdsystemunitdir],
+            AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
+            [],
+            [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
+if test "x$with_systemdsystemunitdir" != "xno"; then
+	AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
+fi
+AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$systemdsystemunitdir"])
+
+
 AC_CONFIG_FILES([
 	po/Makefile.in
 	Makefile
 	src/Makefile
 	src/lib/Makefile
 	src/lib/ddccontrol.pc
-        src/daemon/Makefile
+	src/daemon/Makefile
+	src/daemon/data/Makefile
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile
