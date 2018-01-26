@@ -4,5 +4,5 @@ Description=Control monitor parameters, like brightness, contrast, and other...
 [Service]
 Type=dbus
 BusName=ddccontrol.DDCControl
-ExecStart=@bindir@/ddccontrol_service
+ExecStart=@servicedir@/ddccontrol_service
 User=root

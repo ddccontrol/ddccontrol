@@ -8,8 +8,8 @@ LDADD = ../lib/libddccontrol.la
 dbusinterfacesdir = $(datadir)/dbus-1/interfaces
 dist_dbusinterfaces_DATA = ddccontrol.DDCControl.xml
 
-# TODO: executable not intended to be run by user
-bin_PROGRAMS = ddccontrol_service
+# install to libexec, because it's not intended to be run by user
+libexec_PROGRAMS = ddccontrol_service
 
 ddccontrol_service_SOURCES = interface.h interface.c service.c
 ddccontrol_service_LDFLAGS = $(LIBXML2_LDFLAGS) $(LIBINTL)
