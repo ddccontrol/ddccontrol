@@ -40,7 +40,7 @@ Clone, build and install built version:
 git clone https://github.com/ddccontrol/ddccontrol.git
 cd ddccontrol
 ./autogen.sh
-./configure --prefix=/usr/
+./configure --prefix=/usr/ --sysconfdir=/etc
 make
 sudo make install
 ```

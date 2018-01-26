@@ -1,20 +1,27 @@
 # DDCControl D-Bus daemon
 
-## Configuration
+## Installation
 
-Setup D-Bus busconfig for ddccontrol.DDCControl. Warning - probably restarts display manager. Run following under root:
+Build and install the daemon:
 
 ```
-cp src/daemon/busconfig.conf /etc/dbus-1/system.d/ddccontrol.DDCControl.conf
+cd src/daemon
+make
+sudo make install
+```
+
+D-Bus restart might be needed to apply bus config changes. Warning - probably restarts display manager. Run following under root:
+
+```
 systemctl dbus restart
 ```
 
 ## Usage
 
-Run service as root:
+Service should be started automatically on D-Bus calls. If not, run:
 
 ```
-./src/daemon/service
+sudo systemctl start ddccontrol
 ```
 
 Test method calls as regular user:
