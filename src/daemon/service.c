@@ -141,8 +141,50 @@ void on_name_lost(GDBusConnection *connection,const gchar *name,gpointer user_da
     printf("Name lost\n");
 }
 
+static int is_i2c_loaded() {
+    FILE *pf;
+    char result[128];
+
+    pf = popen("lsmod | grep '^i2c_dev'", "r");
+    fgets(result, 128 , pf);
+
+    if (pclose(pf) != 0)
+        return FALSE;
+
+    if(strncmp(result, "i2c_dev ", 8))
+        return FALSE;
+
+    return TRUE;
+}
+
+int load_i2c_dev() {
+    FILE *pf;
+
+    fprintf(stderr, _("loading i2c-dev module: modprobe i2c-dev\n"));
+    pf = popen("modprobe i2c-dev", "r");
+
+    if (pclose(pf) != 0) {
+        fprintf(stderr, _("Failed to load i2c-dev module, check output of `modprobe i2c-dev`!\n"));
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+int check_or_load_i2c_dev() {
+    if(is_i2c_loaded() == FALSE) {
+        fprintf(stderr, _("i2c-dev module isn't loaded\n"));
+        return load_i2c_dev();
+    }
+    return TRUE;
+}
+
 int main(void) {
     GMainLoop *loop;
+
+    if(check_or_load_i2c_dev() == FALSE) {
+        fprintf(stderr, _("Kernel module i2c_dev isn't available, functionality might be limited, or unavailable...\n"));
+    }
 
     if (!ddcci_init(NULL)) {
         printf(_("Unable to initialize ddcci library.\n"));
