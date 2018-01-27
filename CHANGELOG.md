@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - show warning message without blinking
+- install binary ddcpci to pkglibexec directory (it's not run by users)
 
 ## 0.4.3 - 2017-12-28
 ### Removed
