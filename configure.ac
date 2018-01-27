@@ -81,7 +81,8 @@ fi
 
 AC_DEFINE(_GNU_SOURCE, 1, [Define unconditionally for setting a GNU environment.])
 
-CFLAGS="$CFLAGS -Wall  -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\""
+CFLAGS="$CFLAGS -Wall  -DDATADIR=\"\\\"${datadir}/ddccontrol-db\\\"\" -DBINDIR=\"\\\"${bindir}\\\"\" -DPKGLIBEXECDIR=\"\\\"${pkglibexecdir}\\\"\""
+
 
 # Check for extra libraries
 
