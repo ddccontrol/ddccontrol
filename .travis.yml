@@ -13,8 +13,14 @@ addons:
       - pciutils-dev
       - libgtk2.0-dev
 
+env:
+  matrix:
+    -
+    - CFLAGS='CFLAGS=-O0 -g'
+    - CFLAGS='CFLAGS=-O2'
+
 script:
   - ./autogen.sh
-  - ./configure
+  - ./configure "${CFLAGS}"
   - make -j4
 
