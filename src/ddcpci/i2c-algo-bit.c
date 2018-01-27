@@ -18,7 +18,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.		     */
 /* ------------------------------------------------------------------------- */
 
-/* With some changes from Frodo Looijaard <frodol@dds.nl>, Kyösti Mälkki
+/* With some changes from Frodo Looijaard <frodol@dds.nl>, Kyï¿½sti Mï¿½lkki
    <kmalkki@cc.hut.fi> and Jean Delvare <khali@linux-fr.org> */
 
 /* Adapted to user space by Nicolas Boichat <nicolas@boichat.ch> */
@@ -58,7 +58,7 @@ static struct timeval newtv;
 
 /* ----- sleep function ---------------------------------------------	*/
 
-void inline ssleep(const int usec) {
+static inline void ssleep(const int usec) {
    gettimeofday(&lasttv, NULL);
    while (1) {
       gettimeofday(&newtv, NULL);
@@ -378,7 +378,7 @@ int sendbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 	return wrcount;
 }
 
-inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
+static inline int readbytes(struct i2c_algo_bit_data *adap, struct i2c_msg *msg)
 {
 	int inval;
 	int rdcount=0;   	/* counts bytes read */
