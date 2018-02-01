@@ -117,7 +117,7 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
         }
     }
 
-    ddccontrol_complete_get_control(skeleton, invocation, value);
+    ddccontrol_complete_get_control(skeleton, invocation, value, maximum);
     ddcci_close(&mon);
     return TRUE;
 }

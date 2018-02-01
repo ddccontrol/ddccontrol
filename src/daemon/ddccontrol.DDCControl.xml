@@ -7,7 +7,8 @@
     <method name="GetControl">
       <arg name="device"  type="s" direction="in"  />
       <arg name="control" type="u" direction="in"  />
-      <arg name="value"   type="u" direction="out" />
+      <arg name="value"   type="q" direction="out" />
+      <arg name="maximum" type="q" direction="out" />
     </method>
     <method name="SetControl">
       <arg name="device"  type="s" direction="in"  />
