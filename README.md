@@ -31,7 +31,7 @@ DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official 
 
 Install build dependencies:
 
-* on Ubuntu: `sudo apt install intltool i2c-tools`
+* on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libpci-dev libgtk2.0-dev`
 * on others: `TODO`
 
 Clone, build and install built version:
@@ -40,7 +40,7 @@ Clone, build and install built version:
 git clone https://github.com/ddccontrol/ddccontrol.git
 cd ddccontrol
 ./autogen.sh
-./configure --prefix=/usr/ --sysconfdir=/etc --libexecdir=/usr/lib/ddccontrol
+./configure --prefix=/usr/ --sysconfdir=/etc --libexecdir=/usr/lib
 make
 sudo make install
 ```

@@ -142,7 +142,7 @@ int ddcpci_init()
 			printf("ddcpci initing...\n");
 		}
 		
-		key_t key = ftok(BINDIR "/ddcpci", getpid());
+		key_t key = ftok(DDCPCIDIR "/ddcpci", getpid());
 		
 		if ((msqid = msgget(key, IPC_CREAT | 0666)) < 0) {
 			perror(_("Error while initialisating the message queue"));
@@ -151,7 +151,7 @@ int ddcpci_init()
 		
 		char buffer[256];
 		
-		snprintf(buffer, 256, BINDIR "/ddcpci %d %d &", verbosity, key);
+		snprintf(buffer, 256, DDCPCIDIR "/ddcpci %d %d &", verbosity, key);
 		
 		if (verbosity) {
 			printf("Starting %s...\n", buffer);
