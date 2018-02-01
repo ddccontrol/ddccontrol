@@ -50,10 +50,10 @@ static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation 
         count += 1;
 
     devices = malloc( sizeof(char*) * (count+1) );
-    devices[count] = NULL;
-    for (i = 0, current = monlist; current != NULL; current = current->next) {
+    for (i = 0, current = monlist; current != NULL; current = current->next, i = i+1) {
         devices[i] = current->filename;
     }
+    devices[i] = NULL;
 
     ddccontrol_complete_get_monitors(skeleton, invocation, (const char **)devices);
     ddcci_free_list(monlist);
