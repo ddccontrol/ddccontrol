@@ -18,6 +18,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+#include "ddccontrol.h"
+
 #include "config.h"
 #include "ddcci.h"
 #include "internal.h"
@@ -287,6 +289,13 @@ int main(int argc, char **argv)
 	{
 		usage(argv[0]);
 		exit(1);
+	}
+
+	if (dump == 0 && caps == 0 && probe == 0 && ctrl != -1) {
+		ret = perform_using_dbus(argv[optind], ctrl, value);
+		if( ret == 0 )
+			exit(0);
+		printf(_("Operation using D-Bus failed\n"));
 	}
 	
 	if (!ddcci_init(datadir)) {
