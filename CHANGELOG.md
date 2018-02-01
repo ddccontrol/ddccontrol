@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - show warning message without blinking
 - install binary ddcpci to pkglibexec directory (it's not run by users)
 - fixed build with custom CFLAGS
+- fixed configure.ac to use `$PKGCONFIG` set by `PKG_PROG_PKG_CONFIG` macro
 
 ## 0.4.3 - 2017-12-28
 ### Removed

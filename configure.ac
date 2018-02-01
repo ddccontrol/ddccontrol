@@ -163,18 +163,17 @@ AC_ARG_ENABLE(gnome,
     support_gnome=no
   fi])
 
-# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
+# This should use PKG_CHECK_MODULES() instead of explicitly calling $PKG_CONFIG.
 GDDCCONTROL=
 if test x$support_gnome = xyes; then
-   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
    if test "x$PKG_CONFIG" = "xno" ; then
       AC_MSG_ERROR(pkg-config not found, please install pkg-config)
    fi
 
    echo -n "checking for gtk+>=2.4 and gthread>=2.4... "
-   if pkg-config --atleast-version=2.4 gtk+-2.0 gthread-2.0 ; then
-      GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0`"
-      GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0`"
+   if $PKG_CONFIG --atleast-version=2.4 gtk+-2.0 gthread-2.0 ; then
+      GNOME_LDFLAGS="$LIBXML2_LDFLAGS `$PKG_CONFIG --libs gtk+-2.0 gthread-2.0`"
+      GNOME_CFLAGS="$LIBXML2_CFLAGS `$PKG_CONFIG --cflags gtk+-2.0 gthread-2.0`"
       GDDCCONTROL=gddccontrol
       echo "yes"
 
@@ -194,13 +193,13 @@ AC_ARG_ENABLE(	gnome-applet,
 		fi])
 
 
-# This should use PKG_CHECK_MODULES() instead of explicitly calling pkg-config.
+# This should use PKG_CHECK_MODULES() instead of explicitly calling $PKG_CONFIG.
 GNOME_APPLET=
 if test x$support_gnome_applet = xyes; then
-	if pkg-config --atleast-version=2.10 libpanelapplet-2.0 ; then
+	if $PKG_CONFIG --atleast-version=2.10 libpanelapplet-2.0 ; then
 		GNOME_APPLET="gnome-ddcc-applet"
-	    GNOME_LDFLAGS="$LIBXML2_LDFLAGS `pkg-config --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
-	    GNOME_CFLAGS="$LIBXML2_CFLAGS `pkg-config --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+	    GNOME_LDFLAGS="$LIBXML2_LDFLAGS `$PKG_CONFIG --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
+	    GNOME_CFLAGS="$LIBXML2_CFLAGS `$PKG_CONFIG --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
 	fi
 fi
 
