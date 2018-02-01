@@ -62,6 +62,26 @@ static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation 
     return TRUE;
 }
 
+static gboolean can_open_device(gchar *device) {
+    // THIS IS A SECURITY PRECAUTION
+    // TODO: more sophisticated check, ie. allow to use only detected devices
+    if(strncmp("dev:", device, 4) == 0) {
+        const gchar * DEV_I2C_PREFIX = "dev:/dev/i2c-";
+        const size_t DEV_I2C_PREFIX_LEN = strlen("dev:/dev/i2c-");
+
+        if(strncmp(DEV_I2C_PREFIX, device, DEV_I2C_PREFIX_LEN) != 0)
+            return FALSE;
+
+        gchar * digits_only = device + DEV_I2C_PREFIX_LEN;
+        for(; *digits_only; ++digits_only)
+            if(!isdigit(*digits_only))
+                return FALSE;
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *invocation,
                                     gchar *device, guint control) {
 
@@ -71,6 +91,15 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
     struct monitor mon;
 
     printf("DDCControl get %u for %s.\n", control, device);
+
+    if(can_open_device(device) == FALSE) {
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "only 'dev:/dev/i2c-*' devices are allowed"
+        );
+        return TRUE;
+    }
 
     // TODO: keep monitors open for some time
     if ((ret = ddcci_open(&mon, device, 0)) < 0) {
@@ -100,6 +129,16 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
     struct monitor mon;
 
     printf("DDCControl set %u on %s to %d.\n", control, device, value);
+
+    if(can_open_device(device) == FALSE) {
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "only 'dev:/dev/i2c-*' devices are allowed"
+        );
+        return TRUE;
+    }
+
 
     // TODO: keep monitors open for some time
     if ((ret = ddcci_open(&mon, device, 0)) < 0) {
