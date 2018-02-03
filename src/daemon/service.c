@@ -1,12 +1,59 @@
 #include "interface.h"
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "ddcci.h"
 #include "internal.h"
 
 #define RETRYS 3 /* number of retrys */
+
+static struct monitorlist* monlist = NULL;
+
+static int devices_count = 0;
+static char **devices = NULL;
+static char *supported = NULL;
+
+static struct monitor* open_monitors = NULL;
+static gboolean *monitor_open = NULL;
+static int *monitor_ret = NULL;
+
+static void rescan_monitors() {
+    int i, count;
+    struct monitorlist *current;
+
+    if(monlist != NULL) {
+       free(devices);
+       free(supported);
+       for(i = 0; i < devices_count; i++) {
+           if(monitor_open[i] == TRUE)
+               ddcci_close(&(open_monitors[i]));
+       }
+       free(open_monitors);
+       free(monitor_open);
+       free(monitor_ret);
+       ddcci_free_list(monlist);
+    }
+
+	monlist = ddcci_probe();
+    for(count = 0, current = monlist; current != NULL; current = current->next)
+        count += 1;
+
+    devices = malloc( sizeof(char*) * (count+1) );
+    supported = malloc( sizeof(char) * (count) );
+    open_monitors = malloc( sizeof(struct monitor) * (count) );
+    monitor_open = malloc( sizeof(gboolean) * (count) );
+    monitor_ret = malloc( sizeof(int) * (count) );
+    for (i = 0, current = monlist; current != NULL; current = current->next, i = i+1) {
+        devices[i] = current->filename;
+        supported[i] = current->supported;
+        monitor_open[i] = FALSE;
+    }
+    devices[i] = NULL;
+    devices_count = count;
+}
 
 // TODO: duplicate in main.c
 /* Find the delay we must respect after writing to an address in the database. */
@@ -39,47 +86,58 @@ static int find_write_delay(struct monitor* mon, char ctrl) {
 }
 
 static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation) {
-    printf("DDCControl get monitors\n");
+    if(monlist == NULL)
+        rescan_monitors();
+    ddccontrol_complete_get_monitors(
+            skeleton,
+            invocation,
+            (const char **)devices,
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL)
+    );
+    return TRUE;
+}
 
-    int i, count = 0;
-    struct monitorlist* monlist, *current;
-    char ** devices;
-
-    monlist = ddcci_probe();
-    for(current = monlist; current != NULL; current = current->next)
-        count += 1;
-
-    devices = malloc( sizeof(char*) * (count+1) );
-    for (i = 0, current = monlist; current != NULL; current = current->next, i = i+1) {
-        devices[i] = current->filename;
-    }
-    devices[i] = NULL;
-
-    ddccontrol_complete_get_monitors(skeleton, invocation, (const char **)devices);
-    ddcci_free_list(monlist);
-    free(devices);
-
+static gboolean handle_rescan_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation) {
+    rescan_monitors();
+    ddccontrol_complete_rescan_monitors(
+            skeleton,
+            invocation,
+            (const char **)devices,
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL)
+    );
     return TRUE;
 }
 
 static gboolean can_open_device(gchar *device) {
     // THIS IS A SECURITY PRECAUTION
-    // TODO: more sophisticated check, ie. allow to use only detected devices
-    if(strncmp("dev:", device, 4) == 0) {
-        const gchar * DEV_I2C_PREFIX = "dev:/dev/i2c-";
-        const size_t DEV_I2C_PREFIX_LEN = strlen("dev:/dev/i2c-");
-
-        if(strncmp(DEV_I2C_PREFIX, device, DEV_I2C_PREFIX_LEN) != 0)
-            return FALSE;
-
-        gchar * digits_only = device + DEV_I2C_PREFIX_LEN;
-        for(; *digits_only; ++digits_only)
-            if(!isdigit(*digits_only))
-                return FALSE;
-
-        return TRUE;
+    int i;
+    if( monlist != NULL && devices != NULL ) {
+        for( i = 0; i < devices_count; i++ ) {
+            if(strcmp(devices[i], device) == 0)
+                return TRUE;
+        }
+    }
+    rescan_monitors();
+    for( i = 0; i < devices_count; i++ ) {
+        if(strcmp(devices[i], device) == 0)
+            return TRUE;
     }
     return FALSE;
+}
+
+static int open_monitor(struct monitor **mon, const char *device) {
+    int i;
+    for( i = 0; i < devices_count; i++ ) {
+        if(strcmp(devices[i], device) == 0){
+            if(monitor_open[i] == FALSE) {
+                monitor_ret[i] = ddcci_open(&(open_monitors[i]), device, 0);
+                monitor_open[i] = TRUE;
+            }
+            *mon = &(open_monitors[i]);
+            return monitor_ret[i];
+        }
+    }
+    return -1;
 }
 
 static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *invocation,
@@ -88,7 +146,7 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
     int ret;
     unsigned short value, maximum;
     int retry, result;
-    struct monitor mon;
+    struct monitor *mon;
 
     printf("DDCControl get %u for %s.\n", control, device);
 
@@ -96,52 +154,13 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
                 "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
-                "only 'dev:/dev/i2c-*' devices are allowed"
+                "only detected devices are allowed"
         );
         return TRUE;
     }
 
     // TODO: keep monitors open for some time
-    if ((ret = ddcci_open(&mon, device, 0)) < 0) {
-        fprintf(stderr, 
-                "\nDDC/CI at %s is unusable (%d).\n"
-                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
-                device,
-                ret
-        );
-    } else {
-	for (retry = RETRYS; retry; retry--) {
-            result = ddcci_readctrl(&mon, control, &value, &maximum);
-            if (result >= 0)
-                break;
-        }
-    }
-
-    ddccontrol_complete_get_control(skeleton, invocation, value, maximum);
-    ddcci_close(&mon);
-    return TRUE;
-}
-
-static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *invocation,
-                                    gchar *device, guint control, guint value) {
-
-    int ret;
-    struct monitor mon;
-
-    printf("DDCControl set %u on %s to %d.\n", control, device, value);
-
-    if(can_open_device(device) == FALSE) {
-        g_dbus_method_invocation_return_dbus_error(
-                invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
-                "only 'dev:/dev/i2c-*' devices are allowed"
-        );
-        return TRUE;
-    }
-
-
-    // TODO: keep monitors open for some time
-    if ((ret = ddcci_open(&mon, device, 0)) < 0) {
+    if ((ret = open_monitor(&mon, device)) < 0) {
         fprintf(stderr,
                 "\nDDC/CI at %s is unusable (%d).\n"
                 "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
@@ -149,18 +168,54 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
                 ret
         );
     } else {
-        int delay = find_write_delay(&mon, control);
+        for (retry = RETRYS; retry; retry--) {
+            result = ddcci_readctrl(mon, control, &value, &maximum);
+            if (result >= 0)
+                break;
+        }
+    }
+
+    ddccontrol_complete_get_control(skeleton, invocation, value, maximum);
+    return TRUE;
+}
+
+static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *invocation,
+                                    gchar *device, guint control, guint value) {
+
+    int ret;
+    struct monitor *mon;
+
+    printf("DDCControl set %u on %s to %d.\n", control, device, value);
+
+    if(can_open_device(device) == FALSE) {
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "only detected devices are allowed"
+        );
+        return TRUE;
+    }
+
+    // TODO: keep monitors open for some time
+    if ((ret = open_monitor(&mon, device)) < 0) {
+        fprintf(stderr,
+                "\nDDC/CI at %s is unusable (%d).\n"
+                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
+                device,
+                ret
+        );
+    } else {
+        int delay = find_write_delay(mon, control);
         if (delay >= 0) {
             fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"), control, value, value, delay);
         } else {
             fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"), control, value, value);
         }
-        ddcci_writectrl(&mon, control, value, delay);
+        ddcci_writectrl(mon, control, value, delay);
     }
 
     ddccontrol_complete_set_control(skeleton, invocation);
     ddccontrol_emit_control_changed(DDCCONTROL(skeleton), device, control, value);
-    ddcci_close(&mon);
     return TRUE;
 }
 
@@ -169,6 +224,7 @@ static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpo
 
     skeleton = ddccontrol_skeleton_new();
     g_signal_connect(skeleton, "handle-get-monitors", G_CALLBACK(handle_get_monitors), NULL);
+    g_signal_connect(skeleton, "handle-rescan-monitors", G_CALLBACK(handle_rescan_monitors), NULL);
     g_signal_connect(skeleton, "handle-get-control",  G_CALLBACK(handle_get_control), NULL);
     g_signal_connect(skeleton, "handle-set-control",  G_CALLBACK(handle_set_control), NULL);
 
@@ -238,6 +294,8 @@ int main(void) {
 
     g_main_loop_run(loop);
 
+    if(devices != NULL)
+        ddcci_free_list(monlist);
     ddcci_release();
     return 0;
 }
