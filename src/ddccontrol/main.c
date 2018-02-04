@@ -243,12 +243,10 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if (dump == 0 && caps == 0 && probe == 0 && ctrl != -1) {
-		ret = perform_using_dbus(argv[optind], ctrl, value);
-		if( ret == 0 )
-			exit(0);
-		printf(_("Operation using D-Bus failed\n"));
-	}
+	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value);
+	if( ret == 0 )
+		exit(0);
+	printf(_("Operation using D-Bus failed\n"));
 	
 	if (!ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));

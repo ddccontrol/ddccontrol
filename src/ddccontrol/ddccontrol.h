@@ -22,7 +22,7 @@
 
 #include "ddcci.h"
 
-int perform_using_dbus(char *fn, int ctrl, int value);
+int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int value);
 
 void print_control_value(struct monitor* mon, unsigned char ctrl, unsigned short value, unsigned short maximum, int result);
 

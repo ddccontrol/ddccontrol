@@ -15,6 +15,8 @@ static struct monitorlist* monlist = NULL;
 static int devices_count = 0;
 static char **devices = NULL;
 static char *supported = NULL;
+static char **names = NULL;
+static char *digital = NULL;
 
 static struct monitor* open_monitors = NULL;
 static gboolean *monitor_open = NULL;
@@ -27,6 +29,9 @@ static void rescan_monitors() {
     if(monlist != NULL) {
        free(devices);
        free(supported);
+       free(names);
+       free(digital);
+
        for(i = 0; i < devices_count; i++) {
            if(monitor_open[i] == TRUE)
                ddcci_close(&(open_monitors[i]));
@@ -43,6 +48,8 @@ static void rescan_monitors() {
 
     devices = malloc( sizeof(char*) * (count+1) );
     supported = malloc( sizeof(char) * (count) );
+    names = malloc( sizeof(char*) * (count+1) );
+    digital = malloc( sizeof(char) * (count) );
     open_monitors = malloc( sizeof(struct monitor) * (count) );
     monitor_open = malloc( sizeof(gboolean) * (count) );
     monitor_ret = malloc( sizeof(int) * (count) );
@@ -50,8 +57,11 @@ static void rescan_monitors() {
         devices[i] = current->filename;
         supported[i] = current->supported;
         monitor_open[i] = FALSE;
+        names[i] = current->name;
+        digital[i] = current->digital;
     }
     devices[i] = NULL;
+    names[i] = NULL;
     devices_count = count;
 }
 
@@ -92,7 +102,9 @@ static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation 
             skeleton,
             invocation,
             (const char **)devices,
-            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL)
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL),
+            (const char **)names,
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), digital, devices_count, TRUE, NULL, NULL)
     );
     return TRUE;
 }
@@ -103,7 +115,9 @@ static gboolean handle_rescan_monitors(DDCControl *skeleton, GDBusMethodInvocati
             skeleton,
             invocation,
             (const char **)devices,
-            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL)
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), supported, devices_count, TRUE, NULL, NULL),
+            (const char **)names,
+            g_variant_new_from_data(G_VARIANT_TYPE ("a(y)"), digital, devices_count, TRUE, NULL, NULL)
     );
     return TRUE;
 }
@@ -138,6 +152,41 @@ static int open_monitor(struct monitor **mon, const char *device) {
         }
     }
     return -1;
+}
+
+static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation *invocation,
+                                    gchar *device ) {
+    int ret;
+    struct monitor *mon;
+
+    if(can_open_device(device) == FALSE) {
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "only detected devices are allowed"
+        );
+        return TRUE;
+    }
+
+    // TODO: keep monitors open for some time
+    if ((ret = open_monitor(&mon, device)) < 0) {
+        fprintf(stderr,
+                "\nDDC/CI at %s is unusable (%d).\n"
+                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
+                device,
+                ret
+        );
+
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "Failed to open monitor"
+        );
+        return TRUE;
+    }
+
+    ddccontrol_complete_open_monitor(skeleton, invocation, mon->pnpid, mon->caps.raw_caps);
+    return TRUE;
 }
 
 static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *invocation,
@@ -175,7 +224,7 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
         }
     }
 
-    ddccontrol_complete_get_control(skeleton, invocation, value, maximum);
+    ddccontrol_complete_get_control(skeleton, invocation, result, value, maximum);
     return TRUE;
 }
 
@@ -225,6 +274,7 @@ static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpo
     skeleton = ddccontrol_skeleton_new();
     g_signal_connect(skeleton, "handle-get-monitors", G_CALLBACK(handle_get_monitors), NULL);
     g_signal_connect(skeleton, "handle-rescan-monitors", G_CALLBACK(handle_rescan_monitors), NULL);
+    g_signal_connect(skeleton, "handle-open-monitor", G_CALLBACK(handle_open_monitor), NULL);
     g_signal_connect(skeleton, "handle-get-control",  G_CALLBACK(handle_get_control), NULL);
     g_signal_connect(skeleton, "handle-set-control",  G_CALLBACK(handle_set_control), NULL);
 
