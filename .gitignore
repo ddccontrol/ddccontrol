@@ -34,10 +34,22 @@
 /po/stamp-it
 /src/config.h
 /src/config.h.in
+
+# generated files
+/src/daemon/data/ddccontrol.DDCControl.service
+/src/daemon/data/ddccontrol.service
+/src/daemon/interface.c
+/src/daemon/interface.h
+/src/ddccontrol/dbus_interface.c
+/src/ddccontrol/dbus_interface.h
+/src/gddccontrol/gddccontrol.desktop
+
+# built binaries
+/src/daemon/ddccontrol_service
 /src/ddccontrol/ddccontrol
 /src/ddcpci/ddcpci
 /src/gddccontrol/gddccontrol
-/src/gddccontrol/gddccontrol.desktop
+
 /src/lib/ddccontrol.pc
 /src/stamp-h1
 Makefile

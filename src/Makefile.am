@@ -1,1 +1,1 @@
-SUBDIRS = lib ddccontrol $(GNOME_APPLET) $(GDDCCONTROL) $(DDCPCI)
+SUBDIRS = lib ddccontrol daemon $(GNOME_APPLET) $(GDDCCONTROL) $(DDCPCI)

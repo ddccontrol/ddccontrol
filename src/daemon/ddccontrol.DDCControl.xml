@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name="ddccontrol.DDCControl">
+    <method name="GetMonitors">
+      <arg name="devices"    type="as"   direction="out" />
+      <arg name="supported"  type="a(y)" direction="out" />
+      <arg name="names"      type="as"   direction="out" />
+      <arg name="digital"    type="a(y)"   direction="out" />
+    </method>
+    <method name="RescanMonitors">
+      <arg name="devices"    type="as"   direction="out" />
+      <arg name="supported"  type="a(y)" direction="out" />
+      <arg name="names"      type="as"   direction="out" />
+      <arg name="digital"    type="a(y)"   direction="out" />
+    </method>
+    <method name="OpenMonitor">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="pnpid"   type="s" direction="out" />
+      <arg name="caps"    type="s" direction="out" />
+    </method>
+    <method name="GetControl">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="control" type="u" direction="in"  />
+      <arg name="result"  type="i" direction="out" />
+      <arg name="value"   type="q" direction="out" />
+      <arg name="maximum" type="q" direction="out" />
+    </method>
+    <method name="SetControl">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="control" type="u" direction="in"  />
+      <arg name="value"   type="u" direction="in"  />
+    </method>
+    <signal name="ControlChanged">
+      <arg name="device"  type="s" direction="in"  />
+      <arg name="control" type="u" direction="in"  />
+      <arg name="value"   type="u" direction="in"  />
+    </signal>
+  </interface>
+</node>

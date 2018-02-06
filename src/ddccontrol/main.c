@@ -18,6 +18,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+#include "ddccontrol.h"
+
 #include "config.h"
 #include "ddcci.h"
 #include "internal.h"
@@ -37,61 +39,13 @@ static void dumpctrl(struct monitor* mon, unsigned char ctrl, int force)
 {
 	unsigned short value, maximum;
 	int retry, result;
-
-	struct monitor_db* monitor = mon->db;
-	struct group_db* group;
-	struct subgroup_db* subgroup;
-	struct control_db* control;
-	struct value_db* valued;
-	xmlChar* controlname = NULL;
-	xmlChar* valuename = NULL;
 	
 	for (retry = RETRYS; retry; retry--) {
 		if ((result = ddcci_readctrl(mon, ctrl, &value, &maximum)) >= 0) 
 		{
 			if ((result > 0) || force)
 			{
-				if (monitor) 
-				{
-					/* loop through groups */
-					for (group = monitor->group_list; (group != NULL) && 
-							(controlname == NULL); group = group->next) 
-					{
-						/* loop through subgroups inside group */
-						for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next) 
-						{
-							/* loop through controls inside subgroup */
-							for (control = subgroup->control_list; (control != NULL); control = control->next) 
-							{
-								/* check for control id */
-								if (control->address == ctrl) 
-								{
-									controlname = control->name;
-									/* look for the value */
-									for (valued = control->value_list; (valued != NULL); valued = valued->next) {
-										if (valued->value == value) {
-											valuename = valued->name;
-											break;
-										}
-									}
-									break;
-								}
-							}
-						}
-					}
-				}
-				if (controlname == NULL) {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [???]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-', value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ');
-				}
-				else if (valuename == NULL) {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname);
-				}
-				else {
-					fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s - %s]\n", _("Control"),
-						ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname, valuename);
-				}
+				print_control_value(mon, ctrl, value, maximum, result);
 			}
 			break;
 		}
@@ -288,6 +242,11 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 		exit(1);
 	}
+
+	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value, force);
+	if( ret == 0 )
+		exit(0);
+	printf(_("Operation using D-Bus failed\n"));
 	
 	if (!ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));

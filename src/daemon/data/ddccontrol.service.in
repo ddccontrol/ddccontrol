@@ -1,0 +1,8 @@
+[Unit]
+Description=Control monitor parameters, like brightness, contrast, and other...
+
+[Service]
+Type=dbus
+BusName=ddccontrol.DDCControl
+ExecStart=@servicedir@/ddccontrol_service
+User=root
