@@ -16,7 +16,6 @@ static void dumpctrl(DDCControl *proxy, char *fn, struct monitor* mon, unsigned 
 	gboolean call_result = ddccontrol_call_get_control_sync(proxy, fn, ctrl, &result, &value, &maximum, NULL, &error);
 
 	if(call_result == TRUE) {
-		// TODO: mon parameter shouldn't be hard-coded NULL
 		if ((result > 0) || force) {
 			print_control_value(mon, ctrl, value, maximum, result);
 		}

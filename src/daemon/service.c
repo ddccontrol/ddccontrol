@@ -146,6 +146,15 @@ static int open_monitor(struct monitor **mon, const char *device) {
             if(monitor_open[i] == FALSE) {
                 monitor_ret[i] = ddcci_open(&(open_monitors[i]), device, 0);
                 monitor_open[i] = TRUE;
+
+                if(monitor_ret < 0) {
+                    fprintf(stderr,
+                            "\nDDC/CI at %s is unusable (%d).\n"
+                            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
+                            device,
+                            monitor_ret[i]
+                    );
+                }
             }
             *mon = &(open_monitors[i]);
             return monitor_ret[i];
@@ -168,15 +177,7 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
         return TRUE;
     }
 
-    // TODO: keep monitors open for some time
     if ((ret = open_monitor(&mon, device)) < 0) {
-        fprintf(stderr,
-                "\nDDC/CI at %s is unusable (%d).\n"
-                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
-                device,
-                ret
-        );
-
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
                 "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
@@ -208,21 +209,21 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
         return TRUE;
     }
 
-    // TODO: keep monitors open for some time
     if ((ret = open_monitor(&mon, device)) < 0) {
-        fprintf(stderr,
-                "\nDDC/CI at %s is unusable (%d).\n"
-                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
-                device,
-                ret
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "Failed to open monitor"
         );
-    } else {
-        for (retry = RETRYS; retry; retry--) {
-            result = ddcci_readctrl(mon, control, &value, &maximum);
-            if (result >= 0)
-                break;
-        }
+        return TRUE;
     }
+
+    for (retry = RETRYS; retry; retry--) {
+        result = ddcci_readctrl(mon, control, &value, &maximum);
+        if (result >= 0)
+            break;
+    }
+
 
     ddccontrol_complete_get_control(skeleton, invocation, result, value, maximum);
     return TRUE;
@@ -245,23 +246,22 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
         return TRUE;
     }
 
-    // TODO: keep monitors open for some time
     if ((ret = open_monitor(&mon, device)) < 0) {
-        fprintf(stderr,
-                "\nDDC/CI at %s is unusable (%d).\n"
-                "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
-                device,
-                ret
+        g_dbus_method_invocation_return_dbus_error(
+                invocation,
+                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                "Failed to open monitor"
         );
-    } else {
-        int delay = find_write_delay(mon, control);
-        if (delay >= 0) {
-            fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"), control, value, value, delay);
-        } else {
-            fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"), control, value, value);
-        }
-        ddcci_writectrl(mon, control, value, delay);
+        return TRUE;
     }
+
+    int delay = find_write_delay(mon, control);
+    if (delay >= 0) {
+        fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"), control, value, value, delay);
+    } else {
+        fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"), control, value, value);
+    }
+    ddcci_writectrl(mon, control, value, delay);
 
     ddccontrol_complete_set_control(skeleton, invocation);
     ddccontrol_emit_control_changed(DDCCONTROL(skeleton), device, control, value);
