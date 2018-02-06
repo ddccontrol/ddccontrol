@@ -20,12 +20,11 @@ static void dumpctrl(DDCControl *proxy, char *fn, struct monitor* mon, unsigned 
 			print_control_value(mon, ctrl, value, maximum, result);
 		}
 	} else {
-		// TODO: better error output
-		printf(_("Read failed: %s\n."), error->message);
+		fprintf(stderr, _("Control 0x%02x read failed: %s\n."), ctrl, error->message);
 	}
 }
 
-int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int value) {
+int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int value, int force) {
 	int i;
 	gboolean result;
 
@@ -63,7 +62,6 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 
 		printf(_("Detected monitors :\n"));
 		if(result == FALSE) {
-			// TODO: better error output
 			fprintf(stderr, _("Probe failed: %s\n."), error->message);
 			return -1;
 		}
@@ -100,7 +98,6 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 
 	result = ddccontrol_call_open_monitor_sync(proxy, fn, &pnpid, &mon.caps.raw_caps, NULL, &error);
 	if(result == FALSE) {
-		// TODO: better error output
 		fprintf(stderr, _("Open monitor failed: %s\n."), error->message);
 		return -1;
 	}
@@ -160,7 +157,7 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 		fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
 		for (i = 0; i < 256; i++) {
-			dumpctrl(proxy, fn, &mon, i, 0 /* TODO: force flag */);
+			dumpctrl(proxy, fn, &mon, i, force);
 		}
 	}
 	return 0;

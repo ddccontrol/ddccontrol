@@ -243,7 +243,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value);
+	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value, force);
 	if( ret == 0 )
 		exit(0);
 	printf(_("Operation using D-Bus failed\n"));

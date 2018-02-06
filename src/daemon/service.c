@@ -10,6 +10,10 @@
 
 #define RETRYS 3 /* number of retrys */
 
+// DDC Control D-Bus error declarations
+#define DC_BUS_ERROR_OPEN_FAILED        "ddccontrol.DDCControl.Error.OpenFailed"
+#define DC_BUS_ERROR_INVALID_DEVICE     "ddccontrol.DDCControl.Error.InvalidDevice"
+
 static struct monitorlist* monlist = NULL;
 
 static int devices_count = 0;
@@ -171,7 +175,7 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
     if(can_open_device(device) == FALSE) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_INVALID_DEVICE,
                 "only detected devices are allowed"
         );
         return TRUE;
@@ -180,7 +184,7 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
     if ((ret = open_monitor(&mon, device)) < 0) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_OPEN_FAILED,
                 "Failed to open monitor"
         );
         return TRUE;
@@ -203,7 +207,7 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
     if(can_open_device(device) == FALSE) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_INVALID_DEVICE,
                 "only detected devices are allowed"
         );
         return TRUE;
@@ -212,7 +216,7 @@ static gboolean handle_get_control(DDCControl *skeleton, GDBusMethodInvocation *
     if ((ret = open_monitor(&mon, device)) < 0) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_OPEN_FAILED,
                 "Failed to open monitor"
         );
         return TRUE;
@@ -240,7 +244,7 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
     if(can_open_device(device) == FALSE) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_INVALID_DEVICE,
                 "only detected devices are allowed"
         );
         return TRUE;
@@ -249,7 +253,7 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
     if ((ret = open_monitor(&mon, device)) < 0) {
         g_dbus_method_invocation_return_dbus_error(
                 invocation,
-                "org.freedesktop.DBus.Error.InvalidArgs", // TODO: isn't there more suitable error?
+                DC_BUS_ERROR_OPEN_FAILED,
                 "Failed to open monitor"
         );
         return TRUE;
