@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - changelog in *Keep a Changelog* style
+- D-Bus daemon to perform HW access under root
+- D-Bus client execution mode to ddccontrol (default mode, if available)
+- systemd service to launch daemon
 
 ### Changed
 - show warning message without blinking
