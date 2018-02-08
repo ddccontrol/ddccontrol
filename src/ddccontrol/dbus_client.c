@@ -33,7 +33,7 @@
 static void dumpctrl(DDCControl *proxy, char *fn, struct monitor* mon, unsigned char ctrl, int force)
 {
 	unsigned short value, maximum;
-	int result = ddcci_dbus_readctrl(proxy, fn, ctrl, &value, &maximum);
+	int result = ddcci_readctrl(mon, ctrl, &value, &maximum);
 
 	if ((result > 0) || force) {
 		print_control_value(mon, ctrl, value, maximum, result);
@@ -87,26 +87,26 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 		}
 	}
 
-	struct monitor mon;
+	struct monitor *mon;
 	ddcci_dbus_open(proxy, &mon, fn);
 
 	if( ctrl >= 0 ) {
 		if( value == -1 ) {
 			fprintf(stdout, _("Reading 0x%02x...\n"), ctrl);
 		} else {
-			int result = ddcci_dbus_writectrl(proxy, fn, ctrl, value);
+			int result = ddcci_writectrl(mon, ctrl, value, 0 /* TODO */);
 			if(result < 0) {
 				printf(_("Write failed\n."));
 			}
 		}
-		dumpctrl(proxy, fn, &mon, ctrl, 1);
+		dumpctrl(proxy, fn, mon, ctrl, 1);
 	}
 
 	if (dump) {
 		fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
 		for (i = 0; i < 256; i++) {
-			dumpctrl(proxy, fn, &mon, i, force);
+			dumpctrl(proxy, fn, mon, i, force);
 		}
 	}
 	return 0;

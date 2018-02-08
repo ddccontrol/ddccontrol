@@ -29,7 +29,7 @@ DDCControl* ddcci_dbus_open_proxy();
 
 struct monitorlist* ddcci_dbus_rescan_monitors(DDCControl *proxy);
 
-int ddcci_dbus_open(DDCControl *proxy, struct monitor* mon, const char* filename);
+int ddcci_dbus_open(DDCControl *proxy, struct monitor **mon, const char* filename);
 int ddcci_dbus_readctrl(DDCControl *proxy, char *fn,
         unsigned char ctrl, unsigned short *value, unsigned short *maximum);
 int ddcci_dbus_writectrl(DDCControl *proxy, char *fn,
