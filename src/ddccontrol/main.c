@@ -21,6 +21,7 @@
 #include "ddccontrol.h"
 
 #include "config.h"
+#include "daemon/dbus_client.h"
 #include "ddcci.h"
 #include "internal.h"
 #include "monitor_db.h"
@@ -140,12 +141,19 @@ static void check_integrity(char* datadir, char* pnpname) {
 	exit(0);
 }
 
+static int is_env_no_dbus_set() {
+	return getenv( "DDCCONTROL_NO_DBUS" ) != NULL;
+}
+
 int main(int argc, char **argv)
 {
 	int i, retry, ret;
+
+	// for dbus
+	DDCControl *proxy = NULL;
 		
 	/* filedescriptor and name of device */
-	struct monitor mon;
+	struct monitor *mon;
 	char *fn;
 	
 	char *datadir = NULL;
@@ -243,14 +251,22 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value, force);
-	if( ret == 0 )
-		exit(0);
-	printf(_("Operation using D-Bus failed\n"));
-	
-	if (!ddcci_init(datadir)) {
-		printf(_("Unable to initialize ddcci library.\n"));
-		exit(1);
+	if(is_env_no_dbus_set()) {
+		if (!ddcci_init(datadir)) {
+			printf(_("Unable to initialize ddcci library.\n"));
+			exit(1);
+		}
+	} else {
+		// TODO: DB datadir should be same, as datadir of daemon, needs some integration
+		if (!ddcci_init_db(datadir)) {
+			printf(_("Unable to initialize ddcci db library.\n"));
+			exit(1);
+		}
+		proxy = ddcci_dbus_open_proxy();
+		if(proxy == NULL) {
+			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DBUS=1.\n"));
+			exit(1);
+		}
 	}
 	
 	if (probe) {
@@ -259,7 +275,11 @@ int main(int argc, char **argv)
 		struct monitorlist* monlist;
 		struct monitorlist* current;
 		
-		monlist = ddcci_probe();
+		if(is_env_no_dbus_set()){
+			monlist = ddcci_probe();
+		} else {
+			monlist = ddcci_dbus_rescan_monitors(proxy);
+		}
 		
 		printf(_("Detected monitors :\n"));
 		
@@ -297,8 +317,15 @@ int main(int argc, char **argv)
 	}
 	
 	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
+
+	if(is_env_no_dbus_set()) {
+		mon = malloc(sizeof(struct monitor));
+		ret = ddcci_open(mon, fn, 0);
+	} else {
+		ret = ddcci_dbus_open(proxy, &mon, fn);
+	}
 	
-	if ((ret = ddcci_open(&mon, fn, 0)) < 0) {
+	if (ret < 0) {
 		fprintf(stderr, _(
 			"\nDDC/CI at %s is unusable (%d).\n"
 			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
@@ -306,19 +333,19 @@ int main(int argc, char **argv)
 	} else {
 		fprintf(stdout, _("\nEDID readings:\n"));
 		fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"), 
-			mon.pnpid, mon.db ? mon.db->name : NULL);
-		fprintf(stdout, _("\tInput type: %s\n"), mon.digital ? _("Digital") : _("Analog"));
+			mon->pnpid, mon->db ? mon->db->name : NULL);
+		fprintf(stdout, _("\tInput type: %s\n"), mon->digital ? _("Digital") : _("Analog"));
 		
-		if (mon.fallback) {
+		if (mon->fallback) {
 			/* Put a big warning (in red if we are writing to a terminal). */
 			printf("%s%s\n", isatty(1) ? "\x1B[0;31m" : "", _("=============================== WARNING ==============================="));
-			if (mon.fallback == 1) {
+			if (mon->fallback == 1) {
 				printf(_(
 					"There is no support for your monitor in the database, but ddccontrol is\n"
 					"using a generic profile for your monitor's manufacturer. Some controls\n"
 					"may not be supported, or may not work as expected.\n"));
 			}
-			else if (mon.fallback == 2) {
+			else if (mon->fallback == 2) {
 				printf(_(
 					"There is no support for your monitor in the database, but ddccontrol is\n"
 					"using a basic generic profile. Many controls will not be supported, and\n"
@@ -337,20 +364,20 @@ int main(int argc, char **argv)
 			fprintf(stdout, _("\nCapabilities:\n"));
 			
 			for (retry = RETRYS; retry; retry--) {
-				if (ddcci_caps(&mon) >= 0) {
-					fprintf(stdout, _("Raw output: %s\n"), mon.caps.raw_caps);
+				if (ddcci_caps(mon) >= 0) {
+					fprintf(stdout, _("Raw output: %s\n"), mon->caps.raw_caps);
 					
 					fprintf(stdout, _("Parsed output: \n"));
 					fprintf(stdout, "\tVCP: ");
 					int i;
 					for (i = 0; i < 256; i++) {
-						if (mon.caps.vcp[i]) {
+						if (mon->caps.vcp[i]) {
 							printf("%02x ", i);
 						}
 					}
 					printf("\n");
 					printf(_("\tType: "));
-					switch(mon.caps.type) {
+					switch(mon->caps.type) {
 					case lcd:
 						printf(_("LCD"));
 						break;
@@ -373,7 +400,7 @@ int main(int argc, char **argv)
 		
 		if (ctrl >= 0) {
 			if (value >= 0) {
-				int delay = find_write_delay(&mon, ctrl);
+				int delay = find_write_delay(mon, ctrl);
 				if (delay >= 0) {
 					fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"),
 						ctrl, value, value, delay);
@@ -382,24 +409,24 @@ int main(int argc, char **argv)
 					fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d)...\n"),
 						ctrl, value, value);
 				}
-				ddcci_writectrl(&mon, ctrl, value, delay);
+				ddcci_writectrl(mon, ctrl, value, delay);
 			} else {
 				fprintf(stdout, _("\nReading 0x%02x...\n"), ctrl);
 			}
 			
-			dumpctrl(&mon, ctrl, 1);
+			dumpctrl(mon, ctrl, 1);
 		}
 		
 		if (dump) {
 			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 			
 			for (i = 0; i < 256; i++) {
-				dumpctrl(&mon, i, force);
+				dumpctrl(mon, i, force);
 			}
 		}
 		else if (ctrl == -1 && caps == 0) 
 		{
-			struct monitor_db* monitor = mon.db;
+			struct monitor_db* monitor = mon->db;
 			struct group_db* group;
 			struct subgroup_db* subgroup;
 			struct control_db* control;
@@ -431,7 +458,7 @@ int main(int argc, char **argv)
 								int result;
 								unsigned short value, maximum;
 								
-								if ((result = ddcci_readctrl(&mon, control->address, &value, &maximum)) >= 0) {
+								if ((result = ddcci_readctrl(mon, control->address, &value, &maximum)) >= 0) {
 									printf(
 										(result > 0) 
 											? _("\t\t  supported, value=%d, maximum=%d\n")
@@ -448,11 +475,12 @@ int main(int argc, char **argv)
 		if (save) {
 			fprintf(stdout, _("\nSaving settings...\n"));
 	
-			ddcci_save(&mon);
+			ddcci_save(mon);
 		}
 	}
 	
-	ddcci_close(&mon);
+	ddcci_close(mon);
+	free(mon);
 	
 	if (probe) {
 		free(fn);

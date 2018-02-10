@@ -4,7 +4,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/lib -DLOCALEDIR=\"$(localedir)\"
 LDADD = ../lib/libddccontrol.la ../daemon/libddccontrol_dbus_client.la
 
 bin_PROGRAMS = ddccontrol
-ddccontrol_SOURCES = main.c dbus_client.c printing.c
+ddccontrol_SOURCES = main.c printing.c
 ddccontrol_LDFLAGS = $(LIBXML2_LDFLAGS) $(LIBINTL)
 AM_CFLAGS = $(LIBXML2_CFLAGS)
 
