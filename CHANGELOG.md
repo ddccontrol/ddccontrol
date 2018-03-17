@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - systemd service to launch daemon
 
 ### Changed
-- show warning message without blinking
+- ddccontrol shows warning message without blinking
+- gddccontrol uses D-Bus daemon to access HW devices
 - install binary ddcpci to pkglibexec directory (it's not run by users)
 - fixed build with custom CFLAGS
 - fixed configure.ac to use `$PKGCONFIG` set by `PKG_PROG_PKG_CONFIG` macro
