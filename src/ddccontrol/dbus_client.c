@@ -21,8 +21,10 @@
 
 #include "ddccontrol.h"
 
+#include "daemon/dbus_client.h"
+
+#include "ddcci.h"
 #include "internal.h"
-#include "dbus_interface.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,23 +33,15 @@
 static void dumpctrl(DDCControl *proxy, char *fn, struct monitor* mon, unsigned char ctrl, int force)
 {
 	unsigned short value, maximum;
-	int result;
-	GError *error = NULL;
+	int result = ddcci_readctrl(mon, ctrl, &value, &maximum);
 
-	gboolean call_result = ddccontrol_call_get_control_sync(proxy, fn, ctrl, &result, &value, &maximum, NULL, &error);
-
-	if(call_result == TRUE) {
-		if ((result > 0) || force) {
-			print_control_value(mon, ctrl, value, maximum, result);
-		}
-	} else {
-		fprintf(stderr, _("Control 0x%02x read failed: %s\n."), ctrl, error->message);
+	if ((result > 0) || force) {
+		print_control_value(mon, ctrl, value, maximum, result);
 	}
 }
 
 int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int value, int force) {
 	int i;
-	gboolean result;
 
 	// TODO: custom datadir
 	if (!ddcci_init_db(NULL)) {
@@ -55,54 +49,32 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 		exit(1);
 	}
 
-	GError *error = NULL;
-	DDCControl *proxy = ddccontrol_proxy_new_for_bus_sync(
-			G_BUS_TYPE_SYSTEM,
-			G_DBUS_PROXY_FLAGS_NONE,
-			"ddccontrol.DDCControl",
-			"/ddccontrol/DDCControl",
-			NULL,
-			&error
-	);
-
-	if( error != NULL ) {
-		fprintf(stderr, _("D-Bus connection failed with error: %s.\n"), error->message);
+	DDCControl *proxy = ddcci_dbus_open_proxy();
+	if(proxy == NULL)
 		return -1;
-	}
 
 	if (probe) {
 		fn = NULL;
 
-		char **devices = NULL, **names = NULL;
-		char *supported = NULL, *digital = NULL;
-
-		GVariant *v_supported, *v_digital;
-		size_t supported_n, digital_n;
-
-		result = ddccontrol_call_rescan_monitors_sync(proxy, &devices, &v_supported, &names, &v_digital, NULL, &error);
-
-		printf(_("Detected monitors :\n"));
-		if(result == FALSE) {
-			fprintf(stderr, _("Probe failed: %s\n."), error->message);
-			return -1;
-		}
-
-		supported = g_variant_get_fixed_array(v_supported, &supported_n, sizeof(char));
-		digital = g_variant_get_fixed_array(v_digital, &digital_n, sizeof(char));
-
-
-		for(i = 0; devices[i] != NULL && i < supported_n; i++) {
-			printf(_(" - Device: %s\n"), devices[i]);
-			printf(_("   DDC/CI supported: %s\n"), supported[i] ? _("Yes") : _("No"));
-			printf(_("   Monitor Name: %s\n"), names[i]);
-			printf(_("   Input type: %s\n"), digital[i] ? _("Digital") : _("Analog"));
-
-			if ((!fn) && (supported[i]))
+		struct monitorlist *monlist, *current;
+		
+		monlist = ddcci_dbus_rescan_monitors(proxy);
+		current = monlist;
+		while (current != NULL)
+		{
+			printf(_(" - Device: %s\n"), current->filename);
+			printf(_("   DDC/CI supported: %s\n"), current->supported ? _("Yes") : _("No"));
+			printf(_("   Monitor Name: %s\n"), current->name);
+			printf(_("   Input type: %s\n"), current->digital ? _("Digital") : _("Analog"));
+			
+			if ((!fn) && (current->supported))
 			{
 				printf(_("   (Automatically selected)\n"));
-				fn = malloc(strlen(devices[i])+1);
-				strcpy(fn, devices[i]);
+				fn = malloc(strlen(current->filename)+1);
+				strcpy(fn, current->filename);
 			}
+			
+			current = current->next;
 		}
 
 		if (fn == NULL) {
@@ -110,75 +82,31 @@ int perform_using_dbus(char *fn, int dump, int caps, int probe, int ctrl, int va
 				"No monitor supporting DDC/CI available.\n"
 				"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
 				));
+			ddcci_release();
 			exit(0);
 		}
 	}
 
-	struct monitor mon;
-	char *pnpid = NULL;
-
-	result = ddccontrol_call_open_monitor_sync(proxy, fn, &pnpid, &mon.caps.raw_caps, NULL, &error);
-	if(result == FALSE) {
-		fprintf(stderr, _("Open monitor failed: %s\n."), error->message);
-		return -1;
-	}
-
-	strncpy(&mon.pnpid, pnpid, 7);
-	mon.pnpid[8] = 0;
-
-	ddcci_parse_caps(mon.caps.raw_caps, &mon.caps, 1);
-
-	// TODO: duplicated from ddcci.c
-	// DUPLICATED CODE START
-	mon.db = ddcci_create_db(mon.pnpid, &mon.caps, 1);
-	mon.fallback = 0; /* No fallback */
-
-	if (!mon.db) {
-		/* Fallback on manufacturer generic profile */
-		char buffer[7];
-		buffer[0] = 0;
-		strncat(buffer, mon.pnpid, 3); /* copy manufacturer id */
-		switch(mon.caps.type) {
-		case lcd:
-			strcat(buffer, "lcd");
-			mon.db = ddcci_create_db(buffer, &mon.caps, 1);
-			mon.fallback = 1;
-			break;
-		case crt:
-			strcat(buffer, "crt");
-			mon.db = ddcci_create_db(buffer, &mon.caps, 1);
-			mon.fallback = 1;
-			break;
-		case unk:
-			break;
-		}
-
-		if (!mon.db) {
-			/* Fallback on VESA generic profile */
-			mon.db = ddcci_create_db("VESA", &mon.caps, 1);
-			mon.fallback = 2;
-		}
-	}
-	// DUPLICATED CODE END
-
+	struct monitor *mon;
+	ddcci_dbus_open(proxy, &mon, fn);
 
 	if( ctrl >= 0 ) {
 		if( value == -1 ) {
 			fprintf(stdout, _("Reading 0x%02x...\n"), ctrl);
 		} else {
-			result = ddccontrol_call_set_control_sync(proxy, fn, ctrl, value, NULL, &error);
-			if(result == FALSE) {
+			int result = ddcci_writectrl(mon, ctrl, value, 0 /* TODO */);
+			if(result < 0) {
 				printf(_("Write failed\n."));
 			}
 		}
-		dumpctrl(proxy, fn, &mon, ctrl, 1);
+		dumpctrl(proxy, fn, mon, ctrl, 1);
 	}
 
 	if (dump) {
 		fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
 		for (i = 0; i < 256; i++) {
-			dumpctrl(proxy, fn, &mon, i, force);
+			dumpctrl(proxy, fn, mon, i, force);
 		}
 	}
 	return 0;

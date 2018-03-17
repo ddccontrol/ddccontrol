@@ -48,6 +48,8 @@ struct caps {
 #include "monitor_db.h"
 
 struct monitor {
+	const struct monitor_vtable *__vtable;
+
 	int fd;
 	unsigned int addr;
 	int adl_adapter, adl_display;
