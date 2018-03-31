@@ -13,3 +13,5 @@ BUGS:
  - Fix Samsung 740BF (not detected as LCD)
  - Fix Mitsubishi DiamondPro 930SB (not detected as CRT (type(CRT_AG)))
 
+Features to document:
+ - envvar DDCCONTROL_NO_DAEMON
