@@ -5,7 +5,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- changelog in *Keep a Changelog* style
 - D-Bus daemon to perform HW access under root
 - D-Bus client execution mode to ddccontrol (default mode, if available)
 - systemd service to launch daemon
@@ -13,6 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - ddccontrol shows warning message without blinking
 - gddccontrol uses D-Bus daemon to access HW devices
+
+## [0.4.4] - 2018-04-26
+### Added
+- changelog in *Keep a Changelog* style
+
+### Changed
+- show warning message without blinking
 - install binary ddcpci to pkglibexec directory (it's not run by users)
 - fixed build with custom CFLAGS
 - fixed configure.ac to use `$PKGCONFIG` set by `PKG_PROG_PKG_CONFIG` macro
@@ -21,4 +27,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 - original changelog written in GNU style, because it wasn't maintained
 
-[Unreleased]: https://github.com/ddccontrol/ddccontrol/compare/0.4.3...HEAD
+[Unreleased]: https://github.com/ddccontrol/ddccontrol/compare/0.4.4...master
+[0.4.4]: https://github.com/ddccontrol/ddccontrol/compare/0.4.3...0.4.4

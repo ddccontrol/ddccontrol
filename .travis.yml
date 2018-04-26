@@ -19,6 +19,10 @@ env:
     - CFLAGS='CFLAGS=-O0 -g'
     - CFLAGS='CFLAGS=-O2'
 
+compiler:
+  - clang
+  - gcc
+
 script:
   - ./autogen.sh
   - ./configure "${CFLAGS}"
