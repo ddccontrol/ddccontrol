@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[0.4.4],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_INIT([DDC/CI control tool],[0.4.5-unreleased],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
