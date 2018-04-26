@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.4] - 2018-04-26
 ### Added
 - changelog in *Keep a Changelog* style
 
@@ -17,4 +17,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 - original changelog written in GNU style, because it wasn't maintained
 
-[Unreleased]: https://github.com/ddccontrol/ddccontrol/compare/0.4.3...HEAD
+[0.4.4]: https://github.com/ddccontrol/ddccontrol/compare/0.4.3...0.4.4
