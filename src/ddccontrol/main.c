@@ -140,6 +140,16 @@ static void check_integrity(char* datadir, char* pnpname) {
 	exit(0);
 }
 
+static int can_use_dbus_daemon()
+{
+	const char * disable_envvar = getenv("DDCCONTROL_NO_DAEMON");
+
+	if( disable_envvar != NULL && strlen(disable_envvar) > 0 )
+		return 0;
+
+	return 1;
+}
+
 int main(int argc, char **argv)
 {
 	int i, retry, ret;
@@ -243,10 +253,12 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value, force);
-	if( ret == 0 )
-		exit(0);
-	printf(_("Operation using D-Bus failed\n"));
+	if( can_use_dbus_daemon() ) {
+		ret = perform_using_dbus(optind != argc ? argv[optind] : NULL, dump, caps, probe, ctrl, value, force);
+		if( ret == 0 )
+			exit(0);
+		printf(_("Operation using D-Bus failed\n"));
+	}
 	
 	if (!ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));
