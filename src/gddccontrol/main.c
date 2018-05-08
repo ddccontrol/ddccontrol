@@ -29,6 +29,8 @@
 #include "notebook.h"
 #include "internal.h"
 
+#include "daemon/dbus_client.h"
+
 GtkWidget* table;
 
 GtkWidget *combo_box;
@@ -64,6 +66,8 @@ int currentid = -1;
 int nextid = -1;
 
 static GMutex* combo_change_mutex;
+
+DDCControl *ddccontrol_proxy;
 
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
@@ -327,21 +331,10 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	
 	gtk_list_store_clear(GTK_LIST_STORE(gtk_combo_box_get_model(GTK_COMBO_BOX(combo_box))));
 	
-	set_message(_(
-	"Probing for available monitors..."
-		   ));
-	
-	if (widget == NULL)
-		monlist = ddcci_load_list();
-	else
-		monlist = NULL;
-		
-	if (!monlist) {
-		monlist = ddcci_probe();
-	
-		ddcci_save_list(monlist);
-	}
-	
+	set_message(_("Probing for available monitors..."));
+	// TODO: rescan on button, initial get only
+	monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
+
 	struct monitorlist* current;
 	
 	char buffer[256];
@@ -373,7 +366,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	}
 }
 
-int main( int   argc, char *argv[] )
+int main( int argc, char *argv[] )
 { 
 	int i, verbosity = 0;
 	
@@ -399,7 +392,11 @@ int main( int   argc, char *argv[] )
 	}
 	
 	ddcci_verbosity(verbosity);
-	
+
+	ddccontrol_proxy = ddcci_dbus_open_proxy();
+	if(ddccontrol_proxy == NULL)
+		return 1;
+
 	gtk_init(&argc, &argv);
 	
 	g_thread_init(NULL);

@@ -30,6 +30,8 @@
 
 #include "notebook.h"
 #include "internal.h"
+
+#include "daemon/dbus_client.h"
 	
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
@@ -55,24 +57,23 @@ GSList *all_controls;
 
 int refreshing = 0;
 
+extern DDCControl *ddccontrol_proxy;
+
 // Helpers
 ////////////////////
+
+static void write_dbctrl(struct control_db *control, unsigned short nval) {
+	ddcci_writectrl(mon, control->address, nval, control->delay);
+}
 	
 static void get_value_and_max(struct control_db *control, unsigned short *currentValue, unsigned short *currentMaximum)
 {
-	int retry = 1;
+	int result;
 	if (control->type != command)
 	{
-		for(retry = RETRYS; retry; retry--)
-		{
-			if (ddcci_readctrl(mon, control->address, currentValue, currentMaximum) >= 0)
-			{
-				break;
-			}
-			usleep(20000);
-		}
+		result = ddcci_readctrl(mon, control->address, currentValue, currentMaximum);
 	}
-	if(!retry)
+	if(result < 0)
 	{
 		GtkWidget* dialog = gtk_message_dialog_new(
 				GTK_WINDOW(main_app_window),
@@ -202,7 +203,7 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	
 	unsigned short nval = (unsigned short)round(val*(double)Maximum);
 	if (!refreshing)
-		ddcci_writectrl(mon, control->address, nval, control->delay);
+		write_dbctrl(control, nval);
 	
 	gtk_range_set_value(GTK_RANGE(widget), (double)100.0*nval/(double)Maximum);
 	
@@ -237,7 +238,7 @@ static void group_callback(GtkWidget *widget, gpointer data)
 		if (control)
 		{
 			if (!refreshing)
-				ddcci_writectrl(mon, control->address, val, control->delay);
+				write_dbctrl(control, val);
 			
 			gtk_widget_set_sensitive(GTK_WIDGET(button), val != Default);
 			modified = 1;
@@ -265,7 +266,7 @@ static void command_callback(GtkWidget *widget, gpointer data)
 	
 	if (control)
 	{
-		ddcci_writectrl(mon, control->address, val, control->delay);
+		write_dbctrl(control, val);
 		
 		modified = 1;
 		
@@ -285,7 +286,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(cwidget),"ddc_control");
 	
 	if (control) {
-		ddcci_writectrl(mon, control->address, Default, control->delay);
+		write_dbctrl(control, Default);
 		
 		change_control_value(cwidget, (gpointer)Default);
 	}
@@ -585,9 +586,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	set_message(tmp);
 	g_free(tmp);
 	
-	mon = malloc(sizeof(struct monitor));
-	
-	if (ddcci_open(mon, monitor->filename, 0) < 0) {
+	if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
 		set_message(_(
 			"An error occurred while opening the monitor device.\n"
 			"Maybe this monitor was disconnected, please click on "
@@ -714,7 +713,6 @@ void delete_monitor_manager()
 		if (modified)
 			ddcci_save(mon);
 	
-		ddcci_close(mon);
 		free(mon);
 		g_slist_free(all_controls);
 	}

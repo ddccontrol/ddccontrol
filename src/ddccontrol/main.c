@@ -141,8 +141,14 @@ static void check_integrity(char* datadir, char* pnpname) {
 	exit(0);
 }
 
-static int is_env_no_dbus_set() {
-	return getenv( "DDCCONTROL_NO_DBUS" ) != NULL;
+static int can_use_dbus_daemon()
+{
+	const char * disable_envvar = getenv("DDCCONTROL_NO_DAEMON");
+
+	if( disable_envvar != NULL && strlen(disable_envvar) > 0 )
+		return 0;
+
+	return 1;
 }
 
 int main(int argc, char **argv)
@@ -251,7 +257,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if(is_env_no_dbus_set()) {
+	if(!can_use_dbus_daemon()) {
 		if (!ddcci_init(datadir)) {
 			printf(_("Unable to initialize ddcci library.\n"));
 			exit(1);
@@ -275,10 +281,10 @@ int main(int argc, char **argv)
 		struct monitorlist* monlist;
 		struct monitorlist* current;
 		
-		if(is_env_no_dbus_set()){
-			monlist = ddcci_probe();
-		} else {
+		if(can_use_dbus_daemon()){
 			monlist = ddcci_dbus_rescan_monitors(proxy);
+		} else {
+			monlist = ddcci_probe();
 		}
 		
 		printf(_("Detected monitors :\n"));
@@ -318,11 +324,11 @@ int main(int argc, char **argv)
 	
 	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 
-	if(is_env_no_dbus_set()) {
+	if(can_use_dbus_daemon()) {
+		ret = ddcci_dbus_open(proxy, &mon, fn);
+	} else {
 		mon = malloc(sizeof(struct monitor));
 		ret = ddcci_open(mon, fn, 0);
-	} else {
-		ret = ddcci_dbus_open(proxy, &mon, fn);
 	}
 	
 	if (ret < 0) {
