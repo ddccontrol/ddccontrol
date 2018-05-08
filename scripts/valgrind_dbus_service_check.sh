@@ -20,7 +20,7 @@ sleep 0.25
 pgrep ddc
 
 echo "starting service"
-su -c "libtool --mode=execute valgrind --log-file='${VALGRIND_OUT}' '$(pwd)/src/daemon/ddccontrol_service'" &
+su -c "libtool --mode=execute valgrind --leak-check=full --log-file='${VALGRIND_OUT}' '$(pwd)/src/daemon/ddccontrol_service'" &
 DDCCONTROL_DBUS_SERVICE_PID=$!
 
 sleep 5
