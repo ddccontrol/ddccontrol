@@ -271,7 +271,8 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 		struct i2c_rdwr_ioctl_data msg_rdwr;
 		struct i2c_msg             i2cmsg;
 	
-		/* done, prepare message */	
+		memset(&msg_rdwr, 0, sizeof(msg_rdwr));
+		memset(&i2cmsg, 0, sizeof(i2cmsg));
 		msg_rdwr.msgs = &i2cmsg;
 		msg_rdwr.nmsgs = 1;
 	
@@ -361,6 +362,8 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		struct i2c_msg             i2cmsg;
 		int i;
 	
+		memset(&msg_rdwr, 0, sizeof(msg_rdwr));
+		memset(&i2cmsg, 0, sizeof(i2cmsg));
 		msg_rdwr.msgs = &i2cmsg;
 		msg_rdwr.nmsgs = 1;
 	

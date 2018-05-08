@@ -4,7 +4,7 @@ make -j4
 
 [ `whoami` = root ] || exec sudo su -c $0 root
 
-echo make install; remove dbus service"
+echo 'make install; remove dbus service'
 make install
 find /usr/{,local/}share/dbus* -name "ddccontrol.DDCControl.service" -exec rm '{}' \;
 
