@@ -25,6 +25,7 @@
 #include "ddcci.h"
 #include "internal.h"
 #include "monitor_db.h"
+#include "conf.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -86,7 +87,7 @@ static void usage(char *name)
 {
 	fprintf(stderr,_(
 		"Usage:\n"
-		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
+		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-o (profile path)] [-p | dev]\n"
 		"\tdev: device, e.g. dev:/dev/i2c-0\n"
 		"\t-p : probe I2C devices to find monitor buses\n"
 		"\t-c : query capability\n"
@@ -97,6 +98,7 @@ static void usage(char *name)
 		"\t-s : save settings\n"
 		"\t-v : verbosity (specify more to increase)\n"
 		"\t-b : ddccontrol-db directory (if other than %s)\n"
+		"\t-o : load values from XML profile file\n"
 	), name, DATADIR);
 }
 
@@ -155,7 +157,7 @@ int main(int argc, char **argv)
 {
 	int i, retry, ret;
 
-	// for dbus
+	/* for dbus */
 	DDCControl *proxy = NULL;
 		
 	/* filedescriptor and name of device */
@@ -164,6 +166,9 @@ int main(int argc, char **argv)
 	
 	char *datadir = NULL;
 	char *pnpname = NULL; /* pnpname for -i parameter */
+
+	/* -o (load profile) parameter */
+	struct profile *profilefile = NULL;
 	
 	/* what to do */
 	int dump = 0;
@@ -189,7 +194,7 @@ int main(int argc, char **argv)
 		"This program comes with ABSOLUTELY NO WARRANTY.\n"
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 	
-	while ((i=getopt(argc,argv, "hdr:w:csfvpb:i:")) >= 0)
+	while ((i=getopt(argc,argv, "hdr:w:csfvpbo:i:")) >= 0)
 	{
 		switch(i) {
 		case 'h':
@@ -214,6 +219,13 @@ int main(int argc, char **argv)
 			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535))
 			{
 				fprintf(stderr,_("'%s' does not seem to be a valid value.\n"), optarg);
+				exit(1);
+			}
+			break;
+		case 'o':
+			profilefile = ddcci_load_profile(optarg);
+			if (!profilefile) {
+				fprintf(stderr,"Failed to load profile: %s\n", optarg);
 				exit(1);
 			}
 			break;
@@ -422,8 +434,16 @@ int main(int argc, char **argv)
 			
 			dumpctrl(mon, ctrl, 1);
 		}
-		
-		if (dump) {
+
+		if (profilefile) {			
+			int result = ddcci_apply_profile(profilefile, mon);
+			if (!result) {
+				fprintf(stderr, _("Failed to apply profile: %s\n"), profilefile->name);
+				exit(1);
+			}
+			fprintf(stdout, _("Applied profile: %s\n"), profilefile->name);
+		}
+		else if (dump) {
 			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 			
 			for (i = 0; i < 256; i++) {
