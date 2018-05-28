@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 		"This program comes with ABSOLUTELY NO WARRANTY.\n"
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 	
-	while ((i=getopt(argc,argv, "hdr:w:csfvpbo:i:")) >= 0)
+	while ((i=getopt(argc,argv, "hdr:w:csfvpb:i:l:")) >= 0)
 	{
 		switch(i) {
 		case 'h':
