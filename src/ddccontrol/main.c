@@ -87,7 +87,7 @@ static void usage(char *name)
 {
 	fprintf(stderr,_(
 		"Usage:\n"
-		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-o (profile path)] [-p | dev]\n"
+		"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (profile path)] [-p | dev]\n"
 		"\tdev: device, e.g. dev:/dev/i2c-0\n"
 		"\t-p : probe I2C devices to find monitor buses\n"
 		"\t-c : query capability\n"
@@ -98,7 +98,7 @@ static void usage(char *name)
 		"\t-s : save settings\n"
 		"\t-v : verbosity (specify more to increase)\n"
 		"\t-b : ddccontrol-db directory (if other than %s)\n"
-		"\t-o : load values from XML profile file\n"
+		"\t-l : load values from XML profile file\n"
 	), name, DATADIR);
 }
 
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
 	char *datadir = NULL;
 	char *pnpname = NULL; /* pnpname for -i parameter */
 
-	/* -o (load profile) parameter */
+	/* -l (load profile) parameter */
 	struct profile *profilefile = NULL;
 	
 	/* what to do */
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 			break;
-		case 'o':
+		case 'l':
 			profilefile = ddcci_load_profile(optarg);
 			if (!profilefile) {
 				fprintf(stderr,"Failed to load profile: %s\n", optarg);
@@ -437,11 +437,12 @@ int main(int argc, char **argv)
 
 		if (profilefile) {			
 			int result = ddcci_apply_profile(profilefile, mon);
-			if (!result) {
+			if (result) {
+				fprintf(stdout, _("Applied profile: %s\n"), profilefile->name);
+			} else {
 				fprintf(stderr, _("Failed to apply profile: %s\n"), profilefile->name);
-				exit(1);
 			}
-			fprintf(stdout, _("Applied profile: %s\n"), profilefile->name);
+			free(profilefile);
 		}
 		else if (dump) {
 			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
