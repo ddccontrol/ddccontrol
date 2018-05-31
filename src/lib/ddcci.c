@@ -1103,6 +1103,10 @@ int ddcci_close(struct monitor* mon)
 			free(mon->caps.vcp[i]);
 		}
 	}
+
+	if(mon->caps.raw_caps) {
+		free(mon->caps.raw_caps);
+	}
 	
 	if (mon->profiles) {
 		ddcci_free_profile(mon->profiles);
