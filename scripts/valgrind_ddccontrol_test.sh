@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+SUPPRESSIONS=( $(pwd)/scripts/tmp/GNOME.supp/build/{base,gio,glib,gtk,gtk3}.supp )
+
+for f in "${SUPPRESSIONS[@]}"; do [ ! -f "$f" ] && echo "build GNOME.supp first, missing ${f}" && exit 1; done
 [ "$EUID" -ne 0 ] && echo "Run as root" && exit 1
 
 DEVICE=$1
@@ -18,7 +21,16 @@ export DDCCONTROL_NO_DAEMON
 function valgrind_ddccontrol () {
     VALGRIND_OUT=$(mktemp /tmp/ddccontrol.valgrind.out.XXXXXXXX)
 
-    valgrind --leak-check=full --error-exitcode=121 --log-file="${VALGRIND_OUT}" ddccontrol $@
+    export G_SLICE=always-malloc
+    export G_DEBUG=gc-friendly
+
+    valgrind \
+        --leak-check=full \
+        --error-exitcode=121 \
+        --log-file="${VALGRIND_OUT}" \
+        ${SUPPRESSIONS[@]/#/--suppressions=} \
+        ddccontrol $@
+
     EXIT_CODE=$?
 
     if [ ${EXIT_CODE} -eq 121 ]
