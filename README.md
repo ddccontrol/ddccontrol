@@ -24,7 +24,7 @@ Manual installation is more complicated, but contains latest version of software
 DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official distribution repositories with following command:
 
 * on Ubuntu: `sudo apt install ddccontrol gddccontrol ddccontrol-db i2c-tools`
-* on Fedora: `TODO`
+* on Fedora: `sudo dnf install ddccontrol ddccontrol-gtk`
 * on openSUSE: `TODO`
 
 ### Installation from sources
