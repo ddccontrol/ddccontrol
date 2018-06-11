@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SUPPRESSIONS=( $(pwd)/scripts/tmp/GNOME.supp/build/{base,gio,glib,gtk,gtk3}.supp )
+SUPPRESSIONS=( $(pwd)/scripts/tmp/GNOME.supp/build/{base,gio,glib,gtk,gtk3}.supp /usr/share/glib-2.0/valgrind/glib.supp )
 
 for f in "${SUPPRESSIONS[@]}"; do [ ! -f "$f" ] && echo "build GNOME.supp first, missing ${f}" && exit 1; done
 [ "$EUID" -ne 0 ] && echo "Run as root" && exit 1
