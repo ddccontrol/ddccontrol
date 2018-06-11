@@ -35,10 +35,7 @@ function valgrind_ddccontrol () {
 
     EXIT_CODE=$?
 
-    if [ ${EXIT_CODE} -eq 121 ]
-    then
-        cat "${VALGRIND_OUT}"
-    fi
+    cat "${VALGRIND_OUT}"
     rm "${VALGRIND_OUT}"
 
     if [ ${EXIT_CODE} -ne 0 ]
