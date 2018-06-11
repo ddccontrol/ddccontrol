@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-SUPPRESSIONS=( $(pwd)/scripts/tmp/GNOME.supp/build/{base,gio,glib,gtk,gtk3}.supp /usr/share/glib-2.0/valgrind/glib.supp )
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_DIR="$( dirname "${DIR}" )"
 
-for f in "${SUPPRESSIONS[@]}"; do [ ! -f "$f" ] && echo "build GNOME.supp first, missing ${f}" && exit 1; done
 [ "$EUID" -ne 0 ] && echo "Run as root" && exit 1
+
+source "${DIR}/common/suppressions.sh"
 
 DEVICE=$1
 
