@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_DIR="$( dirname "${DIR}" )"
-
-[ "$EUID" -ne 0 ] && echo "Run as root" && exit 1
-
-source "${DIR}/common/suppressions.sh"
+source "$(dirname "$0")/common_test.sh"
 
 DEVICE=$1
 
