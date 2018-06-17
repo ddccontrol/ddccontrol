@@ -94,6 +94,7 @@ static void usage(char *name)
 		"\t-d : query ctrls 0 - 255\n"
 		"\t-r : query ctrl\n"
 		"\t-w : value to write to ctrl\n"
+		"\t-W : relatively change ctrl value (+/-)\n"
 		"\t-f : force (avoid validity checks)\n"
 		"\t-s : save settings\n"
 		"\t-v : verbosity (specify more to increase)\n"
@@ -174,6 +175,7 @@ int main(int argc, char **argv)
 	int dump = 0;
 	int ctrl = -1;
 	int value = -1;
+	int relative = 0;
 	int caps = 0;
 	int save = 0;
 	int force = 0;
@@ -194,7 +196,7 @@ int main(int argc, char **argv)
 		"This program comes with ABSOLUTELY NO WARRANTY.\n"
 		"You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 	
-	while ((i=getopt(argc,argv, "hdr:w:csfvpb:i:l:")) >= 0)
+	while ((i=getopt(argc,argv, "hdr:w:W:csfvpb:i:l:")) >= 0)
 	{
 		switch(i) {
 		case 'h':
@@ -221,6 +223,18 @@ int main(int argc, char **argv)
 				fprintf(stderr,_("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
 			}
+			break;
+		case 'W':
+			if (ctrl == -1) {
+				fprintf(stderr,_("You cannot use -W parameter without -r.\n"));
+				exit(1);
+			}
+			if ((value = strtol(optarg, NULL, 0)) < -65535 || (value > 65535))
+			{
+				fprintf(stderr,_("'%s' does not seem to be a valid value.\n"), optarg);
+				exit(1);
+			}
+			relative = 1;
 			break;
 		case 'l':
 			profilefile = ddcci_load_profile(optarg);
@@ -417,7 +431,25 @@ int main(int argc, char **argv)
 		}
 		
 		if (ctrl >= 0) {
-			if (value >= 0) {
+			if (relative) {
+				unsigned short old_value, maximum;
+				int retry, result;
+
+				for (retry = RETRYS; retry || (result = ddcci_readctrl(mon, ctrl, &old_value, &maximum)) < 0; retry--)
+					;
+
+				value += old_value;
+				if (value < 0) {
+					fprintf(stderr,_("Value cannot be lower than zero! %d -> %d\n"), old_value, value);
+					relative = 0;
+				}
+				else if (value > maximum) {
+					fprintf(stderr,_("Value cannot be higher than maximum! %d / %d\n"), value, maximum);
+					relative = 0;
+					value = -1;
+				}
+			}
+			if (value >= 0 || relative) {
 				int delay = find_write_delay(mon, ctrl);
 				if (delay >= 0) {
 					fprintf(stdout, _("\nWriting 0x%02x, 0x%02x(%d) (%dms delay)...\n"),
@@ -428,7 +460,8 @@ int main(int argc, char **argv)
 						ctrl, value, value);
 				}
 				ddcci_writectrl(mon, ctrl, value, delay);
-			} else {
+			}
+			else if(!relative) {
 				fprintf(stdout, _("\nReading 0x%02x...\n"), ctrl);
 			}
 			
