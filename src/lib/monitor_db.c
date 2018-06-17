@@ -226,6 +226,8 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"control"))) {
 					mon_ctrlid = xmlGetProp(cur, BAD_CAST "id");
 					if (!xmlStrcmp(mon_ctrlid, options_ctrlid)) {
+						xmlFree(mon_ctrlid);
+
 						tmp = xmlGetProp(cur, BAD_CAST "address");
 						DDCCI_DB_RETURN_IF(tmp == NULL, 0, _("Can't find address property."), cur);
 						current_control->address = strtol((char*)tmp, &endptr, 0);
@@ -304,7 +306,6 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 						current_control = malloc(sizeof(struct control_db));
 						memset(current_control, 0, sizeof(struct control_db));
 						
-						xmlFree(mon_ctrlid);
 						break;
 					}
 					else {
@@ -561,8 +562,8 @@ int ddcci_create_db_protected(
 	}
 	
 	if (!recursionlevel) {
-		struct group_db** group;
-		struct subgroup_db** subgroup;
+		struct group_db **group, *group_to_free;
+		struct subgroup_db **subgroup, *subgroup_to_free;
 		
 		/* loop through groups */
 		group = &mon_db->group_list;
@@ -573,13 +574,22 @@ int ddcci_create_db_protected(
 			while (*subgroup != NULL)
 			{
 				if (!(*subgroup)->control_list) {
+					subgroup_to_free = *subgroup;
 					*subgroup = (*subgroup)->next;
+
+					xmlFree(subgroup_to_free->name);
+					xmlFree(subgroup_to_free->pattern);
+					free(subgroup_to_free);
 					continue;
 				}
 				subgroup = &(*subgroup)->next;
 			}
 			if (!(*group)->subgroup_list) {
+				group_to_free = *group;
 				*group = (*group)->next;
+
+				xmlFree(group_to_free->name);
+				free(group_to_free);
 				continue;
 			}
 			group = &(*group)->next;
