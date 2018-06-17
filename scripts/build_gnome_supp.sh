@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Copyright(c) 2018 Miroslav Kravec (kravec.miroslav@gmail.com)
+# SPDX-License-Identifier: GPL-2.0
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ ! -d "${DIR}/tmp/GNOME.supp" ]; then

@@ -1,3 +1,5 @@
+# Copyright(c) 2018 Miroslav Kravec (kravec.miroslav@gmail.com)
+# SPDX-License-Identifier: GPL-2.0
 
 if [ "$EUID" -ne 0 ];
 then
