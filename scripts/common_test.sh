@@ -1,5 +1,9 @@
 
-[ "$EUID" -ne 0 ] && echo "Run as root" && exit 1
+if [ "$EUID" -ne 0 ];
+then
+    echo 'Run as root'
+    exit 1
+fi
 
 # environment variables
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

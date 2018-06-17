@@ -4,6 +4,9 @@ source "$(dirname "$0")/common_test.sh"
 
 DEVICE=$1
 
+DDCCONTROL_NO_DAEMON=1
+export DDCCONTROL_NO_DAEMON
+
 if [ -z "${DEVICE}" ]
 then
     DEVICE=$(ddccontrol -p | grep '^ - Device: ' | head -n1 | tr ' ' '\n' | tail -n1)
@@ -11,9 +14,6 @@ then
 else
     echo "Using device: ${DEVICE}"
 fi
-
-DDCCONTROL_NO_DAEMON=1
-export DDCCONTROL_NO_DAEMON
 
 function valgrind_ddccontrol () {
     VALGRIND_OUT=$(mktemp /tmp/ddccontrol.valgrind.out.XXXXXXXX)
