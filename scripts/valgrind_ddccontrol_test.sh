@@ -35,7 +35,7 @@ function valgrind_ddccontrol () {
 
     if [ ${EXIT_CODE} -ne 0 ]
     then
-        echo "Execution returned ${EXIT_CODE}, arguments: $@"
+        echo "Execution returned ${EXIT_CODE}, arguments: $*"
         exit 1
     fi
 }

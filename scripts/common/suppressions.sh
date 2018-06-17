@@ -6,5 +6,4 @@ do
     [ ! -f "$f" ] && echo "Suppresion file is missing: ${f}" && exit 1;
 done
 
-VALGRIND_SUPPRESSIONS="${SUPPRESSIONS[@]/#/--suppressions=}"
-VALGRIND_SUPPRESSION_PARAMS=${VALGRIND_SUPPRESSIONS[*]}
+VALGRIND_SUPPRESSION_PARAMS="${SUPPRESSIONS[*]/#/--suppressions=}"
