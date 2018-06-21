@@ -54,3 +54,5 @@
 /src/stamp-h1
 Makefile
 Makefile.in
+
+/scripts/tmp
