@@ -34,12 +34,12 @@ struct dbus_monitor {
     const char *filename;
 };
 
-static int dbus_monitor_readctrl(struct monitor* mon, unsigned char ctrl, unsigned short *value, unsigned short *maximum) {
+static int dbus_monitor_readctrl(struct monitor *mon, unsigned char ctrl, unsigned short *value, unsigned short *maximum) {
     struct dbus_monitor *dbus_mon = (struct dbus_monitor *)mon;
     return ddcci_dbus_readctrl(dbus_mon->proxy, dbus_mon->filename, ctrl, value, maximum);
 }
 
-static int dbus_monitor_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value, int delay) {
+static int dbus_monitor_writectrl(struct monitor *mon, unsigned char ctrl, unsigned short value, int delay) {
     struct dbus_monitor *dbus_mon = (struct dbus_monitor *)mon;
     return ddcci_dbus_writectrl(dbus_mon->proxy, dbus_mon->filename, ctrl, value);
 }
@@ -54,21 +54,19 @@ static const struct monitor_vtable dbus_monitor_vtable = {
     .close = dbus_monitor_close
 };
 
-int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char* filename) {
+int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filename) {
     char *pnpid = NULL;
     GError *error = NULL;
 
     struct dbus_monitor *dbus_mon;
     struct monitor *mon;
 
-    dbus_mon = malloc(sizeof(struct dbus_monitor));
-    (*_mon) = mon = &dbus_mon->mon;
-    memset(dbus_mon, 0, sizeof(struct dbus_monitor));
+    dbus_mon = calloc(1,sizeof(*dbus_mon));
+    *_mon = mon = &dbus_mon->mon;
 
     mon->__vtable = &dbus_monitor_vtable;
     dbus_mon->proxy = proxy;
-    dbus_mon->filename = malloc(strlen(filename) + 1);
-    strcpy(dbus_mon->filename, filename);
+    dbus_mon->filename = strdup(filename);
 
 
     gboolean result = ddccontrol_call_open_monitor_sync(proxy, filename, &pnpid, &mon->caps.raw_caps, NULL, &error);
