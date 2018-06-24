@@ -9,4 +9,7 @@ PATHS=(
     "${PROJECT_DIR}/src/daemon/"
 )
 
-astyle --recursive --style=linux "${PATHS[@]/%/\*.h}" "${PATHS[@]/%/\*.c}"
+astyle --recursive \
+    --style=linux --indent=tab --align-pointer=name \
+    --unpad-paren --pad-header --pad-oper \
+    "${PATHS[@]/%/\*.h}" "${PATHS[@]/%/\*.c}"
