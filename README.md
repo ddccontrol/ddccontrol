@@ -25,7 +25,7 @@ DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official 
 
 * on Ubuntu: `sudo apt install ddccontrol gddccontrol ddccontrol-db i2c-tools`
 * on Fedora: `sudo dnf install ddccontrol ddccontrol-gtk`
-* on openSUSE: `TODO`
+* on openSUSE: `sudo zypper in ddccontrol`
 
 ### Installation from sources
 
