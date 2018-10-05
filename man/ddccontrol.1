@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH DDCCONTROL 1 "July 26, 2006"
+.TH DDCCONTROL 1 "October 5, 2018"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -19,18 +19,24 @@
 ddccontrol \- A utility to control monitor parameters via software
 .SH SYNOPSIS
 .B ddccontrol
+.B -p\ \ \ \ \ \ \ \ \ \ \ \ 
+.RB [ -cdfsv ]
 .RB [ -b
 .IR datadir ]
-.RB [ -v ]
-.RB [ -c ]
-.RB [ -d ]
-.RB [ -f ]
-.RB [ -s ]
 .RB [ -r
 .IR ctrl
 .RB [ -w
 .IR value ]]
-.RB [ -p | dev ]
+.br
+.B ddccontrol
+\fBdev:/dev/i2c-\fP\fIN\fP
+.RB [ -cdfsv ]
+.RB [ -b
+.IR datadir ]
+.RB [ -r
+.IR ctrl
+.RB [ -w
+.IR value ]]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B ddccontrol
@@ -44,7 +50,7 @@ command.
 A summary of options is included below.
 .TP
 .B dev
-device, e.g. dev:/dev/i2c-0
+a device specifier, for example: \fBdev:/dev/i2c-0\fP
 .TP
 .B \-p
 probe I2C devices to find monitor buses
