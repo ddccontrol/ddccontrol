@@ -28,31 +28,26 @@
 #include <stdio.h>
 
 
-void print_control_value(struct monitor* mon, unsigned char ctrl, unsigned short value, unsigned short maximum, int result)
+void print_control_value(struct monitor *mon, unsigned char ctrl, unsigned short value, unsigned short maximum, int result)
 {
-	struct monitor_db* monitor = mon != NULL ? mon->db : NULL;
-	struct group_db* group;
-	struct subgroup_db* subgroup;
-	struct control_db* control;
-	struct value_db* valued;
-	xmlChar* controlname = NULL;
-	xmlChar* valuename = NULL;
+	struct monitor_db *monitor = mon != NULL ? mon->db : NULL;
+	struct group_db *group;
+	struct subgroup_db *subgroup;
+	struct control_db *control;
+	struct value_db *valued;
+	xmlChar *controlname = NULL;
+	xmlChar *valuename = NULL;
 
-	if (monitor)
-	{
+	if (monitor) {
 		/* loop through groups */
 		for (group = monitor->group_list; (group != NULL) &&
-				(controlname == NULL); group = group->next)
-		{
+		     (controlname == NULL); group = group->next) {
 			/* loop through subgroups inside group */
-			for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next)
-			{
+			for (subgroup = group->subgroup_list; (subgroup != NULL); subgroup = subgroup->next) {
 				/* loop through controls inside subgroup */
-				for (control = subgroup->control_list; (control != NULL); control = control->next)
-				{
+				for (control = subgroup->control_list; (control != NULL); control = control->next) {
 					/* check for control id */
-					if (control->address == ctrl)
-					{
+					if (control->address == ctrl) {
 						controlname = control->name;
 						/* look for the value */
 						for (valued = control->value_list; (valued != NULL); valued = valued->next) {
@@ -69,15 +64,13 @@ void print_control_value(struct monitor* mon, unsigned char ctrl, unsigned short
 	}
 	if (controlname == NULL) {
 		fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [???]\n", _("Control"),
-			ctrl, (result > 0) ? '+' : '-', value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ');
-	}
-	else if (valuename == NULL) {
+		        ctrl, (result > 0) ? '+' : '-', value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ');
+	} else if (valuename == NULL) {
 		fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s]\n", _("Control"),
-			ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname);
-	}
-	else {
+		        ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname);
+	} else {
 		fprintf(stdout, "%s 0x%02x: %c/%d/%d %c [%s - %s]\n", _("Control"),
-			ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname, valuename);
+		        ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname, valuename);
 	}
 }
 
