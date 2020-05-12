@@ -47,6 +47,21 @@ GtkWidget* choice_hbox = NULL;
 GtkWidget* profile_hbox = NULL;
 GtkWidget* bottom_hbox = NULL;
 
+GtkWidget* main_app_window = NULL;
+
+GtkWidget* monitor_manager = NULL;
+GtkWidget* profile_manager = NULL;
+
+GtkWidget* profile_manager_button = NULL;
+GtkWidget* saveprofile_button = NULL;
+GtkWidget* cancelprofile_button = NULL;
+GtkWidget* refresh_controls_button = NULL;
+
+struct monitor* mon;
+
+int current_monitor; /* current monitor */
+int num_monitor; /* total number of monitors */
+
 struct monitorlist* monlist;
 
 GtkTooltips *tooltips;
