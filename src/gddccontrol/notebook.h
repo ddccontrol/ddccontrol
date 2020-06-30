@@ -43,12 +43,12 @@
 #endif
 
 /* globals */
-struct monitor* mon;
+extern struct monitor* mon;
 
-GtkWidget* main_app_window;
+extern GtkWidget* main_app_window;
 
-GtkWidget* monitor_manager;
-GtkWidget* profile_manager;
+extern GtkWidget* monitor_manager;
+extern GtkWidget* profile_manager;
 
 /* notebook.c */
 
@@ -91,13 +91,13 @@ void set_message_ok(char* message, int with_ok);
 
 GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
 
-GtkWidget* profile_manager_button;
-GtkWidget* saveprofile_button;
-GtkWidget* cancelprofile_button;
-GtkWidget* refresh_controls_button;
+extern GtkWidget* profile_manager_button;
+extern GtkWidget* saveprofile_button;
+extern GtkWidget* cancelprofile_button;
+extern GtkWidget* refresh_controls_button;
 
 /* Multimonitor support */
-int current_monitor; /* current monitor */
-int num_monitor; /* total number of monitors */
+extern int current_monitor; /* current monitor */
+extern int num_monitor; /* total number of monitors */
 
 #endif //NOTEBOOK_H
