@@ -700,7 +700,7 @@ msgstr "Sección"
 
 #: ../../po/../src/gddccontrol/notebook.c:572
 msgid ""
-"The current monitor is in the database but does not supports DDC/CI.\n"
+"The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
 "This often occurs when you connect the VGA/DVI cable on the wrong input of "
 "monitors supporting DDC/CI only on one of its two inputs.\n"

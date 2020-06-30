@@ -571,7 +571,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	if (!monitor->supported) {
 		set_message(_(
-			"The current monitor is in the database but does not supports "
+			"The current monitor is in the database but does not support "
 			"DDC/CI.\n\nThis often occurs when you connect the VGA/DVI cable "
 			"on the wrong input of monitors supporting DDC/CI only on one of "
 			"its two inputs.\n\n"
