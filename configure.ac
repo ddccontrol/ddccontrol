@@ -121,6 +121,9 @@ fi
 
 AC_SUBST([DDCPCI])
 
+AC_CHECK_HEADERS([sys/io.h])
+AM_CONDITIONAL(HAVE_SYS_IO, [test x$ac_cv_header_sys_io_h = xyes])
+
 # AMD ADL support check
 support_amdadl=
 AC_ARG_ENABLE(amdadl,
