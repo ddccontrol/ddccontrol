@@ -3,7 +3,7 @@
 set -e
 
 echo "Running autoreconf..."
-autoreconf --install $*
+autoreconf --force --install $*
 
 echo "Running intltoolize..."
 intltoolize --force
