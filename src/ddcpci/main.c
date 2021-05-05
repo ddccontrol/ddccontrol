@@ -17,6 +17,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -39,18 +41,22 @@
 card_open cards_open[] = {
 	&nvidia_open,
 	&radeon_open,
-	&i810_open,
 	&via_open,
+#ifdef HAVE_SYS_IO_H
+	&i810_open,
 	&sis_open,
+#endif
 	NULL
 };
 
 card_close cards_close[] = {
 	&nvidia_close,
 	&radeon_close,
-	&i810_close,
 	&via_close,
+#ifdef HAVE_SYS_IO_H
+	&i810_close,
 	&sis_close,
+#endif
 	NULL
 };
 /* end of card list */

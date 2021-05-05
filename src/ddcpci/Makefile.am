@@ -4,7 +4,11 @@ AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/lib  -DLOCALEDIR=\"$(local
 pkglibexec_PROGRAMS = ddcpci
 
 ddcpci_LDFLAGS = -Wl,-z,now
-ddcpci_SOURCES = main.c nvidia.c radeon.c i2c-algo-bit.c intel810.c ddcpci.h i2c-algo-bit.h via.c sis.c
+ddcpci_SOURCES = main.c nvidia.c radeon.c i2c-algo-bit.c ddcpci.h i2c-algo-bit.h via.c
+
+if HAVE_SYS_IO
+ddcpci_SOURCES += intel810.c sis.c
+endif
 
 EXTRA_DIST = intel740.c
 
