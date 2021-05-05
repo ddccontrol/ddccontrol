@@ -3,7 +3,19 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.5.0] - 2021-01-011
+## [0.5.2] - 2021-05-05
+
+### Changed
+
+- Build intel810.c and sis.c only when sys/io.h is available (#94)
+- Fixed building with autoconf-2.71 (#98)
+
+### Added
+
+- Update README to add Solus distribution build dependencies (#93)
+- Add debian instructions (#96)
+
+## [0.5.1] - 2021-01-011
 
 ### Changed
 
