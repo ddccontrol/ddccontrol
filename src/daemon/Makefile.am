@@ -11,15 +11,15 @@ dist_dbusinterfaces_DATA = ddccontrol.DDCControl.xml
 pkglibexec_PROGRAMS = ddccontrol_service
 
 ddccontrol_service_SOURCES = service.c
-ddccontrol_service_LDFLAGS = $(LIBXML2_LDFLAGS) $(LIBINTL)
+ddccontrol_service_LDFLAGS = $(LIBXML2_LIBS) $(LIBINTL)
 ddccontrol_service_LDADD   = libdbusinterface.la ../lib/libddccontrol.la
 
 # D-Bus client library
 lib_LTLIBRARIES = libddccontrol_dbus_client.la
 
 libddccontrol_dbus_client_la_SOURCES = dbus_client.c
-libddccontrol_dbus_client_la_LDFLAGS = $(LIBXML2_LDFLAGS)
-libddccontrol_dbus_client_la_LIBADD   = libdbusinterface.la
+libddccontrol_dbus_client_la_LDFLAGS = $(LIBXML2_LIBS)
+libddccontrol_dbus_client_la_LIBADD   = libdbusinterface.la ../lib/libddccontrol.la
 
 # interface library
 noinst_LTLIBRARIES = libdbusinterface.la
