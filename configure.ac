@@ -18,7 +18,6 @@ PKG_PROG_PKG_CONFIG
 
 AC_LANG([C])
 
-AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h unistd.h sys/time.h stdlib.h errno.h unistd.h string.h sys/types.h sys/stat.h fcntl.h sys/ioctl.h dirent.h], [], [AC_MSG_ERROR([Important header not found, please install it.], [1])], [])
 
 check_xsltproc=yes
