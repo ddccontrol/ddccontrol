@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[0.5.2],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_INIT([DDC/CI control tool],[0.6.0],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -295,5 +295,6 @@ AC_CONFIG_FILES([
 	src/ddcpci/Makefile
 	src/gnome-ddcc-applet/Makefile
 	doc/Makefile
+	doc/main.xml
 	man/Makefile])
 AC_OUTPUT

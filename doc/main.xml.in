@@ -37,12 +37,12 @@
 </copyright>
 
 <releaseinfo role="meta">
-$Id$
+@PACKAGE@-@VERSION@
 </releaseinfo>
 
 <abstract>
 <para>
-Documentation for DDCcontrol version 0.5.2.
+Documentation for DDCcontrol version @VERSION@.
 </para>
 </abstract>
 
