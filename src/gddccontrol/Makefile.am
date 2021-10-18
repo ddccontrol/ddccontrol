@@ -15,6 +15,8 @@ desktop_in_files = gddccontrol.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
+MOSTLYCLEANFILES = $(desktop_DATA)
+
 icondir = $(datadir)/icons/hicolor/48x48/apps
 icon_DATA = gddccontrol.png
 

@@ -25,7 +25,8 @@ spell:
 
 clean-local:
 	rm -rf html
-	rm -f ddccontrol.fo ddccontrol.pdf
+
+MOSTLYCLEANFILES = ddccontrol.fo ddccontrol.pdf
 
 ddccontrol.fo: main.xml gpl.xml style-fo.xsl
 	$(XSLTPROC)  \
