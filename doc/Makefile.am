@@ -7,7 +7,7 @@ if BUILD_DOC
 html/*: main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml supportedmonitors.xml thanks.xml techdocs.xml usage.xml style.xsl
 	rm -rf html.old
 	true `mv -f html html.old`
-	mkdir html
+	$(MKDIR_P) html
 	$(XSLTPROC) $(XSLTPROC_FLAGS) -o html/ $(top_srcdir)/doc/$(XHTML_STYLESHEET) $<
 	-$(TIDY) -q -raw -im html/*.html
 
@@ -25,7 +25,8 @@ spell:
 
 clean-local:
 	rm -rf html
-	rm -f ddccontrol.fo ddccontrol.pdf
+
+MOSTLYCLEANFILES = ddccontrol.fo ddccontrol.pdf
 
 ddccontrol.fo: main.xml gpl.xml style-fo.xsl
 	$(XSLTPROC)  \
