@@ -285,7 +285,7 @@ int main(int argc, char **argv)
 		}
 		proxy = ddcci_dbus_open_proxy();
 		if (proxy == NULL) {
-			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DBUS=1.\n"));
+			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));
 			exit(1);
 		}
 	}
