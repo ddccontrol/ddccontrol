@@ -49,6 +49,7 @@ static int dbus_monitor_writectrl(struct monitor *mon, unsigned char ctrl, unsig
 static int dbus_monitor_close(struct monitor *mon)
 {
 	// TODO: think about architecture, maybe notify D-Bus daemon?
+	return 0;
 }
 
 static const struct monitor_vtable dbus_monitor_vtable = {
