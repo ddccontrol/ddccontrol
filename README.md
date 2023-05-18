@@ -51,6 +51,12 @@ sudo make install
 
 Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
 
+## Contributing to the Monitor Database
+
+Follow the instructions on https://github.com/ddccontrol/ddccontrol-db/blob/master/doc/how-to-add-a-monitor.md for inclusion. 
+It often merely involves adapting a few standard capabilities as many [pull requests](https://github.com/ddccontrol/ddccontrol-db/pulls) show.
+
+
 ## Usage
 
 ### From GUI using gddccontrol
