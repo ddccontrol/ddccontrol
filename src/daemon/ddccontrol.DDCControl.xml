@@ -31,9 +31,9 @@
       <arg name="value"   type="u" direction="in"  />
     </method>
     <signal name="ControlChanged">
-      <arg name="device"  type="s" direction="in"  />
-      <arg name="control" type="u" direction="in"  />
-      <arg name="value"   type="u" direction="in"  />
+      <arg name="device"  type="s" direction="out"  />
+      <arg name="control" type="u" direction="out"  />
+      <arg name="value"   type="u" direction="out"  />
     </signal>
   </interface>
 </node>
