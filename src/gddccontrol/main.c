@@ -169,7 +169,7 @@ static gboolean window_changed(GtkWidget *widget,
 				gpointer user_data)
 {
 	if (num_monitor == 2) { // If there are more than two monitors, we need a configuration menu
-		int cx, cy, i;
+		int i;
 		struct monitorlist* current;
 		
 		if (monlist == NULL) {
@@ -185,9 +185,6 @@ static gboolean window_changed(GtkWidget *widget,
 			//printf("i : %d\n", i);
 			return FALSE;
 		}
-		
-		cx = event->x + (event->width/2);
-		cy = event->y + (event->height/2);
 		
 		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
 		
