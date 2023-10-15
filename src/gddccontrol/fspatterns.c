@@ -159,13 +159,11 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	
 	color.red = color.green = color.blue = 0x8000;
 	gdk_cairo_set_source_color(gc, &color);
-	// gdk_draw_rectangle(pixmap, gc, TRUE, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
 	cairo_rectangle(gc, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
 	cairo_fill(gc);
 	
 	color.red = color.green = color.blue = 0x0000;
 	gdk_cairo_set_source_color(gc, &color);
-	//gdk_draw_layout(pixmap, gc, (width-label_width)/2, 3*height/8, layout);
 	cairo_move_to(gc, (width-label_width)/2, 3*height/8);
 	pango_cairo_show_layout(gc, layout);
 	
@@ -195,7 +193,6 @@ static void show_pattern(gchar* patternname)
 	cairo_t* gc = gdk_cairo_create(pixmap);
 	color.red = color.green = color.blue = 0x0000;
 	gdk_cairo_set_source_color(gc, &color);
-	// gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, drect.width, drect.height);
 	cairo_rectangle(gc, 0, 0, drect.width, drect.height);
 	cairo_fill(gc);
 	if (g_str_equal(patternname, "brightnesscontrast")) {
@@ -217,15 +214,11 @@ static void show_pattern(gchar* patternname)
 		
 		/* Fujitsu-Siemens blank lines for auto level (0xfe). */
 		color.red = color.green = color.blue = 0xFFFF;
-
 		gdk_cairo_set_source_color(gc, &color);
 		cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
-		// gdk_draw_line(pixmap, gc, 0, (drect.height)/24, drect.width, (drect.height)/24);
 		cairo_move_to(gc, 0, (drect.height)/24);
 		cairo_line_to(gc, drect.width, (drect.height)/24);
 		cairo_stroke(gc);
-
-		// gdk_draw_line(pixmap, gc, 0, (23*drect.height)/24, drect.width, (23*drect.height)/24);
 		cairo_move_to(gc, 0, (23*drect.height)/24);
 		cairo_line_to(gc, drect.width, (23*drect.height)/24);
 		cairo_stroke(gc);
@@ -264,12 +257,12 @@ static void show_pattern(gchar* patternname)
 					color.blue = 0xFFFF;
 				}
 				gdk_cairo_set_source_color(gc, &color);
-				// gdk_draw_line(pixmap, gc, x+dsize, y, x+dsize, y+csize);
+				// TODO maybe +0.5f pixel
 				cairo_move_to(gc, x+dsize, y);
 				cairo_line_to(gc, x+dsize, y+csize);
 				cairo_stroke(gc);
 				
-				// gdk_draw_line(pixmap, gc, x, y+dsize, x+csize, y+dsize);
+				// TODO maybe +0.5f pixel
 				cairo_move_to(gc, x, y+dsize);
 				cairo_line_to(gc, x+csize, y+dsize);
 				cairo_stroke(gc);
