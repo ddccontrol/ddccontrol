@@ -41,11 +41,10 @@ static GtkWidget* images[4] = {NULL, NULL, NULL, NULL}; /* top-bottom-left-right
 
 static void destroy(GtkWidget *widget, gpointer data)
 {
-	
-	gtk_widget_ref(vbox);
+	g_object_ref(vbox);
 	gtk_container_remove(GTK_CONTAINER(centervbox), vbox);
 	gtk_box_pack_start(GTK_BOX(monmainvbox), vbox, 0, 5, 5);
-	gtk_widget_unref(vbox);
+	g_object_unref(vbox);
 	
 	gtk_widget_hide(fs_patterns_window);
 }
@@ -145,11 +144,15 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	GdkColor color;
 	color.red = color.green = color.blue = 0xFFFF;
 	gdk_cairo_set_source_color(gc, &color);
-	
+
+	// TODO
 	int x, y;
 	for (x = 0; x < width; x += 1) {
 		for (y = x%2; y < height; y += 2) {
-			gdk_draw_point(pixmap, gc, x, y);
+			// gdk_draw_point(pixmap, gc, x, y);
+			cairo_move_to(gc, x, y);
+			cairo_line_to(gc, x, y);
+			cairo_stroke(gc);
 		}
 	}
 	
@@ -167,7 +170,7 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	cairo_move_to(gc, (width-label_width)/2, 3*height/8);
 	pango_cairo_show_layout(gc, layout);
 	
-	g_object_unref(gc);
+	//g_object_unref(gc);
 }
 
 static void show_pattern(gchar* patternname)
@@ -196,9 +199,10 @@ static void show_pattern(gchar* patternname)
 	gdk_cairo_set_source_color(gc, &color);
 	cairo_rectangle(gc, 0, 0, drect.width, drect.height);
 	cairo_fill(gc);
+	// TODO turn this string matching into an Enum or similar
 	if (g_str_equal(patternname, "brightnesscontrast")) {
 		drawShade(pixmap, drect.height/8, drect.height/8, 21);
-		
+
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_cairo_set_source_color(gc, &color);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
@@ -217,11 +221,12 @@ static void show_pattern(gchar* patternname)
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_cairo_set_source_color(gc, &color);
 		cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
-		cairo_move_to(gc, 0, (drect.height)/24);
-		cairo_line_to(gc, drect.width, (drect.height)/24);
+		// TODO this line is off by .5 pixels and I don't understand why
+		cairo_move_to(gc, 0, 0.5f+((float)((drect.height)/24)));
+		cairo_line_to(gc, drect.width, 0.5f+((float)((drect.height)/24)));
 		cairo_stroke(gc);
-		cairo_move_to(gc, 0, (23*drect.height)/24);
-		cairo_line_to(gc, drect.width, (23*drect.height)/24);
+		cairo_move_to(gc, 0, (23*drect.height)/24+0.5f);
+		cairo_line_to(gc, drect.width, (23*drect.height)/24+0.5f);
 		cairo_stroke(gc);
 	}
 	else if (g_str_equal(patternname, "moire")) {
@@ -284,8 +289,6 @@ static void show_pattern(gchar* patternname)
 		pango_cairo_show_layout(gc, layout);
 	}
 	
-	g_object_unref(gc);
-	
 	GdkPixbuf* pixbufs[4];
 	
 	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, drect.width, top);
@@ -337,10 +340,10 @@ void fullscreen_callback(GtkWidget *widget, gpointer data) {
 	if (!fs_patterns_window)
 		create_fullscreen_patterns_window();
 	
-	gtk_widget_ref(vbox);
+	g_object_ref(vbox);
 	gtk_container_remove(GTK_CONTAINER(monmainvbox), vbox);
 	gtk_box_pack_start(GTK_BOX(centervbox), vbox, 0, 5, 5);
-	gtk_widget_unref(vbox);
+	g_object_unref(vbox);
 	
 	show_pattern(g_object_get_data(G_OBJECT(widget),"pattern"));
 }
