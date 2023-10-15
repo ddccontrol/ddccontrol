@@ -84,6 +84,7 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 	
 	cairo_t* gc = gdk_cairo_create(pixmap);
 	cairo_t* gcwhite = gdk_cairo_create(pixmap);
+	cairo_set_line_cap(gcwhite, CAIRO_LINE_CAP_SQUARE);
 	
 	int width, height;
 	gdk_pixmap_get_size(pixmap, &width, &height);
@@ -109,7 +110,6 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 		cairo_line_to(gcwhite, x_position, y_position-1);
 		cairo_stroke(gcwhite);
 		// draw tick at shade border (top)
-		cairo_set_line_cap(gcwhite, CAIRO_LINE_CAP_SQUARE);
 		cairo_move_to(gcwhite, x_position, y_position+shade_height);
 		cairo_line_to(gcwhite, x_position, y_position+shade_height+5);
 		cairo_stroke(gcwhite);
@@ -130,7 +130,6 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 	cairo_line_to(gcwhite, x_position, y_position-1);
 	cairo_stroke(gcwhite);
 	// draw tick at shade border (top)
-	cairo_set_line_cap(gcwhite, CAIRO_LINE_CAP_SQUARE);
 	cairo_move_to(gcwhite, x_position, y_position+shade_height);
 	cairo_line_to(gcwhite, x_position, y_position+shade_height+5);
 	cairo_stroke(gcwhite);
@@ -142,6 +141,7 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text) {
 	int label_width, label_height;
 	cairo_t* gc = gdk_cairo_create(pixmap);
+	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
 	GdkColor color;
 	color.red = color.green = color.blue = 0xFFFF;
 	gdk_cairo_set_source_color(gc, &color);
@@ -191,6 +191,7 @@ static void show_pattern(gchar* patternname)
 	int label_width, label_height;
 	GdkColor color;
 	cairo_t* gc = gdk_cairo_create(pixmap);
+	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
 	color.red = color.green = color.blue = 0x0000;
 	gdk_cairo_set_source_color(gc, &color);
 	cairo_rectangle(gc, 0, 0, drect.width, drect.height);
