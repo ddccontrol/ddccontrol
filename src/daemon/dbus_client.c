@@ -120,7 +120,7 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 	return 0;
 }
 
-int ddcci_dbus_readctrl(DDCControl *proxy, char *fn,
+int ddcci_dbus_readctrl(DDCControl *proxy, const char *fn,
                         unsigned char ctrl, unsigned short *value, unsigned short *maximum)
 {
 	int result;
@@ -136,7 +136,7 @@ int ddcci_dbus_readctrl(DDCControl *proxy, char *fn,
 	}
 }
 
-int ddcci_dbus_writectrl(DDCControl *proxy, char *fn,
+int ddcci_dbus_writectrl(DDCControl *proxy, const char *fn,
                          unsigned char ctrl, unsigned short value)
 {
 	GError *error = NULL;
