@@ -11,15 +11,6 @@ use it. To launch this GUI, simply type:</para>
 </screen>
 </sect1>
 <sect1>
-   <title>Gnome panel applet</title>
-   <para>If Gnome&gt;=2.10 is installed on your computer, the configure process will
-      detect it, and build the Gnome panel applet.</para>
-   <para>The Gnome panel applet is useful to switch between different monitor profiles
-      created with the GTK+ GUI. To add it to your Gnome Panel, simply right-click on
-      the panel, choose <quote>Add to Panel</quote>, and select
-      <quote>Monitor Profile Switcher</quote>.</para>
-</sect1>
-<sect1>
 <title>Command line tool</title>
 <para>The command line tool is useful for debugging purpose, and to create
 automatic scripts.</para>

@@ -12,9 +12,6 @@ src/gddccontrol/gddccontrol.desktop.in
 src/gddccontrol/gprofile.c
 src/gddccontrol/main.c
 src/gddccontrol/notebook.c
-src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in
-src/gnome-ddcc-applet/GNOME_ddcc-applet.xml
-src/gnome-ddcc-applet/ddcc-applet.c
 src/lib/conf.c
 src/lib/ddcci.c
 src/lib/monitor_db.c

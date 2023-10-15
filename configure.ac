@@ -177,29 +177,9 @@ if test x$support_gnome = xyes; then
    fi
 fi
 
-support_gnome_applet=yes
-AC_ARG_ENABLE(	gnome-applet,
-		AS_HELP_STRING([--disable-gnome-applet],[disable build of gnome panel applet (enabled)]),
-		[if test x$enableval = xno; then
-			support_gnome_applet=no
-		fi])
-
-
-# This should use PKG_CHECK_MODULES() instead of explicitly calling $PKG_CONFIG.
-GNOME_APPLET=
-if test x$support_gnome_applet = xyes; then
-	if $PKG_CONFIG --atleast-version=2.10 libpanelapplet-2.0 ; then
-		GNOME_APPLET="gnome-ddcc-applet"
-	    GNOME_LDFLAGS="$LIBXML2_LIBS `$PKG_CONFIG --libs gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
-	    GNOME_CFLAGS="$LIBXML2_CFLAGS `$PKG_CONFIG --cflags gtk+-2.0 gthread-2.0 libpanelapplet-2.0`"
-	fi
-fi
-
-
 AC_SUBST([GNOME_LDFLAGS])
 AC_SUBST([GNOME_CFLAGS])
 AC_SUBST([GDDCCONTROL])
-AC_SUBST([GNOME_APPLET])
 
 PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.30.0],[CFLAGS="${GIO_UNIX_CFLAGS} ${CFLAGS}" LIBS="${GIO_UNIX_LIBS} ${LIBS}"])
 
@@ -294,7 +274,6 @@ AC_CONFIG_FILES([
 	src/ddccontrol/Makefile
 	src/gddccontrol/Makefile
 	src/ddcpci/Makefile
-	src/gnome-ddcc-applet/Makefile
 	doc/Makefile
 	doc/main.xml
 	man/Makefile])
