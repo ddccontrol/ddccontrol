@@ -12,9 +12,9 @@ Release Check List (Nicolas Boichat)
 
 # Test with other distributions linux headers
 # Fedora: glibc-kernheaders package
-- CFLAGS="-I/home/nicolas/dev/ddcci/headers/FC4/include" ./configure --disable-gnome --disable-gnome-applet && make clean all
+- CFLAGS="-I/home/nicolas/dev/ddcci/headers/FC4/include" ./configure --disable-gnome && make clean all
 # Debian: http://packages.debian.org/testing/devel/linux-kernel-headers
-- CFLAGS="-I/home/nicolas/dev/ddcci/headers/Debian/include" ./configure --disable-gnome --disable-gnome-applet && make clean all
+- CFLAGS="-I/home/nicolas/dev/ddcci/headers/Debian/include" ./configure --disable-gnome && make clean all
 
 # Set back default config
 - ./configure --enable-maintainter-mode --enable-doc && make
