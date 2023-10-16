@@ -120,6 +120,7 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
 		cairo_move_to(gcwhite, x_position+(shade_width-label_width)/2, y_position+shade_height+2);
 		pango_cairo_show_layout(gcwhite, layout);
+		g_object_unref(layout);
 		
 		x_position += shade_width;
 		color.red = color.green = color.blue = (shade_index+1)*0xFFFF/(shade_count-1);
@@ -132,9 +133,9 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 	cairo_move_to(gcwhite, x_position, y_position+shade_height);
 	cairo_line_to(gcwhite, x_position, y_position+shade_height+5);
 	cairo_stroke(gcwhite);
-	
-	//g_object_unref(gc);
-	//g_object_unref(gcwhite);
+
+	cairo_destroy(gc);
+	cairo_destroy(gcwhite);
 }
 
 static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text) {
@@ -169,8 +170,9 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	gdk_cairo_set_source_color(gc, &color);
 	cairo_move_to(gc, (width-label_width)/2, 3*height/8);
 	pango_cairo_show_layout(gc, layout);
+	g_object_unref(layout);
 	
-	//g_object_unref(gc);
+	cairo_destroy(gc);
 }
 
 static void show_pattern(gchar* patternname)
@@ -216,6 +218,7 @@ static void show_pattern(gchar* patternname)
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
 		cairo_move_to(gc, (drect.width-label_width)/2, 3*drect.height/8);
 		pango_cairo_show_layout(gc, layout);
+		g_object_unref(layout);
 		
 		/* Fujitsu-Siemens blank lines for auto level (0xfe). */
 		color.red = color.green = color.blue = 0xFFFF;
@@ -287,14 +290,17 @@ static void show_pattern(gchar* patternname)
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
 		cairo_move_to(gc, (drect.width-label_width)/2, drect.height/8);
 		pango_cairo_show_layout(gc, layout);
+		g_object_unref(layout);
 	}
-	
+	cairo_destroy(gc);
+
 	GdkPixbuf* pixbufs[4];
 	
 	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, drect.width, top);
 	pixbufs[1] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, bottom, 0, 0, drect.width, drect.height-bottom);
 	pixbufs[2] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, top, 0, 0, left, bottom-top);
 	pixbufs[3] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, right, top, 0, 0, drect.width-right, bottom-top);
+	g_object_unref(pixmap);
 	
 	if (images[0])
 	{ /* GtkImages already exist */
@@ -307,7 +313,6 @@ static void show_pattern(gchar* patternname)
 		for (i = 0; i < 4; i++) {
 			images[i] = gtk_image_new_from_pixbuf(pixbufs[i]);
 			gtk_widget_show(images[i]);
-			g_object_unref(pixbufs[i]);
 		}
 		
 		gtk_table_attach(GTK_TABLE(table), images[0],       0, 3, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
@@ -316,6 +321,9 @@ static void show_pattern(gchar* patternname)
 		gtk_table_attach(GTK_TABLE(table), images[3],       2, 3, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
 		gtk_table_attach(GTK_TABLE(table), images[1],       0, 3, 2, 3, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
 		gtk_widget_show(table);
+	}
+	for (i = 0; i < 4; i++) {
+		g_object_unref(pixbufs[i]);
 	}
 	
 	gtk_widget_set_size_request(scrolled_window, right-left, bottom-top);
