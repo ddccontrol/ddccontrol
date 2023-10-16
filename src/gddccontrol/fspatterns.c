@@ -175,6 +175,55 @@ static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text)
 	cairo_destroy(gc);
 }
 
+static void draw_color_crosses(GdkDrawable* pixmap, int width, int height) {
+	const int cross_size = 51;
+	const int arm_length = 25;
+
+	cairo_t* gc = gdk_cairo_create(pixmap);
+	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
+	cairo_set_line_width(gc, 1);
+	
+	GdkColor color;
+	
+	int x, y, color_index = 0, color_column = 0;
+	for (x = 0; x < width; x += cross_size) {
+		color_index = color_column;
+		for (y = 0; y < height; y += cross_size) {
+			color.red = 0x0000;
+			color.green = 0x0000;
+			color.blue = 0x0000;
+			switch (color_index % 4) {
+			case 0:
+				color.red = 0xFFFF;
+				break;
+			case 1:
+				color.green = 0xFFFF;
+				break;
+			case 2:
+				color.blue = 0xFFFF;
+				break;
+			default:
+				color.red = 0xFFFF;
+				color.green = 0xFFFF;
+				color.blue = 0xFFFF;
+			}
+			gdk_cairo_set_source_color(gc, &color);
+			
+			cairo_move_to(gc, 0.5f+x+arm_length, 0.5f+y);
+			cairo_line_to(gc, 0.5f+x+arm_length, 0.5f+y+cross_size);
+			cairo_stroke(gc);
+			
+			cairo_move_to(gc, 0.5f+x, 0.5f+y+arm_length);
+			cairo_line_to(gc, 0.5f+x+cross_size, 0.5f+y+arm_length);
+			cairo_stroke(gc);
+			
+			color_index++;
+		}
+		color_column++;
+	}
+	cairo_destroy(gc);
+}
+
 static void show_pattern(gchar* patternname)
 {
 	// TODO create and draw fullscreen window instead which we can close with [ESC] key
@@ -241,44 +290,7 @@ static void show_pattern(gchar* patternname)
 			  "Adjust Image Lock Fine to minimize movement on the screen."));
 	}
 	else if (g_str_equal(patternname, "misconvergence")) {
-		const int csize = 51;
-		const int dsize = 25;
-		int x, y, c = 0, d = 0;
-		for (x = 0; x < drect.width; x += csize) {
-			c = d;
-			for (y = 0; y < drect.height; y += csize) {
-				color.red = 0x0000;
-				color.green = 0x0000;
-				color.blue = 0x0000;
-				switch (c % 4) {
-				case 0:
-					color.red = 0xFFFF;
-					break;
-				case 1:
-					color.green = 0xFFFF;
-					break;
-				case 2:
-					color.blue = 0xFFFF;
-					break;
-				default:
-					color.red = 0xFFFF;
-					color.green = 0xFFFF;
-					color.blue = 0xFFFF;
-				}
-				gdk_cairo_set_source_color(gc, &color);
-				// TODO maybe +0.5f pixel
-				cairo_move_to(gc, x+dsize, y);
-				cairo_line_to(gc, x+dsize, y+csize);
-				cairo_stroke(gc);
-				
-				// TODO maybe +0.5f pixel
-				cairo_move_to(gc, x, y+dsize);
-				cairo_line_to(gc, x+csize, y+dsize);
-				cairo_stroke(gc);
-				c++;
-			}
-			d++;
-		}
+		draw_color_crosses(pixmap, drect.width, drect.height);
 	}
 	else {
 		color.red = color.green = color.blue = 0xFFFF;
