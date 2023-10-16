@@ -141,31 +141,27 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text) {
 	int label_width, label_height;
 	cairo_t* gc = gdk_cairo_create(pixmap);
-	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
 	GdkColor color;
 	color.red = color.green = color.blue = 0xFFFF;
 	gdk_cairo_set_source_color(gc, &color);
 
-	// TODO
+	// draw checker pattern (alternating white pixels)
 	int x, y;
 	for (x = 0; x < width; x += 1) {
 		for (y = x%2; y < height; y += 2) {
-			// gdk_draw_point(pixmap, gc, x, y);
-			cairo_move_to(gc, x, y);
-			cairo_line_to(gc, x, y);
-			cairo_stroke(gc);
+			cairo_rectangle(gc, x, y, 1, 1);
+			cairo_fill(gc);
 		}
 	}
-	
+
+	// draw black label on grey background
 	PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 	pango_layout_set_markup(layout, text, -1);
 	pango_layout_get_pixel_size(layout, &label_width, &label_height);
-	
 	color.red = color.green = color.blue = 0x8000;
 	gdk_cairo_set_source_color(gc, &color);
 	cairo_rectangle(gc, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
 	cairo_fill(gc);
-	
 	color.red = color.green = color.blue = 0x0000;
 	gdk_cairo_set_source_color(gc, &color);
 	cairo_move_to(gc, (width-label_width)/2, 3*height/8);
