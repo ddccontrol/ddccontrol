@@ -76,7 +76,7 @@ static void create_fullscreen_patterns_window()
 	gtk_widget_show(scrolled_window);
 }
 
-static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int shade_count) {
+static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, int shade_count) {
 	GdkColor color;
 	PangoLayout* layout;
 	gchar* tmp;
@@ -138,7 +138,7 @@ static void drawShade(GdkDrawable* pixmap, int y_position, int shade_height, int
 	cairo_destroy(gcwhite);
 }
 
-static void drawchecker(GdkDrawable* pixmap, int width, int height, gchar* text) {
+static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text) {
 	int label_width, label_height;
 	cairo_t* gc = gdk_cairo_create(pixmap);
 	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
@@ -252,7 +252,7 @@ static void show_pattern(gchar* patternname)
 	cairo_fill(gc);
 	// TODO turn this string matching into an Enum or similar
 	if (g_str_equal(patternname, "brightnesscontrast")) {
-		drawShade(pixmap, drect.height/8, drect.height/8, 21);
+		draw_shade(pixmap, drect.height/8, drect.height/8, 21);
 
 		color.red = color.green = color.blue = 0xFFFF;
 		gdk_cairo_set_source_color(gc, &color);
@@ -282,10 +282,10 @@ static void show_pattern(gchar* patternname)
 		cairo_stroke(gc);
 	}
 	else if (g_str_equal(patternname, "moire")) {
-		drawchecker(pixmap, drect.width, drect.height, _("Try to make moire patterns disappear."));
+		draw_checker(pixmap, drect.width, drect.height, _("Try to make moire patterns disappear."));
 	}
 	else if (g_str_equal(patternname, "clock")) {
-		drawchecker(pixmap, drect.width, drect.height,
+		draw_checker(pixmap, drect.width, drect.height,
 			_("Adjust Image Lock Coarse to make the vertical band disappear.\n"
 			  "Adjust Image Lock Fine to minimize movement on the screen."));
 	}
