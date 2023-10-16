@@ -162,17 +162,17 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 
 static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text) {
 	int label_width, label_height;
-	cairo_t* gc = gdk_cairo_create(pixmap);
+	cairo_t* cairo = gdk_cairo_create(pixmap);
 	GdkColor color;
 	color.red = color.green = color.blue = 0xFFFF;
-	gdk_cairo_set_source_color(gc, &color);
+	gdk_cairo_set_source_color(cairo, &color);
 
 	// draw checker pattern (alternating white pixels)
 	int x, y;
 	for (x = 0; x < width; x += 1) {
 		for (y = x%2; y < height; y += 2) {
-			cairo_rectangle(gc, x, y, 1, 1);
-			cairo_fill(gc);
+			cairo_rectangle(cairo, x, y, 1, 1);
+			cairo_fill(cairo);
 		}
 	}
 
@@ -181,25 +181,25 @@ static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text
 	pango_layout_set_markup(layout, text, -1);
 	pango_layout_get_pixel_size(layout, &label_width, &label_height);
 	color.red = color.green = color.blue = 0x8000;
-	gdk_cairo_set_source_color(gc, &color);
-	cairo_rectangle(gc, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
-	cairo_fill(gc);
+	gdk_cairo_set_source_color(cairo, &color);
+	cairo_rectangle(cairo, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
+	cairo_fill(cairo);
 	color.red = color.green = color.blue = 0x0000;
-	gdk_cairo_set_source_color(gc, &color);
-	cairo_move_to(gc, (width-label_width)/2, 3*height/8);
-	pango_cairo_show_layout(gc, layout);
+	gdk_cairo_set_source_color(cairo, &color);
+	cairo_move_to(cairo, (width-label_width)/2, 3*height/8);
+	pango_cairo_show_layout(cairo, layout);
 	g_object_unref(layout);
 	
-	cairo_destroy(gc);
+	cairo_destroy(cairo);
 }
 
 static void draw_color_crosses(GdkDrawable* pixmap, int width, int height) {
 	const int cross_size = 51;
 	const int arm_length = 25;
 
-	cairo_t* gc = gdk_cairo_create(pixmap);
-	cairo_set_line_cap(gc, CAIRO_LINE_CAP_SQUARE);
-	cairo_set_line_width(gc, 1);
+	cairo_t* cairo = gdk_cairo_create(pixmap);
+	cairo_set_line_cap(cairo, CAIRO_LINE_CAP_SQUARE);
+	cairo_set_line_width(cairo, 1);
 	
 	GdkColor color;
 	
@@ -225,21 +225,21 @@ static void draw_color_crosses(GdkDrawable* pixmap, int width, int height) {
 				color.green = 0xFFFF;
 				color.blue = 0xFFFF;
 			}
-			gdk_cairo_set_source_color(gc, &color);
+			gdk_cairo_set_source_color(cairo, &color);
 			
-			cairo_move_to(gc, 0.5f+x+arm_length, 0.5f+y);
-			cairo_line_to(gc, 0.5f+x+arm_length, 0.5f+y+cross_size);
-			cairo_stroke(gc);
+			cairo_move_to(cairo, 0.5f+x+arm_length, 0.5f+y);
+			cairo_line_to(cairo, 0.5f+x+arm_length, 0.5f+y+cross_size);
+			cairo_stroke(cairo);
 			
-			cairo_move_to(gc, 0.5f+x, 0.5f+y+arm_length);
-			cairo_line_to(gc, 0.5f+x+cross_size, 0.5f+y+arm_length);
-			cairo_stroke(gc);
+			cairo_move_to(cairo, 0.5f+x, 0.5f+y+arm_length);
+			cairo_line_to(cairo, 0.5f+x+cross_size, 0.5f+y+arm_length);
+			cairo_stroke(cairo);
 			
 			color_index++;
 		}
 		color_column++;
 	}
-	cairo_destroy(gc);
+	cairo_destroy(cairo);
 }
 
 static void show_pattern(gchar* patternname)
@@ -262,12 +262,12 @@ static void show_pattern(gchar* patternname)
 
 	// draw black background
 	GdkColor color;
-	cairo_t* gc = gdk_cairo_create(pixmap);
+	cairo_t* cairo = gdk_cairo_create(pixmap);
 	color.red = color.green = color.blue = 0x0000;
-	gdk_cairo_set_source_color(gc, &color);
-	cairo_rectangle(gc, 0, 0, drect.width, drect.height);
-	cairo_fill(gc);
-	cairo_destroy(gc);
+	gdk_cairo_set_source_color(cairo, &color);
+	cairo_rectangle(cairo, 0, 0, drect.width, drect.height);
+	cairo_fill(cairo);
+	cairo_destroy(cairo);
 
 	// TODO turn this string matching into an enum or similar
 	if (g_str_equal(patternname, "brightnesscontrast")) {
@@ -286,18 +286,18 @@ static void show_pattern(gchar* patternname)
 	}
 	else { // TODO when using enum above, this code can be deleted
 		int label_width, label_height;
-		cairo_t* gc = gdk_cairo_create(pixmap);
+		cairo_t* cairo = gdk_cairo_create(pixmap);
 		color.red = color.green = color.blue = 0xFFFF;
-		gdk_cairo_set_source_color(gc, &color);
+		gdk_cairo_set_source_color(cairo, &color);
 		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s"), patternname);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 		pango_layout_set_markup(layout, tmp, -1);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
-		cairo_move_to(gc, (drect.width-label_width)/2, drect.height/8);
-		pango_cairo_show_layout(gc, layout);
+		cairo_move_to(cairo, (drect.width-label_width)/2, drect.height/8);
+		pango_cairo_show_layout(cairo, layout);
 		g_object_unref(layout);
-		cairo_destroy(gc);
+		cairo_destroy(cairo);
 	}
 
 	GdkPixbuf* pixbufs[4];
