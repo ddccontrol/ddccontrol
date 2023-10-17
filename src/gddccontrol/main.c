@@ -184,7 +184,7 @@ static gboolean window_changed(GtkWidget *widget,
 			return FALSE;
 		}
 		
-		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
+		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
 		
 		if (i != current_monitor) {
 			int k = nextid;
@@ -589,7 +589,7 @@ int main( int argc, char *argv[] )
 		printf("%d: %d, %d %dx%d\n", nscreen, dest.x, dest.y, dest.width, dest.height);
 	}*/
 	
-	current_monitor = gdk_screen_get_monitor_at_window(screen, main_app_window->window);
+	current_monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(main_app_window));
 	
 	probe_monitors(NULL, NULL);
 	

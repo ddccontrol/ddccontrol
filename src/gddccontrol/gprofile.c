@@ -455,7 +455,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	tmp = g_strdup_printf("<span size='large' weight='ultrabold'>%s %s</span>", _("Profile information:"), profile->name);
 	gtk_label_set_markup(GTK_LABEL(label), tmp);
 	g_free(tmp);
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), label, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), label, FALSE, FALSE, 5);
 	gtk_widget_show(label);
 	
 	hbox = gtk_hbox_new(FALSE,0);
@@ -467,7 +467,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
 	gtk_widget_show(label);
 	
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), hbox, FALSE, FALSE, 5);
 	gtk_widget_show(hbox);
 	
 	hbox = gtk_hbox_new(FALSE,0);
@@ -482,12 +482,12 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	g_signal_connect(GTK_ENTRY(entry), "changed", G_CALLBACK(entry_modified_callback), dialog);
 	gtk_widget_show(entry);
 	
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), hbox, FALSE, FALSE, 5);
 	gtk_widget_show(hbox);
 	
 	GtkWidget* tree = create_info_tree(profile, dialog);
 	
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), tree, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), tree, FALSE, FALSE, 5);
 	gtk_widget_show(tree);
 	
 	gint result = gtk_dialog_run(GTK_DIALOG(dialog));

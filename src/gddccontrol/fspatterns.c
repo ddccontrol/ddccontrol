@@ -248,7 +248,7 @@ static void show_pattern(gchar* patternname)
 	GdkRectangle drect;
 	
 	GdkScreen* screen = gdk_screen_get_default();
-	int i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
+	int i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
 	gdk_screen_get_monitor_geometry(screen, i, &drect);
 		
 	int top = 7*drect.height/12, bottom = 11*drect.height/12, left = drect.width/3, right = 2*drect.width/3;
@@ -256,8 +256,9 @@ static void show_pattern(gchar* patternname)
 	gtk_widget_set_size_request(fs_patterns_window, drect.width, drect.height);
 	
 	gtk_window_move(GTK_WINDOW(fs_patterns_window), drect.x, drect.y);
-	
-	GdkDrawable* pixmap = gdk_pixmap_new(0, drect.width, drect.height, gdk_colormap_get_visual(gdk_colormap_get_system())->depth);
+
+	gint depth = gdk_visual_get_depth(gdk_visual_get_system());
+	GdkDrawable* pixmap = gdk_pixmap_new(0, drect.width, drect.height, depth);
 	gdk_drawable_set_colormap(pixmap, gdk_colormap_get_system());
 
 	// draw black background
