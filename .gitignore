@@ -28,6 +28,7 @@
 /missing
 /po/*.gmo
 /po/.intltool-merge-cache
+/po/.intltool-merge-cache.lock
 /po/Makefile.in.in
 /po/Makevars.template
 /po/POTFILES
