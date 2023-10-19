@@ -64,8 +64,6 @@ int num_monitor; /* total number of monitors */
 
 struct monitorlist* monlist;
 
-GtkTooltips *tooltips;
-
 gulong combo_box_changed_handler_id = 0;
 
 int mainrow = 0; /* Main center row in the table widget */
@@ -186,7 +184,7 @@ static gboolean window_changed(GtkWidget *widget,
 			return FALSE;
 		}
 		
-		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), main_app_window->window);
+		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
 		
 		if (i != current_monitor) {
 			int k = nextid;
@@ -331,7 +329,7 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 	g_object_set_data(G_OBJECT(button), "button_label", label);
 	
 	if (tool_tip) {
-		gtk_tooltips_set_tip(GTK_TOOLTIPS(tooltips), button, tool_tip, NULL);
+		gtk_widget_set_tooltip_text(GTK_WIDGET(button), tool_tip);
 	}
 	
 	return button;
@@ -355,7 +353,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	{
 		snprintf(buffer, 256, "%s: %s",
 			current->filename, current->name);
-		gtk_combo_box_append_text(GTK_COMBO_BOX(combo_box), buffer);
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), buffer);
 	}
 	
 	combo_box_changed_handler_id = g_signal_connect(G_OBJECT(combo_box), "changed", G_CALLBACK(combo_change), NULL);
@@ -414,8 +412,6 @@ int main( int argc, char *argv[] )
 	g_thread_init(NULL);
 	combo_change_mutex = g_mutex_new();
 	
-	tooltips = gtk_tooltips_new();
-	
 	/* Full screen patterns test */
 	/*create_fullscreen_patterns_window();
 	show_pattern();
@@ -468,7 +464,7 @@ int main( int argc, char *argv[] )
 	gtk_widget_show(label);
 	gtk_box_pack_start(GTK_BOX(choice_hbox),label, 0, 0, 0);
 	
-	combo_box = gtk_combo_box_new_text();
+	combo_box = gtk_combo_box_text_new();
 	
 	gtk_widget_show(combo_box);
 
@@ -593,7 +589,7 @@ int main( int argc, char *argv[] )
 		printf("%d: %d, %d %dx%d\n", nscreen, dest.x, dest.y, dest.width, dest.height);
 	}*/
 	
-	current_monitor = gdk_screen_get_monitor_at_window(screen, main_app_window->window);
+	current_monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(main_app_window));
 	
 	probe_monitors(NULL, NULL);
 	
