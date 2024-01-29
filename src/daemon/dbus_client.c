@@ -80,7 +80,7 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 		return -1;
 	}
 
-	strncpy(&mon->pnpid, pnpid, 7);
+	strncpy((char *)&mon->pnpid, pnpid, 7);
 	mon->pnpid[7] = 0;
 
 	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
