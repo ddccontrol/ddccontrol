@@ -1,0 +1,1342 @@
+# Georgian translation for ddcontrol.
+# Copyright (C) 2026 ddcontrol's authors.
+# This file is distributed under the same license as the ddcontrol package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ddcontrol\n"
+"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2024-01-29 22:16+0100\n"
+"PO-Revision-Date: 2026-03-24 17:19+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: ../src/ddccontrol/main.c:84
+#, c-format
+msgid ""
+"Usage:\n"
+"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (profile "
+"path)] [-p | dev]\n"
+"\tdev: device, e.g. dev:/dev/i2c-0\n"
+"\t-p : probe I2C devices to find monitor buses\n"
+"\t-c : query capability\n"
+"\t-d : query ctrls 0 - 255\n"
+"\t-r : query ctrl\n"
+"\t-w : value to write to ctrl\n"
+"\t-W : relatively change ctrl value (+/-)\n"
+"\t-f : force (avoid validity checks)\n"
+"\t-s : save settings\n"
+"\t-v : verbosity (specify more to increase)\n"
+"\t-b : ddccontrol-db directory (if other than %s)\n"
+"\t-l : load values from XML profile file\n"
+msgstr ""
+"გამოყენება:\n"
+"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (პროფილის "
+"ბილიკი)] [-p | dev]\n"
+"\tdev: device, e.g. dev:/dev/i2c-0\n"
+"\t-p : I2C მოწყობილობების ზონდირება ეკრანის სალტეების აღმოსაჩენად\n"
+"\t-c : შესაძლებლობის გამოთხოვა\n"
+"\t-d : კნტრლ ელემენტების გამოთხოვა 0 - 255\n"
+"\t-r : კნტრლ ელემენტების გამოთხოვა\n"
+"\t-w : კონტროლის ელემენტში ჩასაწერი მნიშვნელობა\n"
+"\t-W : კონტროლის ელემენტის მნიშვნელობის ფარდობითი ცვლილება (+/-)\n"
+"\t-f : ნაძალადევი (სისწორის შემოწმებების გამოტოვება)\n"
+"\t-s : პარამეტრების შენახვა\n"
+"\t-v : გამოტანილი შეტყობინებების დაწვრილმანება (გასაზრდელად მიუთითეთ ერთზე "
+"მეტჯერ)\n"
+"\t-b : ddccontrol-db საქაღალდე (თუ განსხვავდება მნიშვნელობისგან %s)\n"
+"\t-l : მნიშვნელობების წაკითხვა XML პროფილის ფაილიდან\n"
+
+#: ../src/ddccontrol/main.c:105 ../src/ddccontrol/main.c:127
+#, c-format
+msgid "Checking %s integrity...\n"
+msgstr "%s-ის მთლიანობის შემოწმება...\n"
+
+#: ../src/ddccontrol/main.c:107 ../src/ddccontrol/main.c:129
+#, c-format
+msgid "[ FAILED ]\n"
+msgstr "[ ჩავარდა ]\n"
+
+#: ../src/ddccontrol/main.c:111 ../src/ddccontrol/main.c:134
+#, c-format
+msgid "[ OK ]\n"
+msgstr "[ კარგია ]\n"
+
+#: ../src/ddccontrol/main.c:189
+#, c-format
+msgid ""
+"ddccontrol version %s\n"
+"Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+"Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"This program comes with ABSOLUTELY NO WARRANTY.\n"
+"You may redistribute copies of this program under the terms of the GNU "
+"General Public License.\n"
+"\n"
+msgstr ""
+"ddccontrol ვერსია %s\n"
+"Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+"Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"This program comes with ABSOLUTELY NO WARRANTY.\n"
+"You may redistribute copies of this program under the terms of the GNU "
+"General Public License.\n"
+"\n"
+
+#: ../src/ddccontrol/main.c:206
+#, c-format
+msgid "'%s' does not seem to be a valid register name\n"
+msgstr "'%s' რეგისტრის სწორ სახელს არ წააგავს\n"
+
+#: ../src/ddccontrol/main.c:212
+#, c-format
+msgid "You cannot use -w parameter without -r.\n"
+msgstr "პარამეტრს -w ვერ გამოიყენებთ პარამეტრის -r გარეშე.\n"
+
+#: ../src/ddccontrol/main.c:216 ../src/ddccontrol/main.c:226
+#, c-format
+msgid "'%s' does not seem to be a valid value.\n"
+msgstr "'%s' სწორ მნიშვნელობას არ წააგავს.\n"
+
+#: ../src/ddccontrol/main.c:222
+#, c-format
+msgid "You cannot use -W parameter without -r.\n"
+msgstr "პარამეტრს -W ვერ გამოიყენებთ პარამეტრის -r გარეშე.\n"
+
+#: ../src/ddccontrol/main.c:277 ../src/gddccontrol/main.c:421
+#, c-format
+msgid "Unable to initialize ddcci library.\n"
+msgstr "ბიბლიოთეკის ddcci ინიციალიზაცია შეუძლებელია.\n"
+
+#: ../src/ddccontrol/main.c:283
+#, c-format
+msgid "Unable to initialize ddcci db library.\n"
+msgstr "ddcci-ის მონაცემთა ბაზის ბიბლიოთეკის ინიციალიზაცია შეუძლებელია.\n"
+
+#: ../src/ddccontrol/main.c:288
+#, c-format
+msgid "Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"
+msgstr ""
+"D-Bus-ის პროქსის გახსნა ჩავარდა. სცადეთ გარემოს ცვლადით "
+"DDCCONTROL_NO_DAEMON=1.\n"
+
+#: ../src/ddccontrol/main.c:305
+#, c-format
+msgid "Detected monitors :\n"
+msgstr "აღმოჩენილი ეკრანები:\n"
+
+#: ../src/ddccontrol/main.c:309
+#, c-format
+msgid " - Device: %s\n"
+msgstr " - მოწყობილობა: %s\n"
+
+#: ../src/ddccontrol/main.c:310
+#, c-format
+msgid "   DDC/CI supported: %s\n"
+msgstr "   DDC/CI მხარდაჭერილია: %s\n"
+
+#: ../src/ddccontrol/main.c:310
+msgid "Yes"
+msgstr "დიახ"
+
+#: ../src/ddccontrol/main.c:310
+msgid "No"
+msgstr "არა"
+
+#: ../src/ddccontrol/main.c:311
+#, c-format
+msgid "   Monitor Name: %s\n"
+msgstr "   ეკრანის სახელი: %s\n"
+
+#: ../src/ddccontrol/main.c:312
+#, c-format
+msgid "   Input type: %s\n"
+msgstr "   შეყვანის ტიპი: %s\n"
+
+#: ../src/ddccontrol/main.c:312 ../src/ddccontrol/main.c:355
+msgid "Digital"
+msgstr "ციფრული"
+
+#: ../src/ddccontrol/main.c:312 ../src/ddccontrol/main.c:355
+msgid "Analog"
+msgstr "ანალოგური"
+
+#: ../src/ddccontrol/main.c:315
+#, c-format
+msgid "  (Automatically selected)\n"
+msgstr "  (ავტომატურად არჩეული)\n"
+
+#: ../src/ddccontrol/main.c:325
+#, c-format
+msgid ""
+"No monitor supporting DDC/CI available.\n"
+"If your graphics card need it, please check all the required kernel modules "
+"are loaded (i2c-dev, and your framebuffer driver).\n"
+msgstr ""
+"DDC/CI-ის მხარდაჭერის მქონე ეკრანი ხელმისაწვდომი არაა.\n"
+"თუ თქვენს გრაფიკულ ბარათს ეს სჭირდება, შეამოწმეთ, ჩატვირთულია, თუ არა ყველა "
+"საჭირო ბირთვის მოდული (i2c-dev და თქვენი framebuffer-ის დრაივერი).\n"
+
+#: ../src/ddccontrol/main.c:337
+#, c-format
+msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
+msgstr "EDID-ის წაკითხვა და DDC/CI-ის ინიციალიზაცია სალტესთან %s...\n"
+
+#: ../src/ddccontrol/main.c:348
+#, c-format
+msgid ""
+"\n"
+"DDC/CI at %s is unusable (%d).\n"
+"If your graphics card need it, please check all the required kernel modules "
+"are loaded (i2c-dev, and your framebuffer driver).\n"
+msgstr ""
+"\n"
+"DDC/CI მისამართზე %s გამოუსადეგარია (%d).\n"
+"თუ თქვენს გრაფიკულ ბარათს ეს სჭირდება, შეამოწმეთ, ჩატვირთულია, თუ არა ყველა "
+"საჭირო ბირთვის მოდული (i2c-dev და თქვენი framebuffer-ის დრაივერი).\n"
+
+#: ../src/ddccontrol/main.c:352
+#, c-format
+msgid ""
+"\n"
+"EDID readings:\n"
+msgstr ""
+"\n"
+"EDID-ის მნიშვნელობები:\n"
+
+#: ../src/ddccontrol/main.c:353
+#, c-format
+msgid "\tPlug and Play ID: %s [%s]\n"
+msgstr "\tPlug and Play ID: %s [%s]\n"
+
+#: ../src/ddccontrol/main.c:355
+#, c-format
+msgid "\tInput type: %s\n"
+msgstr "\tშეყვანის ტიპი: %s\n"
+
+#. Put a big warning (in red if we are writing to a terminal).
+#: ../src/ddccontrol/main.c:359 ../src/ddccontrol/main.c:377
+msgid "=============================== WARNING ==============================="
+msgstr ""
+"=============================== გაფრთხილება ==============================="
+
+#: ../src/ddccontrol/main.c:362
+#, c-format
+msgid ""
+"There is no support for your monitor in the database, but ddccontrol is\n"
+"using a generic profile for your monitor's manufacturer. Some controls\n"
+"may not be supported, or may not work as expected.\n"
+msgstr ""
+"თქვენი ეკრანის მხარდაჭერა მონაცემთა ბაზაში არ არსებობს, მაგრამ ddccontrol "
+"იყენებს\n"
+"ზოგად პროფილს თქვენი ეკრანის მწარმოებლისთვის. შეიძლება, ზოგიერთი კონტროლის "
+"ელემენტი\n"
+"მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც მოელით.\n"
+
+#: ../src/ddccontrol/main.c:367
+#, c-format
+msgid ""
+"There is no support for your monitor in the database, but ddccontrol is\n"
+"using a basic generic profile. Many controls will not be supported, and\n"
+"some controls may not work as expected.\n"
+msgstr ""
+"თქვენი ეკრანის მხარდაჭერა მონაცემთა ბაზაში არ არსებობს, მაგრამ ddccontrol "
+"იყენებს\n"
+"საბაზისო ზოგად პროფილს თქვენი ეკრანის მწარმოებლისთვის. შეიძლება, ზოგიერთი\n"
+"კონტროლის ელემენტი მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც მოელით.\n"
+
+#: ../src/ddccontrol/main.c:372
+#, c-format
+msgid ""
+"Please update ddccontrol-db, or, if you are already using the latest\n"
+"version, please send the output of the following command to\n"
+"ddccontrol-users@lists.sourceforge.net:\n"
+msgstr ""
+"განაახლეთ ddccontrol-db, ან, თუ უკვე იყენებთ უახლეს ვერსიას,\n"
+"გამოგვიგზავნეთ შემდეგი ბრძანების გამოტანილი ინფორმაცია ელფოსტაზე\n"
+"ddccontrol-users@lists.sourceforge.net:\n"
+
+#: ../src/ddccontrol/main.c:376 ../src/gddccontrol/notebook.c:695
+#, c-format
+msgid "Thank you.\n"
+msgstr "მადლობა.\n"
+
+#: ../src/ddccontrol/main.c:381
+#, c-format
+msgid ""
+"\n"
+"Capabilities:\n"
+msgstr ""
+"\n"
+"შესაძლებლობები:\n"
+
+#: ../src/ddccontrol/main.c:385
+#, c-format
+msgid "Raw output: %s\n"
+msgstr "დაუმუშავებელი გამოტანა: %s\n"
+
+#: ../src/ddccontrol/main.c:387
+#, c-format
+msgid "Parsed output: \n"
+msgstr "დამუშავებული გამოტანა:\n"
+
+#: ../src/ddccontrol/main.c:396
+#, c-format
+msgid "\tType: "
+msgstr "\tტიპი: "
+
+#: ../src/ddccontrol/main.c:399
+#, c-format
+msgid "LCD"
+msgstr "LCD"
+
+#: ../src/ddccontrol/main.c:402
+#, c-format
+msgid "CRT"
+msgstr "CRT"
+
+#: ../src/ddccontrol/main.c:405
+#, c-format
+msgid "Unknown"
+msgstr "უცნობი"
+
+#: ../src/ddccontrol/main.c:414
+#, c-format
+msgid "Capabilities read fail.\n"
+msgstr "შესაძლებლობების წაკითხვა ჩავარდა.\n"
+
+#: ../src/ddccontrol/main.c:428
+#, c-format
+msgid "Value cannot be lower than zero! %d -> %d\n"
+msgstr "მნიშვნელობა ნულზე ნაკლები ვერ იქნება! %d -> %d\n"
+
+#: ../src/ddccontrol/main.c:431
+#, c-format
+msgid "Value cannot be higher than maximum! %d / %d\n"
+msgstr "მნიშვნელობა მაქსიმუმს ვერ გადააჭარბებს! %d / %d\n"
+
+#: ../src/ddccontrol/main.c:439
+#, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d) (%dms delay)...\n"
+msgstr ""
+"\n"
+"იწერება 0x%02x, 0x%02x(%d) (%dმწმ დაყოვნება)...\n"
+
+#: ../src/ddccontrol/main.c:442
+#, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d)...\n"
+msgstr ""
+"\n"
+"იწერება 0x%02x, 0x%02x(%d)...\n"
+
+#: ../src/ddccontrol/main.c:447
+#, c-format
+msgid ""
+"\n"
+"Reading 0x%02x...\n"
+msgstr ""
+"\n"
+"მიმდინარეობს კითხვა 0x%02x...\n"
+
+#: ../src/ddccontrol/main.c:456
+#, c-format
+msgid "Applied profile: %s\n"
+msgstr "გადატარებული პროფილი: %s\n"
+
+#: ../src/ddccontrol/main.c:458
+#, c-format
+msgid "Failed to apply profile: %s\n"
+msgstr "პროფილის გადატარება ჩავარდა: %s\n"
+
+#: ../src/ddccontrol/main.c:462
+#, c-format
+msgid ""
+"\n"
+"Controls (valid/current/max) [Description - Value name]:\n"
+msgstr ""
+"\n"
+"კონტროლის ელემენტები (სწორი/მიმდინარე/მას) [აღწერა - მნიშვნელობის სახელი]:\n"
+
+#: ../src/ddccontrol/main.c:484
+#, c-format
+msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
+msgstr "\t\t> id=%s, სახელი=%s, მისამართი=%#x, დაყოვნება=%dმწმ, ტიპი=%d\n"
+
+#: ../src/ddccontrol/main.c:489
+#, c-format
+msgid "\t\t  Possible values:\n"
+msgstr "\t\t  შესაძლო მნიშვნელობები:\n"
+
+#: ../src/ddccontrol/main.c:493
+#, c-format
+msgid "\t\t\t> id=%s - name=%s, value=%d\n"
+msgstr "\t\t\t> id=%s - სახელი=%s, მნიშვნელობა=%d\n"
+
+#: ../src/ddccontrol/main.c:503
+#, c-format
+msgid "\t\t  supported, value=%d, maximum=%d\n"
+msgstr "\t\t  მხარდაჭერილია. მნიშვნელობა=%d, მაქსიმუმი=%d\n"
+
+#: ../src/ddccontrol/main.c:504
+#, c-format
+msgid "\t\t  not supported, value=%d, maximum=%d\n"
+msgstr "\t\t  მხარდაჭერილი არაა. მნიშვნელობა=%d, მაქსიმუმი=%d\n"
+
+#: ../src/ddccontrol/main.c:515
+#, c-format
+msgid ""
+"\n"
+"Saving settings...\n"
+msgstr ""
+"\n"
+"პარამეტრების შენახვა...\n"
+
+#. arbitration or no acknowledge
+#: ../src/ddcpci/i2c-algo-bit.c:368
+#, c-format
+msgid "sendbytes: error - bailout.\n"
+msgstr "sendbytes: შეცდომა - გავდივარ.\n"
+
+#. read timed out
+#: ../src/ddcpci/i2c-algo-bit.c:395
+#, c-format
+msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
+msgstr "i2c-algo-bit.o: readbytes: i2c_inb-ის მოლოდინის ვადა ამოიწურა.\n"
+
+#: ../src/ddcpci/i2c-algo-bit.c:414
+#, c-format
+msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
+msgstr "i2c-algo-bit.o: readbytes: მოლოდინის ვადა ამოიწურა დადასტურებისას\n"
+
+#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:162
+#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
+#: ../src/ddcpci/sis.c:174 ../src/ddcpci/via.c:167
+#, c-format
+msgid "%s: Malloc error.\n"
+msgstr "%s: Malloc-ის შეცდომა.\n"
+
+#: ../src/ddcpci/intel740.c:109
+#, c-format
+msgid "%s: ioperm failed"
+msgstr "%s: ioperm ჩავარდა"
+
+#: ../src/ddcpci/intel740.c:121
+#, c-format
+msgid "%s: Error: unknown card type (%#x)\n"
+msgstr "%s: შეცდომა: უცნობი ბარათის ტიპი (%#x)\n"
+
+#: ../src/ddcpci/intel810.c:105
+#, c-format
+msgid "%s: Malloc error."
+msgstr "%s: Malloc-ის შეცდომა."
+
+#: ../src/ddcpci/intel810.c:172
+msgid "i810_open: cannot open /dev/mem"
+msgstr "i810_open: /dev/mem-ის გახსნა შეუძლებელია"
+
+#: ../src/ddcpci/intel810.c:207
+#, c-format
+msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
+msgstr "i810_open: შეცდომა: არც ერთი სწორი MMIO PCI რეგიონი აღმოჩენილი არაა.\n"
+
+#: ../src/ddcpci/intel810.c:214
+msgid "i810_open: mmap failed"
+msgstr "i810_open: mmap ჩავარდა"
+
+#: ../src/ddcpci/main.c:160
+msgid "==>Error while sending open message"
+msgstr "==>შეცდომა გახსნის შეტყობინების გაგზავნიას"
+
+#: ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:190 ../src/ddcpci/main.c:208
+msgid "==>Error while sending data answer message"
+msgstr "==>შეცდომა მონაცემების პასუხის შეტყობინების გაგზავნისას"
+
+#: ../src/ddcpci/main.c:257 ../src/ddcpci/main.c:272
+msgid "==>Error while sending list message"
+msgstr "==>შეცდომა სიის შეტყობინების გაგზავნისას"
+
+#: ../src/ddcpci/main.c:290
+#, c-format
+msgid "Invalid arguments.\n"
+msgstr "არასწორი არგუმენტები.\n"
+
+#: ../src/ddcpci/main.c:296
+#, c-format
+msgid "==>Can't read verbosity.\n"
+msgstr "==>დაწვრილებითი შეტყობინების წაკითხვა შეუძლებელია.\n"
+
+#: ../src/ddcpci/main.c:303
+#, c-format
+msgid "==>Can't read key.\n"
+msgstr "==>გასაღების წაკითხვა შეუძლებელია.\n"
+
+#: ../src/ddcpci/main.c:308
+#, c-format
+msgid "==>Can't open key %u\n"
+msgstr "==>გახსნის შეცდომა გასაღებისთვის %u\n"
+
+#: ../src/ddcpci/main.c:322
+#, c-format
+msgid "==>No command received for %ld seconds, aborting.\n"
+msgstr "==>%ld წამის განმავლობაში ბრძანება არ მიმიღია. შესრულება შეწყდება.\n"
+
+#: ../src/ddcpci/main.c:330
+msgid "==>Error while receiving query\n"
+msgstr "==>შეცდომა მოთხოვნის მიღებისას\n"
+
+#: ../src/ddcpci/main.c:365
+#, c-format
+msgid "==>Invalid query...\n"
+msgstr "==>არასწორი მოთხოვნა...\n"
+
+#: ../src/ddcpci/nvidia.c:122
+#, c-format
+msgid "nvidia.c:init_i2c_bus: Malloc error."
+msgstr "nvidia.c:init_i2c_bus: Malloc-ის შეცდომა."
+
+#: ../src/ddcpci/nvidia.c:165
+msgid "nvidia_open: cannot open /dev/mem"
+msgstr "nvidia_open: /dev/mem-ის გახსნის შეცდომა"
+
+#: ../src/ddcpci/nvidia.c:175
+msgid "nvidia_open: mmap failed"
+msgstr "nvidia_open: mmap ჩავარდა"
+
+#: ../src/ddcpci/radeon.c:173
+#, c-format
+msgid "radeon.c:init_i2c_bus: Malloc error."
+msgstr "radeon.c:init_i2c_bus: Malloc-ის შეცდომა."
+
+#: ../src/ddcpci/radeon.c:221
+msgid "radeon_open: cannot open /dev/mem"
+msgstr "radeon_open: /dev/mem-ის გახსნა შეუძლებელია"
+
+#: ../src/ddcpci/radeon.c:230
+msgid "radeon_open: mmap failed"
+msgstr "radeon_open: mmap ჩავარდა"
+
+#: ../src/ddcpci/sis.c:133
+#, c-format
+msgid "sis.c:init_i2c_bus: Malloc error."
+msgstr "sis.c:init_i2c_bus: Malloc-ის შეცდომა."
+
+#: ../src/ddcpci/via.c:125
+#, c-format
+msgid "via.c:init_i2c_bus: Malloc error."
+msgstr "via.c:init_i2c_bus: Malloc-ის შეცდომა."
+
+#: ../src/ddcpci/via.c:177
+msgid "via_open: cannot open /dev/mem"
+msgstr "via_open: /dev/mem-ის გახსნა შეუძლებელია"
+
+#: ../src/ddcpci/via.c:186
+msgid "via_open: mmap failed"
+msgstr "via_open: mmap ცავარდა"
+
+#: ../src/gddccontrol/fspatterns.c:140
+msgid ""
+"Adjust brightness and contrast following these rules:\n"
+" - Black must be as dark as possible.\n"
+" - White should be as bright as possible.\n"
+" - You must be able to distinguish each gray level (particularly 0 and 12).\n"
+msgstr ""
+"მოირგეთ სიკაშკაშე და კონტრასტი ამ წესების გათვალისწინებით:\n"
+" - შავი უნდა იყოს ისეთი მუქი, როგორც ეს შესაძლებელია.\n"
+" - თეთრი უნდა იყოს ისეთი კაშკაშა, როგორც ეს შესაძლებელია.\n"
+" - უნდა შეგეძლოთ ნაცრისფრის ყველა დონის გარჩევა (უფრო ზუსტად, 0-ის და 12-"
+"ის).\n"
+
+#: ../src/gddccontrol/fspatterns.c:278
+msgid "Try to make moire patterns disappear."
+msgstr "სცადეთ, მუარის ნიმუშები გააქროთ."
+
+#: ../src/gddccontrol/fspatterns.c:282
+msgid ""
+"Adjust Image Lock Coarse to make the vertical band disappear.\n"
+"Adjust Image Lock Fine to minimize movement on the screen."
+msgstr ""
+"მოირგეთ უხეშად გამოსახულება, თუ გნებავთ, ვერტიკალური ზოლები გაქრეს.\n"
+"მოირგეთ გამოსახულება ზუსტად ეკრანზე გადაადგილების შესამცირებლად."
+
+#: ../src/gddccontrol/fspatterns.c:293
+#, c-format
+msgid "Unknown fullscreen pattern name: %s"
+msgstr "უცნობი სრულეკრანიანი ნიმუშის სახელი: %s"
+
+#: ../src/gddccontrol/gddccontrol.desktop.in.h:1
+msgid "DDC Control"
+msgstr "DDC Control"
+
+#: ../src/gddccontrol/gddccontrol.desktop.in.h:2
+msgid "Monitor Settings"
+msgstr "ეკრანის მორგება"
+
+#: ../src/gddccontrol/gddccontrol.desktop.in.h:3
+msgid ""
+"Set your monitor preferences (contrast, brightness,...) and manage your "
+"profiles"
+msgstr ""
+"დააყენეთ თქვენი ეკრანის პარამეტრები (კონტრასტი, სიკაშკაშე) და მართეთ თქვენი "
+"პროფილები"
+
+#: ../src/gddccontrol/gprofile.c:54
+msgid "You must select at least one control to be saved in the profile."
+msgstr "უნდა აირჩიოთ პროფილში შენახული ერთი კონტროლის ელემენტი მაინც."
+
+#: ../src/gddccontrol/gprofile.c:62
+msgid "Creating profile..."
+msgstr "პროფილის შექმნა..."
+
+#: ../src/gddccontrol/gprofile.c:77
+msgid "Error while creating profile."
+msgstr "შეცდომა პროფილის შექმნისას."
+
+#: ../src/gddccontrol/gprofile.c:94
+msgid "Applying profile..."
+msgstr "პროფილის გადატარება..."
+
+#: ../src/gddccontrol/gprofile.c:117
+#, c-format
+msgid "Are you sure you want to delete the profile '%s'?"
+msgstr "მართლა გნებავთ, წაშალოთ პროფილი '%s'?"
+
+#: ../src/gddccontrol/gprofile.c:143
+msgid ""
+"Please select the controls you want to save in the profile using the "
+"checkboxes to the left of each control."
+msgstr ""
+"აირჩიეთ კონტროლის ელემენტები, რომლებიც გნებავთ, პროფილში შეინახოთ თითოეული "
+"კონტროლის ელემენტის მარცხნივ თოლიას დასმით."
+
+#: ../src/gddccontrol/gprofile.c:175
+msgid "Profile Manager"
+msgstr "პროფილის მმართველი"
+
+#: ../src/gddccontrol/gprofile.c:194
+msgid "Apply profile"
+msgstr "პროფილის გადატარება"
+
+#: ../src/gddccontrol/gprofile.c:199
+msgid "Show profile details / Rename profile"
+msgstr "პროფილის დეტალების ჩვენება / პროფილის სახელის გადარქმევა"
+
+#: ../src/gddccontrol/gprofile.c:204
+msgid "Delete profile"
+msgstr "პროფილის წაშლა"
+
+#: ../src/gddccontrol/gprofile.c:230
+msgid "Create profile"
+msgstr "პროფილის შექმნა"
+
+#: ../src/gddccontrol/gprofile.c:236
+msgid "Close profile manager"
+msgstr "პროფილების მმართველის დახურვა"
+
+#: ../src/gddccontrol/gprofile.c:300
+msgid "Control name"
+msgstr "კონსტროლის ელემენტის სახელი"
+
+#: ../src/gddccontrol/gprofile.c:311
+msgid "Value"
+msgstr "მნიშვნელობა"
+
+#: ../src/gddccontrol/gprofile.c:314
+msgid "Address"
+msgstr "მისამართი"
+
+#: ../src/gddccontrol/gprofile.c:317
+msgid "Raw value"
+msgstr "დაუმუშავებელი მნისვნელობა"
+
+#: ../src/gddccontrol/gprofile.c:435 ../src/gddccontrol/gprofile.c:455
+msgid "Profile information:"
+msgstr "პროფილის ინფორმაცია:"
+
+#: ../src/gddccontrol/gprofile.c:464
+#, c-format
+msgid "File name: %s"
+msgstr "ფაილის სახელი: %s"
+
+#: ../src/gddccontrol/gprofile.c:475
+msgid "Profile name:"
+msgstr "პროფილის სახელი:"
+
+#. Save
+#: ../src/gddccontrol/gprofile.c:497
+msgid "Saving profile..."
+msgstr "პროფილის შენახვა..."
+
+#: ../src/gddccontrol/gprofile.c:506
+msgid "Error while saving profile."
+msgstr "პროფილის შენახვის შეცდომა."
+
+#: ../src/gddccontrol/main.c:192
+#, c-format
+msgid "Monitor changed (%d %d).\n"
+msgstr "ეკრანი შეიცვალა (%d %d).\n"
+
+#: ../src/gddccontrol/main.c:344
+msgid "Probing for available monitors..."
+msgstr "ხელმისაწვდომი ეკრანების აღმოჩენა..."
+
+#: ../src/gddccontrol/main.c:373
+msgid ""
+"No monitor supporting DDC/CI available.\n"
+"\n"
+"If your graphics card need it, please check all the required kernel modules "
+"are loaded (i2c-dev, and your framebuffer driver)."
+msgstr ""
+"DDC/CI-ის მხარდაჭერის მქონე ეკრანი ხელმისაწვდომი არაა.\n"
+"\n"
+"თუ თქვენს გრაფიკულ ბარათს ეს სჭირდება, შეამოწმეთ, ჩატვირთულია, თუ არა ყველა "
+"საჭირო ბირთვის მოდული (i2c-dev და თქვენი framebuffer-ის დრაივერი)."
+
+#: ../src/gddccontrol/main.c:427
+msgid "Unable to initialize ddcci library, see console for more details.\n"
+msgstr ""
+"ddcci ბიბლიოთეკის ინიციალიზაცია შეუძლებელია. მეტი დეტალებისთვის იხილეთ "
+"კონსოლი.\n"
+"\n"
+
+#: ../src/gddccontrol/main.c:439
+msgid "Monitor settings"
+msgstr "ეკრანის მორგება"
+
+#: ../src/gddccontrol/main.c:463
+msgid "Current monitor: "
+msgstr "მიმდინარე ეკრანი: "
+
+#: ../src/gddccontrol/main.c:473
+msgid "Refresh monitor list"
+msgstr "ეკრანების სიის განახლება"
+
+#: ../src/gddccontrol/main.c:490
+msgid "Profile manager"
+msgstr "პროფილების მმართველი"
+
+#: ../src/gddccontrol/main.c:497
+msgid "Save profile"
+msgstr "პროფილის შენახვა"
+
+#: ../src/gddccontrol/main.c:503
+msgid "Cancel profile creation"
+msgstr "პროფილის შექმნის გაუმება"
+
+#: ../src/gddccontrol/main.c:527
+msgid "OK"
+msgstr "დიახ"
+
+#: ../src/gddccontrol/main.c:555
+msgid "Refresh"
+msgstr "განახლება"
+
+#: ../src/gddccontrol/main.c:555
+msgid "Refresh all controls"
+msgstr "ყველა კონტროლის ელემენტის განახლება"
+
+#: ../src/gddccontrol/main.c:562
+msgid "Close"
+msgstr "დახურვა"
+
+#. moninfo = gtk_label_new ();
+#. gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
+#.
+#. gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
+#: ../src/gddccontrol/main.c:601
+#, c-format
+msgid "Welcome to gddccontrol %s."
+msgstr "კეთილი იყოს თქვენი მობრძანება gddccontrol %s-ში."
+
+#: ../src/gddccontrol/notebook.c:83
+msgid "Error while getting value"
+msgstr "შეცდომა მნიშვნელობის მიღებისას"
+
+#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
+#, c-format
+msgid "Refreshing controls values (%d%%)..."
+msgstr "კონტროლის ელემენტის მნიშვნელობების განახლება (%d%%)..."
+
+#: ../src/gddccontrol/notebook.c:135
+msgid "Could not get the control_db struct related to a control."
+msgstr ""
+"კონტროლის ელემენტებთან დაკავშირებული სტრუქტურის, control_db, მიღება "
+"შეუძლებელია."
+
+#: ../src/gddccontrol/notebook.c:495
+msgid "Show fullscreen patterns"
+msgstr "სრულეკრანიანი ნიმუშების ჩვენება"
+
+#: ../src/gddccontrol/notebook.c:527
+msgid "Section"
+msgstr "განყოფილება"
+
+#: ../src/gddccontrol/notebook.c:574
+msgid ""
+"The current monitor is in the database but does not support DDC/CI.\n"
+"\n"
+"This often occurs when you connect the VGA/DVI cable on the wrong input of "
+"monitors supporting DDC/CI only on one of its two inputs.\n"
+"\n"
+"If your monitor has two inputs, please try to connect the cable to the other "
+"input, and then click on the refresh button near the monitor list."
+msgstr ""
+"თქვენი ამჟამინდელი ეკრანი მონაცემთა ბაზაში არსებობს, მაგრამ DDC/CI-ის "
+"მხარდაჭერა არ აქვს.\n"
+"\n"
+"ეს ხშირად ხდება, როცა VGA/DVI კაბელს ეკრანის არასწორ ადგილას აერთებთ "
+"ეკრანებისთვის, რომლებსაც DC/CI-ის მხარდაჭერა, მხოლოდ, ერთ-ერთზე გააჩნია ორი "
+"სოკეტიდან.\n"
+"\n"
+"თუ თქვენს ეკრანს ორი შესაერთებელი აქვს, სცადეთ, შეაერთოთ კაბელი მეორე "
+"შესაერთებელში და დააწკაპუნეთ განახლების ღილაკზე ეკრანების სიასთან."
+
+#: ../src/gddccontrol/notebook.c:585
+#, c-format
+msgid "Opening the monitor device (%s)..."
+msgstr "ეკრანის მოწყობილობის გახსნა (%s)..."
+
+#: ../src/gddccontrol/notebook.c:591
+msgid ""
+"An error occurred while opening the monitor device.\n"
+"Maybe this monitor was disconnected, please click on the refresh button near "
+"the monitor list."
+msgstr ""
+"შეცდომა ეკრანის მოწყობილობის გახსნისას.\n"
+"შეიძლება, ეს ეკრანი გამოერთებულია. დააწკაპუნეთ განახლების ღილაკზე ეკრანების "
+"სიასთან."
+
+#: ../src/gddccontrol/notebook.c:600
+#, c-format
+msgid ""
+"The current monitor is not supported, please run\n"
+"%s\n"
+"and send the output to ddccontrol-users@lists.sourceforge.net.\n"
+"Thanks."
+msgstr ""
+"ეს ეკრანი მხარდაჭერილი არაა. გაუშვით ბრძანება\n"
+"%s\n"
+"და გამოაგზავნეთ გამოტანილი ინფორმაცია ელფოსტაზე ddccontrol-"
+"users@lists.sourceforge.net.\n"
+"მადლობა."
+
+#: ../src/gddccontrol/notebook.c:620
+msgid "Please click on a group name."
+msgstr "დააწკაპუნეთ ჯგუფის სახელზე."
+
+#: ../src/gddccontrol/notebook.c:639 ../src/gddccontrol/notebook.c:650
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "კონტროლის ელემენტის მნიშვნელობების მიღება (%d%%)..."
+
+#: ../src/gddccontrol/notebook.c:664
+msgid "Loading profiles..."
+msgstr "პროფილების ჩატვირთვა..."
+
+#: ../src/gddccontrol/notebook.c:677
+msgid ""
+"There is no support for your monitor in the database, but ddccontrol is "
+"using a generic profile for your monitor's manufacturer. Some controls may "
+"not be supported, or may not work as expected.\n"
+msgstr ""
+"თქვენი ეკრანის მხარდაჭერა მონაცემთა ბაზაში არ არსებობს, მაგრამ ddccontrol "
+"იყენებს ზოგად პროფილს თქვენი ეკრანის მწარმოებლისთვის. შეიძლება, ზოგიერთი "
+"კონტროლის ელემენტი მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც მოელით.\n"
+
+#: ../src/gddccontrol/notebook.c:683
+msgid ""
+"There is no support for your monitor in the database, but ddccontrol is "
+"using a basic generic profile. Many controls will not be supported, and some "
+"controls may not work as expected.\n"
+msgstr ""
+"თქვენი ეკრანის მხარდაჭერა მონაცემთა ბაზაში არ არსებობს, მაგრამ ddccontrol "
+"იყენებს საბაზისო ზოგად პროფილს თქვენი ეკრანის მწარმოებლისთვის. შეიძლება, "
+"ზოგიერთი კონტროლის ელემენტი მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც "
+"მოელით.\n"
+
+#: ../src/gddccontrol/notebook.c:688
+msgid "Warning!"
+msgstr "გაფთხილება:!"
+
+#: ../src/gddccontrol/notebook.c:690
+msgid ""
+"Please update ddccontrol-db, or, if you are already using the latest "
+"version, please send the output of the following command to ddccontrol-"
+"users@lists.sourceforge.net:\n"
+msgstr ""
+"განაახლეთ ddccontrol-db, ან, თუ უკვე იყენებთ უახლეს ვერსიას, გამოგვიგზავნეთ "
+"შემდეგი ბრძანების გამოტანილი ინფორმაცია ელფოსტაზე ddccontrol-"
+"users@lists.sourceforge.net:\n"
+
+#: ../src/lib/conf.c:63 ../src/lib/conf.c:260 ../src/lib/conf.c:310
+#: ../src/lib/ddcci.c:1306
+msgid "Cannot create filename (buffer too small)\n"
+msgstr "ფაილის სახელის შექმნა შეუძლებელია (ბუფერი მეტისმეტად პატარაა)\n"
+
+#: ../src/lib/conf.c:88 ../src/lib/conf.c:367 ../src/lib/monitor_db.c:353
+#: ../src/lib/monitor_db.c:726
+#, c-format
+msgid "Document not parsed successfully.\n"
+msgstr "დოკუმენტის დამუშავება წარმატებით არ დასრულდა.\n"
+
+#: ../src/lib/conf.c:95 ../src/lib/conf.c:375
+#, c-format
+msgid "empty profile file\n"
+msgstr "ცარიელი პროფილის ფაილი\n"
+
+#: ../src/lib/conf.c:101 ../src/lib/conf.c:382
+#, c-format
+msgid "profile of the wrong type, root node %s != profile"
+msgstr "პროფილის ტიპი არასწორია. ძირითადი კვანძი %s != პროფილს"
+
+#: ../src/lib/conf.c:107
+msgid "Can't find ddccontrolversion property."
+msgstr "თვისების ddccontrolversion აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:109
+#, c-format
+msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
+msgstr "ეკრანების სიის შენახვის შემდეგ ddccontrol განახლდა (%s vs %s).\n"
+
+#: ../src/lib/conf.c:126
+msgid "Can't find filename property."
+msgstr "თვისების filename აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:132
+msgid "Can't find supported property."
+msgstr "თვისების supported აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:135
+msgid "Can't convert supported property to int."
+msgstr "თვისების property მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/conf.c:140 ../src/lib/conf.c:392 ../src/lib/monitor_db.c:92
+#: ../src/lib/monitor_db.c:196 ../src/lib/monitor_db.c:373
+#: ../src/lib/monitor_db.c:429 ../src/lib/monitor_db.c:450
+msgid "Can't find name property."
+msgstr "თვისების name აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:146
+msgid "Can't find digital property."
+msgstr "თვისების digital აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:149
+msgid "Can't convert digital property to int."
+msgstr "თვისების digital მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/conf.c:177 ../src/lib/conf.c:447
+msgid "Cannot create the xml writer\n"
+msgstr "xml-ის ჩამწერის შექმნა შეუძლებელია\n"
+
+#: ../src/lib/conf.c:241
+msgid "Cannot read control value\n"
+msgstr "კონტროლის ელემენტის მნიშვნელობის წაკითხვა შეუძლებელია\n"
+
+#: ../src/lib/conf.c:278
+msgid "Cannot write control value\n"
+msgstr "კონტროლის ელემენტის მნიშვნელობის ჩაწერა შეუძლებელია\n"
+
+#: ../src/lib/conf.c:315
+msgid "Error while opening ddccontrol home directory."
+msgstr "ddccontrol-ის საწყისი საქაღალდის გახსნის შეცდომა."
+
+#: ../src/lib/conf.c:340
+msgid "Error while reading ddccontrol home directory."
+msgstr "შეცდომა ddccontrol-ის საწყისი საქაღალდის წაკითხვისას."
+
+#: ../src/lib/conf.c:389
+msgid "Can't find pnpid property."
+msgstr "თვისების pnpid აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:395 ../src/lib/conf.c:398
+msgid "Can't find version property."
+msgstr "თვისების version აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:397 ../src/lib/monitor_db.c:764
+msgid "Can't convert version to int."
+msgstr "ვერსიის მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/conf.c:400
+#, c-format
+msgid "profile version (%d) is not supported (should be %d).\n"
+msgstr "პროფილის ვერსია (%d) მხარდაჭერილი არაა (უნდა ყოფილიყო %d).\n"
+
+#: ../src/lib/conf.c:415 ../src/lib/monitor_db.c:233
+msgid "Can't find address property."
+msgstr "თვისების address აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:417 ../src/lib/monitor_db.c:235
+msgid "Can't convert address to int."
+msgstr "მისამართის მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/conf.c:421 ../src/lib/monitor_db.c:114
+msgid "Can't find value property."
+msgstr "თვისების value აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/conf.c:423 ../src/lib/monitor_db.c:116
+msgid "Can't convert value to int."
+msgstr "მნიშვნელობის მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/conf.c:507
+msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
+msgstr "ddcci_delete_profile: შეცდომა. პროფილის წაშლა შეუძლებელია.\n"
+
+#: ../src/lib/conf.c:527
+#, c-format
+msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
+msgstr ""
+"ddcci_delete_profile: შეცდომა. წასაშლელი პროფილის აღმოჩენა შეუძლებელია.\n"
+
+#: ../src/lib/ddcci.c:148
+msgid "Error while initialisating the message queue"
+msgstr "შეცდომა შეტყობინებების სიის ინიციალიზაციისას"
+
+#: ../src/lib/ddcci.c:177
+msgid "Error while sending quit message"
+msgstr "შეცდომა გასვლის შეტყობინების გაგზავნისას"
+
+#: ../src/lib/ddcci.c:223
+msgid "Error while sending heartbeat message"
+msgstr "შეცდომა გულისცემის შეტყობინების გაგზავნისას"
+
+#: ../src/lib/ddcci.c:241
+#, c-format
+msgid "Failed to initialize ddccontrol database...\n"
+msgstr "ddcontrol-ის მონაცემთა ბაზის ინიციალიზაცია ჩავარდა...\n"
+
+#: ../src/lib/ddcci.c:247
+#, c-format
+msgid "Failed to initialize ADL...\n"
+msgstr "ADL-ის ინიციალიზაცია ჩავარდა...\n"
+
+#: ../src/lib/ddcci.c:292 ../src/lib/ddcci.c:383
+#, c-format
+msgid "ioctl returned %d\n"
+msgstr "ioctl-მა დააბრუნა %d\n"
+
+#: ../src/lib/ddcci.c:321
+msgid "Error while sending write message"
+msgstr "შეცდომა ჩაწერის შეტყობინების გაგზავნისას"
+
+#: ../src/lib/ddcci.c:330
+msgid "Error while reading write message answer"
+msgstr "შეცდომა ჩაწერის შეტყობინების პასუხის წაკითხვისას"
+
+#: ../src/lib/ddcci.c:413
+msgid "Error while sending read message"
+msgstr "შეცდომა წაკითხვის შეტყობინების გაგზავნისას"
+
+#: ../src/lib/ddcci.c:422
+msgid "Error while reading read message answer"
+msgstr "შეცდომა წაკითხვის შეტყობინების პასუხის წაკითხვისას"
+
+#: ../src/lib/ddcci.c:518
+#, c-format
+msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
+msgstr "არასწორი პასუხი. პირველი ბაიტია 0x%02x. უნდა იყოს 0x%02x\n"
+
+#: ../src/lib/ddcci.c:528
+#, c-format
+msgid "Non-fatal error: Invalid response, magic is 0x%02x\n"
+msgstr "არაფატალური შეცდომა: არასწორი პასუხი. მაგიური რიცხვია 0x%02x\n"
+
+#: ../src/lib/ddcci.c:535
+#, c-format
+msgid "Invalid response, length is %d, should be %d at most\n"
+msgstr "არასწორი პასუხი. სიგრძეა %d. უნდა იყოს მაქს %d\n"
+
+#: ../src/lib/ddcci.c:548
+#, c-format
+msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
+msgstr ""
+"არასწორი პასუხი. მონაცემები დაზიანებულია - xor არის 0x%02x, სიგრძე 0x%02x\n"
+
+#: ../src/lib/ddcci.c:709 ../src/lib/ddcci.c:731
+#, c-format
+msgid "Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"
+msgstr ""
+"მნიშვნელობის მთელ რიცხვში გადაყვანა შეუძლებელია. არასწორი თავსართი "
+"(ბუფერი=%s, პოზიცია=%d).\n"
+
+#: ../src/lib/ddcci.c:814
+#, c-format
+msgid "Invalid sequence in caps.\n"
+msgstr "არასწორი მიმდევრობა თავსართში.\n"
+
+#: ../src/lib/ddcci.c:892
+#, c-format
+msgid "Corrupted EDID at 0x%02x.\n"
+msgstr "დაზიანებული EDID მისამართზე 0x%02x.\n"
+
+#: ../src/lib/ddcci.c:904
+#, c-format
+msgid "Serial number: %d\n"
+msgstr "სერიული ნომერი: %d\n"
+
+#: ../src/lib/ddcci.c:907
+#, c-format
+msgid "Manufactured: Week %d, %d\n"
+msgstr "წარმოებულია: კვირა %d, %d\n"
+
+#: ../src/lib/ddcci.c:910
+#, c-format
+msgid "EDID version: %d.%d\n"
+msgstr "EDID-ის ვერსია: %d.%d\n"
+
+#: ../src/lib/ddcci.c:913
+#, c-format
+msgid "Maximum size: %d x %d (cm)\n"
+msgstr "მაქს ზომა: %d x %d (სმ)\n"
+
+#: ../src/lib/ddcci.c:924
+#, c-format
+msgid "Reading EDID 0x%02x failed.\n"
+msgstr "EDID-ის 0x%02x წაკითხვა ჩავარდა.\n"
+
+#: ../src/lib/ddcci.c:954
+#, c-format
+msgid "Device: %s\n"
+msgstr "მოწყობილობა: %s\n"
+
+#: ../src/lib/ddcci.c:968
+msgid "Error while sending open message"
+msgstr "გახსნის შეტყობინების გაგზავნია შეცდომა"
+
+#: ../src/lib/ddcci.c:976
+msgid "Error while reading open message answer"
+msgstr "შეცდომა გახსნის შეტყობინებაზე პასუხის წაკითხვისას"
+
+#: ../src/lib/ddcci.c:988 ../src/lib/ddcci.c:1001
+#, c-format
+msgid "Invalid filename (%s).\n"
+msgstr "არასწორი ფაილის სახელი (%s).\n"
+
+#: ../src/lib/ddcci.c:993
+#, c-format
+msgid "ADL display not found (%s).\n"
+msgstr "ADL ეკრანი აღმოჩენილი არაა (%s).\n"
+
+#: ../src/lib/ddcci.c:1125
+#, c-format
+msgid "ddcci_open returned %d\n"
+msgstr "ddcci_open-მა დააბრუნა %d\n"
+
+#: ../src/lib/ddcci.c:1138
+#, c-format
+msgid "Unknown monitor (%s)"
+msgstr "უცნობი ეკრანი (%s)"
+
+#: ../src/lib/ddcci.c:1159
+#, c-format
+msgid "Probing for available monitors"
+msgstr "ხელმისაწვდომი ეკრანების აღმოჩენა"
+
+#: ../src/lib/ddcci.c:1173
+msgid "Error while sending list message"
+msgstr "შეცდომა სიის შეტყობინების გაგზავნისას"
+
+#: ../src/lib/ddcci.c:1182
+msgid "Error while reading list entry"
+msgstr "შეცდომა სიის ჩანაწერის კითხვისას"
+
+#: ../src/lib/ddcci.c:1199
+#, c-format
+msgid "Found PCI device (%s)\n"
+msgstr "აღმოჩენილია PCI მოწყობილობა (%s)\n"
+
+#: ../src/lib/ddcci.c:1239
+#, c-format
+msgid "Found I2C device (%s)\n"
+msgstr "აღმოჩენილია I2C მოწყობილობა (%s)\n"
+
+#: ../src/lib/ddcci.c:1264
+#, c-format
+msgid "Found ADL display (%s)\n"
+msgstr "აღმოჩენილია ADL ეკრანი (%s)\n"
+
+#: ../src/lib/ddcci.c:1310
+msgid "Error while getting information about ddccontrol home directory."
+msgstr ""
+"შეცდომა ddccontrol-ის საწყისი საქაღალდის შესახებ ინფორმაციის მიღებისას."
+
+#: ../src/lib/ddcci.c:1316
+msgid "Error while creating ddccontrol home directory."
+msgstr "შეცდომა ddccontrol-ის საწყისი საქაღალდის შექმნისას."
+
+#: ../src/lib/ddcci.c:1322
+msgid ""
+"Error while getting information about ddccontrol home directory after "
+"creating it."
+msgstr ""
+"შეცდომა ddccontrol-ის საქაღალდის შესახებ ინფორმაციის მიღებისას მისი შექმნის "
+"შემდეგ."
+
+#: ../src/lib/ddcci.c:1330
+msgid "Error: '.ddccontrol' in your home directory is not a directory."
+msgstr "შეცდომა: '.ddccontrol' თქვენს საწყის საქაღალდეში საქაღალდე არაა."
+
+#: ../src/lib/ddcci.c:1339
+msgid "Error while getting information about ddccontrol profile directory."
+msgstr ""
+"შეცდომა ddccontrol-ის პროფილების საქაღალდის შესახებ ინფორმაციის მიღებისას."
+
+#: ../src/lib/ddcci.c:1345
+msgid "Error while creating ddccontrol profile directory."
+msgstr "შეცდომა ddccontrol-ის პროფილების საქაღალდის შექმნისას."
+
+#: ../src/lib/ddcci.c:1351
+msgid ""
+"Error while getting information about ddccontrol profile directory after "
+"creating it."
+msgstr ""
+"შეცდომა ddccontrol-ის პროფილების საქაღალდის შესახებ ინფორმაციის მიღებისას "
+"მისი შექმნის შემდეგ."
+
+#: ../src/lib/ddcci.c:1359
+msgid ""
+"Error: '.ddccontrol/profiles' in your home directory is not a directory."
+msgstr ""
+"შეცდომა: '.ddccontrol/profiles' თქვენს საწყის საქაღალდეში საქაღალდე არაა."
+
+#: ../src/lib/monitor_db.c:84 ../src/lib/monitor_db.c:194
+msgid "Can't find id property."
+msgstr "თვისების id აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/monitor_db.c:153 ../src/lib/monitor_db.c:549
+#, c-format
+msgid "Element %s (id=%s) has not been found (line %ld).\n"
+msgstr "ელემენტი %s (id=%s) აღმოჩენილი არაა (ხაზი %ld).\n"
+
+#: ../src/lib/monitor_db.c:207
+msgid "Invalid refresh type (!= none, != all)."
+msgstr "არასწორი განახლების ტიპი (!= არცერთი, != ყველა)."
+
+#: ../src/lib/monitor_db.c:242
+#, c-format
+msgid "Control %s has been discarded by the caps string.\n"
+msgstr ""
+"კონტროლის ელემენტი %s მოცილებულია თავსართის სტრიქონის მიერ.\n"
+"\n"
+
+#: ../src/lib/monitor_db.c:250
+#, c-format
+msgid "Control %s (0x%02x) has already been defined.\n"
+msgstr "კონტროლის ელემენტი %s (0x%02x) უკვე აღწერილია.\n"
+
+#: ../src/lib/monitor_db.c:263
+msgid "Can't convert delay to int."
+msgstr "დაყოვნების მთელ რიცხვში გადაყვანა შეუძლებელია."
+
+#: ../src/lib/monitor_db.c:271
+msgid "Can't find type property."
+msgstr "თვისების type აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/monitor_db.c:296 ../src/lib/monitor_db.c:384
+msgid "Invalid type."
+msgstr "არასწორი ტიპი."
+
+#: ../src/lib/monitor_db.c:346
+#, c-format
+msgid "Database must be inited before reading a monitor file.\n"
+msgstr ""
+"ეკრანის ფაილის წაკითხვამდე აუცილებელია მონაცემთა ბაზის ინიციალიზაცია.\n"
+
+#: ../src/lib/monitor_db.c:360
+#, c-format
+msgid "empty monitor/%s.xml\n"
+msgstr "ცარიელი monitor/%s.xml\n"
+
+#: ../src/lib/monitor_db.c:366
+#, c-format
+msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
+msgstr "monitor/%s.xml არასწორი ტიპისაა. root node %s != monitor"
+
+#: ../src/lib/monitor_db.c:467
+msgid "Can't find add or remove property in caps."
+msgstr "თავსართში add, ან remove თვისება აღმოჩენილი არაა."
+
+#: ../src/lib/monitor_db.c:469
+msgid "Invalid remove caps."
+msgstr "არასწორი თავსართი remove."
+
+#: ../src/lib/monitor_db.c:471
+msgid "Invalid add caps."
+msgstr "არასწორი თავსართი add."
+
+#: ../src/lib/monitor_db.c:476
+#, c-format
+msgid "Error, include recursion level > 15 (file: %s).\n"
+msgstr "შეცდომა. ჩასმის რეკურსიის დონე > 15 (ფაილი: %s).\n"
+
+#: ../src/lib/monitor_db.c:482
+msgid "Can't find file property."
+msgstr "თვისების file აღმოჩენა შეუძლებელია."
+
+#: ../src/lib/monitor_db.c:490
+msgid "Two controls part in XML file."
+msgstr "ორი კონტროლის ელემენტის ნაწილი XML ფაილში."
+
+#: ../src/lib/monitor_db.c:537
+msgid "Error enumerating controls in subgroup."
+msgstr "ქვეჯგუფში კონტროლის ელემენტების ჩამოთვლის შეცდომა."
+
+#: ../src/lib/monitor_db.c:601
+#, c-format
+msgid "document of the wrong type, can't find controls or include.\n"
+msgstr ""
+"არასწორი ტიპის დოკუმენტი. კონტროლის ელემენტები, ან ჩასასმელი ფაილები "
+"აღმოჩენილი არაა.\n"
+
+#: ../src/lib/monitor_db.c:733
+#, c-format
+msgid "empty options.xml\n"
+msgstr "ცარიელი options.xml\n"
+
+#: ../src/lib/monitor_db.c:740
+#, c-format
+msgid "options.xml of the wrong type, root node %s != options"
+msgstr "არასწორი ტიპის options.xml. root node %s != options"
+
+#: ../src/lib/monitor_db.c:750
+#, c-format
+msgid "options.xml dbversion attribute missing, please update your database.\n"
+msgstr ""
+"options.xml-ში ატრიბუტი dbversion აღმოჩენილი არაა. განაახლეთ თქვენი "
+"მონაცემთა ბაზა.\n"
+
+#: ../src/lib/monitor_db.c:757
+#, c-format
+msgid "options.xml date attribute missing, please update your database.\n"
+msgstr ""
+"options.xml-ში ატრიბუტი date აღმოჩენილი არაა. განაახლეთ თქვენი მონაცემთა "
+"ბაზა.\n"
+
+#: ../src/lib/monitor_db.c:767
+#, c-format
+msgid ""
+"options.xml dbversion (%d) is greater than the supported version (%d).\n"
+msgstr ""
+"options.xml-ში ატრიბუტი dbversion (%d) მხარდაჭერილ ვერსიაზე (%d) მეტია.\n"
+
+#: ../src/lib/monitor_db.c:768
+#, c-format
+msgid "Please update ddccontrol program.\n"
+msgstr "განაახლეთ პროგრამა ddccontrol.\n"
+
+#: ../src/lib/monitor_db.c:775
+#, c-format
+msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
+msgstr ""
+"options.xml-ში ატრიბუტი dbversion (%d) მხარდაჭერილ ვერსიაზე (%d) ნაკლებია.\n"
+
+#: ../src/lib/monitor_db.c:776
+#, c-format
+msgid "Please update ddccontrol database.\n"
+msgstr "განაახლეთ ddccontrol-ის მონაცემთა ბაზა.\n"
