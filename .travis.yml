@@ -1,0 +1,33 @@
+language: cpp
+
+dist: trusty
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - intltool
+      - autoconf
+      - autopoint
+      - libxml2-dev
+      - pciutils-dev
+      - libgtk2.0-dev
+      - astyle
+
+env:
+  matrix:
+    -
+    - CFLAGS='CFLAGS=-O0 -g'
+    - CFLAGS='CFLAGS=-O2'
+
+compiler:
+  - clang
+  - gcc
+
+script:
+  - ./autogen.sh
+  - ./configure "${CFLAGS}"
+  - make -j4
+  - ./scripts/format_code.sh
+  - 'find -name "*.orig" -exec rm -v {} \;'
+  - ./scripts/travis_ci_after_build_checks.sh
