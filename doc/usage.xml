@@ -2,7 +2,7 @@
 <title>Usage</title>
 <sect1>
 <title>GTK+ GUI</title>
-<para>If GTK+&gt;=2.4 is installed on your computer, the configure process will
+<para>If GTK+ 3 is installed on your computer, the configure process will
 detect it, and build the GTK+ application.</para>
 <para>The GTK+ GUI is designed to be user-friendly, so it should be easy to
 use it. To launch this GUI, simply type:</para>

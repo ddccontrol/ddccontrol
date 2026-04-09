@@ -25,12 +25,12 @@
 
 static GtkWidget* fs_patterns_window = NULL;
 
-static GtkWidget* table;
+static GtkWidget* grid;
 static GtkWidget* centervbox;
 static GtkWidget* scrolled_window;
 
-static GtkWidget* monmainvbox; /* Monitor manager main GtkVBox (containing vbox) */
-static GtkWidget* vbox; /* GtkVBox containing controls */
+static GtkWidget* monmainvbox; /* Monitor manager main GtkBox (containing vbox) */
+static GtkWidget* vbox; /* GtkBox containing controls */
 
 static GtkWidget* images[4] = {NULL, NULL, NULL, NULL}; /* top-bottom-left-right images */
 
@@ -55,20 +55,19 @@ static void create_fullscreen_patterns_window()
 	
 	gtk_container_set_border_width(GTK_CONTAINER(fs_patterns_window), 0);
 	
-	table = gtk_table_new(3, 3, FALSE);
-	gtk_container_add(GTK_CONTAINER(fs_patterns_window), table);
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(fs_patterns_window), grid);
 	
 	scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	
-	centervbox = gtk_vbox_new(FALSE,10);
+	centervbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	
-	GtkWidget* align = gtk_alignment_new(0.5, 0, 0, 0);
 	GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 	gtk_widget_show(close_button);
-	gtk_container_add(GTK_CONTAINER(align), close_button);
-	gtk_widget_show(align);
-	gtk_box_pack_end(GTK_BOX(centervbox), align, TRUE, 5, 5);
+	gtk_widget_set_halign(close_button, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(close_button, GTK_ALIGN_START);
+	gtk_box_pack_end(GTK_BOX(centervbox), close_button, TRUE, 5, 5);
 	gtk_widget_show(centervbox);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), centervbox);
@@ -76,17 +75,17 @@ static void create_fullscreen_patterns_window()
 	gtk_widget_show(scrolled_window);
 }
 
-static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, int shade_count) {
+static void draw_shade(cairo_surface_t* surface, int y_position, int shade_height, int shade_count) {
 	GdkColor color;
 	PangoLayout* layout;
 	gchar* tmp;
 	
-	cairo_t* cairo_shade = gdk_cairo_create(pixmap);
-	cairo_t* cairo_white = gdk_cairo_create(pixmap);
+	cairo_t* cairo_shade = cairo_create(surface);
+	cairo_t* cairo_white = cairo_create(surface);
 	cairo_set_line_cap(cairo_white, CAIRO_LINE_CAP_SQUARE);
 	
-	int width, height;
-	gdk_pixmap_get_size(pixmap, &width, &height);
+	int width = cairo_image_surface_get_width(surface);
+	int height = cairo_image_surface_get_height(surface);
 	
 	int x_margin = width/12;
 	int shade_width = (width-(x_margin*2))/shade_count;
@@ -94,13 +93,12 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 	int shade_index;
 	int label_width, label_height;
 	
-	color.red = color.green = color.blue = 0xFFFF;
-	gdk_cairo_set_source_color(cairo_white, &color);
+	cairo_set_source_rgb(cairo_white, 1.0, 1.0, 1.0);
 	
-	color.red = color.green = color.blue = 0x0000;
 	for (shade_index = 0; shade_index < shade_count; shade_index++) {
 		// draw shade
-		gdk_cairo_set_source_color(cairo_shade, &color);
+		double gray_level = (double)shade_index / (double)(shade_count - 1);
+		cairo_set_source_rgb(cairo_shade, gray_level, gray_level, gray_level);
 		cairo_rectangle(cairo_shade, x_position, y_position, shade_width, shade_height);
 		cairo_fill(cairo_shade);
 
@@ -114,7 +112,7 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 		cairo_stroke(cairo_white);
 
 		// draw label displaying color value
-		tmp = g_strdup_printf("%d", color.red*0xFF/0xFFFF);
+		tmp = g_strdup_printf("%d", (int)(gray_level * 255));
 		layout = gtk_widget_create_pango_layout(fs_patterns_window, tmp);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
@@ -123,7 +121,6 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 		g_object_unref(layout);
 		
 		x_position += shade_width;
-		color.red = color.green = color.blue = (shade_index+1)*0xFFFF/(shade_count-1);
 	}
 	cairo_destroy(cairo_shade);
 	// draw tick at shade border (bottom)
@@ -160,12 +157,10 @@ static void draw_shade(GdkDrawable* pixmap, int y_position, int shade_height, in
 	cairo_destroy(cairo_white);
 }
 
-static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text) {
+static void draw_checker(cairo_surface_t* surface, int width, int height, gchar* text) {
 	int label_width, label_height;
-	cairo_t* cairo = gdk_cairo_create(pixmap);
-	GdkColor color;
-	color.red = color.green = color.blue = 0xFFFF;
-	gdk_cairo_set_source_color(cairo, &color);
+	cairo_t* cairo = cairo_create(surface);
+	cairo_set_source_rgb(cairo, 1.0, 1.0, 1.0);
 
 	// draw checker pattern (alternating white pixels)
 	int x, y;
@@ -180,12 +175,10 @@ static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text
 	PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 	pango_layout_set_markup(layout, text, -1);
 	pango_layout_get_pixel_size(layout, &label_width, &label_height);
-	color.red = color.green = color.blue = 0x8000;
-	gdk_cairo_set_source_color(cairo, &color);
+	cairo_set_source_rgb(cairo, 0.5, 0.5, 0.5);
 	cairo_rectangle(cairo, (width-label_width)/2-5, 3*height/8-5, label_width+10, label_height+10);
 	cairo_fill(cairo);
-	color.red = color.green = color.blue = 0x0000;
-	gdk_cairo_set_source_color(cairo, &color);
+	cairo_set_source_rgb(cairo, 0.0, 0.0, 0.0);
 	cairo_move_to(cairo, (width-label_width)/2, 3*height/8);
 	pango_cairo_show_layout(cairo, layout);
 	g_object_unref(layout);
@@ -193,39 +186,31 @@ static void draw_checker(GdkDrawable* pixmap, int width, int height, gchar* text
 	cairo_destroy(cairo);
 }
 
-static void draw_color_crosses(GdkDrawable* pixmap, int width, int height) {
+static void draw_color_crosses(cairo_surface_t* surface, int width, int height) {
 	const int cross_size = 51;
 	const int arm_length = 25;
 
-	cairo_t* cairo = gdk_cairo_create(pixmap);
+	cairo_t* cairo = cairo_create(surface);
 	cairo_set_line_cap(cairo, CAIRO_LINE_CAP_SQUARE);
 	cairo_set_line_width(cairo, 1);
-	
-	GdkColor color;
 	
 	int x, y, color_index = 0, color_column = 0;
 	for (x = 0; x < width; x += cross_size) {
 		color_index = color_column;
 		for (y = 0; y < height; y += cross_size) {
-			color.red = 0x0000;
-			color.green = 0x0000;
-			color.blue = 0x0000;
 			switch (color_index % 4) {
 			case 0:
-				color.red = 0xFFFF;
+				cairo_set_source_rgb(cairo, 1.0, 0.0, 0.0);
 				break;
 			case 1:
-				color.green = 0xFFFF;
+				cairo_set_source_rgb(cairo, 0.0, 1.0, 0.0);
 				break;
 			case 2:
-				color.blue = 0xFFFF;
+				cairo_set_source_rgb(cairo, 0.0, 0.0, 1.0);
 				break;
 			default:
-				color.red = 0xFFFF;
-				color.green = 0xFFFF;
-				color.blue = 0xFFFF;
+				cairo_set_source_rgb(cairo, 1.0, 1.0, 1.0);
 			}
-			gdk_cairo_set_source_color(cairo, &color);
 			
 			cairo_move_to(cairo, 0.5f+x+arm_length, 0.5f+y);
 			cairo_line_to(cairo, 0.5f+x+arm_length, 0.5f+y+cross_size);
@@ -257,39 +242,34 @@ static void show_pattern(gchar* patternname)
 	
 	gtk_window_move(GTK_WINDOW(fs_patterns_window), drect.x, drect.y);
 
-	gint depth = gdk_visual_get_depth(gdk_visual_get_system());
-	GdkDrawable* pixmap = gdk_pixmap_new(0, drect.width, drect.height, depth);
-	gdk_drawable_set_colormap(pixmap, gdk_colormap_get_system());
+	cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, drect.width, drect.height);
 
 	// draw black background
-	GdkColor color;
-	cairo_t* cairo = gdk_cairo_create(pixmap);
-	color.red = color.green = color.blue = 0x0000;
-	gdk_cairo_set_source_color(cairo, &color);
+	cairo_t* cairo = cairo_create(surface);
+	cairo_set_source_rgb(cairo, 0.0, 0.0, 0.0);
 	cairo_rectangle(cairo, 0, 0, drect.width, drect.height);
 	cairo_fill(cairo);
 	cairo_destroy(cairo);
 
 	// TODO turn this string matching into an enum or similar
 	if (g_str_equal(patternname, "brightnesscontrast")) {
-		draw_shade(pixmap, drect.height/8, drect.height/8, 21);
+		draw_shade(surface, drect.height/8, drect.height/8, 21);
 	}
 	else if (g_str_equal(patternname, "moire")) {
-		draw_checker(pixmap, drect.width, drect.height, _("Try to make moire patterns disappear."));
+		draw_checker(surface, drect.width, drect.height, _("Try to make moire patterns disappear."));
 	}
 	else if (g_str_equal(patternname, "clock")) {
-		draw_checker(pixmap, drect.width, drect.height,
+		draw_checker(surface, drect.width, drect.height,
 			_("Adjust Image Lock Coarse to make the vertical band disappear.\n"
 			  "Adjust Image Lock Fine to minimize movement on the screen."));
 	}
 	else if (g_str_equal(patternname, "misconvergence")) {
-		draw_color_crosses(pixmap, drect.width, drect.height);
+		draw_color_crosses(surface, drect.width, drect.height);
 	}
 	else { // TODO when using enum above, this code can be deleted
 		int label_width, label_height;
-		cairo_t* cairo = gdk_cairo_create(pixmap);
-		color.red = color.green = color.blue = 0xFFFF;
-		gdk_cairo_set_source_color(cairo, &color);
+		cairo_t* cairo = cairo_create(surface);
+		cairo_set_source_rgb(cairo, 1.0, 1.0, 1.0);
 		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s"), patternname);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 		pango_layout_set_markup(layout, tmp, -1);
@@ -303,11 +283,11 @@ static void show_pattern(gchar* patternname)
 
 	GdkPixbuf* pixbufs[4];
 	
-	pixbufs[0] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, 0, 0, 0, drect.width, top);
-	pixbufs[1] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, bottom, 0, 0, drect.width, drect.height-bottom);
-	pixbufs[2] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, 0, top, 0, 0, left, bottom-top);
-	pixbufs[3] = gdk_pixbuf_get_from_drawable(NULL, pixmap, NULL, right, top, 0, 0, drect.width-right, bottom-top);
-	g_object_unref(pixmap);
+	pixbufs[0] = gdk_pixbuf_get_from_surface(surface, 0, 0, drect.width, top);
+	pixbufs[1] = gdk_pixbuf_get_from_surface(surface, 0, bottom, drect.width, drect.height-bottom);
+	pixbufs[2] = gdk_pixbuf_get_from_surface(surface, 0, top, left, bottom-top);
+	pixbufs[3] = gdk_pixbuf_get_from_surface(surface, right, top, drect.width-right, bottom-top);
+	cairo_surface_destroy(surface);
 	
 	if (images[0])
 	{ /* GtkImages already exist */
@@ -322,12 +302,22 @@ static void show_pattern(gchar* patternname)
 			gtk_widget_show(images[i]);
 		}
 		
-		gtk_table_attach(GTK_TABLE(table), images[0],       0, 3, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
-		gtk_table_attach(GTK_TABLE(table), images[2],       0, 1, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
-		gtk_table_attach(GTK_TABLE(table), scrolled_window, 1, 2, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
-		gtk_table_attach(GTK_TABLE(table), images[3],       2, 3, 1, 2, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
-		gtk_table_attach(GTK_TABLE(table), images[1],       0, 3, 2, 3, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 0, 0);
-		gtk_widget_show(table);
+		gtk_grid_attach(GTK_GRID(grid), images[0], 0, 0, 3, 1);
+		gtk_widget_set_hexpand(images[0], TRUE);
+		gtk_widget_set_vexpand(images[0], TRUE);
+		gtk_grid_attach(GTK_GRID(grid), images[2], 0, 1, 1, 1);
+		gtk_widget_set_hexpand(images[2], TRUE);
+		gtk_widget_set_vexpand(images[2], TRUE);
+		gtk_grid_attach(GTK_GRID(grid), scrolled_window, 1, 1, 1, 1);
+		gtk_widget_set_hexpand(scrolled_window, TRUE);
+		gtk_widget_set_vexpand(scrolled_window, TRUE);
+		gtk_grid_attach(GTK_GRID(grid), images[3], 2, 1, 1, 1);
+		gtk_widget_set_hexpand(images[3], TRUE);
+		gtk_widget_set_vexpand(images[3], TRUE);
+		gtk_grid_attach(GTK_GRID(grid), images[1], 0, 2, 3, 1);
+		gtk_widget_set_hexpand(images[1], TRUE);
+		gtk_widget_set_vexpand(images[1], TRUE);
+		gtk_widget_show(grid);
 	}
 	for (i = 0; i < 4; i++) {
 		g_object_unref(pixbufs[i]);

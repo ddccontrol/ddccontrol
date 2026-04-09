@@ -360,7 +360,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 	if (control->type != command)
 		get_value_and_max(control,&currentDefault,&currentMaximum);
 	
-	GtkWidget* hbox = gtk_hbox_new(FALSE,0);
+	GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	GtkWidget *widget = NULL;
 	GtkWidget *button = NULL;
 	GtkWidget *check_frame = NULL; /* Frame around the check */
@@ -412,7 +412,8 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 			break;
 		case command:
 			{
-				widget = gtk_vbox_new(TRUE, 0);
+				widget = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+				gtk_box_set_homogeneous(GTK_BOX(widget), TRUE);
 				struct value_db* value;
 				for (value = control->value_list; value != NULL; value = value->next)
 				{
@@ -426,7 +427,8 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 			break;
 		case list:
 			{
-				widget = gtk_vbox_new(TRUE, 0);
+				widget = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+				gtk_box_set_homogeneous(GTK_BOX(widget), TRUE);
 				struct value_db* value;
 				GSList* group = NULL;
 				for (value = control->value_list; value != NULL; value = value->next)
@@ -474,8 +476,8 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 {
 	int i=0;
-	GtkWidget* mainvbox = gtk_vbox_new(FALSE,10);
-	GtkWidget* vbox = gtk_vbox_new(FALSE,10);
+	GtkWidget* mainvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
+	GtkWidget* vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	GtkWidget* frame;
 	
 	struct control_db* control;
@@ -490,13 +492,11 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	}
 	
 	if (subgroup->pattern) {
-		GtkWidget* align = gtk_alignment_new(0.5, 0, 0, 0);
-		
 		GtkWidget* button = stock_label_button(GTK_STOCK_FULLSCREEN, _("Show fullscreen patterns"), NULL);
 		gtk_widget_show(button);
-		gtk_container_add(GTK_CONTAINER(align), button);
-		gtk_widget_show(align);
-		gtk_box_pack_end(GTK_BOX(mainvbox), align, TRUE, 5, 5);
+		gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
+		gtk_widget_set_valign(button, GTK_ALIGN_START);
+		gtk_box_pack_end(GTK_BOX(mainvbox), button, TRUE, 5, 5);
 		g_object_set_data(G_OBJECT(button), "pattern", subgroup->pattern);
 		g_object_set_data(G_OBJECT(button), "mainvbox", mainvbox);
 		g_object_set_data(G_OBJECT(button), "vbox", vbox);
@@ -615,10 +615,16 @@ void create_monitor_manager(struct monitorlist* monitor)
 	GtkWidget *tree = createTree(notebook);
 	
 	//////////////////////////////	
-	GtkWidget* none = gtk_table_new(1, 1, TRUE);
+	GtkWidget* none = gtk_grid_new();
 	
 	GtkWidget *valuelabel = gtk_label_new (_("Please click on a group name."));
-	gtk_table_attach(GTK_TABLE(none), valuelabel, 0, 1, 0, 1, GTK_FILL_EXPAND, GTK_EXPAND, 5, 5);
+	gtk_grid_attach(GTK_GRID(none), valuelabel, 0, 0, 1, 1);
+	gtk_widget_set_hexpand(valuelabel, TRUE);
+	gtk_widget_set_vexpand(valuelabel, TRUE);
+	gtk_widget_set_margin_top(valuelabel, 5);
+	gtk_widget_set_margin_bottom(valuelabel, 5);
+	gtk_widget_set_margin_start(valuelabel, 5);
+	gtk_widget_set_margin_end(valuelabel, 5);
 	
 	GtkWidget *label = gtk_label_new("zero");
 	
@@ -654,12 +660,23 @@ void create_monitor_manager(struct monitorlist* monitor)
 		}
 	}
 	
-	GtkWidget* table = gtk_table_new(2, 1, FALSE);
+	GtkWidget* grid = gtk_grid_new();
 	gtk_widget_show (tree);
-	gtk_table_attach(GTK_TABLE(table), tree, 0, 1, 0, 1, 0, GTK_FILL_EXPAND, 3, 0);
+	gtk_grid_attach(GTK_GRID(grid), tree, 0, 0, 1, 1);
+	gtk_widget_set_vexpand(tree, TRUE);
+	gtk_widget_set_margin_top(tree, 3);
+	gtk_widget_set_margin_bottom(tree, 0);
+	gtk_widget_set_margin_start(tree, 3);
+	gtk_widget_set_margin_end(tree, 0);
 	gtk_widget_show (notebook);
-	gtk_table_attach(GTK_TABLE(table), notebook, 1, 2, 0, 1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 3, 0);
-	gtk_widget_show (table);
+	gtk_grid_attach(GTK_GRID(grid), notebook, 1, 0, 1, 1);
+	gtk_widget_set_hexpand(notebook, TRUE);
+	gtk_widget_set_vexpand(notebook, TRUE);
+	gtk_widget_set_margin_top(notebook, 3);
+	gtk_widget_set_margin_bottom(notebook, 0);
+	gtk_widget_set_margin_start(notebook, 3);
+	gtk_widget_set_margin_end(notebook, 0);
+	gtk_widget_show (grid);
 	
 	set_message(_("Loading profiles..."));
 	
@@ -667,7 +684,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	create_profile_manager();
 	
-	monitor_manager = table;
+	monitor_manager = grid;
 	
 	if (mon->fallback) {
 		/* Put a big warning. */
@@ -714,11 +731,9 @@ void delete_monitor_manager()
 			ddcci_save(mon);
 	
 		free(mon);
-		g_slist_free(all_controls);
 	}
 	
-	if (profile_manager) {
-		gtk_widget_destroy(profile_manager);
-		profile_manager = NULL;
+	if (all_controls) {
+		g_slist_free(all_controls);
 	}
 }

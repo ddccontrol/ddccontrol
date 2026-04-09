@@ -31,7 +31,7 @@
 
 #include "daemon/dbus_client.h"
 
-GtkWidget* table;
+GtkWidget* grid;
 
 GtkWidget *combo_box;
 GtkWidget* refresh_monitors_button;
@@ -147,8 +147,20 @@ static void combo_change(GtkWidget *widget, gpointer data)
 		}
 		
 		if (monitor_manager) {
-			gtk_table_attach(GTK_TABLE(table), monitor_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
-			gtk_table_attach(GTK_TABLE(table), profile_manager, 0, 1, mainrow, mainrow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+			gtk_grid_attach(GTK_GRID(grid), monitor_manager, 0, mainrow, 1, 1);
+			gtk_widget_set_hexpand(monitor_manager, TRUE);
+			gtk_widget_set_vexpand(monitor_manager, TRUE);
+			gtk_widget_set_margin_top(monitor_manager, 5);
+			gtk_widget_set_margin_bottom(monitor_manager, 5);
+			gtk_widget_set_margin_start(monitor_manager, 5);
+			gtk_widget_set_margin_end(monitor_manager, 5);
+			gtk_grid_attach(GTK_GRID(grid), profile_manager, 0, mainrow, 1, 1);
+			gtk_widget_set_hexpand(profile_manager, TRUE);
+			gtk_widget_set_vexpand(profile_manager, TRUE);
+			gtk_widget_set_margin_top(profile_manager, 5);
+			gtk_widget_set_margin_bottom(profile_manager, 5);
+			gtk_widget_set_margin_start(profile_manager, 5);
+			gtk_widget_set_margin_end(profile_manager, 5);
 		}
 		
 		while (gtk_events_pending ())
@@ -304,7 +316,7 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 	button = gtk_button_new();
 	
 	/* Create box for image and label */
-	box = gtk_hbox_new(FALSE, 0);
+	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER (box), 1);
 	
 	/* Now on to the image stuff */
@@ -409,7 +421,6 @@ int main( int argc, char *argv[] )
 
 	gtk_init(&argc, &argv);
 	
-	g_thread_init(NULL);
 	combo_change_mutex = g_mutex_new();
 	
 	/* Full screen patterns test */
@@ -453,12 +464,12 @@ int main( int argc, char *argv[] )
 	
 	gtk_container_set_border_width (GTK_CONTAINER (main_app_window), 4);
 	
-	table = gtk_table_new(5, 1, FALSE);
-	gtk_widget_show (table);
+	grid = gtk_grid_new();
+	gtk_widget_show (grid);
 	int crow = 0; /* Current row */
 	
 	/* Monitor choice combo box */
-	choice_hbox = gtk_hbox_new(FALSE, 10);
+	choice_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	
 	GtkWidget* label = gtk_label_new(_("Current monitor: "));
 	gtk_widget_show(label);
@@ -475,17 +486,23 @@ int main( int argc, char *argv[] )
 	gtk_widget_show(refresh_monitors_button);
 	gtk_box_pack_start(GTK_BOX(choice_hbox),refresh_monitors_button, 0, 0, 0);
 	
-	gtk_table_attach(GTK_TABLE(table), choice_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, 0, 5, 5);
+	gtk_grid_attach(GTK_GRID(grid), choice_hbox, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(choice_hbox, TRUE);
+	gtk_widget_set_margin_top(choice_hbox, 5);
+	gtk_widget_set_margin_bottom(choice_hbox, 5);
+	gtk_widget_set_margin_start(choice_hbox, 5);
+	gtk_widget_set_margin_end(choice_hbox, 5);
 	crow++;
 	gtk_widget_show(choice_hbox);
 	
-	GtkWidget* hsep = gtk_hseparator_new();
+	GtkWidget* hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_widget_show (hsep);
-	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	gtk_grid_attach(GTK_GRID(grid), hsep, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(hsep, TRUE);
 	crow++;
 	
 	/* Toolbar (profile...) */
-	profile_hbox = gtk_hbox_new(FALSE, 10);
+	profile_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	
 	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"), NULL);
 	g_signal_connect(G_OBJECT(profile_manager_button), "clicked", G_CALLBACK(loadprofile_callback), NULL);
@@ -507,50 +524,63 @@ int main( int argc, char *argv[] )
 	gtk_widget_set_sensitive(cancelprofile_button, FALSE);
 	
 	gtk_widget_show (profile_hbox);
-	gtk_table_attach(GTK_TABLE(table), profile_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	gtk_grid_attach(GTK_GRID(grid), profile_hbox, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(profile_hbox, TRUE);
+	gtk_widget_set_margin_top(profile_hbox, 8);
+	gtk_widget_set_margin_bottom(profile_hbox, 8);
+	gtk_widget_set_margin_start(profile_hbox, 8);
+	gtk_widget_set_margin_end(profile_hbox, 8);
 	crow++;
 	
-	hsep = gtk_hseparator_new();
+	hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_widget_show (hsep);
-	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	gtk_grid_attach(GTK_GRID(grid), hsep, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(hsep, TRUE);
 	crow++;
 	
 	/* Status message label (used when loading or refreshing, or when displaying some kind of warnings) */
-	messagebox = gtk_vbox_new(FALSE, 10);
+	messagebox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	
 	messagelabel = gtk_label_new ("");
 	gtk_label_set_line_wrap(GTK_LABEL(messagelabel), TRUE);
 	gtk_box_pack_start(GTK_BOX(messagebox), messagelabel, 1, 1, 0);
 	gtk_widget_show(messagelabel);
 	
-	GtkWidget* messagealign = gtk_alignment_new(0.5, 0.5, 0, 0);
 	messagebutton = stock_label_button(GTK_STOCK_OK, _("OK"), NULL);
 	g_signal_connect(G_OBJECT(messagebutton), "clicked", G_CALLBACK(messagebutton_callback), NULL);
-	gtk_container_add(GTK_CONTAINER(messagealign), messagebutton);
+	gtk_widget_set_halign(messagebutton, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(messagebutton, GTK_ALIGN_CENTER);
 	gtk_widget_show(messagebutton);
 	
-	gtk_box_pack_start(GTK_BOX(messagebox), messagealign, 0, 0, 10);
-	gtk_widget_show(messagealign);
+	gtk_box_pack_start(GTK_BOX(messagebox), messagebutton, 0, 0, 10);
 	
-	gtk_table_attach(GTK_TABLE(table), messagebox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_FILL_EXPAND, 5, 5);
+	gtk_grid_attach(GTK_GRID(grid), messagebox, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(messagebox, TRUE);
+	gtk_widget_set_vexpand(messagebox, TRUE);
+	gtk_widget_set_margin_top(messagebox, 5);
+	gtk_widget_set_margin_bottom(messagebox, 5);
+	gtk_widget_set_margin_start(messagebox, 5);
+	gtk_widget_set_margin_end(messagebox, 5);
 	mainrow = crow;
 	crow++;
 	
-	hsep = gtk_hseparator_new();
+	hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_widget_show (hsep);
-	gtk_table_attach(GTK_TABLE(table), hsep, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 0);
+	gtk_grid_attach(GTK_GRID(grid), hsep, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(hsep, TRUE);
 	crow++;
 	
 	/* Refresh and close buttons */
-	bottom_hbox = gtk_hbox_new(FALSE, 10);
+	bottom_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	
 	statuslabel = gtk_label_new("");
 	gtk_label_set_line_wrap(GTK_LABEL(statuslabel), TRUE);
 	gtk_box_pack_start(GTK_BOX(bottom_hbox),statuslabel, TRUE, TRUE, 0);
 	gtk_widget_show(statuslabel);
 	
-	GtkWidget* align = gtk_alignment_new(1, 0.5, 0, 0);
-	GtkWidget* br_hbox = gtk_hbox_new(FALSE, 30);
+	GtkWidget* br_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 30);
+	gtk_widget_set_halign(br_hbox, GTK_ALIGN_END);
+	gtk_widget_set_valign(br_hbox, GTK_ALIGN_CENTER);
 	
 	refresh_controls_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
 	g_signal_connect(G_OBJECT(refresh_controls_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
@@ -565,16 +595,19 @@ int main( int argc, char *argv[] )
 	gtk_box_pack_start(GTK_BOX(br_hbox),close_button,0,0,0);
 	gtk_widget_show (close_button);
 	
-	gtk_container_add(GTK_CONTAINER(align),br_hbox);
 	gtk_widget_show (br_hbox);
-	gtk_widget_show (align);
 	
-	gtk_box_pack_start(GTK_BOX(bottom_hbox),align, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(bottom_hbox),br_hbox, TRUE, TRUE,0);
 	gtk_widget_show (bottom_hbox);
-	gtk_table_attach(GTK_TABLE(table), bottom_hbox, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 8, 8);
+	gtk_grid_attach(GTK_GRID(grid), bottom_hbox, 0, crow, 1, 1);
+	gtk_widget_set_hexpand(bottom_hbox, TRUE);
+	gtk_widget_set_margin_top(bottom_hbox, 8);
+	gtk_widget_set_margin_bottom(bottom_hbox, 8);
+	gtk_widget_set_margin_start(bottom_hbox, 8);
+	gtk_widget_set_margin_end(bottom_hbox, 8);
 	crow++;
 	
-	gtk_container_add (GTK_CONTAINER(main_app_window), table);
+	gtk_container_add (GTK_CONTAINER(main_app_window), grid);
 	
 	gtk_widget_show(main_app_window);
 	

@@ -151,7 +151,7 @@ static void close_profile_manager(GtkWidget *widget, gpointer data)
 /* Initializers */
 /* Fill profile manager with components */
 void fill_profile_manager() {
-	GtkWidget* table;
+	GtkWidget* grid;
 	GtkWidget* label;
 	GtkWidget* button;
 	GtkWidget* hsep;
@@ -184,33 +184,55 @@ void fill_profile_manager() {
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 	
-	table = gtk_table_new(count == 0 ? 1 : (count*2)-1, 5, FALSE);
+	grid = gtk_grid_new();
 	
 	while (profile != NULL) {
 		label = gtk_label_new((gchar*)profile->name);
-		gtk_table_attach(GTK_TABLE(table), label, 0, 1, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 5);
+		gtk_grid_attach(GTK_GRID(grid), label, 0, crow, 1, 1);
+		gtk_widget_set_hexpand(label, TRUE);
+		gtk_widget_set_margin_top(label, 5);
+		gtk_widget_set_margin_bottom(label, 0);
+		gtk_widget_set_margin_start(label, 5);
+		gtk_widget_set_margin_end(label, 0);
 		gtk_widget_show(label);
 		
 		button = stock_label_button(GTK_STOCK_APPLY, NULL, _("Apply profile"));
-		gtk_table_attach(GTK_TABLE(table), button, 1, 2, crow, crow+1, GTK_SHRINK, 0, 5, 5);
+		gtk_grid_attach(GTK_GRID(grid), button, 1, crow, 1, 1);
+		gtk_widget_set_margin_top(button, 5);
+		gtk_widget_set_margin_bottom(button, 5);
+		gtk_widget_set_margin_start(button, 5);
+		gtk_widget_set_margin_end(button, 5);
 		gtk_widget_show(button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(apply_callback), profile);
 		
 		button = stock_label_button(GTK_STOCK_EDIT, NULL, _("Show profile details / Rename profile"));
-		gtk_table_attach(GTK_TABLE(table), button, 2, 3, crow, crow+1, GTK_SHRINK, 0, 5, 5);
+		gtk_grid_attach(GTK_GRID(grid), button, 2, crow, 1, 1);
+		gtk_widget_set_margin_top(button, 5);
+		gtk_widget_set_margin_bottom(button, 5);
+		gtk_widget_set_margin_start(button, 5);
+		gtk_widget_set_margin_end(button, 5);
 		gtk_widget_show(button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_info_callback), profile);
 		
 		button = stock_label_button(GTK_STOCK_DELETE, NULL, _("Delete profile"));
-		gtk_table_attach(GTK_TABLE(table), button, 3, 4, crow, crow+1, GTK_SHRINK, 0, 5, 5);
+		gtk_grid_attach(GTK_GRID(grid), button, 3, crow, 1, 1);
+		gtk_widget_set_margin_top(button, 5);
+		gtk_widget_set_margin_bottom(button, 5);
+		gtk_widget_set_margin_start(button, 5);
+		gtk_widget_set_margin_end(button, 5);
 		gtk_widget_show(button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(delete_callback), profile);
 		
 		crow++;
 		
 		if (profile->next) {
-				hsep = gtk_hseparator_new();
-				gtk_table_attach(GTK_TABLE(table), hsep, 0, 3, crow, crow+1, GTK_FILL_EXPAND, GTK_SHRINK, 0, 5);
+				hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+				gtk_grid_attach(GTK_GRID(grid), hsep, 0, crow, 3, 1);
+				gtk_widget_set_hexpand(hsep, TRUE);
+				gtk_widget_set_margin_top(hsep, 5);
+				gtk_widget_set_margin_bottom(hsep, 0);
+				gtk_widget_set_margin_start(hsep, 0);
+				gtk_widget_set_margin_end(hsep, 0);
 				crow++;
 				gtk_widget_show(hsep);
 		}
@@ -218,14 +240,15 @@ void fill_profile_manager() {
 		profile = profile->next;
 	}
 	
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), table);
-	gtk_widget_show(table);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), grid);
+	gtk_widget_show(grid);
 	
 	gtk_box_pack_start(GTK_BOX(profile_manager), scrolled_window, TRUE, TRUE, 0);
 	gtk_widget_show(scrolled_window);
 	
-	GtkWidget* salign = gtk_alignment_new(0.5, 0, 0, 0);
-	hbox = gtk_hbox_new(FALSE, 10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+	gtk_widget_set_halign(hbox, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(hbox, GTK_ALIGN_START);
 	
 	button = stock_label_button(GTK_STOCK_SAVE, _("Create profile"), NULL);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(create_callback), NULL);
@@ -239,16 +262,14 @@ void fill_profile_manager() {
 	gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
 	gtk_widget_show(button);
 	
-	gtk_container_add(GTK_CONTAINER(salign), hbox);
 	gtk_widget_show(hbox);
 	
-	gtk_box_pack_start(GTK_BOX(profile_manager), salign, 0, 0, 0);
-	gtk_widget_show(salign);
+	gtk_box_pack_start(GTK_BOX(profile_manager), hbox, 0, 0, 0);
 }
 
 void create_profile_manager()
 {
-	profile_manager = gtk_vbox_new(FALSE, 10);
+	profile_manager = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	
 	fill_profile_manager();
 }
@@ -458,7 +479,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area((GtkDialog *)dialog)), label, FALSE, FALSE, 5);
 	gtk_widget_show(label);
 	
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	
 	label = gtk_label_new(NULL);
 	tmp = g_strdup_printf(_("File name: %s"), profile->filename);
@@ -470,7 +491,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area((GtkDialog *)dialog)), hbox, FALSE, FALSE, 5);
 	gtk_widget_show(hbox);
 	
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	
 	label = gtk_label_new(_("Profile name:"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);

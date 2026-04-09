@@ -24,7 +24,7 @@
 <para>In addition to the library packages, you also need the development
 packages, which are not usually installed. For example, on Debian, their names
 are <filename>libxml2-dev</filename>, <filename>pciutils-dev</filename> and
-<filename>libgtk2.0-dev</filename>. Other distributions probably have similar
+<filename>libgtk-3-dev</filename>. Other distributions probably have similar
 package names. On Fedora Core 5, you will also need
 <filename>gnome-panel-devel</filename> package.
 </para>
