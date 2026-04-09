@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -12,43 +12,45 @@ jobs:
     strategy:
       matrix:
         compiler: [clang, gcc]
-        cflags: ['', 'CFLAGS=-O0 -g -Werror', 'CFLAGS=-O2 -Werror']
-    
+        cflags: ["", "CFLAGS=-O0 -g -Werror", "CFLAGS=-O2 -Werror"]
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          intltool \
-          autoconf \
-          libxml2-dev \
-          libpci-dev \
-          libgtk-3-dev \
-          astyle
-    
-    - name: Set compiler
-      run: |
-        if [ "${{ matrix.compiler }}" = "clang" ]; then
-          echo "CC=clang" >> $GITHUB_ENV
-        else
-          echo "CC=gcc" >> $GITHUB_ENV
-        fi
-    
-    - name: Build
-      env:
-        CFLAGS: ${{ matrix.cflags }}
-      run: |
-        ./autogen.sh
-        ./configure "$CFLAGS"
-        make -j4
-    
-    - name: Format code check
-      run: ./scripts/format_code.sh
-    
-    - name: Clean up formatted files
-      run: find -name "*.orig" -exec rm -v {} \;
-    
-    - name: Post-build checks
-      run: ./scripts/travis_ci_after_build_checks.sh
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            astyle \
+            autoconf \
+            dh-autoreconf \
+            intltool \
+            libgtk-3-dev \
+            libpci-dev \
+            libxml2-dev \
+            pkg-config \
+
+      - name: Set compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            echo "CC=clang" >> $GITHUB_ENV
+          else
+            echo "CC=gcc" >> $GITHUB_ENV
+          fi
+
+      - name: Build
+        env:
+          CFLAGS: ${{ matrix.cflags }}
+        run: |
+          ./autogen.sh
+          ./configure "$CFLAGS"
+          make -j4
+
+      - name: Format code check
+        run: ./scripts/format_code.sh
+
+      - name: Clean up formatted files
+        run: find -name "*.orig" -exec rm -v {} \;
+
+      - name: Post-build checks
+        run: ./scripts/travis_ci_after_build_checks.sh
