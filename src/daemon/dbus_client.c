@@ -158,7 +158,7 @@ struct monitorlist *ddcci_dbus_rescan_monitors(DDCControl *proxy)
 	struct monitorlist *monlist = NULL, *current = NULL;
 
 	char **devices = NULL, **names = NULL;
-	char *supported = NULL, *digital = NULL;
+	const gchar *supported = NULL, *digital = NULL;
 
 	GError *error = NULL;
 	GVariant *v_supported, *v_digital;
