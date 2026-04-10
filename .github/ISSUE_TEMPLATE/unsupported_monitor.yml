@@ -1,0 +1,58 @@
+title: "[monitor] "
+labels: ["unsupported-monitor"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an unsupported monitor.
+
+        Please review the prefilled values and attach the full report file if you have one.
+
+  - type: input
+    id: pnp_id
+    attributes:
+      label: PNP ID
+      description: Plug and Play ID read from EDID
+    validations:
+      required: true
+
+  - type: input
+    id: monitor_name
+    attributes:
+      label: Monitor name
+      description: Monitor name read from EDID
+    validations:
+      required: true
+
+  - type: input
+    id: ddccontrol_version
+    attributes:
+      label: ddccontrol version
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: I2C device
+    validations:
+      required: false
+
+  - type: dropdown
+    id: fallback_profile
+    attributes:
+      label: Fallback vendor profile used
+      options:
+        - "yes"
+        - "no"
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: Full report
+      description: Attach the generated file, or paste the report here
+      render: text
+    validations:
+      required: false

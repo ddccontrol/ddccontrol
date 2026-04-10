@@ -369,10 +369,12 @@ int main(int argc, char **argv)
 				           "some controls may not work as expected.\n"));
 			}
 			printf(_(
-			           "Please update ddccontrol-db, or, if you are already using the latest\n"
-			           "version, please send the output of the following command to\n"
-			           "ddccontrol-users@lists.sourceforge.net:\n"));
-			printf("\nLANG= LC_ALL= ddccontrol -p -c -d\n\n");
+				           "Unsupported monitor detected.\n\n"
+				           "Please update ddccontrol-db, or, if you are already using the latest\n"
+				           "version, please open a github issue:\n"
+				           "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml\n"
+				           "Then attach the resulting report file of the following command:\n"));
+			printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
 			printf(_("Thank you.\n"));
 			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
 		}
