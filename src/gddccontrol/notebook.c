@@ -597,10 +597,12 @@ void create_monitor_manager(struct monitorlist* monitor)
 
 	if (!mon->db) {
 		tmp = g_strdup_printf(_(
-			"The current monitor is not supported, please run\n"
-			"%s\n"
-			"and send the output to ddccontrol-users@lists.sourceforge.net.\n"
-			"Thanks."), "<tt>LANG= LC_ALL= ddccontrol -p -c -d</tt>");
+			"Unsupported monitor detected.\n\n"
+			"Please update ddccontrol-db, or, if you are already using the latest\n"
+			"version, please open a github issue:\n"
+			"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml"
+			"\nThen attach the resulting report file of the following command:"),
+			"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n");
 		set_message(tmp);
 		g_free(tmp);
 		monitor_manager = NULL;
@@ -707,9 +709,9 @@ void create_monitor_manager(struct monitorlist* monitor)
 				"Unsupported monitor detected.\n\n"
 				"Please update ddccontrol-db, or, if you are already using the latest\n"
 				"version, please open a github issue:\n"
-				"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml&ddccontrol_version=1.0.3\n"
-				"Then attach the resulting report file of the following command:\n"));
-				printf("\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n");
+				"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml"
+				"\nThen attach the resulting report file of the following command:\n"),
+				"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n",
 				_("Thank you.\n"), NULL);
 		gtk_widget_show(monitor_manager);
 		set_message_ok(tmp, 1);
