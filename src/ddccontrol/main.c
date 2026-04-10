@@ -26,6 +26,7 @@
 #include "internal.h"
 #include "monitor_db.h"
 #include "conf.h"
+#include "issueurl.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -166,6 +167,8 @@ int main(int argc, char **argv)
 
 	/* -l (load profile) parameter */
 	struct profile *profilefile = NULL;
+
+	struct issue_report report = {0};
 
 	/* what to do */
 	int dump = 0;
@@ -311,14 +314,16 @@ int main(int argc, char **argv)
 			printf(_("   Monitor Name: %s\n"), current->name);
 			printf(_("   Input type: %s\n"), current->digital ? _("Digital") : _("Analog"));
 
+
 			if ((!fn) && (current->supported)) {
 				printf(_("  (Automatically selected)\n"));
 				fn = malloc(strlen(current->filename) + 1);
 				strcpy(fn, current->filename);
 			}
-
+		 	report.monitor_name = current->name;
 			current = current->next;
 		}
+
 
 		if (fn == NULL) {
 			fprintf(stderr, _(
@@ -353,6 +358,7 @@ int main(int argc, char **argv)
 		fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"),
 		        mon->pnpid, mon->db ? mon->db->name : NULL);
 		fprintf(stdout, _("\tInput type: %s\n"), mon->digital ? _("Digital") : _("Analog"));
+		report.pnp_id = mon->pnpid;
 
 		if (mon->fallback) {
 			/* Put a big warning (in red if we are writing to a terminal). */
@@ -369,10 +375,12 @@ int main(int argc, char **argv)
 				           "some controls may not work as expected.\n"));
 			}
 			printf(_(
-			           "Please update ddccontrol-db, or, if you are already using the latest\n"
-			           "version, please send the output of the following command to\n"
-			           "ddccontrol-users@lists.sourceforge.net:\n"));
-			printf("\nLANG= LC_ALL= ddccontrol -p -c -d\n\n");
+				           "Unsupported monitor detected.\n\n"
+				           "Please update ddccontrol-db, or, if you are already using the latest\n"
+				           "version, please open a github issue:\n"
+				           "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml\n"
+				           "Then attach the resulting report file of the following command:\n"));
+			printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
 			printf(_("Thank you.\n"));
 			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
 		}
@@ -517,6 +525,15 @@ int main(int argc, char **argv)
 			ddcci_save(mon);
 		}
 	}
+
+
+	// if (issue_report->monitor_name && issue_report->pnp_id) {
+ //                printf("https://github.com/ddccontrol/ddccontrol-db/issues/new?"
+ //                    "template=unsupported-monitor.yml&monitor_name=%s?pnp_id=%s\n",
+ //                    encoded_name, pnp_id);
+	// }
+	// free(report) ;
+	printf("%s\n", build_issue_url(&report));
 
 	ddcci_close(mon);
 	free(mon);
