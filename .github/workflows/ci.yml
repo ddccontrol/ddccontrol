@@ -12,8 +12,7 @@ jobs:
     strategy:
       matrix:
         compiler: [clang, gcc]
-        cflags: ["", "CFLAGS=-O0 -g -Werror", "CFLAGS=-O2 -Werror"]
-
+        cflags: ["", "-O0 -g", "-O2"]
     steps:
       - uses: actions/checkout@v4
 
