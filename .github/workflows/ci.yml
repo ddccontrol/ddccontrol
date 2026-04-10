@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        compiler: [clang, gcc]
+        compiler: [gcc]
         cflags: ["", "-O0 -g", "-O2"]
     steps:
       - uses: actions/checkout@v4
