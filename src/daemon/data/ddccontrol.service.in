@@ -1,5 +1,6 @@
 [Unit]
 Description=Control monitor parameters, like brightness, contrast, and other...
+Documentation=man:ddccontrol(1)
 
 [Service]
 Type=dbus
