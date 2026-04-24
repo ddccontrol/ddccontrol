@@ -371,7 +371,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 		case value:
 		case list:
 			button = gtk_button_new();
-			GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_UNDO, GTK_ICON_SIZE_LARGE_TOOLBAR);
+			GtkWidget *image = gtk_image_new_from_icon_name("edit-undo", GTK_ICON_SIZE_BUTTON);
 			gtk_widget_show(image);
 			gtk_container_add(GTK_CONTAINER(button), image);
 			gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
@@ -492,7 +492,7 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	}
 	
 	if (subgroup->pattern) {
-		GtkWidget* button = stock_label_button(GTK_STOCK_FULLSCREEN, _("Show fullscreen patterns"), NULL);
+		GtkWidget* button = button_from_icon_name("view-fullscreen", _("_Show fullscreen patterns"), NULL);
 		gtk_widget_show(button);
 		gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
 		gtk_widget_set_valign(button, GTK_ALIGN_START);

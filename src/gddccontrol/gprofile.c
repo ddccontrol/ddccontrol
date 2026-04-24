@@ -196,7 +196,7 @@ void fill_profile_manager() {
 		gtk_widget_set_margin_end(label, 0);
 		gtk_widget_show(label);
 		
-		button = stock_label_button(GTK_STOCK_APPLY, NULL, _("Apply profile"));
+		button = button_from_icon_name("document-open", NULL, _("Apply profile"));
 		gtk_grid_attach(GTK_GRID(grid), button, 1, crow, 1, 1);
 		gtk_widget_set_margin_top(button, 5);
 		gtk_widget_set_margin_bottom(button, 5);
@@ -205,7 +205,7 @@ void fill_profile_manager() {
 		gtk_widget_show(button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(apply_callback), profile);
 		
-		button = stock_label_button(GTK_STOCK_EDIT, NULL, _("Show profile details / Rename profile"));
+		button = button_from_icon_name("dialog-information", NULL, _("Show profile details / Rename profile"));
 		gtk_grid_attach(GTK_GRID(grid), button, 2, crow, 1, 1);
 		gtk_widget_set_margin_top(button, 5);
 		gtk_widget_set_margin_bottom(button, 5);
@@ -214,7 +214,7 @@ void fill_profile_manager() {
 		gtk_widget_show(button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(show_info_callback), profile);
 		
-		button = stock_label_button(GTK_STOCK_DELETE, NULL, _("Delete profile"));
+		button = button_from_icon_name("edit-delete", NULL, _("Delete profile"));
 		gtk_grid_attach(GTK_GRID(grid), button, 3, crow, 1, 1);
 		gtk_widget_set_margin_top(button, 5);
 		gtk_widget_set_margin_bottom(button, 5);
@@ -250,13 +250,13 @@ void fill_profile_manager() {
 	gtk_widget_set_halign(hbox, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(hbox, GTK_ALIGN_START);
 	
-	button = stock_label_button(GTK_STOCK_SAVE, _("Create profile"), NULL);
+	button = button_from_icon_name("document-new", _("Create profile"), NULL);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(create_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
 	gtk_widget_show(button);
 	
-	button = stock_label_button(GTK_STOCK_CLOSE, _("Close profile manager"), NULL);
+	button = button_from_icon_name("window-close", _("Close profile manager"), NULL);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(close_profile_manager), NULL);
 
 	gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
@@ -438,8 +438,12 @@ static void entry_modified_callback(GtkWidget* entry, GtkWidget* dialog) {
 	
 	if (ok_button) {
 		gtk_container_remove(GTK_CONTAINER(gtk_widget_get_parent(ok_button)), ok_button);
-		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE,   GTK_RESPONSE_OK);
-		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+		GtkWidget *save_button = button_from_icon_name("document-save", _("_Rename profile"), NULL);
+		gtk_widget_show(save_button);
+		gtk_dialog_add_action_widget(GTK_DIALOG(dialog), save_button, GTK_RESPONSE_OK);
+		GtkWidget *cancel_button = button_from_icon_name("edit-clear", _("_Cancel"), NULL);
+		gtk_widget_show(cancel_button);
+		gtk_dialog_add_action_widget(GTK_DIALOG(dialog), cancel_button, GTK_RESPONSE_CANCEL);
 		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
 	}
 }
@@ -460,15 +464,21 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 		title,
 		GTK_WINDOW(main_app_window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-		NULL);
+		NULL, NULL);
 	
 	if (new_profile) {
 		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
-		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE,   GTK_RESPONSE_OK);
-		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+		GtkWidget* save_button = button_from_icon_name("document-save", _("_Save profile"), NULL);
+		gtk_widget_show(save_button);
+		gtk_dialog_add_action_widget(GTK_DIALOG(dialog), save_button, GTK_RESPONSE_OK);
+		GtkWidget* abort_button = button_from_icon_name("edit-clear-all", _("_Abort creating profile"), NULL);
+		gtk_widget_show(abort_button);
+		gtk_dialog_add_action_widget(GTK_DIALOG(dialog), abort_button, GTK_RESPONSE_CANCEL);
 	}
 	else {
-		GtkWidget* ok_button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+		GtkWidget* ok_button = button_from_icon_name("window-close", _("_Close"), NULL);
+		gtk_widget_show(ok_button);
+		gtk_dialog_add_action_widget(GTK_DIALOG(dialog), ok_button, GTK_RESPONSE_ACCEPT);
 		g_object_set_data(G_OBJECT(dialog), "ok_button", ok_button);
 	}
 	

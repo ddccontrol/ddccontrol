@@ -61,8 +61,8 @@ static void create_fullscreen_patterns_window()
 	scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	
 	centervbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
-	
-	GtkWidget* close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+
+	GtkWidget* close_button = button_from_icon_name("view-restore", _("_Close fullscreen patterns"), NULL);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 	gtk_widget_show(close_button);
 	gtk_widget_set_halign(close_button, GTK_ALIGN_CENTER);
@@ -76,7 +76,6 @@ static void create_fullscreen_patterns_window()
 }
 
 static void draw_shade(cairo_surface_t* surface, int y_position, int shade_height, int shade_count) {
-	GdkColor color;
 	PangoLayout* layout;
 	gchar* tmp;
 	
