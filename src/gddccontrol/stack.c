@@ -393,7 +393,7 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 	{
 		case value:
 			{
-				widget = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+				widget = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0.0, 100.0, 1.0);
 				gtk_scale_set_digits(GTK_SCALE(widget), 1);
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
 				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);

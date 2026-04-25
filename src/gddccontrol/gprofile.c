@@ -182,7 +182,7 @@ void fill_profile_manager() {
 	
 	gtk_container_set_border_width(GTK_CONTAINER(scrolled_window), 10);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
-	                                GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	
 	grid = gtk_grid_new();
 	
@@ -240,7 +240,7 @@ void fill_profile_manager() {
 		profile = profile->next;
 	}
 	
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), grid);
+	gtk_container_add(GTK_CONTAINER(scrolled_window), grid);
 	gtk_widget_show(grid);
 	
 	gtk_box_pack_start(GTK_BOX(profile_manager), scrolled_window, TRUE, TRUE, 0);

@@ -70,7 +70,7 @@ static void create_fullscreen_patterns_window()
 	gtk_box_pack_end(GTK_BOX(centervbox), close_button, TRUE, 5, 5);
 	gtk_widget_show(centervbox);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), centervbox);
+	gtk_container_add(GTK_CONTAINER(scrolled_window), centervbox);
 	
 	gtk_widget_show(scrolled_window);
 }
