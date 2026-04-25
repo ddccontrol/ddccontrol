@@ -357,7 +357,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	// TODO: rescan on button, initial get only
 	monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
 
-	struct monitorlist* current;
+	const struct monitorlist* current;
 	
 	char buffer[256];
 	

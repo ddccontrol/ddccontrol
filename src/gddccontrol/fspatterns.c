@@ -77,7 +77,6 @@ static void create_fullscreen_patterns_window()
 
 static void draw_shade(cairo_surface_t* surface, int y_position, int shade_height, int shade_count) {
 	PangoLayout* layout;
-	gchar* tmp;
 	
 	cairo_t* cairo_shade = cairo_create(surface);
 	cairo_t* cairo_white = cairo_create(surface);
@@ -111,7 +110,7 @@ static void draw_shade(cairo_surface_t* surface, int y_position, int shade_heigh
 		cairo_stroke(cairo_white);
 
 		// draw label displaying color value
-		tmp = g_strdup_printf("%d", (int)(gray_level * 255));
+		gchar* tmp = g_strdup_printf("%d", (int)(gray_level * 255));
 		layout = gtk_widget_create_pango_layout(fs_patterns_window, tmp);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
@@ -193,9 +192,9 @@ static void draw_color_crosses(cairo_surface_t* surface, int width, int height) 
 	cairo_set_line_cap(cairo, CAIRO_LINE_CAP_SQUARE);
 	cairo_set_line_width(cairo, 1);
 	
-	int x, y, color_index = 0, color_column = 0;
+	int x, y, color_column = 0;
 	for (x = 0; x < width; x += cross_size) {
-		color_index = color_column;
+		int color_index = color_column;
 		for (y = 0; y < height; y += cross_size) {
 			switch (color_index % 4) {
 			case 0:
@@ -267,17 +266,17 @@ static void show_pattern(gchar* patternname)
 	}
 	else { // TODO when using enum above, this code can be deleted
 		int label_width, label_height;
-		cairo_t* cairo = cairo_create(surface);
-		cairo_set_source_rgb(cairo, 1.0, 1.0, 1.0);
+		cairo_t* inner_cairo = cairo_create(surface);
+		cairo_set_source_rgb(inner_cairo, 1.0, 1.0, 1.0);
 		gchar* tmp = g_strdup_printf(_("Unknown fullscreen pattern name: %s"), patternname);
 		PangoLayout* layout = pango_layout_new(gtk_widget_get_pango_context(fs_patterns_window));
 		pango_layout_set_markup(layout, tmp, -1);
 		g_free(tmp);
 		pango_layout_get_pixel_size(layout, &label_width, &label_height);
-		cairo_move_to(cairo, (drect.width-label_width)/2, drect.height/8);
-		pango_cairo_show_layout(cairo, layout);
+		cairo_move_to(inner_cairo, (drect.width-label_width)/2, drect.height/8);
+		pango_cairo_show_layout(inner_cairo, layout);
 		g_object_unref(layout);
-		cairo_destroy(cairo);
+		cairo_destroy(inner_cairo);
 	}
 
 	GdkPixbuf* pixbufs[4];

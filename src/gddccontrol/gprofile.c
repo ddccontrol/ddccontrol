@@ -347,16 +347,14 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 	struct control_db* control;
 	struct value_db* value_db;
 	
-	gboolean group_created, subgroup_created;
-	
 	int i;
 	
 	for (group = mon->db->group_list; group != NULL; group = group->next)
 	{
-		group_created = FALSE;
+		gboolean group_created = FALSE;
 		for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
 		{
-			subgroup_created = FALSE;
+			gboolean subgroup_created = FALSE;
 			for (control = subgroup->control_list; control != NULL; control = control->next)
 			{
 				for (i = 0; i < profile->size; i++)
@@ -529,14 +527,14 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 		ddcci_set_profile_name(profile, gtk_entry_get_text(GTK_ENTRY(entry)));
 		rc = ddcci_save_profile(profile, mon);
 		if (!rc) {
-			GtkWidget* dialog = gtk_message_dialog_new(
+			GtkWidget* errordialog = gtk_message_dialog_new(
 					GTK_WINDOW(main_app_window),
 					GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_MESSAGE_ERROR,
 					GTK_BUTTONS_CLOSE,
 					_("Error while saving profile."));
-			gtk_dialog_run(GTK_DIALOG(dialog));
-			gtk_widget_destroy(dialog);
+			gtk_dialog_run(GTK_DIALOG(errordialog));
+			gtk_widget_destroy(errordialog);
 			set_message("");
 			return;
 		}

@@ -127,7 +127,7 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 				get_value_and_max(control, &currentValue, &currentMaximum);
 				change_control_value(list->data, (gpointer)(long)currentValue);
 			}
-			gchar* tmp = g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count);
+			tmp = g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count);
 			set_message(tmp);
 			g_free(tmp);
 		}
@@ -234,19 +234,16 @@ static void group_callback(GtkWidget *widget, gpointer data)
 #if 0
 		printf("Would change %#x to %#x\n", currentControl->address, val);
 #endif
+	
+		if (!refreshing)
+			write_dbctrl(control, val);
 		
-		if (control)
-		{
-			if (!refreshing)
-				write_dbctrl(control, val);
-			
-			gtk_widget_set_sensitive(GTK_WIDGET(button), val != Default);
-			modified = 1;
-			
-			/* Refresh if needed */
-			if (control->refresh == all) {
-				refresh_all_controls(NULL, NULL);
-			}
+		gtk_widget_set_sensitive(GTK_WIDGET(button), val != Default);
+		modified = 1;
+		
+		/* Refresh if needed */
+		if (control->refresh == all) {
+			refresh_all_controls(NULL, NULL);
 		}
 	}
 }
@@ -470,12 +467,11 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 	int i=0;
 	GtkWidget* mainvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	GtkWidget* vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
-	GtkWidget* frame;
 	
 	struct control_db* control;
 	for (control = subgroup->control_list; control != NULL; control = control->next)
 	{
-		frame = gtk_frame_new((char*)control->name);
+		GtkWidget* frame = gtk_frame_new((char*)control->name);
 		gtk_container_set_border_width(GTK_CONTAINER(frame),5);
 		GtkWidget* controlWidget = createControlWidgets(control);
 		gtk_container_add(GTK_CONTAINER(frame), controlWidget);
@@ -551,15 +547,10 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 	{
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
-			
 			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
 			}
 		}
-	}
-
-	
-	if (mon->db)
-	{
+		
 		int count = 0, current = 0;
 		
 		for (group = mon->db->group_list; group != NULL; group = group->next)
@@ -582,7 +573,7 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 				
 				GtkWidget* currentPage = createPage(stack, subgroup);
 				current++;
-				gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
+				tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
 				set_message(tmp);
 				g_free(tmp);
 				
@@ -700,7 +691,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 				"some controls may not work as expected.\n"));
 		}
 
-		gchar* tmp = g_strconcat("<span size='large' weight='ultrabold'>", _("Warning!"), "</span>\n\n", 
+		tmp = g_strconcat("<span size='large' weight='ultrabold'>", _("Warning!"), "</span>\n\n", 
 				message, _(
 				"Please update ddccontrol-db, or, if you are already using the latest "
 				"version, please send the output of the following command to "
