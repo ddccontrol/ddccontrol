@@ -140,7 +140,7 @@ static void create_callback(GtkWidget *widget, gpointer data)
 	gtk_widget_show(saveprofile_button);
 	gtk_widget_show(cancelprofile_button);
 	
-	set_status(_("Please select the controls you want to save in the profile using the checkboxes to the left of each control."));
+	set_status(_("Please select the controls you want to save in the profile using the checkboxes above each control."));
 }
 
 static void close_profile_manager(GtkWidget *widget, gpointer data)
