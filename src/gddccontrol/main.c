@@ -347,49 +347,6 @@ GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_tex
 	return button;
 }
 
-/* Create a new button with an image and a label packed into it
- * and return the button. */
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip)
-{
-	GtkWidget *box;
-	GtkWidget *label = NULL;
-	GtkWidget *image;
-	GtkWidget *button;
-	
-	button = gtk_button_new();
-	
-	/* Create box for image and label */
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width(GTK_CONTAINER (box), 1);
-	
-	/* Now on to the image stuff */
-	image = gtk_image_new_from_stock(stockid, GTK_ICON_SIZE_BUTTON);
-	gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 3);
-	gtk_widget_show(image);
-
-	if (label_text) {
-		/* Create a label for the button */
-		label = gtk_label_new(label_text);
-		
-		/* Pack the image and label into the box */
-		gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 3);
-		
-		gtk_widget_show(label);
-	}
-	
-	gtk_widget_show(box);
-	
-	gtk_container_add (GTK_CONTAINER(button), box);
-	
-	g_object_set_data(G_OBJECT(button), "button_label", label);
-	
-	if (tool_tip) {
-		gtk_widget_set_tooltip_text(GTK_WIDGET(button), tool_tip);
-	}
-	
-	return button;
-}
-
 static void probe_monitors(GtkWidget *widget, gpointer data) {
 	if (combo_box_changed_handler_id)
 		g_signal_handler_disconnect(G_OBJECT(combo_box), combo_box_changed_handler_id);
@@ -589,7 +546,7 @@ int main( int argc, char *argv[] )
 	gtk_box_pack_start(GTK_BOX(messagebox), messagelabel, 1, 1, 0);
 	gtk_widget_show(messagelabel);
 	
-	messagebutton = stock_label_button(GTK_STOCK_OK, _("OK"), NULL);
+	messagebutton = gtk_label_new_with_mnemonic(_("OK"));
 	g_signal_connect(G_OBJECT(messagebutton), "clicked", G_CALLBACK(messagebutton_callback), NULL);
 	gtk_widget_set_halign(messagebutton, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(messagebutton, GTK_ALIGN_CENTER);

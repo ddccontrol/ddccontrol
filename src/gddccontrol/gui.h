@@ -81,7 +81,6 @@ void set_status(char* message);
 void set_message(char* message);
 void set_message_ok(char* message, int with_ok);
 
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
 GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_text, const gchar *tool_tip);
 
 extern GtkWidget* profile_manager_button;

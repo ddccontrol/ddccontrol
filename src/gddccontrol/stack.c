@@ -316,16 +316,15 @@ void show_profile_checks(gboolean show) {
 	GSList* list = all_controls;
 	
 	while (list) {
-		GtkWidget* check_frame = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check_frame");
-		GtkWidget* check = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check");
-		if (check_frame) {
+		GtkWidget* profileCheckBox = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "profile_check_box");
+		if (profileCheckBox) {
 			if (show)
-				gtk_widget_show(check_frame);
+				gtk_widget_show(profileCheckBox);
 			else
-				gtk_widget_hide(check_frame);
+				gtk_widget_hide(profileCheckBox);
 		}
-		if (check && show) {
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), FALSE);
+		if (profileCheckBox && show) {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(profileCheckBox), FALSE);
 		}
 		list = g_slist_next(list);
 	}
@@ -339,9 +338,9 @@ int get_profile_checked_controls(unsigned char* controls) {
 	struct control_db *control;
 	
 	while (list) {
-		GtkWidget* check = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "check");
-		if (check) {
-			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(check))) {
+		GtkWidget* profileCheckBox = (GtkWidget*)g_object_get_data(G_OBJECT(list->data), "profile_check_box");
+		if (profileCheckBox) {
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(profileCheckBox))) {
 				control = (struct control_db*)g_object_get_data(G_OBJECT(list->data), "ddc_control");
 				controls[current] = control->address;
 				current++;
@@ -353,39 +352,29 @@ int get_profile_checked_controls(unsigned char* controls) {
 	return current;
 }
 
-static void createControl(GtkWidget *parent,struct control_db *control)
+static GtkWidget* createControlWidgets(struct control_db *control)
 {
 	unsigned short currentDefault = 1;
 	unsigned short currentMaximum = 1;
 	if (control->type != command)
 		get_value_and_max(control,&currentDefault,&currentMaximum);
 	
-	GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
+	GtkWidget* outerBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+	GtkWidget* controlWithUndo = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	GtkWidget *widget = NULL;
-	GtkWidget *button = NULL;
-	GtkWidget *check_frame = NULL; /* Frame around the check */
-	GtkWidget *check = NULL;
+	GtkWidget *undoButton = NULL;
+	GtkWidget *profileCheckBox = NULL;
 	
 	switch (control->type)
 	{
 		case value:
 		case list:
-			button = gtk_button_new();
-			GtkWidget *image = gtk_image_new_from_icon_name("edit-undo", GTK_ICON_SIZE_BUTTON);
-			gtk_widget_show(image);
-			gtk_container_add(GTK_CONTAINER(button), image);
-			gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE);
+			undoButton = button_from_icon_name("edit-undo", NULL, NULL);
+			gtk_widget_set_sensitive(GTK_WIDGET(undoButton), FALSE);
 			
-			check_frame = gtk_frame_new(NULL);
-			check = gtk_check_button_new();
-			image = gtk_image_new_from_stock(GTK_STOCK_SAVE, GTK_ICON_SIZE_LARGE_TOOLBAR);
-			gtk_widget_show(image);
-			gtk_container_add(GTK_CONTAINER(check), image);
-			gtk_widget_show(check);
-			gtk_container_add(GTK_CONTAINER(check_frame),check);
+			profileCheckBox = gtk_check_button_new_with_label(_("Include in new profile"));
 			break;
 		default:
-			button = NULL;
 			break;
 	}
 	
@@ -397,9 +386,8 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 				gtk_scale_set_digits(GTK_SCALE(widget), 1);
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
 				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);
-				g_object_set_data(G_OBJECT(widget), "restore_button", button);
-				g_object_set_data(G_OBJECT(widget), "check_frame", check_frame);
-				g_object_set_data(G_OBJECT(widget), "check", check);
+				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
+				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
 				
 				gtk_range_set_increments(GTK_RANGE(widget),
 						100.0/(double)currentMaximum,
@@ -443,34 +431,34 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 				}
 				
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
-				g_object_set_data(G_OBJECT(widget), "restore_button", button);
-				g_object_set_data(G_OBJECT(widget), "check_frame", check_frame);
-				g_object_set_data(G_OBJECT(widget), "check", check);
+				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
+				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
 				
 				break;
 			}
 		default:
-			return;
+			break;
 	}
-	if (check) {
-		//gtk_widget_show(check_frame);
-		gtk_box_pack_start(GTK_BOX(hbox), check_frame, 0, 0, 0);
+	if (profileCheckBox) {
+		gtk_box_pack_start(GTK_BOX(outerBox), profileCheckBox, 0, 0, 0);
 	}
 	
 	all_controls = g_slist_append(all_controls,widget);
 	g_object_set_data(G_OBJECT(widget), "ddc_control", control);
 	/*g_print("%i - %i\n",all_controls,g_slist_length(all_controls));*/
 	gtk_widget_show(widget);
-	gtk_box_pack_start(GTK_BOX(hbox), widget, 1, 1, 0);
+	gtk_box_pack_start(GTK_BOX(controlWithUndo), widget, 1, 1, 0);
 	
-	if (button) {
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(restore_callback), widget);
-		gtk_widget_show(button);
-		gtk_box_pack_start(GTK_BOX(hbox), button, 0, 0, 0);
+	if (undoButton) {
+		g_signal_connect(G_OBJECT(undoButton), "clicked", G_CALLBACK(restore_callback), widget);
+		gtk_widget_show(undoButton);
+		gtk_box_pack_start(GTK_BOX(controlWithUndo), undoButton, 0, 0, 0);
 	}
-	
-	gtk_widget_show(hbox);
-	gtk_container_add(GTK_CONTAINER(parent),hbox);
+
+	gtk_box_pack_end(GTK_BOX(outerBox), controlWithUndo, 0, 0, 0);
+	gtk_widget_show(controlWithUndo);
+	gtk_widget_show(outerBox);
+	return outerBox;
 }
 	
 static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
@@ -489,7 +477,8 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 	{
 		frame = gtk_frame_new((char*)control->name);
 		gtk_container_set_border_width(GTK_CONTAINER(frame),5);
-		createControl(frame,control);
+		GtkWidget* controlWidget = createControlWidgets(control);
+		gtk_container_add(GTK_CONTAINER(frame), controlWidget);
 		gtk_widget_show(frame);
 		gtk_box_pack_start(GTK_BOX(vbox),frame,0,0,0);
 		i++;
