@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
  ***************************************************************************/
 
-#include "notebook.h"
+#include "gui.h"
 #include "internal.h"
 
 #include <string.h>

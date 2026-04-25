@@ -26,7 +26,7 @@
 
 #define IDLE_TIMEOUT 60
 
-#include "notebook.h"
+#include "gui.h"
 #include "internal.h"
 
 #include "daemon/dbus_client.h"

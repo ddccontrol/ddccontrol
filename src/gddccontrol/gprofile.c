@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "config.h"
-#include "notebook.h"
+#include "gui.h"
 #include "internal.h"
 
 #include <string.h>

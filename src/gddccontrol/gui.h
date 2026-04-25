@@ -42,7 +42,7 @@ extern GtkWidget* main_app_window;
 extern GtkWidget* monitor_manager;
 extern GtkWidget* profile_manager;
 
-/* notebook.c */
+/* stack.c */
 
 void create_monitor_manager(struct monitorlist* monitor);
 void delete_monitor_manager();

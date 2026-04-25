@@ -28,7 +28,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "notebook.h"
+#include "gui.h"
 #include "internal.h"
 
 #include "daemon/dbus_client.h"
@@ -40,8 +40,8 @@
 enum
 {
 	TITLE_COL,
-	ID_COL,
-	WIDGET_COL,
+	PAGE_WIDGET,
+	PARENT_CONTAINER,
 	N_COLS,
 };
 
@@ -296,15 +296,15 @@ static void tree_selection_changed_callback(GtkTreeSelection *selection, gpointe
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	gint  id;
-	GtkWidget *notebook;
+	GtkWidget *page;
+	GtkWidget *parent_container;
 	
 	if (gtk_tree_selection_get_selected(selection, &model, &iter))
 	{
-		gtk_tree_model_get(model,&iter,ID_COL,&id,-1);
-		gtk_tree_model_get(model,&iter,WIDGET_COL,&notebook,-1);
+		gtk_tree_model_get(model, &iter, PAGE_WIDGET, &page, -1);
+		gtk_tree_model_get(model, &iter, PARENT_CONTAINER, &parent_container, -1);
 		
-		gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),id);
+		gtk_stack_set_visible_child(GTK_STACK(parent_container), page);
 	}
 }
 
@@ -473,8 +473,12 @@ static void createControl(GtkWidget *parent,struct control_db *control)
 	gtk_container_add(GTK_CONTAINER(parent),hbox);
 }
 	
-static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
+static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 {
+	GtkWidget* scroll_area = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll_area), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_widget_show(scroll_area);
+	
 	int i=0;
 	GtkWidget* mainvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	GtkWidget* vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
@@ -506,17 +510,18 @@ static void createPage(GtkWidget* notebook, struct subgroup_db* subgroup)
 	gtk_box_pack_start(GTK_BOX(mainvbox), vbox, 0, 5, 5);
 	gtk_widget_show(vbox);
 	
-	GtkWidget* label;
-	label = gtk_label_new((char*)subgroup->name);
-	gtk_widget_show(label);
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), mainvbox, label);
+	gtk_container_add(GTK_CONTAINER(scroll_area), mainvbox);
+	
+	gtk_stack_add_named(GTK_STACK(stack), scroll_area, subgroup->name);
 	gtk_widget_show(mainvbox);
+
+	return scroll_area;
 }
 
-	
-static GtkWidget* createTree(GtkWidget *notebook)
+/* The GtkTreeView acts as a hierarchical GtkStackSwitcher */
+static GtkWidget* createTreeAndPages(GtkWidget *stack)
 {
-	GtkTreeStore *store = gtk_tree_store_new(N_COLS,G_TYPE_STRING,G_TYPE_INT,G_TYPE_POINTER);
+	GtkTreeStore *store = gtk_tree_store_new(N_COLS,G_TYPE_STRING,G_TYPE_POINTER,G_TYPE_POINTER);
 	
 	GtkWidget *tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
 	g_object_unref(G_OBJECT(store));
@@ -529,22 +534,70 @@ static GtkWidget* createTree(GtkWidget *notebook)
 	
 	GtkTreeIter top_iter;
 	GtkTreeIter sub_iter;
+
+	////////////////
+	GtkWidget* empty_selection_info = gtk_grid_new();
+	
+	GtkWidget *valuelabel = gtk_label_new (_("Please click on a group name."));
+	gtk_grid_attach(GTK_GRID(empty_selection_info), valuelabel, 0, 0, 1, 1);
+	gtk_widget_set_hexpand(valuelabel, TRUE);
+	gtk_widget_set_vexpand(valuelabel, TRUE);
+	gtk_widget_set_margin_top(valuelabel, 5);
+	gtk_widget_set_margin_bottom(valuelabel, 5);
+	gtk_widget_set_margin_start(valuelabel, 5);
+	gtk_widget_set_margin_end(valuelabel, 5);
+	gtk_widget_show(valuelabel);
+	
+	gtk_stack_add_named(GTK_STACK(stack), empty_selection_info, "__zero");
+	gtk_widget_show(empty_selection_info);
+	gtk_stack_set_visible_child(GTK_STACK(stack), empty_selection_info);
+	///////////////////////
+	
 	
 	struct group_db* group;
 	struct subgroup_db* subgroup;
+
+
+	if (mon->db)
+	{
+		for (group = mon->db->group_list; group != NULL; group = group->next)
+		{
+			
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
+			}
+		}
+	}
+
 	
 	if (mon->db)
 	{
-		int id = 1;
+		int count = 0, current = 0;
+		
+		for (group = mon->db->group_list; group != NULL; group = group->next)
+		{
+			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
+				count++;
+		}
+		
+		gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
+		set_message(tmp);
+		g_free(tmp);
+		
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{
 			gtk_tree_store_append(store,&top_iter,NULL);
-			gtk_tree_store_set(store,&top_iter,TITLE_COL,group->name,ID_COL,0,WIDGET_COL,notebook,-1);
+			gtk_tree_store_set(store, &top_iter, TITLE_COL, group->name, PAGE_WIDGET, empty_selection_info, PARENT_CONTAINER, stack,-1);
 			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
 			{
 				gtk_tree_store_append(store,&sub_iter,&top_iter);
-				gtk_tree_store_set(store,&sub_iter,TITLE_COL,subgroup->name,ID_COL,id,WIDGET_COL,notebook,-1);
-				id++;
+				
+				GtkWidget* currentPage = createPage(stack, subgroup);
+				current++;
+				gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
+				set_message(tmp);
+				g_free(tmp);
+				
+				gtk_tree_store_set(store, &sub_iter, TITLE_COL, subgroup->name, PAGE_WIDGET, currentPage, PARENT_CONTAINER, stack,-1);
 			}
 		}
 	}
@@ -607,58 +660,9 @@ void create_monitor_manager(struct monitorlist* monitor)
 		return;
 	}
 	
-	GtkWidget *notebook = gtk_notebook_new();
+	GtkWidget *stack = gtk_stack_new();
 	
-	struct group_db* group;
-	struct subgroup_db* subgroup;
-	
-	GtkWidget *tree = createTree(notebook);
-	
-	//////////////////////////////	
-	GtkWidget* none = gtk_grid_new();
-	
-	GtkWidget *valuelabel = gtk_label_new (_("Please click on a group name."));
-	gtk_grid_attach(GTK_GRID(none), valuelabel, 0, 0, 1, 1);
-	gtk_widget_set_hexpand(valuelabel, TRUE);
-	gtk_widget_set_vexpand(valuelabel, TRUE);
-	gtk_widget_set_margin_top(valuelabel, 5);
-	gtk_widget_set_margin_bottom(valuelabel, 5);
-	gtk_widget_set_margin_start(valuelabel, 5);
-	gtk_widget_set_margin_end(valuelabel, 5);
-	
-	GtkWidget *label = gtk_label_new("zero");
-	
-	gtk_widget_show(valuelabel);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), none, label);
-	gtk_widget_show(none);
-	/////////////////////////////
-	
-	if (mon->db)
-	{
-		int count = 0, current = 0;
-		for (group = mon->db->group_list; group != NULL; group = group->next)
-		{
-			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next)
-				count++;
-		}
-		
-		gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
-		set_message(tmp);
-		g_free(tmp);
-		for (group = mon->db->group_list; group != NULL; group = group->next)
-		{
-			gtk_notebook_set_show_tabs(GTK_NOTEBOOK(notebook),0);
-			//	gtk_notebook_set_show_border(GTK_NOTEBOOK(notebook),0);
-			
-			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
-				createPage(notebook, subgroup);
-				current++;
-				gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
-				set_message(tmp);
-				g_free(tmp);
-			}
-		}
-	}
+	GtkWidget *tree = createTreeAndPages(stack);
 	
 	GtkWidget* grid = gtk_grid_new();
 	gtk_widget_show (tree);
@@ -668,14 +672,19 @@ void create_monitor_manager(struct monitorlist* monitor)
 	gtk_widget_set_margin_bottom(tree, 0);
 	gtk_widget_set_margin_start(tree, 3);
 	gtk_widget_set_margin_end(tree, 0);
-	gtk_widget_show (notebook);
-	gtk_grid_attach(GTK_GRID(grid), notebook, 1, 0, 1, 1);
-	gtk_widget_set_hexpand(notebook, TRUE);
-	gtk_widget_set_vexpand(notebook, TRUE);
-	gtk_widget_set_margin_top(notebook, 3);
-	gtk_widget_set_margin_bottom(notebook, 0);
-	gtk_widget_set_margin_start(notebook, 3);
-	gtk_widget_set_margin_end(notebook, 0);
+	gtk_widget_show (stack);
+	
+	GtkWidget* separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
+	gtk_grid_attach(GTK_GRID(grid), separator, 1, 0, 1, 1);
+	gtk_widget_show(separator);
+	
+	gtk_grid_attach(GTK_GRID(grid), stack, 2, 0, 1, 1);
+	gtk_widget_set_hexpand(stack, TRUE);
+	gtk_widget_set_vexpand(stack, TRUE);
+	gtk_widget_set_margin_top(stack, 3);
+	gtk_widget_set_margin_bottom(stack, 0);
+	gtk_widget_set_margin_start(stack, 3);
+	gtk_widget_set_margin_end(stack, 0);
 	gtk_widget_show (grid);
 	
 	set_message(_("Loading profiles..."));
