@@ -251,7 +251,7 @@ void set_status(char* message) {
 	gtk_label_set_text(GTK_LABEL(statuslabel), message);
 }
 
-static void messagebutton_callback(GtkWidget *widget, gpointer data)
+static void messagebutton_callback(GtkButton *button, gpointer user_data)
 {
 	set_message("");
 }
@@ -546,7 +546,7 @@ int main( int argc, char *argv[] )
 	gtk_box_pack_start(GTK_BOX(messagebox), messagelabel, 1, 1, 0);
 	gtk_widget_show(messagelabel);
 	
-	messagebutton = gtk_label_new_with_mnemonic(_("OK"));
+	messagebutton = gtk_button_new_with_mnemonic(_("OK"));
 	g_signal_connect(G_OBJECT(messagebutton), "clicked", G_CALLBACK(messagebutton_callback), NULL);
 	gtk_widget_set_halign(messagebutton, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(messagebutton, GTK_ALIGN_CENTER);
