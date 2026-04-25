@@ -301,7 +301,7 @@ void set_message_ok(char* message, int with_ok)
 static gboolean heartbeat(gpointer data)
 {
 	ddcpci_send_heartbeat();
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 /* Create a new button with an image and a label packed into it
