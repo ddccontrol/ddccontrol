@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get install -y --no-install-recommends \
             astyle \
             autoconf \
             dh-autoreconf \
@@ -42,7 +42,7 @@ jobs:
         run: |
           ./autogen.sh
           ./configure "$CFLAGS"
-          make -j4
+          make -j$(nproc)
 
       - name: Format code check
         run: ./scripts/format_code.sh
