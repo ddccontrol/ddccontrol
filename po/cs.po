@@ -5,38 +5,38 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ddccontrol 0.4.3\n"
-"Report-Msgid-Bugs-To: ddccontrol-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-01-06 18:52+0100\n"
+"Report-Msgid-Bugs-To: https://github.com/ddccontrol/ddccontrol/issues/\n"
+"POT-Creation-Date: 2026-05-13 15:12+0200\n"
 "PO-Revision-Date: 2010-07-07 14:57+0200\n"
 "Last-Translator: Stanislav Brabec <sbrabec@suse.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/ddccontrol/main.c:83 ../src/ddccontrol/main.c:87
-#: ../src/ddccontrol/main.c:91
-msgid "Control"
-msgstr "Ovládání"
-
-#: ../src/ddccontrol/main.c:132
-#, c-format
+#: ../src/ddccontrol/main.c:85
+#, fuzzy, c-format
 msgid ""
 "Usage:\n"
-"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-p | dev]\n"
+"%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (profile "
+"path)] [-p | dev]\n"
 "\tdev: device, e.g. dev:/dev/i2c-0\n"
 "\t-p : probe I2C devices to find monitor buses\n"
 "\t-c : query capability\n"
 "\t-d : query ctrls 0 - 255\n"
 "\t-r : query ctrl\n"
 "\t-w : value to write to ctrl\n"
+"\t-W : relatively change ctrl value (+/-)\n"
 "\t-f : force (avoid validity checks)\n"
 "\t-s : save settings\n"
 "\t-v : verbosity (specify more to increase)\n"
 "\t-b : ddccontrol-db directory (if other than %s)\n"
+"\t-l : load values from XML profile file\n"
 msgstr ""
 "Použití:\n"
-" %s [-b data_adr] [-v] [-c] [-d] [-f] [-s] [-r prvek [-w hodnota]] [-p | zař]\n"
+" %s [-b data_adr] [-v] [-c] [-d] [-f] [-s] [-r prvek [-w hodnota]] [-p | "
+"zař]\n"
 "\\tzař: zařízení, např. dev:/dev/i2c-0\n"
 "\\t-p: Hledat sběrnice monitorů mezi I2C zařízeními\n"
 "\\t-c: dotaz na schopnosti\n"
@@ -48,22 +48,22 @@ msgstr ""
 "\\t-v: upovidanost (pro zvýšení zadejte vyšší hodnotu)\n"
 "\\t-b: adresář s ddccontrol-db (je-li jiný než %s)\n"
 
-#: ../src/ddccontrol/main.c:150 ../src/ddccontrol/main.c:172
+#: ../src/ddccontrol/main.c:106 ../src/ddccontrol/main.c:128
 #, c-format
 msgid "Checking %s integrity...\n"
 msgstr "Kontrola integrity %s...\n"
 
-#: ../src/ddccontrol/main.c:152 ../src/ddccontrol/main.c:174
+#: ../src/ddccontrol/main.c:108 ../src/ddccontrol/main.c:130
 #, c-format
 msgid "[ FAILED ]\n"
 msgstr "[ SELHALO ]\n"
 
-#: ../src/ddccontrol/main.c:156 ../src/ddccontrol/main.c:179
+#: ../src/ddccontrol/main.c:112 ../src/ddccontrol/main.c:135
 #, c-format
 msgid "[ OK ]\n"
 msgstr "[ OK ]\n"
 
-#: ../src/ddccontrol/main.c:217
+#: ../src/ddccontrol/main.c:194
 #, c-format
 msgid ""
 "ddccontrol version %s\n"
@@ -78,76 +78,92 @@ msgstr ""
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
 "Tento program je šířen ABSOLUTNĚ BEZ ZÁRUKY.\n"
-"Můžete šířit kopie tohoto programu za dodržení podmínek GNU General Public License.\n"
+"Můžete šířit kopie tohoto programu za dodržení podmínek GNU General Public "
+"License.\n"
 "\n"
 
-#: ../src/ddccontrol/main.c:236
+#: ../src/ddccontrol/main.c:211
 #, c-format
 msgid "'%s' does not seem to be a valid register name\n"
 msgstr "'%s' nevypadá jako platné jméno registru\n"
 
-#: ../src/ddccontrol/main.c:242
+#: ../src/ddccontrol/main.c:217
 #, c-format
 msgid "You cannot use -w parameter without -r.\n"
 msgstr "Nelze použít parametr -w bez parametru -r.\n"
 
-#: ../src/ddccontrol/main.c:247
+#: ../src/ddccontrol/main.c:221 ../src/ddccontrol/main.c:231
 #, c-format
 msgid "'%s' does not seem to be a valid value.\n"
 msgstr "'%s' nevypadá jako platná hodnota.\n"
 
-#: ../src/ddccontrol/main.c:292 ../src/gddccontrol/main.c:415
+#: ../src/ddccontrol/main.c:227
+#, fuzzy, c-format
+msgid "You cannot use -W parameter without -r.\n"
+msgstr "Nelze použít parametr -w bez parametru -r.\n"
+
+#: ../src/ddccontrol/main.c:282 ../src/gddccontrol/main.c:432
 #, c-format
 msgid "Unable to initialize ddcci library.\n"
 msgstr "Nelze inicializovat knihovnu ddcci.\n"
 
-#: ../src/ddccontrol/main.c:304
+#: ../src/ddccontrol/main.c:288
+#, fuzzy, c-format
+msgid "Unable to initialize ddcci db library.\n"
+msgstr "Nelze inicializovat knihovnu ddcci.\n"
+
+#: ../src/ddccontrol/main.c:293
+#, c-format
+msgid "Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"
+msgstr ""
+
+#: ../src/ddccontrol/main.c:310
 #, c-format
 msgid "Detected monitors :\n"
 msgstr "Detekované monitory:\n"
 
-#: ../src/ddccontrol/main.c:309
+#: ../src/ddccontrol/main.c:314
 #, c-format
 msgid " - Device: %s\n"
 msgstr "- Zařízení: %s\n"
 
-#: ../src/ddccontrol/main.c:310
+#: ../src/ddccontrol/main.c:315
 #, c-format
 msgid "   DDC/CI supported: %s\n"
 msgstr "   DDC/CI podporováno: %s\n"
 
-#: ../src/ddccontrol/main.c:310
+#: ../src/ddccontrol/main.c:315
 msgid "Yes"
 msgstr "Ano"
 
-#: ../src/ddccontrol/main.c:310
+#: ../src/ddccontrol/main.c:315
 msgid "No"
 msgstr "Ne"
 
-#: ../src/ddccontrol/main.c:311
+#: ../src/ddccontrol/main.c:316
 #, c-format
 msgid "   Monitor Name: %s\n"
 msgstr "   Jméno monitoru: %s\n"
 
-#: ../src/ddccontrol/main.c:312
+#: ../src/ddccontrol/main.c:317
 #, c-format
 msgid "   Input type: %s\n"
 msgstr "   Typ vstupu: %s\n"
 
-#: ../src/ddccontrol/main.c:312 ../src/ddccontrol/main.c:350
+#: ../src/ddccontrol/main.c:317 ../src/ddccontrol/main.c:364
 msgid "Digital"
 msgstr "Digitální"
 
-#: ../src/ddccontrol/main.c:312 ../src/ddccontrol/main.c:350
+#: ../src/ddccontrol/main.c:317 ../src/ddccontrol/main.c:364
 msgid "Analog"
 msgstr "Analogový"
 
-#: ../src/ddccontrol/main.c:316
+#: ../src/ddccontrol/main.c:321
 #, c-format
 msgid "  (Automatically selected)\n"
 msgstr "  (volen automaticky)\n"
 
-#: ../src/ddccontrol/main.c:326
+#: ../src/ddccontrol/main.c:333
 #, c-format
 msgid ""
 "No monitor supporting DDC/CI available.\n"
@@ -155,14 +171,15 @@ msgid ""
 "are loaded (i2c-dev, and your framebuffer driver).\n"
 msgstr ""
 "Žádný monitor podporující DDC/CI není k dispozici.\n"
-"Pokud to vaše grafická karta potřebuje, zkontrolujte, zda všechny požadované moduly jádra jsou zavedeny (i2c-dev, a vaše ovladače frame bufferu).\n"
+"Pokud to vaše grafická karta potřebuje, zkontrolujte, zda všechny požadované "
+"moduly jádra jsou zavedeny (i2c-dev, a vaše ovladače frame bufferu).\n"
 
-#: ../src/ddccontrol/main.c:339
+#: ../src/ddccontrol/main.c:346
 #, c-format
 msgid "Reading EDID and initializing DDC/CI at bus %s...\n"
 msgstr "Čte se EDID a inicializuje se DDC/CI na sběrnici %s...\n"
 
-#: ../src/ddccontrol/main.c:343
+#: ../src/ddccontrol/main.c:357
 #, c-format
 msgid ""
 "\n"
@@ -172,31 +189,169 @@ msgid ""
 msgstr ""
 "\n"
 "DDC/CI na %s není použitelný (%d).\n"
-"Pokud to vaše grafická karta potřebuje, zkontrolujte, zda všechny požadované moduly jádra jsou zavedeny (i2c-dev, a vaše ovladače frame bufferu).\n"
+"Pokud to vaše grafická karta potřebuje, zkontrolujte, zda všechny požadované "
+"moduly jádra jsou zavedeny (i2c-dev, a vaše ovladače frame bufferu).\n"
 
-#: ../src/ddccontrol/main.c:347
+#: ../src/ddccontrol/main.c:361
 #, c-format
 msgid ""
 "\n"
 "EDID readings:\n"
-msgstr "\nNačtená EDID:\n"
+msgstr ""
+"\n"
+"Načtená EDID:\n"
 
-#: ../src/ddccontrol/main.c:348
+#: ../src/ddccontrol/main.c:362
 #, c-format
 msgid "\tPlug and Play ID: %s [%s]\n"
 msgstr "\tIdentifikátor Plug and Play: %s [%s]\n"
 
-#: ../src/ddccontrol/main.c:350
+#: ../src/ddccontrol/main.c:364
 #, c-format
 msgid "\tInput type: %s\n"
 msgstr "\tTyp vstupu: %s\n"
 
-#. Put a big warning (in red if we are writing to a terminal).
-#: ../src/ddccontrol/main.c:354 ../src/ddccontrol/main.c:373
-msgid "=============================== WARNING ==============================="
-msgstr "============================== VAROVÁNÍ ==============================="
+#: ../src/ddccontrol/main.c:370
+#, c-format
+msgid ""
+"\n"
+"Capabilities:\n"
+msgstr ""
+"\n"
+"Schopnosti:\n"
 
-#: ../src/ddccontrol/main.c:357
+#: ../src/ddccontrol/main.c:374
+#, c-format
+msgid "Raw output: %s\n"
+msgstr "Surový výstup: %s\n"
+
+#: ../src/ddccontrol/main.c:376
+#, c-format
+msgid "Parsed output: \n"
+msgstr "Analyzovaný výstup:\n"
+
+#: ../src/ddccontrol/main.c:385
+#, c-format
+msgid "\tType: "
+msgstr "\tTyp: "
+
+#: ../src/ddccontrol/main.c:388
+#, c-format
+msgid "LCD"
+msgstr "LCD"
+
+#: ../src/ddccontrol/main.c:391
+#, c-format
+msgid "CRT"
+msgstr "CRT"
+
+#: ../src/ddccontrol/main.c:394
+#, c-format
+msgid "Unknown"
+msgstr "Neznámý"
+
+#: ../src/ddccontrol/main.c:403
+#, c-format
+msgid "Capabilities read fail.\n"
+msgstr "Nezdařilo se načíst schopnosti.\n"
+
+#: ../src/ddccontrol/main.c:417
+#, c-format
+msgid "Value cannot be lower than zero! %d -> %d\n"
+msgstr ""
+
+#: ../src/ddccontrol/main.c:420
+#, c-format
+msgid "Value cannot be higher than maximum! %d / %d\n"
+msgstr ""
+
+#: ../src/ddccontrol/main.c:428
+#, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d) (%dms delay)...\n"
+msgstr ""
+"\n"
+"Zápis 0x%02x, 0x%02x (%d) (zpoždění %dms)...\n"
+
+#: ../src/ddccontrol/main.c:431
+#, c-format
+msgid ""
+"\n"
+"Writing 0x%02x, 0x%02x(%d)...\n"
+msgstr ""
+"\n"
+"Zápis 0x%02x, 0x%02x (%d)...\n"
+
+#: ../src/ddccontrol/main.c:436
+#, c-format
+msgid ""
+"\n"
+"Reading 0x%02x...\n"
+msgstr ""
+"\n"
+"Čtení 0x%02x...\n"
+
+#: ../src/ddccontrol/main.c:445
+#, fuzzy, c-format
+msgid "Applied profile: %s\n"
+msgstr "Apply Profil"
+
+#: ../src/ddccontrol/main.c:447
+#, c-format
+msgid "Failed to apply profile: %s\n"
+msgstr ""
+
+#: ../src/ddccontrol/main.c:451
+#, c-format
+msgid ""
+"\n"
+"Controls (valid/current/max) [Description - Value name]:\n"
+msgstr ""
+"\n"
+"Ovládací prvky (platný/současný/max) [Popis - Název hodnoty]:\n"
+
+#: ../src/ddccontrol/main.c:473
+#, c-format
+msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
+msgstr "\t\t> id=%s, název=%s adresa=%#x, zpoždění=%dms, typ=%d\n"
+
+#: ../src/ddccontrol/main.c:478
+#, c-format
+msgid "\t\t  Possible values:\n"
+msgstr "\t\t  Možné hodnoty:\n"
+
+#: ../src/ddccontrol/main.c:482
+#, c-format
+msgid "\t\t\t> id=%s - name=%s, value=%d\n"
+msgstr "\t\t\t> id=%s - název=%s, hodnota=%d\n"
+
+#: ../src/ddccontrol/main.c:492
+#, c-format
+msgid "\t\t  supported, value=%d, maximum=%d\n"
+msgstr "\t\t  podporován, hodnota=%d, maximum=%d\n"
+
+#: ../src/ddccontrol/main.c:493
+#, c-format
+msgid "\t\t  not supported, value=%d, maximum=%d\n"
+msgstr "\t\t  není podporován, hodnota=%d, maximum=%d\n"
+
+#: ../src/ddccontrol/main.c:504
+#, c-format
+msgid ""
+"\n"
+"Saving settings...\n"
+msgstr ""
+"\n"
+"Ukládá se nastavení...\n"
+
+#. Put a big warning (in red if we are writing to a terminal).
+#: ../src/ddccontrol/main.c:516 ../src/ddccontrol/main.c:537
+msgid "=============================== WARNING ==============================="
+msgstr ""
+"============================== VAROVÁNÍ ==============================="
+
+#: ../src/ddccontrol/main.c:519
 #, c-format
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is\n"
@@ -207,7 +362,7 @@ msgstr ""
 "použije obecný profil výrobce vašeho monitoru. Některé ovládací prvky\n"
 "nemusí být podporovány, nebo nemusí fungovat podle očekávání.\n"
 
-#: ../src/ddccontrol/main.c:363
+#: ../src/ddccontrol/main.c:524
 #, c-format
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is\n"
@@ -218,123 +373,24 @@ msgstr ""
 "použije základní obecný profil. Mnoho ovládacích prvků nebude podporováno,\n"
 "a některé nemusí fungovat podle očekávání.\n"
 
-#: ../src/ddccontrol/main.c:368
+#: ../src/ddccontrol/main.c:529
 #, c-format
 msgid ""
+"Unsupported monitor detected.\n"
+"\n"
 "Please update ddccontrol-db, or, if you are already using the latest\n"
-"version, please send the output of the following command to\n"
-"ddccontrol-users@lists.sourceforge.net:\n"
+"version, please open this pre-filled GitHub issue:\n"
 msgstr ""
-"Prosím aktualizujte ddccontrol-db, nebo, pokud jste již používáte\n"
-"nejnovější verzi, zašlete prosím výstup následujícího příkazu na\n"
-"ddccontrol-users@lists.sourceforge.net:\n"
 
-#: ../src/ddccontrol/main.c:372 ../src/gddccontrol/notebook.c:695
+#: ../src/ddccontrol/main.c:534
+#, c-format
+msgid "Then attach the resulting report file of the following command:\n"
+msgstr ""
+
+#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/notebook.c:715
 #, c-format
 msgid "Thank you.\n"
 msgstr "Děkujeme.\n"
-
-#: ../src/ddccontrol/main.c:377
-#, c-format
-msgid ""
-"\n"
-"Capabilities:\n"
-msgstr "\nSchopnosti:\n"
-
-#: ../src/ddccontrol/main.c:381
-#, c-format
-msgid "Raw output: %s\n"
-msgstr "Surový výstup: %s\n"
-
-#: ../src/ddccontrol/main.c:383
-#, c-format
-msgid "Parsed output: \n"
-msgstr "Analyzovaný výstup:\n"
-
-#: ../src/ddccontrol/main.c:392
-#, c-format
-msgid "\tType: "
-msgstr "\tTyp: "
-
-#: ../src/ddccontrol/main.c:395
-#, c-format
-msgid "LCD"
-msgstr "LCD"
-
-#: ../src/ddccontrol/main.c:398
-#, c-format
-msgid "CRT"
-msgstr "CRT"
-
-#: ../src/ddccontrol/main.c:401
-#, c-format
-msgid "Unknown"
-msgstr "Neznámý"
-
-#: ../src/ddccontrol/main.c:410
-#, c-format
-msgid "Capabilities read fail.\n"
-msgstr "Nezdařilo se načíst schopnosti.\n"
-
-#: ../src/ddccontrol/main.c:418
-#, c-format
-msgid ""
-"\n"
-"Writing 0x%02x, 0x%02x(%d) (%dms delay)...\n"
-msgstr "\nZápis 0x%02x, 0x%02x (%d) (zpoždění %dms)...\n"
-
-#: ../src/ddccontrol/main.c:422
-#, c-format
-msgid ""
-"\n"
-"Writing 0x%02x, 0x%02x(%d)...\n"
-msgstr "\nZápis 0x%02x, 0x%02x (%d)...\n"
-
-#: ../src/ddccontrol/main.c:427
-#, c-format
-msgid ""
-"\n"
-"Reading 0x%02x...\n"
-msgstr "\nČtení 0x%02x...\n"
-
-#: ../src/ddccontrol/main.c:434
-#, c-format
-msgid ""
-"\n"
-"Controls (valid/current/max) [Description - Value name]:\n"
-msgstr "\nOvládací prvky (platný/současný/max) [Popis - Název hodnoty]:\n"
-
-#: ../src/ddccontrol/main.c:458
-#, c-format
-msgid "\t\t> id=%s, name=%s, address=%#x, delay=%dms, type=%d\n"
-msgstr "\t\t> id=%s, název=%s adresa=%#x, zpoždění=%dms, typ=%d\n"
-
-#: ../src/ddccontrol/main.c:463
-#, c-format
-msgid "\t\t  Possible values:\n"
-msgstr "\t\t  Možné hodnoty:\n"
-
-#: ../src/ddccontrol/main.c:467
-#, c-format
-msgid "\t\t\t> id=%s - name=%s, value=%d\n"
-msgstr "\t\t\t> id=%s - název=%s, hodnota=%d\n"
-
-#: ../src/ddccontrol/main.c:477
-#, c-format
-msgid "\t\t  supported, value=%d, maximum=%d\n"
-msgstr "\t\t  podporován, hodnota=%d, maximum=%d\n"
-
-#: ../src/ddccontrol/main.c:478
-#, c-format
-msgid "\t\t  not supported, value=%d, maximum=%d\n"
-msgstr "\t\t  není podporován, hodnota=%d, maximum=%d\n"
-
-#: ../src/ddccontrol/main.c:489
-#, c-format
-msgid ""
-"\n"
-"Saving settings...\n"
-msgstr "\nUkládá se nastavení...\n"
 
 #. arbitration or no acknowledge
 #: ../src/ddcpci/i2c-algo-bit.c:368
@@ -353,7 +409,7 @@ msgstr "i2c-algo-bit.o: readbytes: čas i2c_inb vypršel.\n"
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: v ACK timeout\n"
 
-#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:161
+#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:162
 #: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
 #: ../src/ddcpci/sis.c:174 ../src/ddcpci/via.c:167
 #, c-format
@@ -375,61 +431,61 @@ msgstr "%s: Chyba: neznámý typ karty (%#x)\n"
 msgid "%s: Malloc error."
 msgstr " %s: Chyba malloc."
 
-#: ../src/ddcpci/intel810.c:171
+#: ../src/ddcpci/intel810.c:172
 msgid "i810_open: cannot open /dev/mem"
 msgstr "i810_open: nelze otevřít /dev/mem"
 
-#: ../src/ddcpci/intel810.c:206
+#: ../src/ddcpci/intel810.c:207
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr "i810_open: Chyba: nelze najít žádný platný MMIO PCI region.\n"
 
-#: ../src/ddcpci/intel810.c:213
+#: ../src/ddcpci/intel810.c:214
 msgid "i810_open: mmap failed"
 msgstr "i810_open: mmap selhalo"
 
-#: ../src/ddcpci/main.c:154
+#: ../src/ddcpci/main.c:160
 msgid "==>Error while sending open message"
 msgstr "==>Chyba při odesílání otevírací zprávy"
 
-#: ../src/ddcpci/main.c:178 ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:202
+#: ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:190 ../src/ddcpci/main.c:208
 msgid "==>Error while sending data answer message"
 msgstr "==>Chyba při odesílání dat zprávy s odpovědí"
 
-#: ../src/ddcpci/main.c:251 ../src/ddcpci/main.c:266
+#: ../src/ddcpci/main.c:257 ../src/ddcpci/main.c:272
 msgid "==>Error while sending list message"
 msgstr "==>Chyba při odesílání zprávy se seznamem"
 
-#: ../src/ddcpci/main.c:284
+#: ../src/ddcpci/main.c:290
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "Neplatné argumenty.\n"
 
-#: ../src/ddcpci/main.c:290
+#: ../src/ddcpci/main.c:296
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>Nelze přečíst upovídanost.\n"
 
-#: ../src/ddcpci/main.c:297
+#: ../src/ddcpci/main.c:303
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>Nelze načíst klíč.\n"
 
-#: ../src/ddcpci/main.c:302
+#: ../src/ddcpci/main.c:308
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>Nelze otevřít klíč %u\n"
 
-#: ../src/ddcpci/main.c:316
+#: ../src/ddcpci/main.c:322
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>Během %ld sekund nebyl přijat Žádný příkaz, ruší se.\n"
 
-#: ../src/ddcpci/main.c:324
+#: ../src/ddcpci/main.c:330
 msgid "==>Error while receiving query\n"
 msgstr "==>Chyba při příjmu dotazu\n"
 
-#: ../src/ddcpci/main.c:359
+#: ../src/ddcpci/main.c:365
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>Neplatný dotaz...\n"
@@ -478,7 +534,7 @@ msgstr "via_open: cannot open /dev/mem"
 msgid "via_open: mmap failed"
 msgstr "via_open: mmap selhalo"
 
-#: ../src/gddccontrol/fspatterns.c:195
+#: ../src/gddccontrol/fspatterns.c:137
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -490,11 +546,11 @@ msgstr ""
 "- Bílá by měla být tak jasná, jak je to možné.\n"
 "- Musíte být schopni rozlišit každou úroveň šedé (zvláště 0 a 12).\n"
 
-#: ../src/gddccontrol/fspatterns.c:211
+#: ../src/gddccontrol/fspatterns.c:259
 msgid "Try to make moire patterns disappear."
 msgstr "Snažte se, aby moaré vzorky zmizely."
 
-#: ../src/gddccontrol/fspatterns.c:215
+#: ../src/gddccontrol/fspatterns.c:263
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -502,7 +558,7 @@ msgstr ""
 "Nastavte Hrubý zámek obrazu tak, aby zmizel svislý pruh.\n"
 "Minimalizujte pohyb obrazovce nastavením Jemného zámku obrazu."
 
-#: ../src/gddccontrol/fspatterns.c:254
+#: ../src/gddccontrol/fspatterns.c:273
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Neznámý název celoobrazovkového vzorku: %s"
@@ -521,28 +577,29 @@ msgid ""
 "profiles"
 msgstr "Přednastavení monitoru (kontrastu, jasu,...) a správa profilů"
 
-#: ../src/gddccontrol/gprofile.c:53
+#: ../src/gddccontrol/gprofile.c:54
 msgid "You must select at least one control to be saved in the profile."
-msgstr "Musíte vybrat alespoň jeden ovládací prvek, které má být uložen v profilu."
+msgstr ""
+"Musíte vybrat alespoň jeden ovládací prvek, které má být uložen v profilu."
 
-#: ../src/gddccontrol/gprofile.c:61
+#: ../src/gddccontrol/gprofile.c:62
 msgid "Creating profile..."
 msgstr "Vytváří se profil..."
 
-#: ../src/gddccontrol/gprofile.c:76
+#: ../src/gddccontrol/gprofile.c:77
 msgid "Error while creating profile."
 msgstr "Chyba při vytváření profilu."
 
-#: ../src/gddccontrol/gprofile.c:93
+#: ../src/gddccontrol/gprofile.c:94
 msgid "Applying profile..."
 msgstr "Použití profilu..."
 
-#: ../src/gddccontrol/gprofile.c:116
+#: ../src/gddccontrol/gprofile.c:117
 #, c-format
 msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "Jste si jisti, že chcete smazat profil ' %s'?"
 
-#: ../src/gddccontrol/gprofile.c:142
+#: ../src/gddccontrol/gprofile.c:143
 msgid ""
 "Please select the controls you want to save in the profile using the "
 "checkboxes to the left of each control."
@@ -550,78 +607,78 @@ msgstr ""
 "Prosím zvolte ovládací prvky, které chcete uložit do profilu pomocí "
 "zaškrtávací políčka nalevo od každé kontroly."
 
-#: ../src/gddccontrol/gprofile.c:174
+#: ../src/gddccontrol/gprofile.c:175
 msgid "Profile Manager"
 msgstr "Správce profilů"
 
-#: ../src/gddccontrol/gprofile.c:193
+#: ../src/gddccontrol/gprofile.c:199
 msgid "Apply profile"
 msgstr "Apply Profil"
 
-#: ../src/gddccontrol/gprofile.c:198
+#: ../src/gddccontrol/gprofile.c:208
 msgid "Show profile details / Rename profile"
 msgstr "Show details profil / Přejmenovat profil"
 
-#: ../src/gddccontrol/gprofile.c:203
+#: ../src/gddccontrol/gprofile.c:217
 msgid "Delete profile"
 msgstr "Smazat profil"
 
-#: ../src/gddccontrol/gprofile.c:229
+#: ../src/gddccontrol/gprofile.c:253
 msgid "Create profile"
 msgstr "Vytvořit profil"
 
-#: ../src/gddccontrol/gprofile.c:235
+#: ../src/gddccontrol/gprofile.c:259
 msgid "Close profile manager"
 msgstr "Zavřít profil manažera"
 
-#: ../src/gddccontrol/gprofile.c:299
+#: ../src/gddccontrol/gprofile.c:321
 msgid "Control name"
 msgstr "Control name"
 
-#: ../src/gddccontrol/gprofile.c:310
+#: ../src/gddccontrol/gprofile.c:332
 msgid "Value"
 msgstr "Value"
 
-#: ../src/gddccontrol/gprofile.c:313
+#: ../src/gddccontrol/gprofile.c:335
 msgid "Address"
 msgstr "Address"
 
-#: ../src/gddccontrol/gprofile.c:316
+#: ../src/gddccontrol/gprofile.c:338
 msgid "Raw value"
 msgstr "Raw hodnota"
 
-#: ../src/gddccontrol/gprofile.c:434 ../src/gddccontrol/gprofile.c:454
+#: ../src/gddccontrol/gprofile.c:456 ../src/gddccontrol/gprofile.c:476
 msgid "Profile information:"
 msgstr "Profil informace:"
 
-#: ../src/gddccontrol/gprofile.c:463
+#: ../src/gddccontrol/gprofile.c:485
 #, c-format
 msgid "File name: %s"
 msgstr "Název souboru: %s"
 
-#: ../src/gddccontrol/gprofile.c:474
+#: ../src/gddccontrol/gprofile.c:496
 msgid "Profile name:"
 msgstr "Název profilu"
 
 #. Save
-#: ../src/gddccontrol/gprofile.c:496
+#: ../src/gddccontrol/gprofile.c:518
 msgid "Saving profile..."
 msgstr "Saving profil..."
 
-#: ../src/gddccontrol/gprofile.c:505
+#: ../src/gddccontrol/gprofile.c:527
 msgid "Error while saving profile."
 msgstr "Chyba při ukládání profilu."
 
-#: ../src/gddccontrol/main.c:177
+#: ../src/gddccontrol/main.c:204
 #, c-format
 msgid "Monitor changed (%d %d).\n"
 msgstr "Monitor změna (%d %d).\n"
 
-#: ../src/gddccontrol/main.c:330
+#: ../src/gddccontrol/main.c:356
 msgid "Probing for available monitors..."
 msgstr "Probing k dispozici monitory..."
 
-#: ../src/gddccontrol/main.c:369
+#: ../src/gddccontrol/main.c:385
 msgid ""
 "No monitor supporting DDC/CI available.\n"
 "\n"
@@ -633,47 +690,47 @@ msgstr ""
 "Pokud vaše grafická karta potřebuje, Zkontrolujte, zda všechny požadované "
 "moduly jádra jsou zavedeny (I2C-dev, a vaše frame buffer řidiče)."
 
-#: ../src/gddccontrol/main.c:421
+#: ../src/gddccontrol/main.c:438
 msgid "Unable to initialize ddcci library, see console for more details.\n"
 msgstr "Nelze inicializovat knihovnu ddcci, viz konzole pro více informací.\n"
 
-#: ../src/gddccontrol/main.c:431
+#: ../src/gddccontrol/main.c:450
 msgid "Monitor settings"
 msgstr "Nastavení monitoru"
 
-#: ../src/gddccontrol/main.c:455
+#: ../src/gddccontrol/main.c:474
 msgid "Current monitor: "
 msgstr "Aktuální monitor: "
 
-#: ../src/gddccontrol/main.c:465
+#: ../src/gddccontrol/main.c:484
 msgid "Refresh monitor list"
 msgstr "Aktualizovat seznam monitorů"
 
-#: ../src/gddccontrol/main.c:482
+#: ../src/gddccontrol/main.c:507
 msgid "Profile manager"
 msgstr "Správce profilů"
 
-#: ../src/gddccontrol/main.c:489
+#: ../src/gddccontrol/main.c:514
 msgid "Save profile"
 msgstr "Uložit profil"
 
-#: ../src/gddccontrol/main.c:495
+#: ../src/gddccontrol/main.c:520
 msgid "Cancel profile creation"
 msgstr "Zrušit vytvoření profilu"
 
-#: ../src/gddccontrol/main.c:519
+#: ../src/gddccontrol/main.c:549
 msgid "OK"
 msgstr "OK"
 
-#: ../src/gddccontrol/main.c:547
+#: ../src/gddccontrol/main.c:585
 msgid "Refresh"
 msgstr "Aktualizovat"
 
-#: ../src/gddccontrol/main.c:547
+#: ../src/gddccontrol/main.c:585
 msgid "Refresh all controls"
 msgstr "Aktualizovat všechny ovládací prvky"
 
-#: ../src/gddccontrol/main.c:554
+#: ../src/gddccontrol/main.c:592
 msgid "Close"
 msgstr "Zavřít"
 
@@ -681,33 +738,33 @@ msgstr "Zavřít"
 #. gtk_misc_set_alignment(GTK_MISC(moninfo), 0, 0);
 #.
 #. gtk_table_attach(GTK_TABLE(table), moninfo, 0, 1, 1, 2, GTK_FILL_EXPAND, 0, 5, 5);
-#: ../src/gddccontrol/main.c:593
+#: ../src/gddccontrol/main.c:634
 #, c-format
 msgid "Welcome to gddccontrol %s."
 msgstr "Vítejte v gddccontrol %s."
 
-#: ../src/gddccontrol/notebook.c:81
+#: ../src/gddccontrol/notebook.c:83
 msgid "Error while getting value"
 msgstr "Chyba při získávání hodnoty"
 
-#: ../src/gddccontrol/notebook.c:116 ../src/gddccontrol/notebook.c:128
+#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "Aktualizují se nastavené hodnoty (%d %%)..."
 
-#: ../src/gddccontrol/notebook.c:133
+#: ../src/gddccontrol/notebook.c:135
 msgid "Could not get the control_db struct related to a control."
 msgstr "Nelze získat control_db struct související s ovládáním."
 
-#: ../src/gddccontrol/notebook.c:493
+#: ../src/gddccontrol/notebook.c:495
 msgid "Show fullscreen patterns"
 msgstr "Zobrazit celoobrazovkové vzory"
 
-#: ../src/gddccontrol/notebook.c:525
+#: ../src/gddccontrol/notebook.c:527
 msgid "Section"
 msgstr "Oddíl"
 
-#: ../src/gddccontrol/notebook.c:572
+#: ../src/gddccontrol/notebook.c:574
 msgid ""
 "The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
@@ -719,11 +776,13 @@ msgid ""
 msgstr ""
 "Současný monitor je v databázi, ale nepodporuje DDC/CI.\n"
 "\n"
-"K tomu často dochází při připojení VGA/DVI kabelu na nevhodný vstup u monitorů, které podporují DDC/CI pouze na jednom ze dvou vstupů.\n"
+"K tomu často dochází při připojení VGA/DVI kabelu na nevhodný vstup "
+"u monitorů, které podporují DDC/CI pouze na jednom ze dvou vstupů.\n"
 "\n"
-"Pokud má váš monitor má dva vstupy, prosím, zkuste připojit kabel na jiný vstup, a potom klikněte na obnovovací tlačítko poblíž seznamu monitorů."
+"Pokud má váš monitor má dva vstupy, prosím, zkuste připojit kabel na jiný "
+"vstup, a potom klikněte na obnovovací tlačítko poblíž seznamu monitorů."
 
-#: ../src/gddccontrol/notebook.c:583
+#: ../src/gddccontrol/notebook.c:585
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "Otvírá se zařízení monitoru (%s)..."
@@ -735,547 +794,563 @@ msgid ""
 "the monitor list."
 msgstr ""
 "Došlo k chybě při otevírání zařízení monitoru.\n"
-"Možná, že byl tento monitor odpojen, klikněte na obnovovací tlačítko poblíž seznamu monitorů."
+"Možná, že byl tento monitor odpojen, klikněte na obnovovací tlačítko poblíž "
+"seznamu monitorů."
 
 #: ../src/gddccontrol/notebook.c:600
 #, c-format
 msgid ""
-"The current monitor is not supported, please run\n"
-"%s\n"
-"and send the output to ddccontrol-users@lists.sourceforge.net.\n"
-"Thanks."
+"Unsupported monitor detected.\n"
+"\n"
+"Please update ddccontrol-db, or, if you are already using the latest\n"
+"version, please open a github issue:\n"
+"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-"
+"monitor.yml\n"
+"Then attach the resulting report file of the following command:"
 msgstr ""
-"Aktuální monitor není podporován, spusťte\n"
-"%s\n"
-"a odešlete výstup na ddccontrol-users@lists.sourceforge.net.\n"
-"Děkujeme."
 
-#: ../src/gddccontrol/notebook.c:620
+#: ../src/gddccontrol/notebook.c:622
 msgid "Please click on a group name."
 msgstr "Prosím, klikněte na název skupiny."
 
-#: ../src/gddccontrol/notebook.c:639 ../src/gddccontrol/notebook.c:650
+#: ../src/gddccontrol/notebook.c:647 ../src/gddccontrol/notebook.c:658
 #, c-format
 msgid "Getting controls values (%d%%)..."
 msgstr "Získávají se nastavené hodnoty (%d %%)..."
 
-#: ../src/gddccontrol/notebook.c:664
+#: ../src/gddccontrol/notebook.c:683
 msgid "Loading profiles..."
 msgstr "Čtou se profily..."
 
-#: ../src/gddccontrol/notebook.c:677
+#: ../src/gddccontrol/notebook.c:696
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a generic profile for your monitor's manufacturer. Some controls may "
 "not be supported, or may not work as expected.\n"
-msgstr "Váš monitor není zanesen v databázi, ale ddccontrol používá obecný profil výrobce monitoru. Některé ovládací prvky nemusí být podporovány nebo nemusí fungovat podle očekávání.\n"
+msgstr ""
+"Váš monitor není zanesen v databázi, ale ddccontrol používá obecný profil "
+"výrobce monitoru. Některé ovládací prvky nemusí být podporovány nebo nemusí "
+"fungovat podle očekávání.\n"
 
-#: ../src/gddccontrol/notebook.c:683
+#: ../src/gddccontrol/notebook.c:702
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a basic generic profile. Many controls will not be supported, and some "
 "controls may not work as expected.\n"
-msgstr "Váš monitor není zanesen v databázi, ale ddccontrol používá obecný profil. Mnohé ovládací prvky nebudou podporovány, některé nemusí fungovat podle očekávání.\n"
+msgstr ""
+"Váš monitor není zanesen v databázi, ale ddccontrol používá obecný profil. "
+"Mnohé ovládací prvky nebudou podporovány, některé nemusí fungovat podle "
+"očekávání.\n"
 
-#: ../src/gddccontrol/notebook.c:688
+#: ../src/gddccontrol/notebook.c:707
 msgid "Warning!"
 msgstr "Varování!"
 
-#: ../src/gddccontrol/notebook.c:690
+#: ../src/gddccontrol/notebook.c:709
 msgid ""
-"Please update ddccontrol-db, or, if you are already using the latest "
-"version, please send the output of the following command to ddccontrol-"
-"users@lists.sourceforge.net:\n"
-msgstr "Prosím aktualizujte ddccontrol-db, nebo, pokud již používáte nejnovější verzi, zašlete prosím výstup následujícího příkazu na  ddccontrol-users@lists.sourceforge.net:\n"
-
-#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:1
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:184
-msgid "Monitor Profile Switcher"
-msgstr "Přepínač profilů monitoru"
-
-#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.server.in.in.h:2
-msgid "Quickly switch monitor profiles created with gddccontrol"
-msgstr "Rychle přepíná profily monitoru vytvořené pomocí gddccontrol"
-
-#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:1
-msgid "_About..."
-msgstr "_O aplikaci..."
-
-#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:2
-msgid "_Properties..."
-msgstr "_Vlastosti..."
-
-#: ../src/gnome-ddcc-applet/GNOME_ddcc-applet.xml.h:3
-msgid "_Run gddccontrol..."
-msgstr "_Spustit gddccontrol..."
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:189
-msgid ""
-"An applet for quick switching of monitor profiles.\n"
-"Based on libddccontrol and part of the ddccontrol project.\n"
-"(http://ddccontrol.sourceforge.net)"
+"Unsupported monitor detected.\n"
+"\n"
+"Please update ddccontrol-db, or, if you are already using the latest\n"
+"version, please open a github issue:\n"
+"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-"
+"monitor.yml\n"
+"Then attach the resulting report file of the following command:\n"
 msgstr ""
-"Applet pro rychlé přepínání profilů monitoru.\n"
-"Založeno na libddccontrol a části projektu ddccontrol.\n"
-"(http://ddccontrol.sourceforge.net)"
 
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:386
-msgid "Unable to initialize ddcci library"
-msgstr "Nelze inicializovat knihovnu ddcci"
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:390
-msgid "No monitor configuration found. Please run gddccontrol first"
-msgstr "Žádné konfigurace monitoru nebyly nalezeny. Spusťte nejdříve gddccontrol"
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:395
-msgid "An error occurred while opening the monitor device"
-msgstr "Došlo k chybě při otevírání zařízení monitoru"
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:400
-msgid "Can't find any profiles"
-msgstr "Žádné profily nebyly nalezeny"
-
-#. only reached, if init was not finished
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:416
-msgid "error"
-msgstr "chyba"
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:440
-msgid "Monitor:"
-msgstr "Monitor:"
-
-#: ../src/gnome-ddcc-applet/ddcc-applet.c:443
-msgid "Monitor Profile Switcher Properties"
-msgstr "Vlastnosti přepínače profilů monitoru"
-
-#: ../src/lib/conf.c:61 ../src/lib/conf.c:258 ../src/lib/conf.c:308
-#: ../src/lib/ddcci.c:1202
+#: ../src/lib/conf.c:63 ../src/lib/conf.c:260 ../src/lib/conf.c:310
+#: ../src/lib/ddcci.c:1306
 msgid "Cannot create filename (buffer too small)\n"
 msgstr "Nelze vytvořit jméno souboru (buffer je příliš malý)\n"
 
-#: ../src/lib/conf.c:86 ../src/lib/conf.c:363 ../src/lib/monitor_db.c:350
-#: ../src/lib/monitor_db.c:714
+#: ../src/lib/conf.c:88 ../src/lib/conf.c:367 ../src/lib/monitor_db.c:353
+#: ../src/lib/monitor_db.c:726
 #, c-format
 msgid "Document not parsed successfully.\n"
 msgstr "Dokument nebyl analyzován úspěšně.\n"
 
-#: ../src/lib/conf.c:93 ../src/lib/conf.c:370
+#: ../src/lib/conf.c:95 ../src/lib/conf.c:375
 #, c-format
 msgid "empty profile file\n"
 msgstr "prázdný soubor profilu\n"
 
-#: ../src/lib/conf.c:99 ../src/lib/conf.c:376
+#: ../src/lib/conf.c:101 ../src/lib/conf.c:382
 #, c-format
 msgid "profile of the wrong type, root node %s != profile"
 msgstr "profil nevhodného typu, kořenový uzel %s! = profil"
 
-#: ../src/lib/conf.c:105
+#: ../src/lib/conf.c:107
 msgid "Can't find ddccontrolversion property."
 msgstr "Nebyla nalezena vlastnost verze dccontrol."
 
-#: ../src/lib/conf.c:107
+#: ../src/lib/conf.c:109
 #, c-format
 msgid "ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"
-msgstr "ddccontrol byl od posledního zápisu seznamu monitorů aktualizován (%s proti %s).\n"
+msgstr ""
+"ddccontrol byl od posledního zápisu seznamu monitorů aktualizován (%s proti "
+"%s).\n"
 
-#: ../src/lib/conf.c:124
+#: ../src/lib/conf.c:126
 msgid "Can't find filename property."
 msgstr "Nebyla nalezena vlastnost jména souboru."
 
-#: ../src/lib/conf.c:130
+#: ../src/lib/conf.c:132
 msgid "Can't find supported property."
 msgstr "Nebyla nalezena vlastnost podpory."
 
-#: ../src/lib/conf.c:133
+#: ../src/lib/conf.c:135
 msgid "Can't convert supported property to int."
 msgstr "Cannot convert podporována vlastnost int."
 
-#: ../src/lib/conf.c:138 ../src/lib/conf.c:385 ../src/lib/monitor_db.c:90
-#: ../src/lib/monitor_db.c:194 ../src/lib/monitor_db.c:370
-#: ../src/lib/monitor_db.c:426 ../src/lib/monitor_db.c:447
+#: ../src/lib/conf.c:140 ../src/lib/conf.c:392 ../src/lib/monitor_db.c:92
+#: ../src/lib/monitor_db.c:196 ../src/lib/monitor_db.c:373
+#: ../src/lib/monitor_db.c:429 ../src/lib/monitor_db.c:450
 msgid "Can't find name property."
 msgstr "Nebylo nalezeno jméno vlastnosti."
 
-#: ../src/lib/conf.c:144
+#: ../src/lib/conf.c:146
 msgid "Can't find digital property."
 msgstr "Cannot find digitální majetek."
 
-#: ../src/lib/conf.c:147
+#: ../src/lib/conf.c:149
 msgid "Can't convert digital property to int."
 msgstr "Cannot convert digitální majetek int."
 
-#: ../src/lib/conf.c:175 ../src/lib/conf.c:439
+#: ../src/lib/conf.c:177 ../src/lib/conf.c:447
 msgid "Cannot create the xml writer\n"
 msgstr "Nelze vytvořit xml spisovatel\n"
 
-#: ../src/lib/conf.c:239
+#: ../src/lib/conf.c:241
 msgid "Cannot read control value\n"
 msgstr "Cannot read kontrolní hodnota\n"
 
-#: ../src/lib/conf.c:276
+#: ../src/lib/conf.c:278
 msgid "Cannot write control value\n"
 msgstr "Cannot write kontrolní hodnota\n"
 
-#: ../src/lib/conf.c:313
+#: ../src/lib/conf.c:315
 msgid "Error while opening ddccontrol home directory."
 msgstr "Chyba při otevírání ddccontrol domovském adresáři."
 
-#: ../src/lib/conf.c:337
+#: ../src/lib/conf.c:340
 msgid "Error while reading ddccontrol home directory."
 msgstr "Chyba při čtení ddccontrol domovském adresáři."
 
-#: ../src/lib/conf.c:382
+#: ../src/lib/conf.c:389
 msgid "Can't find pnpid property."
 msgstr "Cannot find pnpid majetku."
 
-#: ../src/lib/conf.c:388 ../src/lib/conf.c:391
+#: ../src/lib/conf.c:395 ../src/lib/conf.c:398
 msgid "Can't find version property."
 msgstr "Cannot find version majetku."
 
-#: ../src/lib/conf.c:390 ../src/lib/monitor_db.c:752
+#: ../src/lib/conf.c:397 ../src/lib/monitor_db.c:764
 msgid "Can't convert version to int."
 msgstr "Cannot convert int verzi."
 
-#: ../src/lib/conf.c:393
+#: ../src/lib/conf.c:400
 #, c-format
 msgid "profile version (%d) is not supported (should be %d).\n"
 msgstr "Profil verzi (%d) není podporován (měl by být %d).\n"
 
-#: ../src/lib/conf.c:407 ../src/lib/monitor_db.c:229
+#: ../src/lib/conf.c:415 ../src/lib/monitor_db.c:233
 msgid "Can't find address property."
 msgstr "Cannot find adresu majetku."
 
-#: ../src/lib/conf.c:409 ../src/lib/monitor_db.c:231
+#: ../src/lib/conf.c:417 ../src/lib/monitor_db.c:235
 msgid "Can't convert address to int."
 msgstr "Cannot convert adresu int."
 
-#: ../src/lib/conf.c:413 ../src/lib/monitor_db.c:112
+#: ../src/lib/conf.c:421 ../src/lib/monitor_db.c:114
 msgid "Can't find value property."
 msgstr "Cannot find hodnotu majetku."
 
-#: ../src/lib/conf.c:415 ../src/lib/monitor_db.c:114
+#: ../src/lib/conf.c:423 ../src/lib/monitor_db.c:116
 msgid "Can't convert value to int."
 msgstr "Cannot convert hodnotu int."
 
-#: ../src/lib/conf.c:499
+#: ../src/lib/conf.c:507
 msgid "ddcci_delete_profile: Error, cannot delete profile.\n"
 msgstr "ddcci_delete_profile: Chyba, nelze smazat profil.\n"
 
-#: ../src/lib/conf.c:519
+#: ../src/lib/conf.c:527
 #, c-format
 msgid "ddcci_delete_profile: Error, could not find the profile to delete.\n"
 msgstr "ddcci_delete_profile: Chyba, nemohl najít profil smazat.\n"
 
-#: ../src/lib/ddcci.c:146
+#: ../src/lib/ddcci.c:148
 msgid "Error while initialisating the message queue"
 msgstr "Chyba při init mentalis Racing fronta zpráv"
 
-#: ../src/lib/ddcci.c:175
+#: ../src/lib/ddcci.c:177
 msgid "Error while sending quit message"
 msgstr "Chyba při odesílání zprávy quit"
 
-#: ../src/lib/ddcci.c:221
+#: ../src/lib/ddcci.c:223
 msgid "Error while sending heartbeat message"
 msgstr "Chyba při odesílání zprávy Heartbeat"
 
-#: ../src/lib/ddcci.c:239
+#: ../src/lib/ddcci.c:241
 #, c-format
 msgid "Failed to initialize ddccontrol database...\n"
 msgstr "Nepodařilo se inicializovat ddccontrol databází...\n"
 
-#: ../src/lib/ddcci.c:275 ../src/lib/ddcci.c:350
+#: ../src/lib/ddcci.c:247
+#, fuzzy, c-format
+msgid "Failed to initialize ADL...\n"
+msgstr "Nepodařilo se inicializovat ddccontrol databází...\n"
+
+#: ../src/lib/ddcci.c:292 ../src/lib/ddcci.c:383
 #, c-format
 msgid "ioctl returned %d\n"
 msgstr "ioctl vrátil %d\n"
 
-#: ../src/lib/ddcci.c:300
+#: ../src/lib/ddcci.c:321
 msgid "Error while sending write message"
 msgstr "Chyba při odesílání zprávy napsat"
 
-#: ../src/lib/ddcci.c:309
+#: ../src/lib/ddcci.c:330
 msgid "Error while reading write message answer"
 msgstr "Chyba při čtení zprávy napsat odpověď"
 
-#: ../src/lib/ddcci.c:376
+#: ../src/lib/ddcci.c:413
 msgid "Error while sending read message"
 msgstr "Chyba při odesílání zprávy číst"
 
-#: ../src/lib/ddcci.c:385
+#: ../src/lib/ddcci.c:422
 msgid "Error while reading read message answer"
 msgstr "Chyba při čtení zprávy číst odpověď"
 
-#: ../src/lib/ddcci.c:475
+#: ../src/lib/ddcci.c:518
 #, c-format
 msgid "Invalid response, first byte is 0x%02x, should be 0x%02x\n"
 msgstr "Invalid odpověď, první bajt je 0x %02x, by měla být 0x %02x\n"
 
-#: ../src/lib/ddcci.c:485
+#: ../src/lib/ddcci.c:528
 #, c-format
 msgid "Non-fatal error: Invalid response, magic is 0x%02x\n"
 msgstr "Non-Fatal error: Neplatná odpověď, magie je 0x %02x\n"
 
-#: ../src/lib/ddcci.c:492
+#: ../src/lib/ddcci.c:535
 #, c-format
 msgid "Invalid response, length is %d, should be %d at most\n"
 msgstr "Invalid odpověď, délka %d, by měla být maximálně %d\n"
 
-#: ../src/lib/ddcci.c:505
+#: ../src/lib/ddcci.c:548
 #, c-format
 msgid "Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"
 msgstr "Invalid odpověď, poškozená data - XOR je 0x %02x, délka 0x %02x\n"
 
-#: ../src/lib/ddcci.c:658 ../src/lib/ddcci.c:680
+#: ../src/lib/ddcci.c:709 ../src/lib/ddcci.c:731
 #, c-format
 msgid "Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"
 msgstr "Cannot convert hodnotu int, neplatné Capsis (buf = %s, pos = %d).\n"
 
-#: ../src/lib/ddcci.c:763
+#: ../src/lib/ddcci.c:814
 #, c-format
 msgid "Invalid sequence in caps.\n"
 msgstr "Neplatná sekvence v víčka.\n"
 
-#: ../src/lib/ddcci.c:841
+#: ../src/lib/ddcci.c:892
 #, c-format
 msgid "Corrupted EDID at 0x%02x.\n"
 msgstr "Corrupted EDID na 0x %02x.\n"
 
-#: ../src/lib/ddcci.c:853
+#: ../src/lib/ddcci.c:904
 #, c-format
 msgid "Serial number: %d\n"
 msgstr "Sériové číslo: %d\n"
 
-#: ../src/lib/ddcci.c:856
+#: ../src/lib/ddcci.c:907
 #, c-format
 msgid "Manufactured: Week %d, %d\n"
 msgstr "Výrobce: Týden %d, %d\n"
 
-#: ../src/lib/ddcci.c:859
+#: ../src/lib/ddcci.c:910
 #, c-format
 msgid "EDID version: %d.%d\n"
 msgstr "EDID version: %d. %d\n"
 
-#: ../src/lib/ddcci.c:862
+#: ../src/lib/ddcci.c:913
 #, c-format
 msgid "Maximum size: %d x %d (cm)\n"
 msgstr "Maximální velikost: %d × %d (cm)\n"
 
-#: ../src/lib/ddcci.c:873
+#: ../src/lib/ddcci.c:924
 #, c-format
 msgid "Reading EDID 0x%02x failed.\n"
 msgstr "Reading EDID 0x %02x selhal.\n"
 
-#: ../src/lib/ddcci.c:903
+#: ../src/lib/ddcci.c:954
 #, c-format
 msgid "Device: %s\n"
 msgstr "Device: %s\n"
 
-#: ../src/lib/ddcci.c:917
+#: ../src/lib/ddcci.c:968
 msgid "Error while sending open message"
 msgstr "Chyba při odesílání zprávy otevřít"
 
-#: ../src/lib/ddcci.c:925
+#: ../src/lib/ddcci.c:976
 msgid "Error while reading open message answer"
 msgstr "Chyba při čtení zpráv otevřené odpověď"
 
-#: ../src/lib/ddcci.c:933
+#: ../src/lib/ddcci.c:988 ../src/lib/ddcci.c:1001
 #, c-format
 msgid "Invalid filename (%s).\n"
 msgstr "Neplatný název souboru (%s).\n"
 
-#: ../src/lib/ddcci.c:1049
+#: ../src/lib/ddcci.c:993
+#, c-format
+msgid "ADL display not found (%s).\n"
+msgstr ""
+
+#: ../src/lib/ddcci.c:1125
 #, c-format
 msgid "ddcci_open returned %d\n"
 msgstr "ddcci_open vrátil %d\n"
 
-#: ../src/lib/ddcci.c:1062
+#: ../src/lib/ddcci.c:1138
 #, c-format
 msgid "Unknown monitor (%s)"
 msgstr "Unknown monitor (%s)"
 
-#: ../src/lib/ddcci.c:1083
+#: ../src/lib/ddcci.c:1159
 #, c-format
 msgid "Probing for available monitors"
 msgstr "Probing k dispozici monitory"
 
-#: ../src/lib/ddcci.c:1097
+#: ../src/lib/ddcci.c:1173
 msgid "Error while sending list message"
 msgstr "Chyba při odesílání zprávy Seznam"
 
-#: ../src/lib/ddcci.c:1106
+#: ../src/lib/ddcci.c:1182
 msgid "Error while reading list entry"
 msgstr "Chyba při čtení seznamu položku"
 
-#: ../src/lib/ddcci.c:1123
+#: ../src/lib/ddcci.c:1199
 #, c-format
 msgid "Found PCI device (%s)\n"
 msgstr "Found PCI zařízení (%s)\n"
 
-#: ../src/lib/ddcci.c:1157
+#: ../src/lib/ddcci.c:1239
 #, c-format
 msgid "Found I2C device (%s)\n"
 msgstr "Found I2C zařízení (%s)\n"
 
-#: ../src/lib/ddcci.c:1206
+#: ../src/lib/ddcci.c:1264
+#, fuzzy, c-format
+msgid "Found ADL display (%s)\n"
+msgstr "Found PCI zařízení (%s)\n"
+
+#: ../src/lib/ddcci.c:1310
 msgid "Error while getting information about ddccontrol home directory."
 msgstr "Chyba při získávání informací o ddccontrol domovském adresáři."
 
-#: ../src/lib/ddcci.c:1211
+#: ../src/lib/ddcci.c:1316
 msgid "Error while creating ddccontrol home directory."
 msgstr "Chyba při vytváření ddccontrol domovském adresáři."
 
-#: ../src/lib/ddcci.c:1216
+#: ../src/lib/ddcci.c:1322
 msgid ""
 "Error while getting information about ddccontrol home directory after "
 "creating it."
 msgstr ""
 "Chyba při získávání informací o ddccontrol domovský adresář po vytvoření to."
 
-#: ../src/lib/ddcci.c:1223
+#: ../src/lib/ddcci.c:1330
 msgid "Error: '.ddccontrol' in your home directory is not a directory."
 msgstr "Error: '. ddccontrol' ve vašem domovském adresáři není adresář."
 
-#: ../src/lib/ddcci.c:1231
+#: ../src/lib/ddcci.c:1339
 msgid "Error while getting information about ddccontrol profile directory."
 msgstr "Chyba při získávání informací o ddccontrol profilu."
 
-#: ../src/lib/ddcci.c:1236
+#: ../src/lib/ddcci.c:1345
 msgid "Error while creating ddccontrol profile directory."
 msgstr "Chyba při vytváření ddccontrol profilu."
 
-#: ../src/lib/ddcci.c:1241
+#: ../src/lib/ddcci.c:1351
 msgid ""
 "Error while getting information about ddccontrol profile directory after "
 "creating it."
 msgstr "Chyba při získávání informací o ddccontrol profilu po vytvoření to."
 
-#: ../src/lib/ddcci.c:1248
+#: ../src/lib/ddcci.c:1359
 msgid ""
 "Error: '.ddccontrol/profiles' in your home directory is not a directory."
 msgstr ""
 "Error: '. ddccontrol / profiles' ve vašem domovském adresáři není adresář."
 
-#: ../src/lib/monitor_db.c:82 ../src/lib/monitor_db.c:192
+#: ../src/lib/monitor_db.c:84 ../src/lib/monitor_db.c:194
 msgid "Can't find id property."
 msgstr "Cannot find id majetku."
 
-#: ../src/lib/monitor_db.c:151 ../src/lib/monitor_db.c:546
+#: ../src/lib/monitor_db.c:153 ../src/lib/monitor_db.c:549
 #, c-format
 msgid "Element %s (id=%s) has not been found (line %ld).\n"
 msgstr "Element %s (id = %s) nebyl nalezen (řádek %ld).\n"
 
-#: ../src/lib/monitor_db.c:205
+#: ../src/lib/monitor_db.c:207
 msgid "Invalid refresh type (!= none, != all)."
 msgstr "Invalid Obnovit typ (! nula! = all)."
 
-#: ../src/lib/monitor_db.c:238
+#: ../src/lib/monitor_db.c:242
 #, c-format
 msgid "Control %s has been discarded by the caps string.\n"
 msgstr "Control %s byl odstraňují víčka řetězce.\n"
 
-#: ../src/lib/monitor_db.c:246
+#: ../src/lib/monitor_db.c:250
 #, c-format
 msgid "Control %s (0x%02x) has already been defined.\n"
 msgstr "Control %s (0x %02x) již byl definován.\n"
 
-#: ../src/lib/monitor_db.c:259
+#: ../src/lib/monitor_db.c:263
 msgid "Can't convert delay to int."
 msgstr "Cannot convert zpoždění int."
 
-#: ../src/lib/monitor_db.c:267
+#: ../src/lib/monitor_db.c:271
 msgid "Can't find type property."
 msgstr "Cannot find typu vlastnictví."
 
-#: ../src/lib/monitor_db.c:292 ../src/lib/monitor_db.c:381
+#: ../src/lib/monitor_db.c:296 ../src/lib/monitor_db.c:384
 msgid "Invalid type."
 msgstr "Neplatný typ."
 
-#: ../src/lib/monitor_db.c:343
+#: ../src/lib/monitor_db.c:346
 #, c-format
 msgid "Database must be inited before reading a monitor file.\n"
 msgstr "Database musí být před čtením inited monitor souboru.\n"
 
-#: ../src/lib/monitor_db.c:357
+#: ../src/lib/monitor_db.c:360
 #, c-format
 msgid "empty monitor/%s.xml\n"
 msgstr "empty monitor / %s.xml\n"
 
-#: ../src/lib/monitor_db.c:363
+#: ../src/lib/monitor_db.c:366
 #, c-format
 msgid "monitor/%s.xml of the wrong type, root node %s != monitor"
 msgstr "monitor / %s.xml o nevhodný typ, kořen %s! = monitor"
 
-#: ../src/lib/monitor_db.c:464
+#: ../src/lib/monitor_db.c:467
 msgid "Can't find add or remove property in caps."
 msgstr "Cannot find přidat či odebrat majetek čepice."
 
-#: ../src/lib/monitor_db.c:466
+#: ../src/lib/monitor_db.c:469
 msgid "Invalid remove caps."
 msgstr "Invalid odstranit čepice."
 
-#: ../src/lib/monitor_db.c:468
+#: ../src/lib/monitor_db.c:471
 msgid "Invalid add caps."
 msgstr "Invalid přidat čepice."
 
-#: ../src/lib/monitor_db.c:473
+#: ../src/lib/monitor_db.c:476
 #, c-format
 msgid "Error, include recursion level > 15 (file: %s).\n"
 msgstr "Error, včetně rekurze úrovni> 15 (soubor: %s).\n"
 
-#: ../src/lib/monitor_db.c:479
+#: ../src/lib/monitor_db.c:482
 msgid "Can't find file property."
 msgstr "Nelze nalézt soubor majetku."
 
-#: ../src/lib/monitor_db.c:487
+#: ../src/lib/monitor_db.c:490
 msgid "Two controls part in XML file."
 msgstr "Dva ovládací část v souboru XML."
 
-#: ../src/lib/monitor_db.c:534
+#: ../src/lib/monitor_db.c:537
 msgid "Error enumerating controls in subgroup."
 msgstr "Error výčtu ovládacích prvků v podskupině."
 
-#: ../src/lib/monitor_db.c:589
+#: ../src/lib/monitor_db.c:601
 #, c-format
 msgid "document of the wrong type, can't find controls or include.\n"
 msgstr "doklad o nevhodný typ, nemohou najít ovládací prvky nebo obsahují.\n"
 
-#: ../src/lib/monitor_db.c:721
+#: ../src/lib/monitor_db.c:733
 #, c-format
 msgid "empty options.xml\n"
 msgstr "empty options.xml\n"
 
-#: ../src/lib/monitor_db.c:728
+#: ../src/lib/monitor_db.c:740
 #, c-format
 msgid "options.xml of the wrong type, root node %s != options"
 msgstr "options.xml o nevhodný typ, kořen %s! = volby"
 
-#: ../src/lib/monitor_db.c:738
+#: ../src/lib/monitor_db.c:750
 #, c-format
 msgid "options.xml dbversion attribute missing, please update your database.\n"
 msgstr ""
 "options.xml dbversion atribut chybí, aktualizujte prosím své databázi.\n"
 
-#: ../src/lib/monitor_db.c:745
+#: ../src/lib/monitor_db.c:757
 #, c-format
 msgid "options.xml date attribute missing, please update your database.\n"
 msgstr "options.xml datum atribut chybí, aktualizujte prosím své databázi.\n"
 
-#: ../src/lib/monitor_db.c:755
+#: ../src/lib/monitor_db.c:767
 #, c-format
 msgid ""
 "options.xml dbversion (%d) is greater than the supported version (%d).\n"
 msgstr "options.xml dbversion (%d) je větší než podporovanou verzi (%d).\n"
 
-#: ../src/lib/monitor_db.c:756
+#: ../src/lib/monitor_db.c:768
 #, c-format
 msgid "Please update ddccontrol program.\n"
 msgstr "Prosím aktualizujte ddccontrol programu.\n"
 
-#: ../src/lib/monitor_db.c:763
+#: ../src/lib/monitor_db.c:775
 #, c-format
 msgid "options.xml dbversion (%d) is less than the supported version (%d).\n"
 msgstr "options.xml dbversion (%d) je menší než podporovanou verzi (%d).\n"
 
-#: ../src/lib/monitor_db.c:764
+#: ../src/lib/monitor_db.c:776
 #, c-format
 msgid "Please update ddccontrol database.\n"
 msgstr "Prosím aktualizujte ddccontrol databázi.\n"
+
+#~ msgid "Control"
+#~ msgstr "Ovládání"
+
+#~ msgid "Monitor Profile Switcher"
+#~ msgstr "Přepínač profilů monitoru"
+
+#~ msgid "Quickly switch monitor profiles created with gddccontrol"
+#~ msgstr "Rychle přepíná profily monitoru vytvořené pomocí gddccontrol"
+
+#~ msgid "_About..."
+#~ msgstr "_O aplikaci..."
+
+#~ msgid "_Properties..."
+#~ msgstr "_Vlastosti..."
+
+#~ msgid "_Run gddccontrol..."
+#~ msgstr "_Spustit gddccontrol..."
+
+#~ msgid ""
+#~ "An applet for quick switching of monitor profiles.\n"
+#~ "Based on libddccontrol and part of the ddccontrol project.\n"
+#~ "(http://ddccontrol.sourceforge.net)"
+#~ msgstr ""
+#~ "Applet pro rychlé přepínání profilů monitoru.\n"
+#~ "Založeno na libddccontrol a části projektu ddccontrol.\n"
+#~ "(http://ddccontrol.sourceforge.net)"
+
+#~ msgid "Unable to initialize ddcci library"
+#~ msgstr "Nelze inicializovat knihovnu ddcci"
+
+#~ msgid "No monitor configuration found. Please run gddccontrol first"
+#~ msgstr ""
+#~ "Žádné konfigurace monitoru nebyly nalezeny. Spusťte nejdříve gddccontrol"
+
+#~ msgid "An error occurred while opening the monitor device"
+#~ msgstr "Došlo k chybě při otevírání zařízení monitoru"
+
+#~ msgid "Can't find any profiles"
+#~ msgstr "Žádné profily nebyly nalezeny"
+
+#~ msgid "error"
+#~ msgstr "chyba"
+
+#~ msgid "Monitor:"
+#~ msgstr "Monitor:"
+
+#~ msgid "Monitor Profile Switcher Properties"
+#~ msgstr "Vlastnosti přepínače profilů monitoru"
