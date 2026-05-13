@@ -6,6 +6,7 @@ struct issue_report {
     const char *pnp_id;
     const char *device;
     const char *ddccontrol_version;
+    const char *fallback_profile;
 };
 
 char *build_issue_url(const struct issue_report *report);

@@ -164,11 +164,13 @@ int main(int argc, char **argv)
 
 	char *datadir = NULL;
 	char *pnpname = NULL; /* pnpname for -i parameter */
+	char *selected_monitor_name = NULL;
 
 	/* -l (load profile) parameter */
 	struct profile *profilefile = NULL;
 
 	struct issue_report report = {0};
+	report.ddccontrol_version = VERSION;
 
 	/* what to do */
 	int dump = 0;
@@ -319,8 +321,9 @@ int main(int argc, char **argv)
 				printf(_("  (Automatically selected)\n"));
 				fn = malloc(strlen(current->filename) + 1);
 				strcpy(fn, current->filename);
+				selected_monitor_name = strdup(current->name);
+				report.monitor_name = selected_monitor_name;
 			}
-		 	report.monitor_name = current->name;
 			current = current->next;
 		}
 
@@ -338,6 +341,7 @@ int main(int argc, char **argv)
 	} else {
 		fn = argv[optind];
 	}
+	report.device = fn;
 
 	fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 
@@ -359,31 +363,8 @@ int main(int argc, char **argv)
 		        mon->pnpid, mon->db ? mon->db->name : NULL);
 		fprintf(stdout, _("\tInput type: %s\n"), mon->digital ? _("Digital") : _("Analog"));
 		report.pnp_id = mon->pnpid;
-
-		if (mon->fallback) {
-			/* Put a big warning (in red if we are writing to a terminal). */
-			printf("%s%s\n", isatty(1) ? "\x1B[0;31m" : "", _("=============================== WARNING ==============================="));
-			if (mon->fallback == 1) {
-				printf(_(
-				           "There is no support for your monitor in the database, but ddccontrol is\n"
-				           "using a generic profile for your monitor's manufacturer. Some controls\n"
-				           "may not be supported, or may not work as expected.\n"));
-			} else if (mon->fallback == 2) {
-				printf(_(
-				           "There is no support for your monitor in the database, but ddccontrol is\n"
-				           "using a basic generic profile. Many controls will not be supported, and\n"
-				           "some controls may not work as expected.\n"));
-			}
-			printf(_(
-				           "Unsupported monitor detected.\n\n"
-				           "Please update ddccontrol-db, or, if you are already using the latest\n"
-				           "version, please open a github issue:\n"
-				           "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml\n"
-				           "Then attach the resulting report file of the following command:\n"));
-			printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
-			printf(_("Thank you.\n"));
-			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
-		}
+		if (!report.monitor_name && mon->db)
+			report.monitor_name = (const char*)mon->db->name;
 
 		if (caps) {
 			fprintf(stdout, _("\nCapabilities:\n"));
@@ -524,16 +505,40 @@ int main(int argc, char **argv)
 
 			ddcci_save(mon);
 		}
+
+		if (mon->fallback) {
+			char *issue_url;
+
+			report.fallback_profile = "yes";
+			issue_url = build_issue_url(&report);
+
+			/* Put a big warning (in red if we are writing to a terminal). */
+			printf("%s%s\n", isatty(1) ? "\x1B[0;31m" : "", _("=============================== WARNING ==============================="));
+			if (mon->fallback == 1) {
+				printf(_(
+				           "There is no support for your monitor in the database, but ddccontrol is\n"
+				           "using a generic profile for your monitor's manufacturer. Some controls\n"
+				           "may not be supported, or may not work as expected.\n"));
+			} else if (mon->fallback == 2) {
+				printf(_(
+				           "There is no support for your monitor in the database, but ddccontrol is\n"
+				           "using a basic generic profile. Many controls will not be supported, and\n"
+				           "some controls may not work as expected.\n"));
+			}
+			printf(_(
+				           "Unsupported monitor detected.\n\n"
+				           "Please update ddccontrol-db, or, if you are already using the latest\n"
+				           "version, please open this pre-filled GitHub issue:\n"));
+			printf("%s\n", issue_url ? issue_url : "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml");
+			printf(_(
+				           "Then attach the resulting report file of the following command:\n"));
+			printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
+			printf(_("Thank you.\n"));
+			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
+
+			free(issue_url);
+		}
 	}
-
-
-	// if (issue_report->monitor_name && issue_report->pnp_id) {
- //                printf("https://github.com/ddccontrol/ddccontrol-db/issues/new?"
- //                    "template=unsupported-monitor.yml&monitor_name=%s?pnp_id=%s\n",
- //                    encoded_name, pnp_id);
-	// }
-	// free(report) ;
-	printf("%s\n", build_issue_url(&report));
 
 	ddcci_close(mon);
 	free(mon);
@@ -541,6 +546,7 @@ int main(int argc, char **argv)
 	if (probe) {
 		free(fn);
 	}
+	free(selected_monitor_name);
 
 	ddcci_release();
 	exit(0);
