@@ -1,6 +1,8 @@
 *.la
 *.lo
 *.o
+*.orig
+.dirstamp
 .deps/
 .libs/
 /ABOUT-NLS

@@ -364,7 +364,7 @@ int main(int argc, char **argv)
 		fprintf(stdout, _("\tInput type: %s\n"), mon->digital ? _("Digital") : _("Analog"));
 		report.pnp_id = mon->pnpid;
 		if (!report.monitor_name && mon->db)
-			report.monitor_name = (const char*)mon->db->name;
+			report.monitor_name = (const char *)mon->db->name;
 
 		if (caps) {
 			fprintf(stdout, _("\nCapabilities:\n"));
@@ -526,12 +526,12 @@ int main(int argc, char **argv)
 				           "some controls may not work as expected.\n"));
 			}
 			printf(_(
-				           "Unsupported monitor detected.\n\n"
-				           "Please update ddccontrol-db, or, if you are already using the latest\n"
-				           "version, please open this pre-filled GitHub issue:\n"));
+			           "Unsupported monitor detected.\n\n"
+			           "Please update ddccontrol-db, or, if you are already using the latest\n"
+			           "version, please open this pre-filled GitHub issue:\n"));
 			printf("%s\n", issue_url ? issue_url : "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml");
 			printf(_(
-				           "Then attach the resulting report file of the following command:\n"));
+			           "Then attach the resulting report file of the following command:\n"));
 			printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
 			printf(_("Thank you.\n"));
 			printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
