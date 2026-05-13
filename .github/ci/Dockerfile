@@ -8,6 +8,7 @@ RUN apt-get update \
         autoconf \
         build-essential \
         ca-certificates \
+        clang \
         dh-autoreconf \
         git \
         intltool \

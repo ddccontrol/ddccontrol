@@ -13,7 +13,7 @@ jobs:
       image: ghcr.io/ddccontrol/ddccontrol-ci:latest
     strategy:
       matrix:
-        compiler: [gcc]
+        compiler: [gcc, clang]
     steps:
       - uses: actions/checkout@v6
 
