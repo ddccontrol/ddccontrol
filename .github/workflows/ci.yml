@@ -9,24 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/ddccontrol/ddccontrol-ci:latest
     strategy:
       matrix:
         compiler: [gcc]
     steps:
       - uses: actions/checkout@v6
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            astyle \
-            autoconf \
-            dh-autoreconf \
-            intltool \
-            libgtk-3-dev \
-            libpci-dev \
-            libxml2-dev \
-            pkg-config \
 
       - name: Set compiler
         run: |
@@ -37,11 +26,9 @@ jobs:
           fi
 
       - name: Build
-        env:
-          CFLAGS: ${{ matrix.cflags }}
         run: |
           ./autogen.sh
-          ./configure "$CFLAGS"
+          ./configure CFLAGS="$CFLAGS"
           make -j$(nproc)
 
       - name: Format code check
