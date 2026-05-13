@@ -7,3 +7,4 @@ Icon=gddccontrol
 Terminal=false
 Type=Application
 Categories=GTK;Settings;HardwareSettings;
+Keywords=monitor;brightness;contrast;display;screen;DDC;
