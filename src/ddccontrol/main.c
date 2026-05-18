@@ -112,15 +112,17 @@ static void check_integrity(char *datadir, char *pnpname)
 	printf(_("[ OK ]\n"));
 
 	/* Create caps with all controls. */
-	char buf2[4];
 	char buffer[256 * 3 + 25];
-	strcpy(buffer, "(vcp(");
+	int pos = snprintf(buffer, sizeof(buffer), "(vcp(");
+	if (pos < 0) pos = 0;
+	if ((size_t)pos > sizeof(buffer)) pos = sizeof(buffer);
 	int i;
 	for (i = 0; i < 256; i++) {
-		snprintf(buf2, 4, "%02x ", i);
-		strcat(buffer, buf2);
+		int n = snprintf(buffer + pos, sizeof(buffer) - pos, "%02x ", i);
+		if (n > 0) pos += n;
+		if ((size_t)pos > sizeof(buffer)) pos = sizeof(buffer);
 	}
-	strcat(buffer, "))");
+	snprintf(buffer + pos, sizeof(buffer) - pos, "))");
 
 	struct caps caps;
 	ddcci_parse_caps(buffer, &caps, 1);
@@ -319,9 +321,13 @@ int main(int argc, char **argv)
 
 			if ((!fn) && (current->supported)) {
 				printf(_("  (Automatically selected)\n"));
-				fn = malloc(strlen(current->filename) + 1);
-				strcpy(fn, current->filename);
+				fn = strdup(current->filename);
 				selected_monitor_name = strdup(current->name);
+				if (!fn || !selected_monitor_name) {
+					fprintf(stderr, _("Memory allocation failed\n"));
+					ddcci_release();
+					exit(1);
+				}
 				report.monitor_name = selected_monitor_name;
 			}
 			current = current->next;
