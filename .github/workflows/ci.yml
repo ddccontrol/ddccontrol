@@ -9,18 +9,13 @@ on:
 jobs:
   build:
     name: build (${{ matrix.arch }}, ${{ matrix.compiler }})
-    runs-on: ${{ matrix.runner }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     container:
       image: ghcr.io/ddccontrol/ddccontrol-ci:latest
     strategy:
       matrix:
         arch: [amd64, arm64]
         compiler: [gcc, clang]
-        include:
-          - arch: amd64
-            runner: ubuntu-24.04
-          - arch: arm64
-            runner: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
 
