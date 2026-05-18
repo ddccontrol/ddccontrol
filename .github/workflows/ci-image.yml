@@ -23,16 +23,21 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-      - name: Build image
+      - name: Set up QEMU
+        run: docker run --privileged --rm tonistiigi/binfmt --install arm64
+
+      - name: Set up Docker Buildx
         run: |
-          docker build \
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+
+      - name: Build and push image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
             --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
             --label "org.opencontainers.image.revision=${{ github.sha }}" \
             --tag ghcr.io/ddccontrol/ddccontrol-ci:latest \
             --tag ghcr.io/ddccontrol/ddccontrol-ci:${{ github.sha }} \
+            --push \
             .github/ci
-
-      - name: Push image
-        run: |
-          docker push ghcr.io/ddccontrol/ddccontrol-ci:latest
-          docker push ghcr.io/ddccontrol/ddccontrol-ci:${{ github.sha }}

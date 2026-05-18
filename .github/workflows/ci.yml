@@ -8,12 +8,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    name: build (${{ matrix.arch }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.runner }}
     container:
       image: ghcr.io/ddccontrol/ddccontrol-ci:latest
     strategy:
       matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
         compiler: [gcc, clang]
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
     steps:
       - uses: actions/checkout@v6
 
