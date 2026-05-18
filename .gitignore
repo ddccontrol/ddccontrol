@@ -60,3 +60,6 @@ Makefile
 Makefile.in
 
 /scripts/tmp
+configure~
+po/Makefile.in.in~
+src/config.h.in~
