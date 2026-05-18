@@ -24,7 +24,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Set up QEMU
-        run: docker run --privileged --rm tonistiigi/binfmt --install arm64
+        run: docker run --privileged --rm tonistiigi/binfmt:qemu-v10.2.1 --install arm64
 
       - name: Set up Docker Buildx
         run: |
