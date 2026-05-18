@@ -536,6 +536,8 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 			gtk_dialog_run(GTK_DIALOG(errordialog));
 			gtk_widget_destroy(errordialog);
 			set_message("");
+			g_free(title);
+			gtk_widget_destroy(dialog);
 			return;
 		}
 		refresh_profile_manager();
