@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
     name: build (${{ matrix.target.arch }}, ${{ matrix.compiler }})
@@ -32,6 +36,7 @@ jobs:
 
       - name: Prepare CI image
         run: |
+          echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
           image=ghcr.io/ddccontrol/ddccontrol-ci:latest
           if docker pull --platform "${{ matrix.target.platform }}" "$image"; then
             echo "CI_IMAGE=$image" >> "$GITHUB_ENV"
@@ -58,6 +63,7 @@ jobs:
               set -e
               cp -a /src /tmp/ddccontrol
               cd /tmp/ddccontrol
+              git config --global --add safe.directory /tmp/ddccontrol
               git clean -fdX
               ./autogen.sh
               ./configure CFLAGS="$CFLAGS"
