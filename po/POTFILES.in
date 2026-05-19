@@ -11,7 +11,7 @@ src/gddccontrol/fspatterns.c
 src/gddccontrol/gddccontrol.desktop.in
 src/gddccontrol/gprofile.c
 src/gddccontrol/main.c
-src/gddccontrol/notebook.c
+src/gddccontrol/stack.c
 src/lib/conf.c
 src/lib/ddcci.c
 src/lib/monitor_db.c

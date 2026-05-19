@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DDC/CI control tool cvs version 2005-11-12\n"
 "Report-Msgid-Bugs-To: https://github.com/ddccontrol/ddccontrol/issues/\n"
-"POT-Creation-Date: 2026-05-13 15:12+0200\n"
+"POT-Creation-Date: 2026-05-19 11:05+0200\n"
 "PO-Revision-Date: 2005-11-12 15:50+0800\n"
 "Last-Translator: Wu Songhai waq@21cn.com\n"
 "Language-Team: Simple Chinese <LL@li.org>\n"
@@ -379,7 +379,7 @@ msgstr ""
 msgid "Then attach the resulting report file of the following command:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/notebook.c:715
+#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/stack.c:704
 #, c-format
 msgid "Thank you.\n"
 msgstr ""
@@ -528,7 +528,12 @@ msgstr "nvidia_open: 打不开 /dev/mem"
 msgid "via_open: mmap failed"
 msgstr "nvidia_open: mmap 失败"
 
-#: ../src/gddccontrol/fspatterns.c:137
+#: ../src/gddccontrol/fspatterns.c:65
+#, fuzzy
+msgid "_Close fullscreen patterns"
+msgstr "显示全屏式样"
+
+#: ../src/gddccontrol/fspatterns.c:135
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -540,11 +545,11 @@ msgstr ""
 " - 白色必须尽可能地亮.\n"
 " - 你必须能够辨别每一个灰度级 (特别是 0 和 12).\n"
 
-#: ../src/gddccontrol/fspatterns.c:259
+#: ../src/gddccontrol/fspatterns.c:257
 msgid "Try to make moire patterns disappear."
 msgstr "试图使摩尔纹图案消失."
 
-#: ../src/gddccontrol/fspatterns.c:263
+#: ../src/gddccontrol/fspatterns.c:261
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -552,7 +557,7 @@ msgstr ""
 "粗调使垂直区域消失.\n"
 "调节图像锁定细调使屏幕波动最小."
 
-#: ../src/gddccontrol/fspatterns.c:273
+#: ../src/gddccontrol/fspatterns.c:271
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "未知的全屏图案名字: %s"
@@ -594,9 +599,10 @@ msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "你确认要删除预设文件 '%s' 吗?"
 
 #: ../src/gddccontrol/gprofile.c:143
+#, fuzzy
 msgid ""
 "Please select the controls you want to save in the profile using the "
-"checkboxes to the left of each control."
+"checkboxes above each control."
 msgstr "请选择你想要保存到预设文件中的控制项, 使用各个控制项前的检查框."
 
 #: ../src/gddccontrol/gprofile.c:175
@@ -639,25 +645,49 @@ msgstr "地址"
 msgid "Raw value"
 msgstr "原始值"
 
-#: ../src/gddccontrol/gprofile.c:456 ../src/gddccontrol/gprofile.c:476
+#: ../src/gddccontrol/gprofile.c:439
+#, fuzzy
+msgid "_Rename profile"
+msgstr "创建预设文件"
+
+#: ../src/gddccontrol/gprofile.c:442
+msgid "_Cancel"
+msgstr ""
+
+#: ../src/gddccontrol/gprofile.c:458 ../src/gddccontrol/gprofile.c:484
 msgid "Profile information:"
 msgstr "预设信息:"
 
-#: ../src/gddccontrol/gprofile.c:485
+#: ../src/gddccontrol/gprofile.c:469
+#, fuzzy
+msgid "_Save profile"
+msgstr "保存预设文件"
+
+#: ../src/gddccontrol/gprofile.c:472
+#, fuzzy
+msgid "_Abort creating profile"
+msgstr "创建预设文件时出错."
+
+#: ../src/gddccontrol/gprofile.c:477
+#, fuzzy
+msgid "_Close"
+msgstr "关闭"
+
+#: ../src/gddccontrol/gprofile.c:493
 #, c-format
 msgid "File name: %s"
 msgstr "文件名: %s"
 
-#: ../src/gddccontrol/gprofile.c:496
+#: ../src/gddccontrol/gprofile.c:504
 msgid "Profile name:"
 msgstr "预设名:"
 
 #. Save
-#: ../src/gddccontrol/gprofile.c:518
+#: ../src/gddccontrol/gprofile.c:526
 msgid "Saving profile..."
 msgstr "正在保存预设文件..."
 
-#: ../src/gddccontrol/gprofile.c:527
+#: ../src/gddccontrol/gprofile.c:535
 msgid "Error while saving profile."
 msgstr "保存预设文件是出错."
 
@@ -735,28 +765,43 @@ msgstr "关闭"
 msgid "Welcome to gddccontrol %s."
 msgstr "欢迎使用gddccontrol %s"
 
-#: ../src/gddccontrol/notebook.c:83
+#: ../src/gddccontrol/stack.c:83
 msgid "Error while getting value"
 msgstr "在取值时发生错误"
 
-#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
+#: ../src/gddccontrol/stack.c:118 ../src/gddccontrol/stack.c:130
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "正在刷新控制项的值 (%d%%)..."
 
-#: ../src/gddccontrol/notebook.c:135
+#: ../src/gddccontrol/stack.c:135
 msgid "Could not get the control_db struct related to a control."
 msgstr "不能获取与一个控制器相关的控制库结构."
 
-#: ../src/gddccontrol/notebook.c:495
-msgid "Show fullscreen patterns"
+#: ../src/gddccontrol/stack.c:372
+#, fuzzy
+msgid "Include in new profile"
+msgstr "找不到任何预设文件."
+
+#: ../src/gddccontrol/stack.c:484
+#, fuzzy
+msgid "_Show fullscreen patterns"
 msgstr "显示全屏式样"
 
-#: ../src/gddccontrol/notebook.c:527
+#: ../src/gddccontrol/stack.c:517
 msgid "Section"
 msgstr "区段"
 
-#: ../src/gddccontrol/notebook.c:574
+#: ../src/gddccontrol/stack.c:526
+msgid "Please click on a group name."
+msgstr "请单击一个组名."
+
+#: ../src/gddccontrol/stack.c:562 ../src/gddccontrol/stack.c:576
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "正在获取控制器的值 (%d%%)..."
+
+#: ../src/gddccontrol/stack.c:607
 msgid ""
 "The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
@@ -774,12 +819,12 @@ msgstr ""
 "如果你的显示器有两个信号输入接口, 请尝试连接到另一个接口, 然后点击显示器列表"
 "旁的刷新按钮."
 
-#: ../src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/stack.c:618
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "正在打开显示器设备 (%s)..."
 
-#: ../src/gddccontrol/notebook.c:591
+#: ../src/gddccontrol/stack.c:624
 msgid ""
 "An error occurred while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
@@ -788,7 +833,7 @@ msgstr ""
 "在打开显示器设备时发生了一个错误.\n"
 "可能是显示器没有连接, 请点击显示器列表旁的刷新按钮."
 
-#: ../src/gddccontrol/notebook.c:600
+#: ../src/gddccontrol/stack.c:633
 #, c-format
 msgid ""
 "Unsupported monitor detected.\n"
@@ -800,38 +845,29 @@ msgid ""
 "Then attach the resulting report file of the following command:"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:622
-msgid "Please click on a group name."
-msgstr "请单击一个组名."
-
-#: ../src/gddccontrol/notebook.c:647 ../src/gddccontrol/notebook.c:658
-#, c-format
-msgid "Getting controls values (%d%%)..."
-msgstr "正在获取控制器的值 (%d%%)..."
-
-#: ../src/gddccontrol/notebook.c:683
+#: ../src/gddccontrol/stack.c:672
 msgid "Loading profiles..."
 msgstr "正在装载预设文件..."
 
-#: ../src/gddccontrol/notebook.c:696
+#: ../src/gddccontrol/stack.c:685
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a generic profile for your monitor's manufacturer. Some controls may "
 "not be supported, or may not work as expected.\n"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:702
+#: ../src/gddccontrol/stack.c:691
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a basic generic profile. Many controls will not be supported, and some "
 "controls may not work as expected.\n"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:707
+#: ../src/gddccontrol/stack.c:696
 msgid "Warning!"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:709
+#: ../src/gddccontrol/stack.c:698
 msgid ""
 "Unsupported monitor detected.\n"
 "\n"
@@ -1311,9 +1347,6 @@ msgstr "请更新ddccontrol数据库.\n"
 
 #~ msgid "An error occurred while opening the monitor device"
 #~ msgstr "打开显示器设备时发生了一个错误"
-
-#~ msgid "Can't find any profiles"
-#~ msgstr "找不到任何预设文件."
 
 #~ msgid "error"
 #~ msgstr "错误"
