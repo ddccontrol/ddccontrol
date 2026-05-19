@@ -1157,14 +1157,29 @@ void ddcci_probe_device(char* filename, struct monitorlist** current, struct mon
 	ddcci_close(&mon);
 }
 
+static const char *ddcci_find_trailing_digits(const char *s) {
+	const char *end = s + strlen(s);
+	const char *p = end;
+
+	while (p > s && p[-1] >= '0' && p[-1] <= '9') {
+		p--;
+	}
+
+	if (p == end) {
+		return NULL;
+	}
+
+	return p;
+}
+
 static int ddcci_cmp_dev_filenames(const void *a, const void *b) {
 	const char *sa = *(const char *const *)a;
 	const char *sb = *(const char *const *)b;
-	const char *na = strrchr(sa, '-');
-	const char *nb = strrchr(sb, '-');
+	const char *na = ddcci_find_trailing_digits(sa);
+	const char *nb = ddcci_find_trailing_digits(sb);
 	if (na && nb) {
-		int ia = atoi(na + 1);
-		int ib = atoi(nb + 1);
+		int ia = atoi(na);
+		int ib = atoi(nb);
 		if (ia != ib)
 			return ia - ib;
 	}
