@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ddcontrol\n"
 "Report-Msgid-Bugs-To: https://github.com/ddccontrol/ddccontrol/issues/\n"
-"POT-Creation-Date: 2026-05-13 15:12+0200\n"
+"POT-Creation-Date: 2026-05-19 11:05+0200\n"
 "PO-Revision-Date: 2026-03-24 17:19+0100\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -397,7 +397,7 @@ msgstr ""
 msgid "Then attach the resulting report file of the following command:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/notebook.c:715
+#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/stack.c:704
 #, c-format
 msgid "Thank you.\n"
 msgstr "მადლობა.\n"
@@ -544,7 +544,12 @@ msgstr "via_open: /dev/mem-ის გახსნა შეუძლებელ
 msgid "via_open: mmap failed"
 msgstr "via_open: mmap ცავარდა"
 
-#: ../src/gddccontrol/fspatterns.c:137
+#: ../src/gddccontrol/fspatterns.c:65
+#, fuzzy
+msgid "_Close fullscreen patterns"
+msgstr "სრულეკრანიანი ნიმუშების ჩვენება"
+
+#: ../src/gddccontrol/fspatterns.c:135
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -557,11 +562,11 @@ msgstr ""
 " - უნდა შეგეძლოთ ნაცრისფრის ყველა დონის გარჩევა (უფრო ზუსტად, 0-ის და 12-"
 "ის).\n"
 
-#: ../src/gddccontrol/fspatterns.c:259
+#: ../src/gddccontrol/fspatterns.c:257
 msgid "Try to make moire patterns disappear."
 msgstr "სცადეთ, მუარის ნიმუშები გააქროთ."
 
-#: ../src/gddccontrol/fspatterns.c:263
+#: ../src/gddccontrol/fspatterns.c:261
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -569,7 +574,7 @@ msgstr ""
 "მოირგეთ უხეშად გამოსახულება, თუ გნებავთ, ვერტიკალური ზოლები გაქრეს.\n"
 "მოირგეთ გამოსახულება ზუსტად ეკრანზე გადაადგილების შესამცირებლად."
 
-#: ../src/gddccontrol/fspatterns.c:273
+#: ../src/gddccontrol/fspatterns.c:271
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "უცნობი სრულეკრანიანი ნიმუშის სახელი: %s"
@@ -612,9 +617,10 @@ msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "მართლა გნებავთ, წაშალოთ პროფილი '%s'?"
 
 #: ../src/gddccontrol/gprofile.c:143
+#, fuzzy
 msgid ""
 "Please select the controls you want to save in the profile using the "
-"checkboxes to the left of each control."
+"checkboxes above each control."
 msgstr ""
 "აირჩიეთ კონტროლის ელემენტები, რომლებიც გნებავთ, პროფილში შეინახოთ თითოეული "
 "კონტროლის ელემენტის მარცხნივ თოლიას დასმით."
@@ -659,25 +665,49 @@ msgstr "მისამართი"
 msgid "Raw value"
 msgstr "დაუმუშავებელი მნისვნელობა"
 
-#: ../src/gddccontrol/gprofile.c:456 ../src/gddccontrol/gprofile.c:476
+#: ../src/gddccontrol/gprofile.c:439
+#, fuzzy
+msgid "_Rename profile"
+msgstr "პროფილის შექმნა"
+
+#: ../src/gddccontrol/gprofile.c:442
+msgid "_Cancel"
+msgstr ""
+
+#: ../src/gddccontrol/gprofile.c:458 ../src/gddccontrol/gprofile.c:484
 msgid "Profile information:"
 msgstr "პროფილის ინფორმაცია:"
 
-#: ../src/gddccontrol/gprofile.c:485
+#: ../src/gddccontrol/gprofile.c:469
+#, fuzzy
+msgid "_Save profile"
+msgstr "პროფილის შენახვა"
+
+#: ../src/gddccontrol/gprofile.c:472
+#, fuzzy
+msgid "_Abort creating profile"
+msgstr "შეცდომა პროფილის შექმნისას."
+
+#: ../src/gddccontrol/gprofile.c:477
+#, fuzzy
+msgid "_Close"
+msgstr "დახურვა"
+
+#: ../src/gddccontrol/gprofile.c:493
 #, c-format
 msgid "File name: %s"
 msgstr "ფაილის სახელი: %s"
 
-#: ../src/gddccontrol/gprofile.c:496
+#: ../src/gddccontrol/gprofile.c:504
 msgid "Profile name:"
 msgstr "პროფილის სახელი:"
 
 #. Save
-#: ../src/gddccontrol/gprofile.c:518
+#: ../src/gddccontrol/gprofile.c:526
 msgid "Saving profile..."
 msgstr "პროფილის შენახვა..."
 
-#: ../src/gddccontrol/gprofile.c:527
+#: ../src/gddccontrol/gprofile.c:535
 msgid "Error while saving profile."
 msgstr "პროფილის შენახვის შეცდომა."
 
@@ -758,30 +788,45 @@ msgstr "დახურვა"
 msgid "Welcome to gddccontrol %s."
 msgstr "კეთილი იყოს თქვენი მობრძანება gddccontrol %s-ში."
 
-#: ../src/gddccontrol/notebook.c:83
+#: ../src/gddccontrol/stack.c:83
 msgid "Error while getting value"
 msgstr "შეცდომა მნიშვნელობის მიღებისას"
 
-#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
+#: ../src/gddccontrol/stack.c:118 ../src/gddccontrol/stack.c:130
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "კონტროლის ელემენტის მნიშვნელობების განახლება (%d%%)..."
 
-#: ../src/gddccontrol/notebook.c:135
+#: ../src/gddccontrol/stack.c:135
 msgid "Could not get the control_db struct related to a control."
 msgstr ""
 "კონტროლის ელემენტებთან დაკავშირებული სტრუქტურის, control_db, მიღება "
 "შეუძლებელია."
 
-#: ../src/gddccontrol/notebook.c:495
-msgid "Show fullscreen patterns"
+#: ../src/gddccontrol/stack.c:372
+#, fuzzy
+msgid "Include in new profile"
+msgstr "პროფილის წაშლა"
+
+#: ../src/gddccontrol/stack.c:484
+#, fuzzy
+msgid "_Show fullscreen patterns"
 msgstr "სრულეკრანიანი ნიმუშების ჩვენება"
 
-#: ../src/gddccontrol/notebook.c:527
+#: ../src/gddccontrol/stack.c:517
 msgid "Section"
 msgstr "განყოფილება"
 
-#: ../src/gddccontrol/notebook.c:574
+#: ../src/gddccontrol/stack.c:526
+msgid "Please click on a group name."
+msgstr "დააწკაპუნეთ ჯგუფის სახელზე."
+
+#: ../src/gddccontrol/stack.c:562 ../src/gddccontrol/stack.c:576
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "კონტროლის ელემენტის მნიშვნელობების მიღება (%d%%)..."
+
+#: ../src/gddccontrol/stack.c:607
 msgid ""
 "The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
@@ -801,12 +846,12 @@ msgstr ""
 "თუ თქვენს ეკრანს ორი შესაერთებელი აქვს, სცადეთ, შეაერთოთ კაბელი მეორე "
 "შესაერთებელში და დააწკაპუნეთ განახლების ღილაკზე ეკრანების სიასთან."
 
-#: ../src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/stack.c:618
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "ეკრანის მოწყობილობის გახსნა (%s)..."
 
-#: ../src/gddccontrol/notebook.c:591
+#: ../src/gddccontrol/stack.c:624
 msgid ""
 "An error occurred while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
@@ -816,7 +861,7 @@ msgstr ""
 "შეიძლება, ეს ეკრანი გამოერთებულია. დააწკაპუნეთ განახლების ღილაკზე ეკრანების "
 "სიასთან."
 
-#: ../src/gddccontrol/notebook.c:600
+#: ../src/gddccontrol/stack.c:633
 #, c-format
 msgid ""
 "Unsupported monitor detected.\n"
@@ -828,20 +873,11 @@ msgid ""
 "Then attach the resulting report file of the following command:"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:622
-msgid "Please click on a group name."
-msgstr "დააწკაპუნეთ ჯგუფის სახელზე."
-
-#: ../src/gddccontrol/notebook.c:647 ../src/gddccontrol/notebook.c:658
-#, c-format
-msgid "Getting controls values (%d%%)..."
-msgstr "კონტროლის ელემენტის მნიშვნელობების მიღება (%d%%)..."
-
-#: ../src/gddccontrol/notebook.c:683
+#: ../src/gddccontrol/stack.c:672
 msgid "Loading profiles..."
 msgstr "პროფილების ჩატვირთვა..."
 
-#: ../src/gddccontrol/notebook.c:696
+#: ../src/gddccontrol/stack.c:685
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a generic profile for your monitor's manufacturer. Some controls may "
@@ -851,7 +887,7 @@ msgstr ""
 "იყენებს ზოგად პროფილს თქვენი ეკრანის მწარმოებლისთვის. შეიძლება, ზოგიერთი "
 "კონტროლის ელემენტი მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც მოელით.\n"
 
-#: ../src/gddccontrol/notebook.c:702
+#: ../src/gddccontrol/stack.c:691
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a basic generic profile. Many controls will not be supported, and some "
@@ -862,11 +898,11 @@ msgstr ""
 "ზოგიერთი კონტროლის ელემენტი მხარდაჭერილი არ იყოს, ან არ იმუშაოს ისე, როგორც "
 "მოელით.\n"
 
-#: ../src/gddccontrol/notebook.c:707
+#: ../src/gddccontrol/stack.c:696
 msgid "Warning!"
 msgstr "გაფთხილება:!"
 
-#: ../src/gddccontrol/notebook.c:709
+#: ../src/gddccontrol/stack.c:698
 msgid ""
 "Unsupported monitor detected.\n"
 "\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ddccontrol 0.4.3\n"
 "Report-Msgid-Bugs-To: https://github.com/ddccontrol/ddccontrol/issues/\n"
-"POT-Creation-Date: 2026-05-13 15:12+0200\n"
+"POT-Creation-Date: 2026-05-19 11:05+0200\n"
 "PO-Revision-Date: 2006-08-25 00:31+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -391,7 +391,7 @@ msgstr ""
 msgid "Then attach the resulting report file of the following command:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/notebook.c:715
+#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/stack.c:704
 #, c-format
 msgid "Thank you.\n"
 msgstr "Dziêkujê.\n"
@@ -541,7 +541,12 @@ msgstr "nvidia_open: nie mo¿na otworzyæ /dev/mem"
 msgid "via_open: mmap failed"
 msgstr "nvidia_open: mmap nie powiod³o siê"
 
-#: ../src/gddccontrol/fspatterns.c:137
+#: ../src/gddccontrol/fspatterns.c:65
+#, fuzzy
+msgid "_Close fullscreen patterns"
+msgstr "Poka¿ wzory ca³oekranowe"
+
+#: ../src/gddccontrol/fspatterns.c:135
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -554,11 +559,11 @@ msgstr ""
 " - Musisz byæ w stanie rozró¿niæ ka¿dy stopieñ szaro¶ci (szczególnie 0 i "
 "12).\n"
 
-#: ../src/gddccontrol/fspatterns.c:259
+#: ../src/gddccontrol/fspatterns.c:257
 msgid "Try to make moire patterns disappear."
 msgstr "Spróbuj doprowadziæ do znikniêcia wzorów mory."
 
-#: ../src/gddccontrol/fspatterns.c:263
+#: ../src/gddccontrol/fspatterns.c:261
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -566,7 +571,7 @@ msgstr ""
 "Wyreguluj zgrubn± blokadê obrazu, aby pionowy pasek znikn±³.\n"
 "Wyreguluj dok³adn± blokadê obrazu, aby zminimalizowaæ ruch na ekranie."
 
-#: ../src/gddccontrol/fspatterns.c:273
+#: ../src/gddccontrol/fspatterns.c:271
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Nieznana nazwa wzoru ca³oekranowego: %s"
@@ -610,9 +615,10 @@ msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "Czy skasowaæ profil '%s'?"
 
 #: ../src/gddccontrol/gprofile.c:143
+#, fuzzy
 msgid ""
 "Please select the controls you want to save in the profile using the "
-"checkboxes to the left of each control."
+"checkboxes above each control."
 msgstr ""
 "Proszê wybraæ parametry do zapisu w profilu przy u¿yciu kontrolek z lewej "
 "strony ka¿dego parametru."
@@ -657,25 +663,49 @@ msgstr "Adres"
 msgid "Raw value"
 msgstr "Warto¶æ nieprzetworzona"
 
-#: ../src/gddccontrol/gprofile.c:456 ../src/gddccontrol/gprofile.c:476
+#: ../src/gddccontrol/gprofile.c:439
+#, fuzzy
+msgid "_Rename profile"
+msgstr "Stwórz profil"
+
+#: ../src/gddccontrol/gprofile.c:442
+msgid "_Cancel"
+msgstr ""
+
+#: ../src/gddccontrol/gprofile.c:458 ../src/gddccontrol/gprofile.c:484
 msgid "Profile information:"
 msgstr "Informacje o profilu"
 
-#: ../src/gddccontrol/gprofile.c:485
+#: ../src/gddccontrol/gprofile.c:469
+#, fuzzy
+msgid "_Save profile"
+msgstr "Zapisz profil"
+
+#: ../src/gddccontrol/gprofile.c:472
+#, fuzzy
+msgid "_Abort creating profile"
+msgstr "B³±d podczas tworzenia profilu."
+
+#: ../src/gddccontrol/gprofile.c:477
+#, fuzzy
+msgid "_Close"
+msgstr "Zamknij"
+
+#: ../src/gddccontrol/gprofile.c:493
 #, c-format
 msgid "File name: %s"
 msgstr "Nazwa pliku: %s"
 
-#: ../src/gddccontrol/gprofile.c:496
+#: ../src/gddccontrol/gprofile.c:504
 msgid "Profile name:"
 msgstr "&Nazwa profilu:"
 
 #. Save
-#: ../src/gddccontrol/gprofile.c:518
+#: ../src/gddccontrol/gprofile.c:526
 msgid "Saving profile..."
 msgstr "Zapisz profil..."
 
-#: ../src/gddccontrol/gprofile.c:527
+#: ../src/gddccontrol/gprofile.c:535
 msgid "Error while saving profile."
 msgstr "B³±d podczas zapisywania profilu."
 
@@ -755,28 +785,43 @@ msgstr "Zamknij"
 msgid "Welcome to gddccontrol %s."
 msgstr "Witaj w gddccontrol %s."
 
-#: ../src/gddccontrol/notebook.c:83
+#: ../src/gddccontrol/stack.c:83
 msgid "Error while getting value"
 msgstr "B³±d przy pobieraniu warto¶ci"
 
-#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
+#: ../src/gddccontrol/stack.c:118 ../src/gddccontrol/stack.c:130
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "Od¶wie¿ wielko¶ci paramaetrów  (%d%%)..."
 
-#: ../src/gddccontrol/notebook.c:135
+#: ../src/gddccontrol/stack.c:135
 msgid "Could not get the control_db struct related to a control."
 msgstr "Nie mo¿na znale¼æ struktury control_db odpowiadaj±cej parametrówi."
 
-#: ../src/gddccontrol/notebook.c:495
-msgid "Show fullscreen patterns"
+#: ../src/gddccontrol/stack.c:372
+#, fuzzy
+msgid "Include in new profile"
+msgstr "Nie znaleziono ¿adnego profilu"
+
+#: ../src/gddccontrol/stack.c:484
+#, fuzzy
+msgid "_Show fullscreen patterns"
 msgstr "Poka¿ wzory ca³oekranowe"
 
-#: ../src/gddccontrol/notebook.c:527
+#: ../src/gddccontrol/stack.c:517
 msgid "Section"
 msgstr "Sekcja"
 
-#: ../src/gddccontrol/notebook.c:574
+#: ../src/gddccontrol/stack.c:526
+msgid "Please click on a group name."
+msgstr "Wybierz nazwê grupy."
+
+#: ../src/gddccontrol/stack.c:562 ../src/gddccontrol/stack.c:576
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "Pobieranie warto¶ci parametrów (%d%%)..."
+
+#: ../src/gddccontrol/stack.c:607
 msgid ""
 "The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
@@ -794,12 +839,12 @@ msgstr ""
 "Je¶li monitor ma dwa wej¶cia, proszê spróbowaæ pod³±czyæ kabel do innego "
 "wej¶cia i klikn±æ na przycisku od¶wie¿enia blisko listy monitorów."
 
-#: ../src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/stack.c:618
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "Otwarcie urz±dzenia monitora (%s)..."
 
-#: ../src/gddccontrol/notebook.c:591
+#: ../src/gddccontrol/stack.c:624
 msgid ""
 "An error occurred while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
@@ -809,7 +854,7 @@ msgstr ""
 "Byæ mo¿e monitor jest od³±czony, naci¶niej przycisk od¶wi¿ na li¶cie "
 "monitorów."
 
-#: ../src/gddccontrol/notebook.c:600
+#: ../src/gddccontrol/stack.c:633
 #, c-format
 msgid ""
 "Unsupported monitor detected.\n"
@@ -821,20 +866,11 @@ msgid ""
 "Then attach the resulting report file of the following command:"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:622
-msgid "Please click on a group name."
-msgstr "Wybierz nazwê grupy."
-
-#: ../src/gddccontrol/notebook.c:647 ../src/gddccontrol/notebook.c:658
-#, c-format
-msgid "Getting controls values (%d%%)..."
-msgstr "Pobieranie warto¶ci parametrów (%d%%)..."
-
-#: ../src/gddccontrol/notebook.c:683
+#: ../src/gddccontrol/stack.c:672
 msgid "Loading profiles..."
 msgstr "£adownie profili..."
 
-#: ../src/gddccontrol/notebook.c:696
+#: ../src/gddccontrol/stack.c:685
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a generic profile for your monitor's manufacturer. Some controls may "
@@ -844,7 +880,7 @@ msgstr ""
 "profilu dla tego producenta monitorów. Niektóre parametry mog± nie byæ "
 "obs³ugiwane, lub mog± dzia³aæ inaczej ni¿ powinny.\n"
 
-#: ../src/gddccontrol/notebook.c:702
+#: ../src/gddccontrol/stack.c:691
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a basic generic profile. Many controls will not be supported, and some "
@@ -854,11 +890,11 @@ msgstr ""
 "profilu. Wiele parametrów mo¿e nie byæ obs³ugiwanych, a niektóre mog± "
 "dzia³aæ inaczej ni¿ powinny.\n"
 
-#: ../src/gddccontrol/notebook.c:707
+#: ../src/gddccontrol/stack.c:696
 msgid "Warning!"
 msgstr "Uwaga!"
 
-#: ../src/gddccontrol/notebook.c:709
+#: ../src/gddccontrol/stack.c:698
 msgid ""
 "Unsupported monitor detected.\n"
 "\n"
@@ -1358,9 +1394,6 @@ msgstr "Proszê uaktualniæ bazê danych ddccontrol.\n"
 
 #~ msgid "An error occurred while opening the monitor device"
 #~ msgstr "Wyst±pi³ b³±d podczas otwierania urz±dzenia monitora"
-
-#~ msgid "Can't find any profiles"
-#~ msgstr "Nie znaleziono ¿adnego profilu"
 
 #~ msgid "error"
 #~ msgstr "b³±d"
