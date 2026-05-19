@@ -4,7 +4,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/lib -I$(top_srcdir)/src -DLOCALEDIR=\"$(locale
 EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png
 
 bin_PROGRAMS = gddccontrol
-gddccontrol_SOURCES = main.c notebook.c notebook.h gprofile.c fspatterns.c
+gddccontrol_SOURCES = main.c stack.c gui.h gprofile.c fspatterns.c
 gddccontrol_LDFLAGS = $(GNOME_LDFLAGS) -lm
 gddccontrol_LDADD = ../daemon/libddccontrol_dbus_client.la ../lib/libddccontrol.la
 AM_CFLAGS = $(GNOME_CFLAGS)
