@@ -68,11 +68,10 @@ static void write_dbctrl(struct control_db *control, unsigned short nval) {
 	
 static void get_value_and_max(struct control_db *control, unsigned short *currentValue, unsigned short *currentMaximum)
 {
-	int result;
-	if (control->type != command)
-	{
-		result = ddcci_readctrl(mon, control->address, currentValue, currentMaximum);
-	}
+	if (control->type == command)
+		return;
+
+	int result = ddcci_readctrl(mon, control->address, currentValue, currentMaximum);
 	if(result < 0)
 	{
 		GtkWidget* dialog = gtk_message_dialog_new(
@@ -464,7 +463,6 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll_area), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_widget_show(scroll_area);
 	
-	int i=0;
 	GtkWidget* mainvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	GtkWidget* vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,10);
 	
@@ -477,7 +475,6 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 		gtk_container_add(GTK_CONTAINER(frame), controlWidget);
 		gtk_widget_show(frame);
 		gtk_box_pack_start(GTK_BOX(vbox),frame,0,0,0);
-		i++;
 	}
 	
 	if (subgroup->pattern) {
@@ -489,7 +486,7 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 		g_object_set_data(G_OBJECT(button), "pattern", subgroup->pattern);
 		g_object_set_data(G_OBJECT(button), "mainvbox", mainvbox);
 		g_object_set_data(G_OBJECT(button), "vbox", vbox);
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(fullscreen_callback), value);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(fullscreen_callback), NULL);
 	}
 	
 	gtk_box_pack_start(GTK_BOX(mainvbox), vbox, 0, 5, 5);
@@ -497,7 +494,7 @@ static GtkWidget* createPage(GtkWidget* stack, struct subgroup_db* subgroup)
 	
 	gtk_container_add(GTK_CONTAINER(scroll_area), mainvbox);
 	
-	gtk_stack_add_named(GTK_STACK(stack), scroll_area, subgroup->name);
+	gtk_stack_add_named(GTK_STACK(stack), scroll_area, (const gchar*)subgroup->name);
 	gtk_widget_show(mainvbox);
 
 	return scroll_area;
@@ -628,7 +625,8 @@ void create_monitor_manager(struct monitorlist* monitor)
 			"Please update ddccontrol-db, or, if you are already using the latest\n"
 			"version, please open a github issue:\n"
 			"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml"
-			"\nThen attach the resulting report file of the following command:"),
+			"\nThen attach the resulting report file of the following command:"
+			"%s"),
 			"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n");
 		set_message(tmp);
 		g_free(tmp);
