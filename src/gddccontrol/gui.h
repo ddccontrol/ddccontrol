@@ -34,14 +34,6 @@
 /* constants */
 #define GTK_FILL_EXPAND (GtkAttachOptions)(GTK_FILL|GTK_EXPAND)
 
-#ifndef GTK_STOCK_EDIT /* GTK <2.6 */
-#define GTK_STOCK_EDIT GTK_STOCK_PREFERENCES
-#endif
-
-#ifndef GTK_STOCK_FULLSCREEN /* GTK <2.8 */
-#define GTK_STOCK_FULLSCREEN GTK_STOCK_EXECUTE
-#endif
-
 /* globals */
 extern struct monitor* mon;
 
@@ -50,7 +42,7 @@ extern GtkWidget* main_app_window;
 extern GtkWidget* monitor_manager;
 extern GtkWidget* profile_manager;
 
-/* notebook.c */
+/* stack.c */
 
 void create_monitor_manager(struct monitorlist* monitor);
 void delete_monitor_manager();
@@ -89,7 +81,7 @@ void set_status(char* message);
 void set_message(char* message);
 void set_message_ok(char* message, int with_ok);
 
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip);
+GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_text, const gchar *tool_tip);
 
 extern GtkWidget* profile_manager_button;
 extern GtkWidget* saveprofile_button;
