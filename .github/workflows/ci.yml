@@ -25,14 +25,10 @@ jobs:
             runner: ubuntu-24.04-arm
           - arch: armhf
             platform: linux/arm/v7
-            runner: ubuntu-24.04
+            runner: ubuntu-24.04-arm
         compiler: [gcc, clang]
     steps:
       - uses: actions/checkout@v6
-
-      - name: Set up QEMU
-        if: matrix.target.arch == 'armhf'
-        run: docker run --privileged --rm tonistiigi/binfmt:qemu-v10.2.1 --install arm
 
       - name: Prepare CI image
         run: |
