@@ -1257,9 +1257,19 @@ struct monitorlist* ddcci_probe() {
 	{
 		if (!strncmp(direntp->d_name, prefix, prefix_len))
 		{
+			char **tmp_dev_filenames;
+
 			filename = malloc(strlen(direntp->d_name) + 12);
+			if (filename == NULL)
+				break;
 			snprintf(filename, strlen(direntp->d_name) + 12, "dev:/dev/%s", direntp->d_name);
-			dev_filenames = realloc(dev_filenames, (dev_count + 1) * sizeof(char *));
+			tmp_dev_filenames = realloc(dev_filenames, (dev_count + 1) * sizeof(char *));
+			if (tmp_dev_filenames == NULL)
+			{
+				free(filename);
+				break;
+			}
+			dev_filenames = tmp_dev_filenames;
 			dev_filenames[dev_count++] = filename;
 		}
 	}
