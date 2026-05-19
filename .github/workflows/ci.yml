@@ -6,38 +6,69 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build:
-    name: build (${{ matrix.arch }}, ${{ matrix.compiler }})
-    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
-    container:
-      image: ghcr.io/ddccontrol/ddccontrol-ci:latest
+    name: build (${{ matrix.target.arch }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.target.runner }}
     strategy:
       matrix:
-        arch: [amd64, arm64]
+        target:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+          - arch: armhf
+            platform: linux/arm/v7
+            runner: ubuntu-24.04
         compiler: [gcc, clang]
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set compiler
+      - name: Set up QEMU
+        if: matrix.target.arch == 'armhf'
+        run: docker run --privileged --rm tonistiigi/binfmt:qemu-v10.2.1 --install arm
+
+      - name: Prepare CI image
         run: |
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            echo "CC=clang" >> $GITHUB_ENV
+          echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
+          image=ghcr.io/ddccontrol/ddccontrol-ci:latest
+          if docker pull --platform "${{ matrix.target.platform }}" "$image"; then
+            echo "CI_IMAGE=$image" >> "$GITHUB_ENV"
           else
-            echo "CC=gcc" >> $GITHUB_ENV
+            image=ddccontrol-ci:${{ matrix.target.arch }}
+            docker buildx create --use
+            docker buildx inspect --bootstrap
+            docker buildx build \
+              --platform "${{ matrix.target.platform }}" \
+              --load \
+              --tag "$image" \
+              .github/ci
+            echo "CI_IMAGE=$image" >> "$GITHUB_ENV"
           fi
 
       - name: Build
         run: |
-          ./autogen.sh
-          ./configure CFLAGS="$CFLAGS"
-          make -j$(nproc)
-
-      - name: Format code check
-        run: ./scripts/format_code.sh
-
-      - name: Clean up formatted files
-        run: find -name "*.orig" -exec rm -v {} \;
-
-      - name: Post-build checks
-        run: ./scripts/travis_ci_after_build_checks.sh
+          docker run --rm \
+            --platform "${{ matrix.target.platform }}" \
+            -e CC="${{ matrix.compiler }}" \
+            -v "${{ github.workspace }}:/src:ro" \
+            "$CI_IMAGE" \
+            bash -lc '
+              set -e
+              cp -a /src /tmp/ddccontrol
+              cd /tmp/ddccontrol
+              git config --global --add safe.directory /tmp/ddccontrol
+              git clean -fdX
+              ./autogen.sh
+              ./configure CFLAGS="$CFLAGS"
+              make -j$(nproc)
+              ./scripts/format_code.sh
+              find -name "*.orig" -exec rm -v {} \;
+              ./scripts/travis_ci_after_build_checks.sh
+            '
