@@ -355,6 +355,9 @@ int main(int argc, char **argv)
 			fprintf(stderr, _(
 			            "No monitor supporting DDC/CI available.\n"
 			            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+			            "On many laptops, the internal eDP/LVDS panel does not expose DDC/CI, so only external monitors may work.\n"
+			            "For support, please include output from:\n"
+			            "LANG=C LC_ALL=C ddccontrol -p -c -d\n"
 			        ));
 			ddcci_release();
 			exit(0);
@@ -379,6 +382,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, _(
 		            "\nDDC/CI at %s is unusable (%d).\n"
 		            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+		            "If this is a laptop internal display, please note many eDP/LVDS panels do not support DDC/CI.\n"
 		        ), fn, ret);
 	} else {
 		fprintf(stdout, _("\nEDID readings:\n"));
