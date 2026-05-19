@@ -129,10 +129,13 @@ static void check_integrity(char *datadir, char *pnpname)
 		}
 		pos += n;
 	}
-	if (snprintf(buffer + pos, sizeof(buffer) - (size_t)pos, "))") < 0) {
-		fprintf(stderr, "Failed to build monitor capability buffer.\n");
-		ddcci_release_db();
-		exit(1);
+	{
+		int n = snprintf(buffer + pos, sizeof(buffer) - (size_t)pos, "))");
+		if (n < 0 || (size_t)n >= sizeof(buffer) - (size_t)pos) {
+			fprintf(stderr, "Failed to build monitor capability buffer.\n");
+			ddcci_release_db();
+			exit(1);
+		}
 	}
 
 	struct caps caps;
