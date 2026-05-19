@@ -545,12 +545,6 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 
 	if (mon->db)
 	{
-		for (group = mon->db->group_list; group != NULL; group = group->next)
-		{
-			for (subgroup = group->subgroup_list; subgroup != NULL; subgroup = subgroup->next) {
-			}
-		}
-		
 		int count = 0, current = 0;
 		
 		for (group = mon->db->group_list; group != NULL; group = group->next)
