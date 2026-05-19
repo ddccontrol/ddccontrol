@@ -383,7 +383,10 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		set_message(_(
 			"No monitor supporting DDC/CI available.\n\n"
-			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n\n"
+			"On many laptops, the internal eDP/LVDS panel does not expose DDC/CI, so only external monitors may work.\n\n"
+			"For support, include output from:\n"
+			"LANG=C LC_ALL=C ddccontrol -p -c -d"
 			   ));
 	}
 }
