@@ -462,7 +462,7 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 		title,
 		GTK_WINDOW(main_app_window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-		NULL, NULL);
+		NULL);
 	
 	if (new_profile) {
 		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
