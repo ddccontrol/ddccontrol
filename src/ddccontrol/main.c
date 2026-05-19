@@ -83,7 +83,7 @@ static void usage(char *name)
 {
 	fprintf(stderr, _(
 	            "Usage:\n"
-	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (profile path)] [-p | dev]\n"
+	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
 	            "\tdev: device, e.g. dev:/dev/i2c-0\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
@@ -91,6 +91,7 @@ static void usage(char *name)
 	            "\t-r : query ctrl\n"
 	            "\t-w : value to write to ctrl\n"
 	            "\t-W : relatively change ctrl value (+/-)\n"
+	            "\t-t : toggle ctrl value between value1 and value2\n"
 	            "\t-f : force (avoid validity checks)\n"
 	            "\t-s : save settings\n"
 	            "\t-v : verbosity (specify more to increase)\n"
@@ -193,6 +194,9 @@ int main(int argc, char **argv)
 	int ctrl = -1;
 	int value = -1;
 	int relative = 0;
+	int toggle = 0;
+	int toggle_value1 = -1;
+	int toggle_value2 = -1;
 	int caps = 0;
 	int save = 0;
 	int force = 0;
@@ -213,7 +217,7 @@ int main(int argc, char **argv)
 	          "This program comes with ABSOLUTELY NO WARRANTY.\n"
 	          "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 
-	while ((i = getopt(argc, argv, "hdr:w:W:csfvpb:i:l:")) >= 0) {
+	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:")) >= 0) {
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
@@ -233,6 +237,10 @@ int main(int argc, char **argv)
 				fprintf(stderr, _("You cannot use -w parameter without -r.\n"));
 				exit(1);
 			}
+			if (relative || toggle) {
+				fprintf(stderr, _("You cannot use -w parameter with -W or -t.\n"));
+				exit(1);
+			}
 			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535)) {
 				fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
@@ -243,11 +251,53 @@ int main(int argc, char **argv)
 				fprintf(stderr, _("You cannot use -W parameter without -r.\n"));
 				exit(1);
 			}
+			if (value >= 0 || toggle) {
+				fprintf(stderr, _("You cannot use -W parameter with -w or -t.\n"));
+				exit(1);
+			}
 			if ((value = strtol(optarg, NULL, 0)) < -65535 || (value > 65535)) {
 				fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
 			}
 			relative = 1;
+			break;
+		case 't':
+			if (ctrl == -1) {
+				fprintf(stderr, _("You cannot use -t parameter without -r.\n"));
+				exit(1);
+			}
+			if (value >= 0 || relative) {
+				fprintf(stderr, _("You cannot use -t parameter with -w or -W.\n"));
+				exit(1);
+			}
+			{
+				char *toggle_pair = strdup(optarg);
+				char *separator = toggle_pair ? strchr(toggle_pair, ',') : NULL;
+				char *endptr = NULL;
+
+				if (!toggle_pair || !separator || separator == toggle_pair || *(separator + 1) == '\0') {
+					free(toggle_pair);
+					fprintf(stderr, _("'%s' does not seem to be a valid toggle pair. Use value1,value2.\n"), optarg);
+					exit(1);
+				}
+
+				*separator = '\0';
+				toggle_value1 = strtol(toggle_pair, &endptr, 0);
+				if (*endptr != '\0' || toggle_value1 < 0 || toggle_value1 > 65535) {
+					fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), toggle_pair);
+					free(toggle_pair);
+					exit(1);
+				}
+				toggle_value2 = strtol(separator + 1, &endptr, 0);
+				if (*endptr != '\0' || toggle_value2 < 0 || toggle_value2 > 65535) {
+					free(toggle_pair);
+					fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), separator + 1);
+					exit(1);
+				}
+
+				free(toggle_pair);
+				toggle = 1;
+			}
 			break;
 		case 'l':
 			profilefile = ddcci_load_profile(optarg);
@@ -428,6 +478,25 @@ int main(int argc, char **argv)
 		}
 
 		if (ctrl >= 0) {
+			if (toggle) {
+				unsigned short old_value, maximum;
+				int result = -1;
+
+				for (retry = RETRYS; retry; retry--) {
+					result = ddcci_readctrl(mon, ctrl, &old_value, &maximum);
+					if (result >= 0) {
+						break;
+					}
+				}
+
+				if (result < 0) {
+					fprintf(stderr, _("Control read fail.\n"));
+					value = toggle_value1;
+				} else {
+					value = (old_value == toggle_value1) ? toggle_value2 : toggle_value1;
+				}
+			}
+
 			if (relative) {
 				unsigned short old_value, maximum;
 				int retry, result;
