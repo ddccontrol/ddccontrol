@@ -1130,8 +1130,16 @@ void ddcci_probe_device(char* filename, struct monitorlist** current, struct mon
 		(*current)->filename = filename;
 		(*current)->supported = (ret == 0);
 		if (mon.db) {
-			(*current)->name = malloc(strlen((char*)mon.db->name)+1);
-			strcpy((char*)(*current)->name, (char*)mon.db->name);
+			const char *dbname = (const char *)mon.db->name;
+			if (mon.fallback > 0) {
+				/* Include PnP ID so users can identify monitors not in the database */
+				size_t len = strlen(dbname) + 3 + strlen(mon.pnpid) + 1;
+				(*current)->name = malloc(len);
+				snprintf((char *)(*current)->name, len, "%s [%s]", dbname, mon.pnpid);
+			} else {
+				(*current)->name = malloc(strlen(dbname) + 1);
+				strcpy((char *)(*current)->name, dbname);
+			}
 		}
 		else {
 			(*current)->name = malloc(32);
@@ -1147,6 +1155,20 @@ void ddcci_probe_device(char* filename, struct monitorlist** current, struct mon
 	}
 	
 	ddcci_close(&mon);
+}
+
+static int ddcci_cmp_dev_filenames(const void *a, const void *b) {
+	const char *sa = *(const char *const *)a;
+	const char *sb = *(const char *const *)b;
+	const char *na = strrchr(sa, '-');
+	const char *nb = strrchr(sb, '-');
+	if (na && nb) {
+		int ia = atoi(na + 1);
+		int ib = atoi(nb + 1);
+		if (ia != ib)
+			return ia - ib;
+	}
+	return strcmp(sa, sb);
 }
 
 struct monitorlist* ddcci_probe() {
@@ -1218,36 +1240,49 @@ struct monitorlist* ddcci_probe() {
 	/* Probe real I2C device */
 	DIR *dirp;
 	struct dirent *direntp;
-	
-	dirp = opendir("/dev/");
-	
+
 #ifdef __FreeBSD__
 	const char *prefix = "iic";
 #else
 	const char *prefix = "i2c-";
 #endif
 	int prefix_len = strlen(prefix);
+
+	/* Collect matching device filenames first, then sort for consistent ordering */
+	char **dev_filenames = NULL;
+	int dev_count = 0;
+
+	dirp = opendir("/dev/");
 	while ((direntp = readdir(dirp)) != NULL)
 	{
 		if (!strncmp(direntp->d_name, prefix, prefix_len))
 		{
-			filename = malloc(strlen(direntp->d_name)+12);
-			
-			snprintf(filename, strlen(direntp->d_name)+12, "dev:/dev/%s", direntp->d_name);
-			
-			if (verbosity) {
-				printf(_("Found I2C device (%s)\n"), filename);
-			}
-			
-			ddcci_probe_device(filename, &current, &last);
-			if (!verbosity) {
-				printf(".");
-				fflush(stdout);
-			}
+			filename = malloc(strlen(direntp->d_name) + 12);
+			snprintf(filename, strlen(direntp->d_name) + 12, "dev:/dev/%s", direntp->d_name);
+			dev_filenames = realloc(dev_filenames, (dev_count + 1) * sizeof(char *));
+			dev_filenames[dev_count++] = filename;
 		}
 	}
 	
 	closedir(dirp);
+
+	/* Sort numerically by device number for predictable, consistent ordering */
+	if (dev_count > 1)
+		qsort(dev_filenames, dev_count, sizeof(char *), ddcci_cmp_dev_filenames);
+
+	for (int i = 0; i < dev_count; i++)
+	{
+		filename = dev_filenames[i];
+		if (verbosity) {
+			printf(_("Found I2C device (%s)\n"), filename);
+		}
+		ddcci_probe_device(filename, &current, &last);
+		if (!verbosity) {
+			printf(".");
+			fflush(stdout);
+		}
+	}
+	free(dev_filenames);
 	
 #ifdef HAVE_AMDADL
 	/* ADL probe */
