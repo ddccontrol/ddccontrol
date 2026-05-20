@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>Configure /dev/i2c-* devices</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.66.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="ch02.html" title=
+  "Chapter 2. Install notes" />
+  <link rel="prev" href="ch02s03.html" title=
+  "Compile and install" />
+  <link rel="next" href="ch03.html" title="Chapter 3. Usage" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">Configure <tt class=
+        "filename">/dev/i2c-*</tt> devices</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "ch02s03.html">Prev</a> </td>
+
+        <th width="60%" align="center">Chapter 2. Install
+        notes</th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "ch03.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="sect1" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title" style="clear: both"><a id="kerneli2c"
+          name="kerneli2c"></a>Configure <tt class=
+          "filename">/dev/i2c-*</tt> devices</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style=
+    "margin-left: 0.5in; margin-right: 0.5in;">
+      <h3 class="title">Note</h3><tt class=
+      "filename">/dev/i2c-*</tt> devices are only working with
+      kernel 2.6 or greater.
+    </div>
+
+    <p>If your graphics card is supported by <tt class=
+    "filename">/dev/i2c-*</tt> devices (see <a href="apc.html"
+    title="Appendix C. Supported graphics cards">Appendix C,
+    <i>Supported graphics cards</i></a>), you must load the
+    <tt class="filename">i2c-dev</tt> module by typing, as
+    root:</p>
+    <pre class="screen">
+# modprobe i2c-dev
+</pre>
+
+    <p>You must also load your graphics card framebuffer driver
+    (for card-specific instructions see <a href="apc.html" title=
+    "Appendix C. Supported graphics cards">Appendix� C,
+    <i>Supported graphics cards</i></a>).</p>
+
+    <p>If you want to automatically load these modules when Linux
+    starts, see your distribution's documentation.</p>
+
+    <p>To allow standard (i.e. non-root) users to use DDCcontrol,
+    you must change permissions on <tt class=
+    "filename">/dev/i2c-*</tt>. This is done by typing, as
+    root:</p>
+    <pre class="screen">
+# chmod a+rw /dev/i2c-*
+</pre>
+
+    <div class="sect2" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h3 class="title"><a id="id2497439" name=
+            "id2497439"></a>Kernel configuration options</h3>
+          </div>
+        </div>
+      </div>
+
+      <p>If <tt class="filename">i2c-dev</tt> or your graphics
+      card's framebuffer modules are not available with your
+      kernel, you can build your own kernel with the following
+      options turned on (with recommend to build them as
+      modules):</p>
+
+      <div class="itemizedlist">
+        <ul type="bullet">
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">I2C support</span>.</li>
+
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">I2C support</span>-&gt;<span class=
+          "guimenuitem">I2C device interface</span>.</li>
+
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>.</li>
+
+          <li style="list-style-type: disc">and a specific driver
+          for your graphic card (see <a href="apc.html" title=
+          "Appendix C. Supported graphics cards">Appendix� C,
+          <i>Supported graphics cards</i></a>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "ch02s03.html">Prev</a> </td>
+
+        <td width="20%" align="center"><a accesskey="u" href=
+        "ch02.html">Up</a></td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "ch03.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">Compile and
+        install </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top">
+         Chapter 3. Usage</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>nVidia</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.66.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="apc.html" title=
+  "Appendix C. Supported graphics cards" />
+  <link rel="prev" href="apc.html" title=
+  "Appendix C. Supported graphics cards" />
+  <link rel="next" href="apd.html" title="Appendix D. Thanks" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">nVidia</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "apc.html">Prev</a> </td>
+
+        <th width="60%" align="center">Appendix C. Supported
+        graphics cards</th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "apd.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="sect1" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title" style="clear: both"><a id="id293758"
+          name="id293758"></a>nVidia</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect2" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h3 class="title"><a id="id293764" name=
+            "id293764"></a>Direct PCI memory access support</h3>
+          </div>
+        </div>
+      </div>
+
+      <p>Almost every nVidia cards work with direct PCI memory
+      access, and this method is compatible with the nVidia
+      proprietary drivers.</p>
+
+      <p>To use it, you have nothing special to do, everything is
+      done by DDCcontrol.</p>
+    </div>
+
+    <div class="sect2" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h3 class="title"><a id="id293779" name=
+            "id293779"></a><tt class="filename">/dev/i2c-*</tt>
+            devices support</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="note" style=
+      "margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>To use <tt class=
+        "filename">/dev/i2c-*</tt> devices with nVidia cards, you
+        must have a rather recent kernel (at least version 2.6.9).
+      </div>
+
+      <p>Most nVidia cards, starting with TNT, but excluding the
+      most recent GeForce FX series, work with <tt class=
+      "filename">/dev/i2c-*</tt> devices. To use them, you must
+      load the <tt class="filename">rivafb</tt> module by typing,
+      as root:</p>
+      <pre class="screen">
+# modprobe rivafb
+</pre>
+
+      <p>The kernel configuration options needed to enable nVidia
+      framebuffer and I2C support are:</p>
+
+      <div class="itemizedlist">
+        <ul type="bullet">
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>-&gt;<span class=
+          "guimenuitem">nVidia Riva support</span>.</li>
+
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>-&gt;<span class=
+          "guimenuitem">nVidia Riva support</span>-&gt;<span class=
+          "guimenuitem">Enable DDC Support</span>.</li>
+        </ul>
+      </div>
+
+      <div class="warning" style=
+      "margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Warning</h3>
+
+        <p>The <tt class="filename">rivafb</tt> kernel module is
+        <span class="emphasis"><em>not</em></span> compatible with
+        the binary nVidia X drivers, which are the only drivers for
+        nVidia cards to provide 3D acceleration.</p>
+
+        <p>This is why we recommend that you use direct PCI memory
+        access with nVidia cards.</p>
+      </div>
+    </div>
+
+    <div class="sect3" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h4 class="title"><a id="id293922" name=
+            "id293922"></a>nVidia cards support table</h4>
+          </div>
+        </div>
+      </div>
+
+      <p>Most of these nVidia cards have been reported to work, but
+      others models should also work. If yours is not listed,
+      please send a message to one of the DDCcontrol mailing lists
+      (see <a href="apa.html" title=
+      "Appendix A. Report problems and successes">Appendix A,
+      <i>Report problems and successes</i></a>).</p>
+
+      <div class="informaltable">
+        <table cellspacing="2" cellpadding="5" border="1">
+          <colgroup>
+            <col align="left" />
+            <col align="center" />
+            <col align="center" />
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th rowspan="2" align="left" valign="middle">
+              Name</th>
+
+              <th colspan="2" align="center">Works</th>
+            </tr>
+
+            <tr>
+              <th align="center">dev</th>
+
+              <th align="center">PCI</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td align="left">GeForce Ti 200</td>
+
+              <td bgcolor="#00FF00" align="center">Yes</td>
+
+              <td bgcolor="#00FF00" align="center">Yes</td>
+            </tr>
+
+            <tr>
+              <td align="left">GeForce FX 5700</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+
+              <td bgcolor="#00FF00" align="center">Yes</td>
+            </tr>
+
+            <tr>
+              <td align="left">GeForce 6200 TC</td>
+
+              <td bgcolor="#FFFF00" align="center">???</td>
+
+              <td bgcolor="#00FF00" align="center">Yes</td>
+            </tr>
+
+            <tr>
+              <td align="left">nForce 2 IGP</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "apc.html">Prev</a> </td>
+
+        <td width="20%" align="center"><a accesskey="u" href=
+        "apc.html">Up</a></td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "apd.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">
+        Appendix C. Supported graphics cards </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top">
+         Appendix D. Thanks</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>

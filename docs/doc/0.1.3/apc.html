@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>Appendix C. Supported graphics cards</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.66.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="prev" href="apb.html" title=
+  "Appendix B. Supported monitors" />
+  <link rel="next" href="apcs02.html" title="nVidia" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">Appendix C. Supported
+        graphics cards</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "apb.html">Prev</a> </td>
+
+        <th width="60%" align="center"> </th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "apcs02.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="appendix" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title"><a id="supportedgc" name=
+          "supportedgc"></a>Appendix C. Supported graphics
+          cards</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc">
+      <p><b>Table of Contents</b></p>
+
+      <dl>
+        <dt><span class="sect1"><a href=
+        "apc.html#id2527953">ATI</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "apc.html#id2527958">Radeon series</a></span></dt>
+          </dl>
+        </dd>
+
+        <dt><span class="sect1"><a href=
+        "apcs02.html">nVidia</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "apcs02.html#id2528580">Direct PCI memory access
+            support</a></span></dt>
+
+            <dt><span class="sect2"><a href=
+            "apcs02.html#id2528597"><tt class=
+            "filename">/dev/i2c-*</tt> devices
+            support</a></span></dt>
+          </dl>
+        </dd>
+
+        <dt><span class="sect1"><a href=
+        "apcs03.html">Intel</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "apcs03.html#id2528911">i810/i815/i830/i845/i855/i865/i915/i945
+            with Integrated Graphics Controller</a></span></dt>
+          </dl>
+        </dd>
+
+        <dt><span class="sect1"><a href=
+        "apcs04.html">Matrox</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "apcs04.html#id2529038">G200/G400/G450/G550
+            series</a></span></dt>
+          </dl>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="sect2" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h3 class="title"><a id="id2527983" name=
+            "id2527983"></a><tt class="filename">/dev/i2c-*</tt>
+            versus PCI memory</h3>
+          </div>
+        </div>
+      </div>
+
+      <p>To control a monitor, DDCcontrol must access to the I2C
+      bus of the graphics card. There are two methods to do so: the
+      first one uses <tt class="filename">/dev/i2c-*</tt> devices
+      provided by kernel drivers (abbreviated by dev in tables),
+      the second one reads and writes directly in the card PCI
+      memory (abbreviated by PCI in the tables).</p>
+
+      <p>Depending on your hardware, one method or the other works,
+      or even both.</p>
+    </div>
+
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="id2527953"
+            name="id2527953"></a>ATI</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="id2527958" name=
+              "id2527958"></a>Radeon series</h3>
+            </div>
+          </div>
+        </div>
+
+        <p>ATI Radeon cards only work with <tt class=
+        "filename">/dev/i2c-*</tt> devices. To use them, you must
+        load the <tt class="filename">radeonfb</tt> module by
+        typing, as root:</p>
+        <pre class="screen">
+# modprobe radeonfb
+</pre>
+
+        <p>The kernel configuration options needed to enable Radeon
+        framebuffer driver and I2C support are:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><span class=
+            "guimenu">Devices drivers</span>-&gt;<span class=
+            "guimenuitem">Graphics support</span>-&gt;<span class=
+            "guimenuitem">Framebuffer
+            support</span>-&gt;<span class="guimenuitem">ATI Radeon
+            display support</span>.</li>
+
+            <li style="list-style-type: disc"><span class=
+            "guimenu">Devices drivers</span>-&gt;<span class=
+            "guimenuitem">Graphics support</span>-&gt;<span class=
+            "guimenuitem">Framebuffer
+            support</span>-&gt;<span class="guimenuitem">ATI Radeon
+            display support</span>-&gt;<span class=
+            "guimenuitem">DDC/I2C for ATI Radeon
+            support</span>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sect3" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h4 class="title"><a id="id2528379" name=
+              "id2528379"></a>ATI cards support table</h4>
+            </div>
+          </div>
+        </div>
+
+        <p>These ATI cards have been reported to work, but others
+        models should also work. If yours is not listed, please
+        send a message to one of the DDCcontrol mailing lists (see
+        <a href="apa.html" title=
+        "Appendix A. Report problems and successes">Appendix A,
+        <i>Report problems and successes</i></a>).</p>
+
+        <div class="informaltable">
+          <table cellspacing="2" cellpadding="5" border="1">
+            <colgroup>
+              <col align="left" />
+              <col align="center" />
+              <col align="center" />
+            </colgroup>
+
+            <thead>
+              <tr>
+                <th rowspan="2" align="left" valign="middle">
+                Name</th>
+
+                <th colspan="2" align="center">Works</th>
+              </tr>
+
+              <tr>
+                <th align="center">dev</th>
+
+                <th align="center">PCI</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td align="left">Radeon 7500</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+
+              <tr>
+                <td align="left">Radeon 9200</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+
+              <tr>
+                <td align="left">Radeon 9500</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+
+              <tr>
+                <td align="left">Radeon 9550 SE</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+
+              <tr>
+                <td align="left">Radeon 9600 Pro</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+
+              <tr>
+                <td align="left">Radeon 9700</td>
+
+                <td bgcolor="#00FF00" align="center">Yes</td>
+
+                <td bgcolor="#FF0000" align="center">No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "apb.html">Prev</a> </td>
+
+        <td width="20%" align="center"><a accesskey="u" href=
+        "index.html">Up</a></td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "apcs02.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">
+        Appendix B. Supported monitors </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top"> nVidia</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>
