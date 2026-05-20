@@ -682,11 +682,11 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				}
 			}
 			else if ((stype == 1) && (level == 2)) {
-				if (strncmp(caps_str+pos, "lcd", 3) == 0) {
+				if ((strncmp(caps_str+pos, "lcd", 3) == 0) || (strncmp(caps_str+pos, "LCD", 3) == 0)) {
 					caps->type = lcd;
 					pos += 2;
 				}
-				else if (strncmp(caps_str+pos, "crt", 3) == 0) {
+				else if ((strncmp(caps_str+pos, "crt", 3) == 0) || (strncmp(caps_str+pos, "CRT", 3) == 0)) {
 					caps->type = crt;
 					pos += 2;
 				}
