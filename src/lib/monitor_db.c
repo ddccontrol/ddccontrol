@@ -348,6 +348,13 @@ int ddcci_create_db_protected(
 	}
 	
 	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
+	if (access(buffer, R_OK) != 0) {
+		if (errno == ENOENT) {
+			return 0;
+		}
+		fprintf(stderr, _("Cannot access monitor/%s.xml: %s\n"), pnpname, strerror(errno));
+		return 0;
+	}
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
