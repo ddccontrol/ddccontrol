@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>Matrox</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.68.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="apc.html" title=
+  "Appendix C. Supported graphics cards" />
+  <link rel="prev" href="apcs05.html" title="VIA" />
+  <link rel="next" href="apd.html" title="Appendix D. Thanks" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">Matrox</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "apcs05.html">Prev</a> </td>
+
+        <th width="60%" align="center">Appendix C. Supported
+        graphics cards</th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "apd.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="sect1" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title" style="clear: both"><a id="id287048"
+          name="id287048"></a>Matrox</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect2" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h3 class="title"><a id="id287053" name=
+            "id287053"></a>G200/G400/G450/G550 series</h3>
+          </div>
+        </div>
+      </div>
+
+      <p>Matrox cards only work with <code class=
+      "filename">/dev/i2c-*</code> devices. To use them, you must
+      load both <code class="filename">matroxfb</code> and
+      <code class="filename">i2c-matroxfb</code> modules by typing,
+      as root:</p>
+      <pre class="screen">
+# modprobe matroxfb
+# modprobe i2c-matroxfb
+</pre>
+
+      <p>The kernel configuration options needed to enable Matrox
+      framebuffer driver and I2C support are, at least:</p>
+
+      <div class="itemizedlist">
+        <ul type="bullet">
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>-&gt;<span class=
+          "guimenuitem">Matrox acceleration</span>.</li>
+
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>-&gt;<span class=
+          "guimenuitem">Matrox acceleration</span>-&gt;<span class=
+          "guimenuitem">G100/G200/G400/G450/G550
+          support</span>.</li>
+
+          <li style="list-style-type: disc"><span class=
+          "guimenu">Devices drivers</span>-&gt;<span class=
+          "guimenuitem">Graphics support</span>-&gt;<span class=
+          "guimenuitem">Framebuffer support</span>-&gt;<span class=
+          "guimenuitem">Matrox acceleration</span>-&gt;<span class=
+          "guimenuitem">Matrox I2C support</span>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sect3" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h4 class="title"><a id="id287204" name=
+            "id287204"></a>Matrox cards support table</h4>
+          </div>
+        </div>
+      </div>
+
+      <p>These Matrox cards have been reported to work. If yours is
+      not listed, please send a message to one of the DDCcontrol
+      mailing lists (see <a href="apa.html" title=
+      "Appendix A. Report problems and successes">Appendix A,
+      <i>Report problems and successes</i></a>).</p>
+
+      <div class="informaltable">
+        <table cellspacing="2" cellpadding="5" border="1">
+          <colgroup>
+            <col align="left" />
+            <col align="center" />
+            <col align="center" />
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th rowspan="2" align="left" valign="middle">
+              Name</th>
+
+              <th colspan="2" align="center">Works</th>
+            </tr>
+
+            <tr>
+              <th align="center">dev</th>
+
+              <th align="center">PCI</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td align="left">Matrox G200 AGP</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+            </tr>
+
+            <tr>
+              <td align="left">Matrox G450 AGP</td>
+
+              <td bgcolor="#00FF00" align="center">Yes</td>
+
+              <td bgcolor="#FF0000" align="center">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "apcs05.html">Prev</a> </td>
+
+        <td width="20%" align="center"><a accesskey="u" href=
+        "apc.html">Up</a></td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "apd.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">VIA </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top">
+         Appendix D. Thanks</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>Appendix E. Documents for developers</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.66.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="prev" href="apd.html" title="Appendix D. Thanks" />
+  <link rel="next" href="apf.html" title=
+  "Appendix F. GNU General Public License" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">Appendix E. Documents for
+        developers</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "apd.html">Prev</a> </td>
+
+        <th width="60%" align="center"> </th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "apf.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="appendix" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title"><a id="techdocs" name=
+          "techdocs"></a>Appendix E. Documents for
+          developers</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc">
+      <p><b>Table of Contents</b></p>
+
+      <dl>
+        <dt><span class="sect1"><a href=
+        "ape.html#xmlstruct">Monitor database
+        structure</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "ape.html#optionsxml">Control list</a></span></dt>
+
+            <dt><span class="sect2"><a href=
+            "ape.html#monitorxml">Monitor Profiles</a></span></dt>
+          </dl>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="xmlstruct"
+            name="xmlstruct"></a>Monitor database structure</h2>
+          </div>
+        </div>
+      </div>
+
+      <p>The monitor database is written in XML, it can be found in
+      the <tt class="filename">db</tt> directory of <tt class=
+      "filename">ddccontrol-db</tt> package.</p>
+
+      <p>This directory contains the following files:</p>
+
+      <div class="itemizedlist">
+        <ul type="bullet">
+          <li style="list-style-type: disc"><tt class=
+          "filename">options.xml</tt></li>
+
+          <li style="list-style-type: disc"><tt class=
+          "filename">monitor/<i class=
+          "replaceable"><tt>%monitor_id%</tt></i>.xml</tt></li>
+        </ul>
+      </div>
+
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="optionsxml" name=
+              "optionsxml"></a>Control list</h3>
+            </div>
+
+            <div>
+              <h4 class="subtitle">XML file: <tt class=
+              "filename">options.xml</tt></h4>
+            </div>
+          </div>
+        </div>
+
+        <p><tt class="sgmltag-element">control</tt> elements (e.g.
+        <tt xmlns="" class=
+        "sgmltag-attvalue">“brightness”</tt>) are contained in
+        <tt class="sgmltag-element">group</tt> elements (e.g.
+        <tt xmlns="" class="sgmltag-attvalue">“color
+        settings”</tt>). <tt class="sgmltag-element">group</tt>
+        and <tt class="sgmltag-element">subgroup</tt> elements
+        allow the GUI to separate the controls in different
+        branches on the tree.</p>
+
+        <p><tt class="sgmltag-element">options</tt> attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">date</tt>: indicates the release
+            date of the current database (YYYYMMDD format).</li>
+
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">dbversion</tt>: indicates which
+            version of database format is used (must be set to
+            1).</li>
+          </ul>
+        </div>
+
+        <p><tt class="sgmltag-element">control</tt> attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">id</tt>: abbreviated control
+            name.</li>
+
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">name</tt>: full English control
+            name.</li>
+
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">address</tt>: DDC address
+            (optional).</li>
+
+            <li style="list-style-type: disc">
+              <tt class="sgmltag-attribute">type</tt>: one of these
+              values:
+
+              <div class="itemizedlist">
+                <ul type="opencircle">
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“value”</tt>: The
+                  control accepts values in a continuous range
+                  (e.g. brightness).</li>
+
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“command”</tt>: An
+                  action occurs when the value is set to something
+                  greater than <tt xmlns="" class=
+                  "sgmltag-attvalue">“0”</tt> (e.g. degauss).
+                  If you don't define any <tt class=
+                  "sgmltag-element">value</tt> element in a command
+                  control, the default value <tt xmlns="" class=
+                  "sgmltag-attvalue">“0x01”</tt> will be
+                  used.</li>
+
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“list”</tt>: The
+                  control accepts a list of values (e.g. OSD
+                  language).</li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <p><tt class="sgmltag-element">value</tt> attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">id</tt>: abbreviated value
+            name.</li>
+
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">name</tt>: full English value name
+            (it is not needed if there is only one value for
+            command controls).</li>
+
+            <li style="list-style-type: disc"><tt class=
+            "sgmltag-attribute">value</tt>: DDC control value
+            (optional).</li>
+          </ul>
+        </div>
+
+        <p>File format:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;options date="%date%" dbversion="1"&gt;
+  &lt;group name="%groupname%"&gt;
+    &lt;subgroup name="%subgroupname%"&gt;
+      &lt;control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/&gt;
+        &lt;!-- Command using the default 0x01 address --&gt;
+      &lt;control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/&gt;
+      &lt;control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"&gt;
+        &lt;value id="%value_id%" value="%hex_value%"/&gt;
+      &lt;/control&gt;
+      &lt;control id="%control_id%" type="list" name="%control_name%" address="%hex_address%"&gt;
+        &lt;value id="%value_id%" name="%value_name%" value="%hex_value%"/&gt;
+        &lt;value...&gt;
+      &lt;/control&gt;
+      &lt;control ...&gt;
+    &lt;/subgroup&gt;
+  &lt;/group&gt;
+  &lt;group ...&gt;
+&lt;/options&gt;
+</pre>
+      </div>
+
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="monitorxml" name=
+              "monitorxml"></a>Monitor Profiles</h3>
+            </div>
+
+            <div>
+              <h4 class="subtitle">XML files: <tt class=
+              "filename">monitor/<i class=
+              "replaceable"><tt>%monitor_id%</tt></i>.xml</tt></h4>
+            </div>
+          </div>
+        </div>
+
+        <p>List of controls supported by a monitor.</p>
+
+        <p><tt class="sgmltag-element">control</tt> <tt class=
+        "sgmltag-attribute">id</tt> attributes are defined in
+        <tt class="filename">options.xml</tt>. If <tt class=
+        "sgmltag-element">control</tt> <tt class=
+        "sgmltag-attribute">type</tt> is <tt xmlns="" class=
+        "sgmltag-attvalue">“list”</tt> or <tt xmlns="" class=
+        "sgmltag-attvalue">“command”</tt> without non-default
+        value, supported values must be defined.</p>
+
+        <p><tt class="sgmltag-attribute">address</tt> attribute for
+        <tt class="sgmltag-element">control</tt> elements and
+        <tt class="sgmltag-attribute">value</tt> attribute for
+        <tt class="sgmltag-element">value</tt> elements are
+        optional if they are defined in the general options
+        file.</p>
+
+        <p>The <tt class="sgmltag-attribute">init</tt> attribute in
+        <tt class="sgmltag-element">monitor</tt> element define the
+        type of the initialization: DDC/CI standard (<tt xmlns=""
+        class="sgmltag-attvalue">“standard”</tt>), or Samsung
+        (<tt xmlns="" class=
+        "sgmltag-attvalue">“samsung”</tt>).</p>
+
+        <p>The <tt class="sgmltag-attribute">caps</tt> attribute is
+        optional. Its format is defined in ACCESS.bus
+        specifications and is treated as following:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc">
+              <p>If <tt class="sgmltag-attribute">caps</tt> is not
+              defined, caps are read from monitor.</p>
+            </li>
+
+            <li style="list-style-type: disc">
+              <p>If this attribute exists and have a <tt xmlns=""
+              class="sgmltag-attvalue">“vcp”</tt> string (e.g.
+              <tt xmlns="" class="sgmltag-attvalue">“type(lcd)
+              vcp(10 12)”</tt>) then the specified caps string is
+              used.</p>
+            </li>
+
+            <li style="list-style-type: disc">
+              <p>If this attribute exists but does not have a
+              <tt xmlns="" class="sgmltag-attvalue">“vcp”</tt>
+              (e.g. <tt xmlns="" class=
+              "sgmltag-attvalue">“type(crt)”</tt> or <tt xmlns=
+              "" class="sgmltag-attvalue">“”</tt>), then all
+              controls defined in the monitor profile are supposed
+              to be supported.</p>
+            </li>
+          </ul>
+        </div>
+
+        <p>You can set a <tt class="sgmltag-attribute">delay</tt>
+        attribute in <tt class="sgmltag-element">control</tt>
+        elements to set the time in milliseconds to wait after
+        changing the value of this control. If you don't, a default
+        value is used.</p>
+
+        <p>File format:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;monitor name="%full_monitor_name%" init="[standard|samsung]" caps="%caps%"&gt;
+  &lt;controls&gt;
+    &lt;!--- value --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"/&gt;
+    &lt;!--- command using a default 0x01 value--&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"/&gt;
+    &lt;!--- command --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"&gt;
+      &lt;value id="activate" value="%hex_value%"/&gt;
+    &lt;/control&gt;
+    &lt;!--- list --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"&gt;
+      &lt;value id="%value_id%" value="%hex_value%"/&gt;
+      &lt;value...&gt;
+    &lt;/control&gt;
+    &lt;control...&gt;
+  &lt;/controls&gt;
+&lt;/monitor&gt;
+</pre>
+
+        <p>If a monitor supports exactly the same controls as
+        another one, you can define it as shown:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;monitor include="%monitor_id%" name="%full_monitor_name%" caps="%caps%"/&gt;
+</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "apd.html">Prev</a> </td>
+
+        <td width="20%" align="center"><a accesskey="u" href=
+        "index.html">Up</a></td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "apf.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">
+        Appendix D. Thanks </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top">
+         Appendix F. GNU General Public License</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>

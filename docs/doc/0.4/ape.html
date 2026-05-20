@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 1st August 2004), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=UTF-8" />
+
+  <title>Appendix E. Documents for developers</title>
+  <meta name="generator" content=
+  "DocBook XSL Stylesheets V1.68.1" />
+  <link rel="start" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="up" href="index.html" title=
+  "DDCcontrol Documentation" />
+  <link rel="prev" href="apd.html" title="Appendix D. Thanks" />
+  <link rel="next" href="apes02.html" title=
+  "Profile file structure" />
+</head>
+
+<body>
+  <div class="navheader">
+    <table width="100%" summary="Navigation header">
+      <tr>
+        <th colspan="3" align="center">Appendix E. Documents for
+        developers</th>
+      </tr>
+
+      <tr>
+        <td width="20%" align="left"><a accesskey="p" href=
+        "apd.html">Prev</a> </td>
+
+        <th width="60%" align="center"> </th>
+
+        <td width="20%" align="right"> <a accesskey="n" href=
+        "apes02.html">Next</a></td>
+      </tr>
+    </table>
+    <hr />
+  </div>
+
+  <div class="appendix" lang="en" xml:lang="en">
+    <div class="titlepage">
+      <div>
+        <div>
+          <h2 class="title"><a id="techdocs" name=
+          "techdocs"></a>Appendix E. Documents for
+          developers</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc">
+      <p><b>Table of Contents</b></p>
+
+      <dl>
+        <dt><span class="sect1"><a href="ape.html#dbstruct">Monitor
+        database structure</a></span></dt>
+
+        <dd>
+          <dl>
+            <dt><span class="sect2"><a href=
+            "ape.html#optionsxml">Control list</a></span></dt>
+
+            <dt><span class="sect2"><a href=
+            "ape.html#monitorxml">Monitor Profiles</a></span></dt>
+          </dl>
+        </dd>
+
+        <dt><span class="sect1"><a href="apes02.html">Profile file
+        structure</a></span></dt>
+      </dl>
+    </div>
+
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="dbstruct"
+            name="dbstruct"></a>Monitor database structure</h2>
+          </div>
+        </div>
+      </div>
+
+      <p>The monitor database is written in XML, it can be found in
+      the <code class="filename">db</code> directory of
+      <code class="filename">ddccontrol-db</code> package.</p>
+
+      <p>This directory contains the following files:</p>
+
+      <div class="itemizedlist">
+        <ul type="bullet">
+          <li style="list-style-type: disc"><code class=
+          "filename">options.xml</code></li>
+
+          <li style="list-style-type: disc"><code class=
+          "filename">monitor/<em class=
+          "replaceable"><code>%monitor_id%</code></em>.xml</code></li>
+        </ul>
+      </div>
+
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="optionsxml" name=
+              "optionsxml"></a>Control list</h3>
+            </div>
+
+            <div>
+              <h4 class="subtitle">XML file: <code class=
+              "filename">options.xml</code></h4>
+            </div>
+          </div>
+        </div>
+
+        <p><code class="sgmltag-element">control</code> elements
+        (e.g. <tt xmlns="" class=
+        "sgmltag-attvalue">“brightness”</tt>) are contained in
+        <code class="sgmltag-element">group</code> elements (e.g.
+        <tt xmlns="" class="sgmltag-attvalue">“color
+        settings”</tt>). <code class=
+        "sgmltag-element">group</code> and <code class=
+        "sgmltag-element">subgroup</code> elements allow the GUI to
+        separate the controls in different branches on the
+        tree.</p>
+
+        <p><code class="sgmltag-element">options</code>
+        attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">date</code>: indicates the release
+            date of the current database (YYYYMMDD format).</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">dbversion</code>: indicates which
+            version of database format is used (must be set to
+            3).</li>
+          </ul>
+        </div>
+
+        <p><code class="sgmltag-element">group</code>
+        attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">name</code>: full English group
+            name.</li>
+          </ul>
+        </div>
+
+        <p><code class="sgmltag-element">subgroup</code>
+        attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">name</code>: full English subgroup
+            name.</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">pattern</code>: name of the
+            fullscreen pattern <code class=
+            "filename">gddccontrol</code> must display to help the
+            user to adjust subgroup's controls (optional). For
+            possible values, see <code class=
+            "filename">ddccontrol/src/gddccontrol/fspatterns.c</code>.</li>
+          </ul>
+        </div>
+
+        <p><code class="sgmltag-element">control</code>
+        attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">id</code>: abbreviated control
+            name.</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">name</code>: full English control
+            name.</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">address</code>: DDC/CI address
+            (optional).</li>
+
+            <li style="list-style-type: disc">
+              <code class="sgmltag-attribute">type</code>: one of
+              these values:
+
+              <div class="itemizedlist">
+                <ul type="opencircle">
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“value”</tt>: The
+                  control accepts values in a continuous range
+                  (e.g. brightness).</li>
+
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“command”</tt>: An
+                  action occurs when the value is set to something
+                  greater than <tt xmlns="" class=
+                  "sgmltag-attvalue">“0”</tt> (e.g. degauss).
+                  If you don't define any <code class=
+                  "sgmltag-element">value</code> element in a
+                  command control, the default value <tt xmlns=""
+                  class="sgmltag-attvalue">“0x01”</tt> will be
+                  used.</li>
+
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“list”</tt>: The
+                  control accepts a list of values (e.g. OSD
+                  language).</li>
+                </ul>
+              </div>
+            </li>
+
+            <li style="list-style-type: disc">
+              <code class="sgmltag-attribute">refresh</code> (only
+              for list and command controls): Set whether other
+              controls must be refreshed after changing list value
+              or running the command associated with the control
+              (optional). Possible values:
+
+              <div class="itemizedlist">
+                <ul type="opencircle">
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“none”</tt>: Do not
+                  refresh anything. (default)</li>
+
+                  <li style="list-style-type: circle"><tt xmlns=""
+                  class="sgmltag-attvalue">“all”</tt>: Refresh
+                  all controls.</li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <p><code class="sgmltag-element">value</code>
+        attributes:</p>
+
+        <div class="itemizedlist">
+          <ul type="bullet">
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">id</code>: abbreviated value
+            name.</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">name</code>: full English value
+            name (it is not needed if there is only one value for
+            command controls).</li>
+
+            <li style="list-style-type: disc"><code class=
+            "sgmltag-attribute">value</code>: DDC/CI control value
+            (optional).</li>
+          </ul>
+        </div>
+
+        <p>File format:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;options date="%date%" dbversion="3"&gt;
+  &lt;group name="%groupname%"&gt;
+    &lt;subgroup name="%subgroupname%" pattern="%patternname%"&gt;
+      &lt;control id="%control_id%" type="value" name="%control_name%" address="%hex_address%"/&gt;
+        &lt;!-- Command using the default 0x01 address --&gt;
+      &lt;control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"/&gt;
+      &lt;control id="%control_id%" type="command" name="%control_name%" address="%hex_address%"&gt;
+        &lt;value id="%value_id%" value="%hex_value%"/&gt;
+      &lt;/control&gt;
+      &lt;control id="%control_id%" type="list" name="%control_name%" address="%hex_address%"&gt;
+        &lt;value id="%value_id%" name="%value_name%" value="%hex_value%"/&gt;
+        &lt;value...&gt;
+      &lt;/control&gt;
+      &lt;control ...&gt;
+    &lt;/subgroup&gt;
+  &lt;/group&gt;
+  &lt;group ...&gt;
+&lt;/options&gt;
+</pre>
+      </div>
+
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="monitorxml" name=
+              "monitorxml"></a>Monitor Profiles</h3>
+            </div>
+
+            <div>
+              <h4 class="subtitle">XML files: <code class=
+              "filename">monitor/<em class=
+              "replaceable"><code>%monitor_id%</code></em>.xml</code></h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect3" lang="en" xml:lang="en">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h4 class="title"><a id="id289606" name=
+                "id289606"></a><code class=
+                "sgmltag-element">caps</code> element</h4>
+              </div>
+            </div>
+          </div>
+
+          <p>The caps attribute is optional. Its format is defined
+          in ACCESS.bus specifications.</p>
+
+          <p>To add controls to caps, use the <code class=
+          "sgmltag-attribute">add</code> attribute. To remove
+          controls from caps, use the <code class=
+          "sgmltag-attribute">remove</code> attribute.</p>
+
+          <p>Note remove is handled before add, so if you remove
+          and add a same control, it will finally be in caps.</p>
+        </div>
+
+        <div class="sect3" lang="en" xml:lang="en">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h4 class="title"><a id="id289642" name=
+                "id289642"></a><code class=
+                "sgmltag-element">controls</code> element</h4>
+              </div>
+            </div>
+          </div>
+
+          <p>List of controls supported by a monitor (optional if
+          you have an <code class=
+          "sgmltag-attribute">include</code> element).</p>
+
+          <p><code class="sgmltag-element">control</code>
+          <code class="sgmltag-attribute">id</code> attributes are
+          defined in <code class="filename">options.xml</code>. If
+          <code class="sgmltag-element">control</code> <code class=
+          "sgmltag-attribute">type</code> is <tt xmlns="" class=
+          "sgmltag-attvalue">“list”</tt> or <tt xmlns="" class=
+          "sgmltag-attvalue">“command”</tt> without default
+          values, supported values must be defined.</p>
+
+          <p><code class="sgmltag-attribute">address</code>
+          attribute for <code class=
+          "sgmltag-element">control</code> elements and
+          <code class="sgmltag-attribute">value</code> attribute
+          for <code class="sgmltag-element">value</code> elements
+          are optional if they are defined in the general options
+          file.</p>
+
+          <p>The <code class="sgmltag-attribute">init</code>
+          attribute in <code class="sgmltag-element">monitor</code>
+          element define the type of the initialization: DDC/CI
+          standard (<tt xmlns="" class=
+          "sgmltag-attvalue">“standard”</tt>), or Samsung
+          (<tt xmlns="" class=
+          "sgmltag-attvalue">“samsung”</tt>). This attribute is
+          optional, as long as the monitor profile includes another
+          profile which defines this attribute.</p>
+
+          <p>You can set a <code class=
+          "sgmltag-attribute">delay</code> attribute in
+          <code class="sgmltag-element">control</code> elements to
+          set the time in milliseconds to wait after changing the
+          value of this control. If you don't, a default value is
+          used.</p>
+        </div>
+
+        <div class="sect3" lang="en" xml:lang="en">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h4 class="title"><a id="id289778" name=
+                "id289778"></a><code class=
+                "sgmltag-element">include</code> element</h4>
+              </div>
+            </div>
+          </div>
+
+          <p>Includes another monitor, manufacturer or standard
+          profile, specified by the <code class=
+          "sgmltag-attribute">file</code> attribute.</p>
+        </div>
+
+        <div class="note" style=
+        "margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>Monitor profile are read
+          sequentially. Control and init mode redifinitions are
+          ignored, so define specific controls and init mode before
+          including a generic profile. Caps are also treated
+          sequentially, so if a control is not in CAPS at the time
+          it is defined, it won't be supported by ddccontrol.
+        </div>
+
+        <p>File format:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;monitor name="%full_monitor_name%" init="[standard|samsung]"&gt;
+  &lt;caps add="%add_caps%" remove="%remove_caps%"/&gt;
+  &lt;controls&gt;
+    &lt;!--- value --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"/&gt;
+    &lt;!--- command using a default 0x01 value--&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"/&gt;
+    &lt;!--- command --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"&gt;
+      &lt;value id="activate" value="%hex_value%"/&gt;
+    &lt;/control&gt;
+    &lt;!--- list --&gt;
+    &lt;control id="%control_id%" address="%hex_address%" delay="%wait_time%"&gt;
+      &lt;value id="%value_id%" value="%hex_value%"/&gt;
+      &lt;value...&gt;
+    &lt;/control&gt;
+    &lt;control...&gt;
+  &lt;/controls&gt;
+  &lt;!--- Including VESA generic profile is generally a good idea. --&gt;
+  &lt;include file="VESA"/&gt;
+&lt;/monitor&gt;
+</pre>
+
+        <p>If a monitor supports exactly the same controls as
+        another one, you can define it as shown:</p>
+        <pre class="screen">
+&lt;?xml version="1.0"?&gt;
+&lt;monitor name="%full_monitor_name%"&gt;
+  &lt;caps add="%add_caps%" remove="%remove_caps%"/&gt;
+  &lt;include file="%include_monitor_id%"/&gt;
+&lt;/monitor&gt;
+</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="navfooter">
+    <hr />
+
+    <table width="100%" summary="Navigation footer">
+      <tr>
+        <td width="40%" align="left"><a accesskey="p" href=
+        "apd.html">Prev</a> </td>
+
+        <td width="20%" align="center"> </td>
+
+        <td width="40%" align="right"> <a accesskey="n" href=
+        "apes02.html">Next</a></td>
+      </tr>
+
+      <tr>
+        <td width="40%" align="left" valign="top">
+        Appendix D. Thanks </td>
+
+        <td width="20%" align="center"><a accesskey="h" href=
+        "index.html">Home</a></td>
+
+        <td width="40%" align="right" valign="top"> Profile file
+        structure</td>
+      </tr>
+    </table>
+  </div>
+  <hr xmlns="" />
+
+  <div xmlns="" align="left">
+    <a href="https://sourceforge.net"><img src=
+    "https://sourceforge.net/sflogo.php?group_id=117933&amp;type=1"
+    width="88" height="31" border="0" alt=
+    "SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>
