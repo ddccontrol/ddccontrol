@@ -156,6 +156,8 @@ static gboolean resolve_dev_device(const gchar *device, char *resolved_path)
 	dev_path = device + 4;
 	if (dev_path[0] == '\0')
 		return FALSE;
+	if (!g_str_has_prefix(dev_path, "/dev/"))
+		return FALSE;
 
 	return realpath(dev_path, resolved_path) != NULL;
 }
