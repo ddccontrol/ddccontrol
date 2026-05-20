@@ -32,4 +32,4 @@ CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = ddccontrol.DDCControl.xml
 
 interface.h interface.c: ddccontrol.DDCControl.xml
-	gdbus-codegen --interface-prefix ddccontrol --generate-c-code interface $<
+	gdbus-codegen --interface-prefix ddccontrol --glib-min-required 2.30 --generate-c-code interface $<

@@ -43,11 +43,13 @@ static int dbus_monitor_readctrl(struct monitor *mon, unsigned char ctrl, unsign
 static int dbus_monitor_writectrl(struct monitor *mon, unsigned char ctrl, unsigned short value, int delay)
 {
 	struct dbus_monitor *dbus_mon = (struct dbus_monitor *)mon;
+	(void)delay;
 	return ddcci_dbus_writectrl(dbus_mon->proxy, dbus_mon->filename, ctrl, value);
 }
 
 static int dbus_monitor_close(struct monitor *mon)
 {
+	(void)mon;
 	// TODO: think about architecture, maybe notify D-Bus daemon?
 	return 0;
 }
@@ -154,7 +156,7 @@ int ddcci_dbus_writectrl(DDCControl *proxy, const char *fn,
 
 struct monitorlist *ddcci_dbus_rescan_monitors(DDCControl *proxy)
 {
-	int i;
+	size_t i;
 	struct monitorlist *monlist = NULL, *current = NULL;
 
 	char **devices = NULL, **names = NULL;

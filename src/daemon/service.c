@@ -331,6 +331,8 @@ static gboolean handle_set_control(DDCControl *skeleton, GDBusMethodInvocation *
 static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data)
 {
 	DDCControl *skeleton;
+	(void)name;
+	(void)user_data;
 
 	skeleton = ddccontrol_skeleton_new();
 	g_signal_connect(skeleton, "handle-get-monitors", G_CALLBACK(handle_get_monitors), NULL);
@@ -345,6 +347,9 @@ static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpo
 
 void on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 {
+	(void)connection;
+	(void)name;
+	(void)user_data;
 	printf("Name lost\n");
 }
 

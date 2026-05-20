@@ -530,7 +530,7 @@ static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len
 	}
 
 	_len = _buf[1] & ~MAGIC_2;
-	if (_len > len || _len > sizeof(_buf)) {
+	if (_len > len || _len > (int)sizeof(_buf)) {
 		if (!mon->probing || verbosity) {
 			fprintf(stderr, _("Invalid response, length is %d, should be %d at most\n"),
 				_len, len);
