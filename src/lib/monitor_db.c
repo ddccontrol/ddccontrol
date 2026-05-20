@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include <fcntl.h>
 #include <string.h>
@@ -49,6 +50,23 @@ xmlDocPtr options_doc = NULL;
 int get_verbosity(); /* Defined in ddcci.c */
 
 /* End of CAPS structs/functions */
+
+static int ddcci_is_valid_monitor_profile_name(const char *name)
+{
+	const unsigned char *p;
+
+	if (!name || !*name) {
+		return 0;
+	}
+
+	for (p = (const unsigned char *)name; *p; p++) {
+		if (!isalnum(*p) && *p != '_' && *p != '-') {
+			return 0;
+		}
+	}
+
+	return 1;
+}
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
 {
@@ -344,6 +362,11 @@ int ddcci_create_db_protected(
 	
 	if (options_doc == NULL) {
 		fprintf(stderr, _("Database must be inited before reading a monitor file.\n"));
+		return 0;
+	}
+
+	if (!ddcci_is_valid_monitor_profile_name(pnpname)) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname ? pnpname : _("(null)"));
 		return 0;
 	}
 	
