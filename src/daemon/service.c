@@ -173,6 +173,7 @@ static gboolean same_device(const gchar *detected, const gchar *requested)
 	if (!resolve_dev_device(requested, requested_path))
 		return FALSE;
 
+	/* Canonicalize both paths so symlinks resolve to the same allowlisted device node. */
 	return strcmp(detected_path, requested_path) == 0;
 }
 
@@ -203,7 +204,7 @@ static int open_monitor(struct monitor **mon, const char *device)
 				monitor_ret[i] = ddcci_open(&(open_monitors[i]), devices[i], 0);
 				monitor_open[i] = TRUE;
 
-				if (monitor_ret < 0) {
+				if (monitor_ret[i] < 0) {
 					fprintf(stderr,
 					        "\nDDC/CI at %s is unusable (%d).\n"
 					        "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n",
