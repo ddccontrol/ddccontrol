@@ -20,6 +20,7 @@
 #include "interface.h"
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -145,19 +146,49 @@ static gboolean handle_rescan_monitors(DDCControl *skeleton, GDBusMethodInvocati
 	return TRUE;
 }
 
+static gboolean resolve_dev_device(const gchar *device, char *resolved_path)
+{
+	const char *dev_path;
+
+	if (!g_str_has_prefix(device, "dev:"))
+		return FALSE;
+
+	dev_path = device + 4;
+	if (dev_path[0] == '\0')
+		return FALSE;
+
+	return realpath(dev_path, resolved_path) != NULL;
+}
+
+static gboolean same_device(const gchar *detected, const gchar *requested)
+{
+	char detected_path[PATH_MAX];
+	char requested_path[PATH_MAX];
+
+	if (strcmp(detected, requested) == 0)
+		return TRUE;
+
+	if (!resolve_dev_device(detected, detected_path))
+		return FALSE;
+	if (!resolve_dev_device(requested, requested_path))
+		return FALSE;
+
+	return strcmp(detected_path, requested_path) == 0;
+}
+
 static gboolean can_open_device(gchar *device)
 {
 	// THIS IS A SECURITY PRECAUTION
 	int i;
 	if (monlist != NULL && devices != NULL) {
 		for (i = 0; i < devices_count; i++) {
-			if (strcmp(devices[i], device) == 0)
+			if (same_device(devices[i], device))
 				return TRUE;
 		}
 	}
 	rescan_monitors();
 	for (i = 0; i < devices_count; i++) {
-		if (strcmp(devices[i], device) == 0)
+		if (same_device(devices[i], device))
 			return TRUE;
 	}
 	return FALSE;
@@ -167,9 +198,9 @@ static int open_monitor(struct monitor **mon, const char *device)
 {
 	int i;
 	for (i = 0; i < devices_count; i++) {
-		if (strcmp(devices[i], device) == 0) {
+		if (same_device(devices[i], device)) {
 			if (monitor_open[i] == FALSE) {
-				monitor_ret[i] = ddcci_open(&(open_monitors[i]), device, 0);
+				monitor_ret[i] = ddcci_open(&(open_monitors[i]), devices[i], 0);
 				monitor_open[i] = TRUE;
 
 				if (monitor_ret < 0) {
