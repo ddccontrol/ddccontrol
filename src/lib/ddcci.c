@@ -789,8 +789,8 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 
 int ddcci_caps(struct monitor* mon)
 {
-	if (mon->__vtable && mon->caps.raw_caps) {
-		return strlen(mon->caps.raw_caps);
+	if (mon->__vtable) {
+		return mon->caps.raw_caps ? (int)strlen(mon->caps.raw_caps) : -1;
 	}
 
 	mon->caps.raw_caps = (char*)malloc(16);
