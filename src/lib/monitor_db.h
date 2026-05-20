@@ -29,21 +29,32 @@
 #define DBVERSION 3
 
 enum control_type {
-value = 0,
-command = 1,
-list = 2
+	value = 0,
+	command = 1,
+	list = 2,
+	CONTROL_TYPE_VALUE = value,
+	CONTROL_TYPE_COMMAND = command,
+	CONTROL_TYPE_LIST = list
 };
+typedef enum control_type ControlType;
 
 enum refresh_type {
-none = 0,
-all = 1
+	none = 0,
+	all = 1,
+	REFRESH_TYPE_NONE = none,
+	REFRESH_TYPE_ALL = all
 };
+typedef enum refresh_type RefreshType;
 
 enum init_type {
-unknown = 0,
-standard = 1,
-samsung = 2
+	unknown = 0,
+	standard = 1,
+	samsung = 2,
+	INIT_TYPE_UNKNOWN = unknown,
+	INIT_TYPE_STANDARD = standard,
+	INIT_TYPE_SAMSUNG = samsung
 };
+typedef enum init_type InitType;
 
 struct value_db {
 	xmlChar* id;
@@ -52,6 +63,7 @@ struct value_db {
 	
 	struct value_db* next;
 };
+typedef struct value_db ValueDB;
 
 struct control_db {
 	xmlChar* id;
@@ -64,6 +76,7 @@ struct control_db {
 	struct control_db* next;
 	struct value_db* value_list;
 };
+typedef struct control_db ControlDB;
 
 struct subgroup_db {
 	xmlChar* name;
@@ -72,6 +85,7 @@ struct subgroup_db {
 	struct subgroup_db* next;
 	struct control_db* control_list;
 };
+typedef struct subgroup_db SubgroupDB;
 
 struct group_db {
 	xmlChar* name;
@@ -79,6 +93,7 @@ struct group_db {
 	struct group_db* next;
 	struct subgroup_db* subgroup_list;
 };
+typedef struct group_db GroupDB;
 
 struct monitor_db {
 	xmlChar* name;
@@ -86,11 +101,16 @@ struct monitor_db {
 	
 	struct group_db* group_list;
 };
+typedef struct monitor_db MonitorDB;
 
+/* Load monitor profile data from the XML database. */
 struct monitor_db* ddcci_create_db(const char* pnpname, struct caps* caps, int faulttolerance);
+/* Free a monitor database returned by ddcci_create_db. */
 void ddcci_free_db(struct monitor_db* mon_db);
 
+/* Initialize monitor database subsystem. */
 int ddcci_init_db(char* usedatadir);
+/* Release monitor database subsystem resources. */
 void ddcci_release_db();
 
 #endif
