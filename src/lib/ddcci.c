@@ -789,6 +789,11 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 
 int ddcci_caps(struct monitor* mon)
 {
+	if (mon->__vtable) {
+		/* Backend-driven monitors must provide capabilities during open. */
+		return mon->caps.raw_caps ? (int)strlen(mon->caps.raw_caps) : -1;
+	}
+
 	mon->caps.raw_caps = (char*)malloc(16);
 	int bufferpos = 0;
 	unsigned char buf[64];	/* 64 bytes chunk (was 35, but 173P+ send 43 bytes chunks) */
