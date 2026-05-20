@@ -94,6 +94,9 @@ To set value of control `0x10` (brightness on VESA compliant monitors) to `75` f
 
 ```shell
 sudo ddccontrol -r 0x10 -w 75 dev:/dev/i2c-4
+
+# Save current monitor settings to non-volatile memory (if supported)
+sudo ddccontrol -r 0x10 -w 75 -s dev:/dev/i2c-4
 ```
 
 See `ddccontrol -h` for more information.
