@@ -20,7 +20,7 @@ ddccontrol \- A utility to control monitor parameters via software
 .SH SYNOPSIS
 .B ddccontrol
 .B -p\ \ \ \ \ \ \ \ \ \ \ \ 
-.RB [ -cdfsv ]
+.RB [ -cdfsvS ]
 .RB [ -b
 .IR datadir ]
 .RB [ -r
@@ -34,7 +34,7 @@ ddccontrol \- A utility to control monitor parameters via software
 .br
 .B ddccontrol
 \fBdev:/dev/i2c-\fP\fIN\fP
-.RB [ -cdfsv ]
+.RB [ -cdfsvS ]
 .RB [ -b
 .IR datadir ]
 .RB [ -r
@@ -86,6 +86,9 @@ force (avoid validity checks)
 .TP
 .B \-s
 save settings
+.TP
+.B \-S
+suppress unsupported-monitor fallback warning
 .TP
 .B \-v
 verbosity (specify more to increase)
