@@ -26,7 +26,11 @@ ddccontrol \- A utility to control monitor parameters via software
 .RB [ -r
 .IR ctrl
 .RB [ -w
-.IR value ]]
+.IR value
+.RB | -W
+.IR value
+.RB | -t
+.IR value1,value2 ]]
 .br
 .B ddccontrol
 \fBdev:/dev/i2c-\fP\fIN\fP
@@ -36,7 +40,11 @@ ddccontrol \- A utility to control monitor parameters via software
 .RB [ -r
 .IR ctrl
 .RB [ -w
-.IR value ]]
+.IR value
+.RB | -W
+.IR value
+.RB | -t
+.IR value1,value2 ]]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B ddccontrol
@@ -67,6 +75,12 @@ query ctrl
 .B \-w
 value to write to ctrl
 .TP
+.B \-W
+relatively change ctrl value (+/-)
+.TP
+.B \-t
+toggle ctrl value between value1 and value2 (defaults to value1 if current value is neither)
+.TP
 .B \-f
 force (avoid validity checks)
 .TP
@@ -92,4 +106,3 @@ Copyright 2004\-2005 Oleg I. Vdovikin (oleg@cs.msu.su)
 Copyright 2004\-2006 Nicolas Boichat (nicolas@boichat.ch)
 .PP
 This manual page was written by Roberto C. Sanchez <roberto@connexer.com>.
-
