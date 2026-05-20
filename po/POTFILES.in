@@ -1,4 +1,7 @@
 src/ddccontrol/main.c
+src/ddccontrol/printing.c
+src/daemon/dbus_client.c
+src/daemon/service.c
 src/ddcpci/i2c-algo-bit.c
 src/ddcpci/intel740.c
 src/ddcpci/intel810.c

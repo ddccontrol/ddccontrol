@@ -1,3 +1,0 @@
-src/daemon/dbus_client.c
-src/daemon/service.c
-src/ddccontrol/printing.c
