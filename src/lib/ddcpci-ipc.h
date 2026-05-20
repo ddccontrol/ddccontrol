@@ -37,6 +37,7 @@ struct i2c_bus {
 	int func;
 	int i2cbus;
 };
+typedef struct i2c_bus I2CBus;
 
 #define MAX_BUFFER_SIZE 256
 #define QUERY_SIZE  (sizeof(struct query) - (MAX_BUFFER_SIZE) - sizeof(long))
@@ -60,6 +61,7 @@ struct query {
 	int len; /* only for read queries, number of bytes to read */
 	unsigned char buffer[MAX_BUFFER_SIZE];
 };
+typedef struct query Query;
 
 /* ddcpci to ddccontrol messages (answers) */
 struct answer {
@@ -70,5 +72,6 @@ struct answer {
 	struct i2c_bus bus; /* For answers to QUERY_LIST */
 	unsigned char buffer[MAX_BUFFER_SIZE]; /* For answers to QUERY_DATA, read operations */
 };
+typedef struct answer Answer;
 
 #endif //DDCPCI_IPC_H

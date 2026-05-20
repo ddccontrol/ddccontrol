@@ -27,16 +27,21 @@
 struct profile;
 
 enum monitor_type {
-unk = 0,
-lcd = 1,
-crt = 2
+	unk = 0,
+	lcd = 1,
+	crt = 2,
+	MONITOR_TYPE_UNK = unk,
+	MONITOR_TYPE_LCD = lcd,
+	MONITOR_TYPE_CRT = crt
 };
+typedef enum monitor_type MonitorType;
 
 /* Structure to store CAPS vcp entry (control and related values) */
 struct vcp_entry {
 	int values_len; /* -1 if values are not specified */
 	unsigned short* values;
 };
+typedef struct vcp_entry VcpEntry;
 
 /* Structure to store CAPS */
 struct caps {
@@ -44,6 +49,7 @@ struct caps {
 	enum monitor_type type;
 	char* raw_caps; /* raw text caps */
 };
+typedef struct caps Caps;
 
 #include "monitor_db.h"
 
@@ -61,10 +67,13 @@ struct monitor {
 	
 	struct profile* profiles; /* profiles available for this monitor. Filled by get_all_profiles. */
 	
-	enum {
-		dev
-		,pci
-		,type_adl
+	enum monitor_io_type {
+		dev,
+		pci,
+		type_adl,
+		MONITOR_IO_DEV = dev,
+		MONITOR_IO_PCI = pci,
+		MONITOR_IO_TYPE_ADL = type_adl
 	} type;
 	int probing; /* are we probing? */
 	
@@ -73,6 +82,7 @@ struct monitor {
 	   1 - we are using a manufacturer standard profile (warn the user)
 	   2 - we are using the VESA generic profile (warn the user) */
 };
+typedef struct monitor Monitor;
 
 /* Struct used to return monitor data probed by ddcci_probe */
 struct monitorlist {
@@ -84,33 +94,46 @@ struct monitorlist {
 	
 	struct monitorlist* next;
 };
+typedef struct monitorlist MonitorList;
 
+/* Probe and enumerate connected monitors. */
 struct monitorlist* ddcci_probe();
+/* Free the list returned by ddcci_probe. */
 void ddcci_free_list(struct monitorlist* list);
 
+/* Open a monitor device. */
 int ddcci_open(struct monitor* mon, const char* filename, int probing);
+/* Ask the monitor to save the current settings. */
 int ddcci_save(struct monitor* mon);
+/* Close a monitor device. */
 int ddcci_close(struct monitor* mon);
 
+/* Write a VCP control value. */
 int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short value, int delay);
 
 /* return values: < 0 - failure, 0 - contron not supported, > 0 - supported */
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
 	unsigned short *value, unsigned short *maximum);
 
+/* Parse a monitor capabilities string. */
 int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add);
 
+/* Read and parse monitor capabilities. */
 int ddcci_caps(struct monitor* mon);
 
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
 void ddcci_verbosity(int verbosity);
 
+/* Get the current verbosity level. */
 int get_verbosity();
 
+/* Initialize the library and optional data directory override. */
 int ddcci_init(char* usedatadir);
 
+/* Release all library resources. */
 void ddcci_release();
 
+/* Send a keepalive message to ddcpci helper when used. */
 void ddcpci_send_heartbeat();
 
 /* Create $HOME/.ddccontrol and subdirectories if necessary */
