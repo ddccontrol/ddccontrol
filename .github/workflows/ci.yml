@@ -64,6 +64,7 @@ jobs:
               ./autogen.sh
               ./configure CFLAGS="$CFLAGS"
               make -j$(nproc)
+              make -C src/lib check
               ./scripts/format_code.sh
               find -name "*.orig" -exec rm -v {} \;
               ./scripts/travis_ci_after_build_checks.sh
