@@ -721,9 +721,17 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 			}
 			else if ((svcp == 1) && (level == 3)) {
 				i = 0;
-				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
+				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')') && (caps_str[pos+i] != 0)) {
+					if (i >= (int)sizeof(buf) - 1) {
+						printf(_("CAPS token too long, invalid CAPS (pos=%d).\n"), pos);
+						return -1;
+					}
 					buf[i] = caps_str[pos+i];
 					i++;
+				}
+				if (caps_str[pos+i] == 0) {
+					printf(_("Invalid CAPS, unexpected end of string at pos=%d.\n"), pos);
+					return -1;
 				}
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
