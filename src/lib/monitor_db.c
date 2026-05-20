@@ -112,8 +112,11 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						tmp = xmlGetProp(cur, BAD_CAST "value");
 						
 						DDCCI_DB_RETURN_IF(tmp == NULL, -1, _("Can't find value property."), cur);
-						current_value->value = strtol((char*)tmp, &endptr, 0);
+						long parsed_value = strtol((char*)tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int."), cur);
+						DDCCI_DB_RETURN_IF((parsed_value < 0) || (parsed_value > 65535), -1,
+						                   _("Value is outside the supported 0-65535 range."), cur);
+						current_value->value = (unsigned short)parsed_value;
 						xmlFree(tmp);
 						
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 

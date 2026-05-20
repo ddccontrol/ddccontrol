@@ -1,4 +1,5 @@
 #include "../issueurl.h"
+#include "../monitor_db.h"
 #include "../urlencode.h"
 
 #include <assert.h>
@@ -68,9 +69,16 @@ static void test_build_issue_url_with_null_fields(void) {
     free(url);
 }
 
+static void test_monitor_value_width(void) {
+    struct value_db value = {0};
+    value.value = 40960;
+    assert(value.value == 40960);
+}
+
 int main(void) {
     test_url_encode();
     test_build_issue_url_with_values();
     test_build_issue_url_with_null_fields();
+    test_monitor_value_width();
     return 0;
 }

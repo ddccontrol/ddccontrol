@@ -59,7 +59,7 @@ typedef enum init_type InitType;
 struct value_db {
 	xmlChar* id;
 	xmlChar* name;
-	unsigned char value;
+	unsigned short value;
 	
 	struct value_db* next;
 };
