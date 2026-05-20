@@ -670,7 +670,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	monitor_manager = grid;
 	
-	if (mon->fallback) {
+	if (mon->fallback && !hide_unsupported_monitor_warning) {
 		/* Put a big warning. */
 		gchar* message;
 		if (mon->fallback == 1) {

@@ -21,6 +21,7 @@
 #include "config.h"
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -81,6 +82,7 @@ int nextid = -1;
 static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
+int hide_unsupported_monitor_warning = 0;
 
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
@@ -394,6 +396,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 int main( int argc, char *argv[] )
 { 
 	int i, verbosity = 0;
+	int argi;
 	
 	mon = NULL;
 	monitor_manager = NULL;
@@ -406,6 +409,15 @@ int main( int argc, char *argv[] )
 	bind_textdomain_codeset("ddccontrol-db", "UTF-8");
 	textdomain(PACKAGE);
 #endif
+
+	for (argi = 1; argi < argc; argi++) {
+		if (strcmp(argv[argi], "--hide-unsupported-warning") == 0) {
+			hide_unsupported_monitor_warning = 1;
+			memmove(&argv[argi], &argv[argi + 1], (size_t)(argc - argi) * sizeof(char *));
+			argc--;
+			argi--;
+		}
+	}
 
 	while ((i=getopt(argc,argv,"v")) >= 0)
 	{
