@@ -56,6 +56,10 @@
 /src/gddccontrol/gddccontrol
 
 /src/lib/ddccontrol.pc
+/src/lib/test-suite.log
+/src/lib/test_issueurl
+/src/lib/test_issueurl.log
+/src/lib/test_issueurl.trs
 /src/stamp-h1
 Makefile
 Makefile.in
