@@ -1,9 +1,3 @@
-[![Build Status][travis-badge]][travis]
-
-[travis-badge]: https://travis-ci.org/ddccontrol/ddccontrol.svg?branch=master
-[travis]: https://travis-ci.org/ddccontrol/ddccontrol
-
-
 # DDC/CI control
 
 DDCcontrol is a software used to control monitor parameters, like brightness, contrast, RGB color levels and others.
