@@ -218,7 +218,9 @@ struct card* radeon_open(struct pci_dev *dev)
 	data->fd = open("/dev/mem", O_RDWR);
 	
 	if (data->fd < 0) {
-		perror(_("radeon_open: cannot open /dev/mem"));
+		if (get_verbosity()) {
+			perror(_("radeon_open: cannot open /dev/mem"));
+		}
 		radeon_close(radeon_card);
 		return 0;
 	}
@@ -227,7 +229,9 @@ struct card* radeon_open(struct pci_dev *dev)
 	data->memory = mmap(data->memory, data->length, PROT_READ|PROT_WRITE, MAP_SHARED, data->fd, dev->base_addr[2]);
 
 	if (data->memory == MAP_FAILED) {
-		perror(_("radeon_open: mmap failed"));
+		if (get_verbosity()) {
+			perror(_("radeon_open: mmap failed"));
+		}
 		radeon_close(radeon_card);
 		return 0;
 	}
