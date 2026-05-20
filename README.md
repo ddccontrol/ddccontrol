@@ -76,6 +76,9 @@ Utility can launched directly from commandline:
 sudo gddccontrol
 ```
 
+For GNOME Shell top-bar menu control, see the example extension in
+`contrib/gnome-shell-extension`.
+
 ### From command line using ddccontrol
 
 `ddccontrol` allows monitor configuration directly from commandline. To probe I2C devices to find monitor buses use:
