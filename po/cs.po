@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ddccontrol 0.4.3\n"
 "Report-Msgid-Bugs-To: https://github.com/ddccontrol/ddccontrol/issues/\n"
-"POT-Creation-Date: 2026-05-13 15:12+0200\n"
+"POT-Creation-Date: 2026-05-19 11:05+0200\n"
 "PO-Revision-Date: 2010-07-07 14:57+0200\n"
 "Last-Translator: Stanislav Brabec <sbrabec@suse.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -387,7 +387,7 @@ msgstr ""
 msgid "Then attach the resulting report file of the following command:\n"
 msgstr ""
 
-#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/notebook.c:715
+#: ../src/ddccontrol/main.c:536 ../src/gddccontrol/stack.c:704
 #, c-format
 msgid "Thank you.\n"
 msgstr "Děkujeme.\n"
@@ -534,7 +534,12 @@ msgstr "via_open: cannot open /dev/mem"
 msgid "via_open: mmap failed"
 msgstr "via_open: mmap selhalo"
 
-#: ../src/gddccontrol/fspatterns.c:137
+#: ../src/gddccontrol/fspatterns.c:65
+#, fuzzy
+msgid "_Close fullscreen patterns"
+msgstr "Zobrazit celoobrazovkové vzory"
+
+#: ../src/gddccontrol/fspatterns.c:135
 msgid ""
 "Adjust brightness and contrast following these rules:\n"
 " - Black must be as dark as possible.\n"
@@ -546,11 +551,11 @@ msgstr ""
 "- Bílá by měla být tak jasná, jak je to možné.\n"
 "- Musíte být schopni rozlišit každou úroveň šedé (zvláště 0 a 12).\n"
 
-#: ../src/gddccontrol/fspatterns.c:259
+#: ../src/gddccontrol/fspatterns.c:257
 msgid "Try to make moire patterns disappear."
 msgstr "Snažte se, aby moaré vzorky zmizely."
 
-#: ../src/gddccontrol/fspatterns.c:263
+#: ../src/gddccontrol/fspatterns.c:261
 msgid ""
 "Adjust Image Lock Coarse to make the vertical band disappear.\n"
 "Adjust Image Lock Fine to minimize movement on the screen."
@@ -558,7 +563,7 @@ msgstr ""
 "Nastavte Hrubý zámek obrazu tak, aby zmizel svislý pruh.\n"
 "Minimalizujte pohyb obrazovce nastavením Jemného zámku obrazu."
 
-#: ../src/gddccontrol/fspatterns.c:273
+#: ../src/gddccontrol/fspatterns.c:271
 #, c-format
 msgid "Unknown fullscreen pattern name: %s"
 msgstr "Neznámý název celoobrazovkového vzorku: %s"
@@ -600,9 +605,10 @@ msgid "Are you sure you want to delete the profile '%s'?"
 msgstr "Jste si jisti, že chcete smazat profil ' %s'?"
 
 #: ../src/gddccontrol/gprofile.c:143
+#, fuzzy
 msgid ""
 "Please select the controls you want to save in the profile using the "
-"checkboxes to the left of each control."
+"checkboxes above each control."
 msgstr ""
 "Prosím zvolte ovládací prvky, které chcete uložit do profilu pomocí "
 "zaškrtávací políčka nalevo od každé kontroly."
@@ -647,25 +653,49 @@ msgstr "Address"
 msgid "Raw value"
 msgstr "Raw hodnota"
 
-#: ../src/gddccontrol/gprofile.c:456 ../src/gddccontrol/gprofile.c:476
+#: ../src/gddccontrol/gprofile.c:439
+#, fuzzy
+msgid "_Rename profile"
+msgstr "Vytvořit profil"
+
+#: ../src/gddccontrol/gprofile.c:442
+msgid "_Cancel"
+msgstr ""
+
+#: ../src/gddccontrol/gprofile.c:458 ../src/gddccontrol/gprofile.c:484
 msgid "Profile information:"
 msgstr "Profil informace:"
 
-#: ../src/gddccontrol/gprofile.c:485
+#: ../src/gddccontrol/gprofile.c:469
+#, fuzzy
+msgid "_Save profile"
+msgstr "Uložit profil"
+
+#: ../src/gddccontrol/gprofile.c:472
+#, fuzzy
+msgid "_Abort creating profile"
+msgstr "Chyba při vytváření profilu."
+
+#: ../src/gddccontrol/gprofile.c:477
+#, fuzzy
+msgid "_Close"
+msgstr "Zavřít"
+
+#: ../src/gddccontrol/gprofile.c:493
 #, c-format
 msgid "File name: %s"
 msgstr "Název souboru: %s"
 
-#: ../src/gddccontrol/gprofile.c:496
+#: ../src/gddccontrol/gprofile.c:504
 msgid "Profile name:"
 msgstr "Název profilu"
 
 #. Save
-#: ../src/gddccontrol/gprofile.c:518
+#: ../src/gddccontrol/gprofile.c:526
 msgid "Saving profile..."
 msgstr "Saving profil..."
 
-#: ../src/gddccontrol/gprofile.c:527
+#: ../src/gddccontrol/gprofile.c:535
 msgid "Error while saving profile."
 msgstr "Chyba při ukládání profilu."
 
@@ -743,28 +773,43 @@ msgstr "Zavřít"
 msgid "Welcome to gddccontrol %s."
 msgstr "Vítejte v gddccontrol %s."
 
-#: ../src/gddccontrol/notebook.c:83
+#: ../src/gddccontrol/stack.c:83
 msgid "Error while getting value"
 msgstr "Chyba při získávání hodnoty"
 
-#: ../src/gddccontrol/notebook.c:118 ../src/gddccontrol/notebook.c:130
+#: ../src/gddccontrol/stack.c:118 ../src/gddccontrol/stack.c:130
 #, c-format
 msgid "Refreshing controls values (%d%%)..."
 msgstr "Aktualizují se nastavené hodnoty (%d %%)..."
 
-#: ../src/gddccontrol/notebook.c:135
+#: ../src/gddccontrol/stack.c:135
 msgid "Could not get the control_db struct related to a control."
 msgstr "Nelze získat control_db struct související s ovládáním."
 
-#: ../src/gddccontrol/notebook.c:495
-msgid "Show fullscreen patterns"
+#: ../src/gddccontrol/stack.c:372
+#, fuzzy
+msgid "Include in new profile"
+msgstr "Žádné profily nebyly nalezeny"
+
+#: ../src/gddccontrol/stack.c:484
+#, fuzzy
+msgid "_Show fullscreen patterns"
 msgstr "Zobrazit celoobrazovkové vzory"
 
-#: ../src/gddccontrol/notebook.c:527
+#: ../src/gddccontrol/stack.c:517
 msgid "Section"
 msgstr "Oddíl"
 
-#: ../src/gddccontrol/notebook.c:574
+#: ../src/gddccontrol/stack.c:526
+msgid "Please click on a group name."
+msgstr "Prosím, klikněte na název skupiny."
+
+#: ../src/gddccontrol/stack.c:562 ../src/gddccontrol/stack.c:576
+#, c-format
+msgid "Getting controls values (%d%%)..."
+msgstr "Získávají se nastavené hodnoty (%d %%)..."
+
+#: ../src/gddccontrol/stack.c:607
 msgid ""
 "The current monitor is in the database but does not support DDC/CI.\n"
 "\n"
@@ -782,12 +827,12 @@ msgstr ""
 "Pokud má váš monitor má dva vstupy, prosím, zkuste připojit kabel na jiný "
 "vstup, a potom klikněte na obnovovací tlačítko poblíž seznamu monitorů."
 
-#: ../src/gddccontrol/notebook.c:585
+#: ../src/gddccontrol/stack.c:618
 #, c-format
 msgid "Opening the monitor device (%s)..."
 msgstr "Otvírá se zařízení monitoru (%s)..."
 
-#: ../src/gddccontrol/notebook.c:591
+#: ../src/gddccontrol/stack.c:624
 msgid ""
 "An error occurred while opening the monitor device.\n"
 "Maybe this monitor was disconnected, please click on the refresh button near "
@@ -797,7 +842,7 @@ msgstr ""
 "Možná, že byl tento monitor odpojen, klikněte na obnovovací tlačítko poblíž "
 "seznamu monitorů."
 
-#: ../src/gddccontrol/notebook.c:600
+#: ../src/gddccontrol/stack.c:633
 #, c-format
 msgid ""
 "Unsupported monitor detected.\n"
@@ -809,20 +854,11 @@ msgid ""
 "Then attach the resulting report file of the following command:"
 msgstr ""
 
-#: ../src/gddccontrol/notebook.c:622
-msgid "Please click on a group name."
-msgstr "Prosím, klikněte na název skupiny."
-
-#: ../src/gddccontrol/notebook.c:647 ../src/gddccontrol/notebook.c:658
-#, c-format
-msgid "Getting controls values (%d%%)..."
-msgstr "Získávají se nastavené hodnoty (%d %%)..."
-
-#: ../src/gddccontrol/notebook.c:683
+#: ../src/gddccontrol/stack.c:672
 msgid "Loading profiles..."
 msgstr "Čtou se profily..."
 
-#: ../src/gddccontrol/notebook.c:696
+#: ../src/gddccontrol/stack.c:685
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a generic profile for your monitor's manufacturer. Some controls may "
@@ -832,7 +868,7 @@ msgstr ""
 "výrobce monitoru. Některé ovládací prvky nemusí být podporovány nebo nemusí "
 "fungovat podle očekávání.\n"
 
-#: ../src/gddccontrol/notebook.c:702
+#: ../src/gddccontrol/stack.c:691
 msgid ""
 "There is no support for your monitor in the database, but ddccontrol is "
 "using a basic generic profile. Many controls will not be supported, and some "
@@ -842,11 +878,11 @@ msgstr ""
 "Mnohé ovládací prvky nebudou podporovány, některé nemusí fungovat podle "
 "očekávání.\n"
 
-#: ../src/gddccontrol/notebook.c:707
+#: ../src/gddccontrol/stack.c:696
 msgid "Warning!"
 msgstr "Varování!"
 
-#: ../src/gddccontrol/notebook.c:709
+#: ../src/gddccontrol/stack.c:698
 msgid ""
 "Unsupported monitor detected.\n"
 "\n"
@@ -1342,9 +1378,6 @@ msgstr "Prosím aktualizujte ddccontrol databázi.\n"
 
 #~ msgid "An error occurred while opening the monitor device"
 #~ msgstr "Došlo k chybě při otevírání zařízení monitoru"
-
-#~ msgid "Can't find any profiles"
-#~ msgstr "Žádné profily nebyly nalezeny"
 
 #~ msgid "error"
 #~ msgstr "chyba"

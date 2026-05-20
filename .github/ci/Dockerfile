@@ -1,0 +1,19 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        astyle \
+        autoconf \
+        build-essential \
+        ca-certificates \
+        clang \
+        dh-autoreconf \
+        git \
+        intltool \
+        libgtk-3-dev \
+        libpci-dev \
+        libxml2-dev \
+        pkg-config \
+    && rm -rf /var/lib/apt/lists/*

@@ -26,7 +26,7 @@
 
 #define IDLE_TIMEOUT 60
 
-#include "notebook.h"
+#include "gui.h"
 #include "internal.h"
 
 #include "daemon/dbus_client.h"
@@ -251,7 +251,7 @@ void set_status(char* message) {
 	gtk_label_set_text(GTK_LABEL(statuslabel), message);
 }
 
-static void messagebutton_callback(GtkWidget *widget, gpointer data)
+static void messagebutton_callback(GtkButton *button, gpointer user_data)
 {
 	set_message("");
 }
@@ -301,12 +301,12 @@ void set_message_ok(char* message, int with_ok)
 static gboolean heartbeat(gpointer data)
 {
 	ddcpci_send_heartbeat();
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 /* Create a new button with an image and a label packed into it
  * and return the button. */
-GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, const gchar *tool_tip)
+GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_text, const gchar *tool_tip)
 {
 	GtkWidget *box;
 	GtkWidget *label = NULL;
@@ -320,13 +320,13 @@ GtkWidget *stock_label_button(const gchar * stockid, const gchar *label_text, co
 	gtk_container_set_border_width(GTK_CONTAINER (box), 1);
 	
 	/* Now on to the image stuff */
-	image = gtk_image_new_from_stock(stockid, GTK_ICON_SIZE_BUTTON);
+	image = gtk_image_new_from_icon_name(icon_name, GTK_ICON_SIZE_BUTTON);
 	gtk_box_pack_start(GTK_BOX(box), image, FALSE, FALSE, 3);
 	gtk_widget_show(image);
 
 	if (label_text) {
 		/* Create a label for the button */
-		label = gtk_label_new(label_text);
+		label = gtk_label_new_with_mnemonic(label_text);
 		
 		/* Pack the image and label into the box */
 		gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 3);
@@ -357,7 +357,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	// TODO: rescan on button, initial get only
 	monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
 
-	struct monitorlist* current;
+	const struct monitorlist* current;
 	
 	char buffer[256];
 	
@@ -383,7 +383,10 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		set_message(_(
 			"No monitor supporting DDC/CI available.\n\n"
-			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver)."
+			"If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n\n"
+			"On many laptops, the internal eDP/LVDS panel does not expose DDC/CI, so only external monitors may work.\n\n"
+			"For support, include output from:\n"
+			"LANG=C LC_ALL=C ddccontrol -p -c -d"
 			   ));
 	}
 }
@@ -480,8 +483,8 @@ int main( int argc, char *argv[] )
 	gtk_widget_show(combo_box);
 
 	gtk_box_pack_start(GTK_BOX(choice_hbox),combo_box, 1, 1, 0);
-	
-	refresh_monitors_button = stock_label_button(GTK_STOCK_REFRESH, NULL, _("Refresh monitor list"));
+
+	refresh_monitors_button = button_from_icon_name("view-refresh", NULL, _("Refresh monitor list"));
 	g_signal_connect(G_OBJECT(refresh_monitors_button), "clicked", G_CALLBACK(probe_monitors), NULL);
 	gtk_widget_show(refresh_monitors_button);
 	gtk_box_pack_start(GTK_BOX(choice_hbox),refresh_monitors_button, 0, 0, 0);
@@ -504,20 +507,20 @@ int main( int argc, char *argv[] )
 	/* Toolbar (profile...) */
 	profile_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	
-	profile_manager_button = stock_label_button(GTK_STOCK_OPEN, _("Profile manager"), NULL);
+	profile_manager_button = button_from_icon_name("folder-symbolic", _("Profile manager"), NULL);
 	g_signal_connect(G_OBJECT(profile_manager_button), "clicked", G_CALLBACK(loadprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), profile_manager_button, 0, 0, 0);
 	gtk_widget_show (profile_manager_button);
 	gtk_widget_set_sensitive(profile_manager_button, FALSE);
 	
-	saveprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Save profile"), NULL);
+	saveprofile_button = button_from_icon_name("document-save", _("Save profile"), NULL);
 	g_signal_connect(G_OBJECT(saveprofile_button), "clicked", G_CALLBACK(saveprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), saveprofile_button, 0, 0, 0);
 	gtk_widget_set_sensitive(saveprofile_button, FALSE);
 	
-	cancelprofile_button = stock_label_button(GTK_STOCK_SAVE, _("Cancel profile creation"), NULL);
+	cancelprofile_button = button_from_icon_name("edit-clear-all", _("Cancel profile creation"), NULL);
 	g_signal_connect(G_OBJECT(cancelprofile_button), "clicked", G_CALLBACK(cancelprofile_callback), NULL);
 
 	gtk_box_pack_start(GTK_BOX(profile_hbox), cancelprofile_button, 0, 0, 0);
@@ -546,7 +549,7 @@ int main( int argc, char *argv[] )
 	gtk_box_pack_start(GTK_BOX(messagebox), messagelabel, 1, 1, 0);
 	gtk_widget_show(messagelabel);
 	
-	messagebutton = stock_label_button(GTK_STOCK_OK, _("OK"), NULL);
+	messagebutton = gtk_button_new_with_mnemonic(_("OK"));
 	g_signal_connect(G_OBJECT(messagebutton), "clicked", G_CALLBACK(messagebutton_callback), NULL);
 	gtk_widget_set_halign(messagebutton, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(messagebutton, GTK_ALIGN_CENTER);
@@ -582,14 +585,14 @@ int main( int argc, char *argv[] )
 	gtk_widget_set_halign(br_hbox, GTK_ALIGN_END);
 	gtk_widget_set_valign(br_hbox, GTK_ALIGN_CENTER);
 	
-	refresh_controls_button = stock_label_button(GTK_STOCK_REFRESH, _("Refresh"), _("Refresh all controls"));
+	refresh_controls_button = button_from_icon_name("view-refresh", _("Refresh"), _("Refresh all controls"));
 	g_signal_connect(G_OBJECT(refresh_controls_button),"clicked",G_CALLBACK (refresh_all_controls), NULL);
 
 	gtk_box_pack_start(GTK_BOX(br_hbox),refresh_controls_button,0,0,0);
 	gtk_widget_show (refresh_controls_button);
 	gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 	
-	close_button = stock_label_button(GTK_STOCK_CLOSE, _("Close"), NULL);
+	close_button = button_from_icon_name("window-close", _("Close"), NULL);
 	g_signal_connect(G_OBJECT(close_button),"clicked",G_CALLBACK (destroy), NULL);
 
 	gtk_box_pack_start(GTK_BOX(br_hbox),close_button,0,0,0);

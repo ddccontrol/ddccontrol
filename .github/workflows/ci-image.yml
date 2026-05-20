@@ -1,0 +1,43 @@
+name: CI Image
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 0"
+  push:
+    branches: [master]
+    paths:
+      - ".github/ci/Dockerfile"
+      - ".github/workflows/ci-image.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Set up QEMU
+        run: docker run --privileged --rm tonistiigi/binfmt:qemu-v10.2.1 --install arm64,arm
+
+      - name: Set up Docker Buildx
+        run: |
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+
+      - name: Build and push image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --tag ghcr.io/ddccontrol/ddccontrol-ci:latest \
+            --tag ghcr.io/ddccontrol/ddccontrol-ci:${{ github.sha }} \
+            --push \
+            .github/ci

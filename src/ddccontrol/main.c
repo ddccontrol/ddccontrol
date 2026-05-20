@@ -83,7 +83,7 @@ static void usage(char *name)
 {
 	fprintf(stderr, _(
 	            "Usage:\n"
-	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value]] [-l (profile path)] [-p | dev]\n"
+	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
 	            "\tdev: device, e.g. dev:/dev/i2c-0\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
@@ -91,6 +91,7 @@ static void usage(char *name)
 	            "\t-r : query ctrl\n"
 	            "\t-w : value to write to ctrl\n"
 	            "\t-W : relatively change ctrl value (+/-)\n"
+	            "\t-t : toggle ctrl value between value1 and value2\n"
 	            "\t-f : force (avoid validity checks)\n"
 	            "\t-s : save settings\n"
 	            "\t-v : verbosity (specify more to increase)\n"
@@ -112,15 +113,31 @@ static void check_integrity(char *datadir, char *pnpname)
 	printf(_("[ OK ]\n"));
 
 	/* Create caps with all controls. */
-	char buf2[4];
-	char buffer[256 * 3 + 25];
-	strcpy(buffer, "(vcp(");
+	char buffer[sizeof("(vcp(") + (3 * 256) + sizeof("))")];
+	int pos = snprintf(buffer, sizeof(buffer), "(vcp(");
+	if (pos < 0 || (size_t)pos >= sizeof(buffer)) {
+		fprintf(stderr, "Failed to build monitor capability buffer.\n");
+		ddcci_release_db();
+		exit(1);
+	}
 	int i;
 	for (i = 0; i < 256; i++) {
-		snprintf(buf2, 4, "%02x ", i);
-		strcat(buffer, buf2);
+		int n = snprintf(buffer + pos, sizeof(buffer) - (size_t)pos, "%02x ", i);
+		if (n < 0 || (size_t)n >= sizeof(buffer) - (size_t)pos) {
+			fprintf(stderr, "Failed to build monitor capability buffer.\n");
+			ddcci_release_db();
+			exit(1);
+		}
+		pos += n;
 	}
-	strcat(buffer, "))");
+	{
+		int n = snprintf(buffer + pos, sizeof(buffer) - (size_t)pos, "))");
+		if (n < 0 || (size_t)n >= sizeof(buffer) - (size_t)pos) {
+			fprintf(stderr, "Failed to build monitor capability buffer.\n");
+			ddcci_release_db();
+			exit(1);
+		}
+	}
 
 	struct caps caps;
 	ddcci_parse_caps(buffer, &caps, 1);
@@ -177,6 +194,9 @@ int main(int argc, char **argv)
 	int ctrl = -1;
 	int value = -1;
 	int relative = 0;
+	int toggle = 0;
+	int toggle_value1 = -1;
+	int toggle_value2 = -1;
 	int caps = 0;
 	int save = 0;
 	int force = 0;
@@ -197,7 +217,7 @@ int main(int argc, char **argv)
 	          "This program comes with ABSOLUTELY NO WARRANTY.\n"
 	          "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 
-	while ((i = getopt(argc, argv, "hdr:w:W:csfvpb:i:l:")) >= 0) {
+	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:")) >= 0) {
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
@@ -217,6 +237,10 @@ int main(int argc, char **argv)
 				fprintf(stderr, _("You cannot use -w parameter without -r.\n"));
 				exit(1);
 			}
+			if (relative || toggle) {
+				fprintf(stderr, _("You cannot use -w parameter with -W or -t.\n"));
+				exit(1);
+			}
 			if ((value = strtol(optarg, NULL, 0)) < 0 || (value > 65535)) {
 				fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
@@ -227,11 +251,53 @@ int main(int argc, char **argv)
 				fprintf(stderr, _("You cannot use -W parameter without -r.\n"));
 				exit(1);
 			}
+			if (value >= 0 || toggle) {
+				fprintf(stderr, _("You cannot use -W parameter with -w or -t.\n"));
+				exit(1);
+			}
 			if ((value = strtol(optarg, NULL, 0)) < -65535 || (value > 65535)) {
 				fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), optarg);
 				exit(1);
 			}
 			relative = 1;
+			break;
+		case 't':
+			if (ctrl == -1) {
+				fprintf(stderr, _("You cannot use -t parameter without -r.\n"));
+				exit(1);
+			}
+			if (value >= 0 || relative) {
+				fprintf(stderr, _("You cannot use -t parameter with -w or -W.\n"));
+				exit(1);
+			}
+			{
+				char *toggle_pair = strdup(optarg);
+				char *separator = toggle_pair ? strchr(toggle_pair, ',') : NULL;
+				char *endptr = NULL;
+
+				if (!toggle_pair || !separator || separator == toggle_pair || *(separator + 1) == '\0') {
+					free(toggle_pair);
+					fprintf(stderr, _("'%s' does not seem to be a valid toggle pair. Use value1,value2.\n"), optarg);
+					exit(1);
+				}
+
+				*separator = '\0';
+				toggle_value1 = strtol(toggle_pair, &endptr, 0);
+				if (*endptr != '\0' || toggle_value1 < 0 || toggle_value1 > 65535) {
+					fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), toggle_pair);
+					free(toggle_pair);
+					exit(1);
+				}
+				toggle_value2 = strtol(separator + 1, &endptr, 0);
+				if (*endptr != '\0' || toggle_value2 < 0 || toggle_value2 > 65535) {
+					fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), separator + 1);
+					free(toggle_pair);
+					exit(1);
+				}
+
+				free(toggle_pair);
+				toggle = 1;
+			}
 			break;
 		case 'l':
 			profilefile = ddcci_load_profile(optarg);
@@ -319,9 +385,16 @@ int main(int argc, char **argv)
 
 			if ((!fn) && (current->supported)) {
 				printf(_("  (Automatically selected)\n"));
-				fn = malloc(strlen(current->filename) + 1);
-				strcpy(fn, current->filename);
+				fn = strdup(current->filename);
 				selected_monitor_name = strdup(current->name);
+				if (!fn || !selected_monitor_name) {
+					fprintf(stderr, _("Memory allocation failed\n"));
+					free(fn);
+					free(selected_monitor_name);
+					ddcci_free_list(monlist);
+					ddcci_release();
+					exit(1);
+				}
 				report.monitor_name = selected_monitor_name;
 			}
 			current = current->next;
@@ -332,6 +405,9 @@ int main(int argc, char **argv)
 			fprintf(stderr, _(
 			            "No monitor supporting DDC/CI available.\n"
 			            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+			            "On many laptops, the internal eDP/LVDS panel does not expose DDC/CI, so only external monitors may work.\n"
+			            "For support, please include output from:\n"
+			            "LANG=C LC_ALL=C ddccontrol -p -c -d\n"
 			        ));
 			ddcci_release();
 			exit(0);
@@ -356,6 +432,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, _(
 		            "\nDDC/CI at %s is unusable (%d).\n"
 		            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
+		            "If this is a laptop internal display, please note many eDP/LVDS panels do not support DDC/CI.\n"
 		        ), fn, ret);
 	} else {
 		fprintf(stdout, _("\nEDID readings:\n"));
@@ -405,6 +482,29 @@ int main(int argc, char **argv)
 		}
 
 		if (ctrl >= 0) {
+			if (toggle) {
+				unsigned short old_value, maximum;
+				int result = -1;
+
+				for (retry = RETRYS; retry; retry--) {
+					result = ddcci_readctrl(mon, ctrl, &old_value, &maximum);
+					if (result >= 0) {
+						break;
+					}
+				}
+
+				if (result < 0) {
+					fprintf(stderr, _("Control read fail.\n"));
+					value = -1;
+				} else {
+					value = (old_value == toggle_value1) ? toggle_value2 : toggle_value1;
+					if (value > maximum) {
+						fprintf(stderr, _("Value cannot be higher than maximum! %d / %d\n"), value, maximum);
+						value = -1;
+					}
+				}
+			}
+
 			if (relative) {
 				unsigned short old_value, maximum;
 				int retry, result;
