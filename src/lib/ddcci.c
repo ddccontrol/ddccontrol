@@ -790,6 +790,7 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 int ddcci_caps(struct monitor* mon)
 {
 	if (mon->__vtable) {
+		/* Backend-driven monitors must provide capabilities during open. */
 		return mon->caps.raw_caps ? (int)strlen(mon->caps.raw_caps) : -1;
 	}
 
