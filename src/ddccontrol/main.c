@@ -290,8 +290,8 @@ int main(int argc, char **argv)
 				}
 				toggle_value2 = strtol(separator + 1, &endptr, 0);
 				if (*endptr != '\0' || toggle_value2 < 0 || toggle_value2 > 65535) {
-					free(toggle_pair);
 					fprintf(stderr, _("'%s' does not seem to be a valid value.\n"), separator + 1);
+					free(toggle_pair);
 					exit(1);
 				}
 
