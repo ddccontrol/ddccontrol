@@ -491,9 +491,13 @@ int main(int argc, char **argv)
 
 				if (result < 0) {
 					fprintf(stderr, _("Control read fail.\n"));
-					value = toggle_value1;
+					value = -1;
 				} else {
 					value = (old_value == toggle_value1) ? toggle_value2 : toggle_value1;
+					if (value > maximum) {
+						fprintf(stderr, _("Value cannot be higher than maximum! %d / %d\n"), value, maximum);
+						value = -1;
+					}
 				}
 			}
 
