@@ -31,7 +31,7 @@ struct dbus_monitor {
 	struct monitor mon;
 
 	DDCControl *proxy;
-	const char *filename;
+	char *filename;
 };
 
 static int dbus_monitor_readctrl(struct monitor *mon, unsigned char ctrl, unsigned short *value, unsigned short *maximum)
@@ -49,8 +49,23 @@ static int dbus_monitor_writectrl(struct monitor *mon, unsigned char ctrl, unsig
 
 static int dbus_monitor_close(struct monitor *mon)
 {
-	(void)mon;
-	// TODO: think about architecture, maybe notify D-Bus daemon?
+	int i;
+	struct dbus_monitor *dbus_mon = (struct dbus_monitor *)mon;
+
+	if (mon->db) {
+		ddcci_free_db(mon->db);
+	}
+
+	for (i = 0; i < 256; i++) {
+		if (mon->caps.vcp[i]) {
+			free(mon->caps.vcp[i]->values);
+			free(mon->caps.vcp[i]);
+		}
+	}
+
+	free(mon->caps.raw_caps);
+	free(dbus_mon->filename);
+	free(dbus_mon);
 	return 0;
 }
 
@@ -69,21 +84,32 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 	struct monitor *mon;
 
 	dbus_mon = calloc(1, sizeof(*dbus_mon));
+	if (dbus_mon == NULL) {
+		return -1;
+	}
 	*_mon = mon = &dbus_mon->mon;
 
 	mon->__vtable = &dbus_monitor_vtable;
 	dbus_mon->proxy = proxy;
 	dbus_mon->filename = strdup(filename);
+	if (dbus_mon->filename == NULL) {
+		free(dbus_mon);
+		return -1;
+	}
 
 
 	gboolean result = ddccontrol_call_open_monitor_sync(proxy, filename, &pnpid, &mon->caps.raw_caps, NULL, &error);
 	if (result == FALSE) {
 		fprintf(stderr, _("Open monitor failed: %s\n."), error->message);
+		g_clear_error(&error);
+		free(dbus_mon->filename);
+		free(dbus_mon);
 		return -1;
 	}
 
 	strncpy((char *)&mon->pnpid, pnpid, 7);
 	mon->pnpid[7] = 0;
+	g_free(pnpid);
 
 	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
 
