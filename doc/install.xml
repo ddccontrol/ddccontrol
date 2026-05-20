@@ -39,23 +39,30 @@ case, so you will almost certainly want these packages for compiling ddccontrol.
 
 <sect1 id="download">
 <title>Download the sources</title>
-<para>Go to the
-<ulink url="http://sourceforge.net/project/showfiles.php?group_id=117933">
-download section</ulink> of ddccontrol project's page and download the latest
-<filename>ddccontrol</filename> and <filename>ddccontrol-db</filename>
-source tarballs.</para>
-<para>Then unpack these two archives with:</para>
+<para>Clone the source repositories from GitHub:</para>
+<screen format="linespecific">
+# git clone https://github.com/ddccontrol/ddccontrol.git
+# git clone https://github.com/ddccontrol/ddccontrol-db.git
+</screen>
+<para>You should now have two directories, <filename>ddccontrol</filename> and
+<filename>ddccontrol-db</filename>.</para>
+<para>Alternatively, download the latest source tarballs from the
+<ulink url="https://github.com/ddccontrol/ddccontrol/releases">releases page</ulink>
+and unpack them with:</para>
 <screen format="linespecific">
 # tar xvfz ddccontrol-<replaceable>X.Y</replaceable>.tar.gz
 # tar xvfz ddccontrol-db-<replaceable>YYYYMMDD</replaceable>.tar.gz
 </screen>
-<para>You should now have two directories, <filename>ddccontrol</filename> and
-<filename>ddccontrol-db</filename>.</para>
 </sect1>
  
 <sect1 id="compile">
 <title>Compile and install</title>
-<para>To compile and install the source tarballs, type:</para>
+<para>If you are building from a Git checkout, you must first generate the
+<filename>configure</filename> script using the autotools build system:</para>
+<screen format="linespecific">
+# ./autogen.sh
+</screen>
+<para>To compile and install, type:</para>
 <screen format="linespecific">
 # ./configure
 # make
