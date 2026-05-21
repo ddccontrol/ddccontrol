@@ -58,8 +58,9 @@ GitHub</ulink>.
 </para>
 <para>
 It is a good idea to follow the GitHub project, particularly if you have
-problems translating some technical strings. This way it is not necessary to
-explain the same terms repeatedly to all translators.
+problems translating some technical strings. Please use the GitHub project
+issue tracker or pull request discussion for such questions, so the same terms
+do not need to be explained repeatedly to all translators.
 </para>
 <para>
 Also, if you encounter mistakes in the original English strings, please report those
