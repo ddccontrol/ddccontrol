@@ -21,7 +21,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
 
 #include <fcntl.h>
 #include <string.h>
@@ -60,7 +59,10 @@ static int ddcci_is_valid_monitor_profile_name(const char *name)
 	}
 
 	for (p = (const unsigned char *)name; *p; p++) {
-		if (!isalnum(*p) && *p != '_' && *p != '-') {
+		if (!(('0' <= *p && *p <= '9') ||
+				('A' <= *p && *p <= 'Z') ||
+				('a' <= *p && *p <= 'z') ||
+				*p == '_' || *p == '-')) {
 			return 0;
 		}
 	}
@@ -370,7 +372,10 @@ int ddcci_create_db_protected(
 		return 0;
 	}
 	
-	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
+	if (snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname) >= 256) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname);
+		return 0;
+	}
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
 		fprintf(stderr, _("Document not parsed successfully.\n"));
