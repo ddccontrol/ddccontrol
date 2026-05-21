@@ -35,9 +35,9 @@ Release Check List (Nicolas Boichat)
 - upload ddccontrol-0.x.tar.bz2 to the GitHub release
 
 - update website :
-  - Update docs/index.html news
-  - Add old doc to archives
-  - commit the docs update
+  - Update news in the ddccontrol.github.io repository
+  - Add old generated docs to the website archives
+  - commit the website update
 
 - Announce the release on GitHub
 

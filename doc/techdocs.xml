@@ -17,9 +17,10 @@ Tools you need: <filename>git</filename>,
 <filename>poedit</filename> (or another tool, or a simple text editor).
 </para>
 <para>
-First, you need to check out the sources from the Git repository
-(see the <ulink url="https://github.com/ddccontrol/ddccontrol">ddccontrol
-project on GitHub</ulink>).
+First, you need to check out the sources from the Git repositories:
+<ulink url="https://github.com/ddccontrol/ddccontrol">ddccontrol</ulink>
+and
+<ulink url="https://github.com/ddccontrol/ddccontrol-db">ddccontrol-db</ulink>.
 </para>
 <para>Note you need to perform the following operations
 in both the ddccontrol and ddccontrol-db repositories (there are
