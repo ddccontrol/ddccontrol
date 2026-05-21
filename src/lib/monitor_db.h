@@ -23,6 +23,8 @@
 
 #include "ddcci.h"
 
+#include <stdint.h>
+
 #include <libxml/xmlstring.h>
 
 /* Current database version */
@@ -59,7 +61,7 @@ typedef enum init_type InitType;
 struct value_db {
 	xmlChar* id;
 	xmlChar* name;
-	unsigned short value;
+	uint16_t value;
 	
 	struct value_db* next;
 };

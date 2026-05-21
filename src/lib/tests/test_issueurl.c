@@ -1,5 +1,6 @@
 #include "../issueurl.h"
 #include "../monitor_db.h"
+#include "../monitor_db_internal.h"
 #include "../urlencode.h"
 
 #include <assert.h>
@@ -8,9 +9,6 @@
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-
-extern int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control,
-                                struct control_db *current_control, int command, int faulttolerance);
 
 static void free_value_list(struct value_db *value) {
     while (value != NULL) {
