@@ -23,4 +23,4 @@ check_PROGRAMS = test_issueurl
 TESTS = $(check_PROGRAMS)
 
 test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
-test_issueurl_LDADD = libddccontrol.la
+test_issueurl_LDADD = libddccontrol.la $(LIBXML2_LIBS)
