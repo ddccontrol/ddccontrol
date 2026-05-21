@@ -224,8 +224,8 @@ if test x$support_doc = xyes; then
       if test x$check_xsltproc = xyes ; then
          AC_MSG_CHECKING([whether xsltproc works])
 
-         DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
-         DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
+         DOCBOOK_ROOT="$srcdir/doc"
+         DB_FILE="$DOCBOOK_ROOT/style.xsl"
 
          $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
 <?xml version="1.0" encoding='ISO-8859-1'?>
