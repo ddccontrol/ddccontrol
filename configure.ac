@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[1.0.3],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_INIT([DDC/CI control tool],[1.0.3],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol])
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -224,7 +224,7 @@ if test x$support_doc = xyes; then
       if test x$check_xsltproc = xyes ; then
          AC_MSG_CHECKING([whether xsltproc works])
 
-         DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
+         DOCBOOK_ROOT="https://cdn.docbook.org/release/xsl/current/xhtml"
          DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
 
          $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END

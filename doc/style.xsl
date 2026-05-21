@@ -2,7 +2,7 @@
 <xsl:stylesheet  
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunk.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/xsl/current/xhtml/chunk.xsl"/>
 
 <xsl:param name="html.cellspacing" select="'2'"/>
 <xsl:param name="html.cellpadding" select="'5'"/>
@@ -10,7 +10,7 @@
 <!---<xsl:param name="html.stylesheet" select="'corpstyle.css'"/>-->
 <xsl:template name="user.footer.navigation">
 <hr/>
-<div align="left"><A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=117933&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></A></div>
+<div align="left"><A href="https://ddccontrol.github.io/">DDCcontrol homepage</A></div>
 </xsl:template>
 
 <xsl:template match="sgmltag[@class='attvalue']">

@@ -12,13 +12,15 @@ html/*: main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml suppor
 	-$(TIDY) -q -raw -im html/*.html
 
 publish: all
-	$(SSH) $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf latest"
-	$(SCP) -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/latest
+	rm -rf $(top_srcdir)/docs/doc/latest
+	$(MKDIR_P) $(top_srcdir)/docs/doc
+	cp -R html $(top_srcdir)/docs/doc/latest
 
 publish-release: all pdf
-	$(SSH) $(SFUSER)@ssh.sf.net "cd /home/groups/d/dd/ddccontrol/htdocs/doc/; rm -rf $(VERSION)"
-	$(SCP) -C -r html $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/$(VERSION)
-	$(SCP) -C ddccontrol.pdf $(SFUSER)@ssh.sf.net:/home/groups/d/dd/ddccontrol/htdocs/doc/ddccontrol-$(VERSION).pdf
+	rm -rf $(top_srcdir)/docs/doc/$(VERSION)
+	$(MKDIR_P) $(top_srcdir)/docs/doc
+	cp -R html $(top_srcdir)/docs/doc/$(VERSION)
+	cp ddccontrol.pdf $(top_srcdir)/docs/doc/ddccontrol-$(VERSION).pdf
 
 spell:
 	$(ASPELL) --mode=sgml check main.xml
