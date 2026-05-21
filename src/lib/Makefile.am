@@ -22,4 +22,4 @@ libddccontrol_la_LIBADD = $(LIBXML2_LIBS)
 check_PROGRAMS = test_issueurl
 TESTS = $(check_PROGRAMS)
 
-test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
+test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c monitor_db.c

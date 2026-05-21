@@ -6,6 +6,42 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
+int ddcci_parse_caps(const char *caps_str, struct caps *caps, int add) {
+    (void)caps_str;
+    (void)caps;
+    (void)add;
+    return 1;
+}
+
+int get_verbosity(void) {
+    return 0;
+}
+
+extern int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control,
+                                struct control_db *current_control, int command, int faulttolerance);
+
+static void free_value_list(struct value_db *value) {
+    while (value != NULL) {
+        struct value_db *next = value->next;
+        xmlFree(value->id);
+        xmlFree(value->name);
+        free(value);
+        value = next;
+    }
+}
+
+static xmlNodePtr get_element(xmlNodePtr root, const char *name) {
+    for (xmlNodePtr cur = root->children; cur != NULL; cur = cur->next) {
+        if (cur->type == XML_ELEMENT_NODE && xmlStrcmp(cur->name, BAD_CAST name) == 0) {
+            return cur;
+        }
+    }
+    return NULL;
+}
+
 static void assert_encoded(const char *input, const char *expected) {
     char *encoded = url_encode(input);
     assert(encoded != NULL);
@@ -69,16 +105,74 @@ static void test_build_issue_url_with_null_fields(void) {
     free(url);
 }
 
-static void test_monitor_value_width(void) {
-    struct value_db value = {0};
-    value.value = 40960;
-    assert(value.value == 40960);
+static void test_monitor_db_parses_16bit_value(void) {
+    const char *xml =
+        "<root>"
+        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
+        "  <mon_control><value id='gamma' value='40960'/></mon_control>"
+        "</root>";
+    xmlDocPtr doc = xmlReadMemory(xml, (int)strlen(xml), "regression.xml", NULL, XML_PARSE_NONET);
+    assert(doc != NULL);
+
+    xmlNodePtr root = xmlDocGetRootElement(doc);
+    assert(root != NULL);
+
+    struct control_db control = {0};
+    xmlNodePtr options = get_element(root, "options_control");
+    xmlNodePtr mon = get_element(root, "mon_control");
+    assert(options != NULL);
+    assert(mon != NULL);
+
+    int result = ddcci_get_value_list(options, mon, &control, 0, 0);
+    assert(result == 0);
+    assert(control.value_list != NULL);
+    assert(control.value_list->value == 40960);
+    assert(control.value_list->value != (40960 % 256));
+    assert(control.value_list->next == NULL);
+
+    free_value_list(control.value_list);
+    xmlFreeDoc(doc);
+}
+
+static void test_monitor_db_rejects_out_of_range_values(void) {
+    const char *xml_too_large =
+        "<root>"
+        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
+        "  <mon_control><value id='gamma' value='65536'/></mon_control>"
+        "</root>";
+    const char *xml_negative =
+        "<root>"
+        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
+        "  <mon_control><value id='gamma' value='-1'/></mon_control>"
+        "</root>";
+    const char *inputs[] = {xml_too_large, xml_negative};
+
+    for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++) {
+        xmlDocPtr doc = xmlReadMemory(inputs[i], (int)strlen(inputs[i]), "regression.xml", NULL, XML_PARSE_NONET);
+        assert(doc != NULL);
+
+        xmlNodePtr root = xmlDocGetRootElement(doc);
+        assert(root != NULL);
+
+        struct control_db control = {0};
+        xmlNodePtr options = get_element(root, "options_control");
+        xmlNodePtr mon = get_element(root, "mon_control");
+        assert(options != NULL);
+        assert(mon != NULL);
+
+        int result = ddcci_get_value_list(options, mon, &control, 0, 0);
+        assert(result < 0);
+        assert(control.value_list == NULL);
+
+        xmlFreeDoc(doc);
+    }
 }
 
 int main(void) {
     test_url_encode();
     test_build_issue_url_with_values();
     test_build_issue_url_with_null_fields();
-    test_monitor_value_width();
+    test_monitor_db_parses_16bit_value();
+    test_monitor_db_rejects_out_of_range_values();
     return 0;
 }
