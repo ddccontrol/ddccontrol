@@ -21,7 +21,6 @@
 #include "config.h"
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -83,6 +82,18 @@ static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
 int hide_unsupported_monitor_warning = 0;
+
+static gboolean parse_verbosity_option(const gchar *option_name, const gchar *value, gpointer data, GError **error)
+{
+	(void)option_name;
+	(void)value;
+	(void)error;
+
+	int *verbosity = (int*)data;
+	(*verbosity)++;
+
+	return TRUE;
+}
 
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
@@ -395,8 +406,16 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 
 int main( int argc, char *argv[] )
 { 
-	int i, verbosity = 0;
-	int argi;
+	int verbosity = 0;
+	GError *option_error = NULL;
+	GOptionContext *option_context = NULL;
+	const GOptionEntry option_entries[] = {
+		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
+		  "Hide unsupported monitor warning when using fallback profiles", NULL },
+		{ "verbose", 'v', 0, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
+		  "Increase verbosity (use multiple times for more output)", NULL },
+		{ NULL }
+	};
 	
 	mon = NULL;
 	monitor_manager = NULL;
@@ -410,31 +429,24 @@ int main( int argc, char *argv[] )
 	textdomain(PACKAGE);
 #endif
 
-	for (argi = 1; argi < argc; argi++) {
-		if (strcmp(argv[argi], "--hide-unsupported-warning") == 0) {
-			hide_unsupported_monitor_warning = 1;
-			memmove(&argv[argi], &argv[argi + 1], (size_t)(argc - argi) * sizeof(char *));
-			argc--;
-			argi--;
-		}
+	option_context = g_option_context_new(NULL);
+	g_option_context_add_main_entries(option_context, option_entries, PACKAGE);
+	g_option_context_add_group(option_context, gtk_get_option_group(TRUE));
+
+	if (!g_option_context_parse(option_context, &argc, &argv, &option_error)) {
+		fprintf(stderr, "%s\n", option_error->message);
+		g_error_free(option_error);
+		g_option_context_free(option_context);
+		return 1;
 	}
 
-	while ((i=getopt(argc,argv,"v")) >= 0)
-	{
-		switch(i) {
-		case 'v':
-			verbosity++;
-			break;
-		}
-	}
+	g_option_context_free(option_context);
 	
 	ddcci_verbosity(verbosity);
 
 	ddccontrol_proxy = ddcci_dbus_open_proxy();
 	if(ddccontrol_proxy == NULL)
 		return 1;
-
-	gtk_init(&argc, &argv);
 	
 	g_mutex_init(&combo_change_mutex);
 	
