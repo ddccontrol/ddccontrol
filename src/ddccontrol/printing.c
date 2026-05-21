@@ -51,7 +51,7 @@ void print_control_value(struct monitor *mon, unsigned char ctrl, unsigned short
 						controlname = control->name;
 						/* look for the value */
 						for (valued = control->value_list; (valued != NULL); valued = valued->next) {
-							if (valued->value == value) {
+							if (valued->value16 == value) {
 								valuename = valued->name;
 								break;
 							}
@@ -73,4 +73,3 @@ void print_control_value(struct monitor *mon, unsigned char ctrl, unsigned short
 		        ctrl, (result > 0) ? '+' : '-',  value, maximum, (mon != NULL && mon->caps.vcp[ctrl]) ? 'C' : ' ', controlname, valuename);
 	}
 }
-

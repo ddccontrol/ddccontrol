@@ -153,7 +153,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 							                                                           options_valuename,
 							                                                           options_valuename_owned);
 						                       });
-						current_value->value = (uint16_t)parsed_value;
+						current_value->value16 = (uint16_t)parsed_value;
+						current_value->value = (unsigned char)(current_value->value16 & 0xFF);
 						xmlFree(tmp);
 						
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 
@@ -324,6 +325,7 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 								current_value->id = xmlCharStrdup("default");
 								current_value->name = _D((char*)options_ctrlname);
 								current_value->value = 0x01;
+								current_value->value16 = 0x01;
 								current_value->next = NULL;
 								current_control->value_list = current_value;
 							}

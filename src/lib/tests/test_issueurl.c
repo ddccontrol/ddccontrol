@@ -113,8 +113,8 @@ static void test_monitor_db_parses_16bit_value(void) {
     int result = ddcci_get_value_list(options, mon, &control, 0, 0);
     assert(result == 0);
     assert(control.value_list != NULL);
-    assert(control.value_list->value == 40960);
-    assert(control.value_list->value != (40960 % 256));
+    assert(control.value_list->value16 == 40960);
+    assert(control.value_list->value == (40960 % 256));
     assert(control.value_list->next == NULL);
 
     free_value_list(control.value_list);

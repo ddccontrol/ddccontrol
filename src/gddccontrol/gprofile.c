@@ -390,7 +390,7 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 							tmp3 = NULL;
 							for (value_db = control->value_list; value_db != NULL; value_db = value_db->next)
 							{
-								if (value_db->value == profile->value[i])
+								if (value_db->value16 == profile->value[i])
 								{
 									tmp3 = g_strdup((gchar*)value_db->name);
 								}

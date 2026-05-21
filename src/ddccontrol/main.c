@@ -579,7 +579,7 @@ int main(int argc, char **argv)
 							}
 
 							for (; valued != NULL; valued = valued->next) {
-								printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value);
+								printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value16);
 							}
 
 							for (retry = RETRYS; retry; retry--) {

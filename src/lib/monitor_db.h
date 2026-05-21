@@ -61,9 +61,10 @@ typedef enum init_type InitType;
 struct value_db {
 	xmlChar* id;
 	xmlChar* name;
-	uint16_t value;
+	unsigned char value;
 	
 	struct value_db* next;
+	uint16_t value16;
 };
 typedef struct value_db ValueDB;
 
