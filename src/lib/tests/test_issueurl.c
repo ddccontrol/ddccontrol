@@ -9,17 +9,6 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-int ddcci_parse_caps(const char *caps_str, struct caps *caps, int add) {
-    (void)caps_str;
-    (void)caps;
-    (void)add;
-    return 1;
-}
-
-int get_verbosity(void) {
-    return 0;
-}
-
 extern int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control,
                                 struct control_db *current_control, int command, int faulttolerance);
 
