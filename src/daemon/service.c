@@ -71,13 +71,30 @@ static void rescan_monitors()
 	for (count = 0, current = monlist; current != NULL; current = current->next)
 		count += 1;
 
-	devices = malloc(sizeof(char *) * (count + 1));
-	supported = malloc(sizeof(char) * (count));
-	names = malloc(sizeof(char *) * (count + 1));
-	digital = malloc(sizeof(char) * (count));
+	devices      = malloc(sizeof(char *) * (count + 1));
+	supported    = malloc(sizeof(char) * (count));
+	names        = malloc(sizeof(char *) * (count + 1));
+	digital      = malloc(sizeof(char) * (count));
 	open_monitors = malloc(sizeof(struct monitor) * (count));
 	monitor_open = malloc(sizeof(gboolean) * (count));
-	monitor_ret = malloc(sizeof(int) * (count));
+	monitor_ret  = malloc(sizeof(int) * (count));
+
+	if (!devices || !supported || !names || !digital ||
+	    !open_monitors || !monitor_open || !monitor_ret) {
+		fprintf(stderr, _("rescan_monitors: memory allocation failed\n"));
+		free(devices);      devices = NULL;
+		free(supported);    supported = NULL;
+		free(names);        names = NULL;
+		free(digital);      digital = NULL;
+		free(open_monitors); open_monitors = NULL;
+		free(monitor_open); monitor_open = NULL;
+		free(monitor_ret);  monitor_ret = NULL;
+		ddcci_free_list(monlist);
+		monlist = NULL;
+		devices_count = 0;
+		return;
+	}
+
 	for (i = 0, current = monlist; current != NULL; current = current->next, i = i + 1) {
 		devices[i] = current->filename;
 		supported[i] = current->supported;
