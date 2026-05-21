@@ -12,15 +12,15 @@ html/*: main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml suppor
 	-$(TIDY) -q -raw -im html/*.html
 
 publish: all
-	rm -rf $(top_srcdir)/docs/doc/latest
-	$(MKDIR_P) $(top_srcdir)/docs/doc
-	cp -R html $(top_srcdir)/docs/doc/latest
+	rm -rf $(abs_top_builddir)/docs/doc/latest
+	$(MKDIR_P) $(abs_top_builddir)/docs/doc
+	cp -R html $(abs_top_builddir)/docs/doc/latest
 
 publish-release: all pdf
-	rm -rf $(top_srcdir)/docs/doc/$(VERSION)
-	$(MKDIR_P) $(top_srcdir)/docs/doc
-	cp -R html $(top_srcdir)/docs/doc/$(VERSION)
-	cp ddccontrol.pdf $(top_srcdir)/docs/doc/ddccontrol-$(VERSION).pdf
+	rm -rf $(abs_top_builddir)/docs/doc/$(VERSION)
+	$(MKDIR_P) $(abs_top_builddir)/docs/doc
+	cp -R html $(abs_top_builddir)/docs/doc/$(VERSION)
+	cp ddccontrol.pdf $(abs_top_builddir)/docs/doc/ddccontrol-$(VERSION).pdf
 
 spell:
 	$(ASPELL) --mode=sgml check main.xml
