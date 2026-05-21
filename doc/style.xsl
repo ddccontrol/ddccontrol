@@ -2,7 +2,7 @@
 <xsl:stylesheet  
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunk.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/xsl/current/xhtml/chunk.xsl"/>
 
 <xsl:param name="html.cellspacing" select="'2'"/>
 <xsl:param name="html.cellpadding" select="'5'"/>
