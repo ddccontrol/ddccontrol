@@ -10,7 +10,7 @@
 <!---<xsl:param name="html.stylesheet" select="'corpstyle.css'"/>-->
 <xsl:template name="user.footer.navigation">
 <hr/>
-<div align="left"><A href="https://ddccontrol.github.io/">DDCcontrol homepage</A></div>
+<div style="text-align: left;"><a href="https://ddccontrol.github.io/">DDCcontrol homepage</a></div>
 </xsl:template>
 
 <xsl:template match="sgmltag[@class='attvalue']">
