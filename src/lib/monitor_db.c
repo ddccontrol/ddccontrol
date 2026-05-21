@@ -376,8 +376,28 @@ int ddcci_create_db_protected(
 		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname);
 		return 0;
 	}
+	/* Treat missing monitor profile as unsupported monitor, not parser failure.
+	 * This avoids noisy libxml "failed to load external entity" warnings for ENOENT.
+	 */
+	if (access(buffer, R_OK) != 0) {
+		if (errno == ENOENT) {
+			fprintf(stderr, _("No database entry found for monitor ID %s.\n"), pnpname);
+			fprintf(stderr, _("This monitor is not yet supported by ddccontrol-db.\n"));
+			fprintf(stderr, _("Basic DDC communication may still work.\n"));
+		}
+		else {
+			fprintf(stderr, _("Unable to access monitor database file %s: %s.\n"), buffer, strerror(errno));
+		}
+		return 0;
+	}
+
+	errno = 0;
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
+		if (errno != 0) {
+			fprintf(stderr, _("I/O error while reading monitor database file %s: %s.\n"), buffer, strerror(errno));
+			return 0;
+		}
 		fprintf(stderr, _("Document not parsed successfully.\n"));
 		return 0;
 	}

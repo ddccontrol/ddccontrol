@@ -93,7 +93,7 @@ static void usage(char *name)
 	            "\t-W : relatively change ctrl value (+/-)\n"
 	            "\t-t : toggle ctrl value between value1 and value2\n"
 	            "\t-f : force (avoid validity checks)\n"
-	            "\t-s : save settings\n"
+	            "\t-s : ask the monitor to save current settings (if supported)\n"
 	            "\t-v : verbosity (specify more to increase)\n"
 	            "\t-b : ddccontrol-db directory (if other than %s)\n"
 	            "\t-l : load values from XML profile file\n"
