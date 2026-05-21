@@ -121,7 +121,7 @@ static void test_monitor_db_parses_16bit_value(void) {
     xmlFreeDoc(doc);
 }
 
-static void test_monitor_db_rejects_out_of_range_values(void) {
+static void test_monitor_db_rejects_invalid_values(void) {
     const char *xml_too_large =
         "<root>"
         "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
@@ -132,7 +132,12 @@ static void test_monitor_db_rejects_out_of_range_values(void) {
         "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
         "  <mon_control><value id='gamma' value='-1'/></mon_control>"
         "</root>";
-    const char *inputs[] = {xml_too_large, xml_negative};
+    const char *xml_missing_id =
+        "<root>"
+        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
+        "  <mon_control><value value='40960'/></mon_control>"
+        "</root>";
+    const char *inputs[] = {xml_too_large, xml_negative, xml_missing_id};
 
     for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++) {
         xmlDocPtr doc = xmlReadMemory(inputs[i], (int)strlen(inputs[i]), "regression.xml", NULL, XML_PARSE_NONET);
@@ -160,6 +165,6 @@ int main(void) {
     test_build_issue_url_with_values();
     test_build_issue_url_with_null_fields();
     test_monitor_db_parses_16bit_value();
-    test_monitor_db_rejects_out_of_range_values();
+    test_monitor_db_rejects_invalid_values();
     return 0;
 }

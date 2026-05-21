@@ -124,6 +124,11 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"value"))) {
 					mon_valueid = xmlGetProp(cur, BAD_CAST "id");
+					DDCCI_DB_RETURN_IF_RUN(mon_valueid == NULL, -1, _("Can't find id property."), cur, {
+						ddcci_free_pending_value_parse(NULL, mon_valueid, current_value, matchedvalues,
+						                               options_valueid, options_valuename,
+						                               options_valuename_owned);
+					});
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
 						current_value->id   = xmlStrdup(options_valueid);
 						current_value->name = _D((char*)options_valuename);
