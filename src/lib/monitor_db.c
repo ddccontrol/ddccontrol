@@ -70,7 +70,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	}
 	
 	matchedvalues = malloc((nvalues+1)*sizeof(char)); /* Will not be freed on error, no problem */
-	memset(matchedvalues, 0, nvalues*sizeof(char));
+	memset(matchedvalues, 0, (nvalues+1)*sizeof(char));
 	
 	struct value_db *current_value = malloc(sizeof(struct value_db));
 	struct value_db **last_value_ref = &current_control->value_list;
