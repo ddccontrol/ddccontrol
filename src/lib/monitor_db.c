@@ -49,6 +49,23 @@ xmlDocPtr options_doc = NULL;
 
 int get_verbosity(); /* Defined in ddcci.c */
 
+static void ddcci_free_pending_value_parse(xmlChar *tmp, xmlChar *mon_valueid, struct value_db *current_value,
+                                           char *matchedvalues, xmlChar *options_valueid,
+                                           xmlChar *options_valuename, int options_valuename_owned) {
+	xmlFree(tmp);
+	xmlFree(mon_valueid);
+	if (current_value) {
+		xmlFree(current_value->id);
+		xmlFree(current_value->name);
+		free(current_value);
+	}
+	free(matchedvalues);
+	xmlFree(options_valueid);
+	if (options_valuename_owned) {
+		xmlFree(options_valuename);
+	}
+}
+
 /* End of CAPS structs/functions */
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
@@ -84,6 +101,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			options_valueid   = xmlGetProp(value, BAD_CAST "id");
 			DDCCI_DB_RETURN_IF(options_valueid == NULL, -1, _("Can't find id property."), value);
 			options_valuename = xmlGetProp(value, BAD_CAST "name");
+			int options_valuename_owned = options_valuename != NULL;
 			if (command) {
 				if (options_valuename == NULL) {
 					options_valuename = current_control->name;
@@ -113,35 +131,22 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						tmp = xmlGetProp(cur, BAD_CAST "value");
 						
 						DDCCI_DB_RETURN_IF_RUN(tmp == NULL, -1, _("Can't find value property."), cur, {
-							xmlFree(mon_valueid);
-							xmlFree(current_value->id);
-							xmlFree(current_value->name);
-							free(current_value);
-							free(matchedvalues);
-							xmlFree(options_valueid);
-							xmlFree(options_valuename);
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, matchedvalues,
+							                               options_valueid, options_valuename,
+							                               options_valuename_owned);
 						});
 						long parsed_value = strtol((char*)tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF_RUN(*endptr != 0, -1, _("Can't convert value to int."), cur, {
-							xmlFree(tmp);
-							xmlFree(mon_valueid);
-							xmlFree(current_value->id);
-							xmlFree(current_value->name);
-							free(current_value);
-							free(matchedvalues);
-							xmlFree(options_valueid);
-							xmlFree(options_valuename);
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, matchedvalues,
+							                               options_valueid, options_valuename,
+							                               options_valuename_owned);
 						});
 						DDCCI_DB_RETURN_IF_RUN((parsed_value < 0) || (parsed_value > UINT16_MAX), -1,
 						                       _("Value is outside the supported 0-65535 range."), cur, {
-							                       xmlFree(tmp);
-							                       xmlFree(mon_valueid);
-							                       xmlFree(current_value->id);
-							                       xmlFree(current_value->name);
-							                       free(current_value);
-							                       free(matchedvalues);
-							                       xmlFree(options_valueid);
-							                       xmlFree(options_valuename);
+							                       ddcci_free_pending_value_parse(tmp, mon_valueid, current_value,
+							                                                           matchedvalues, options_valueid,
+							                                                           options_valuename,
+							                                                           options_valuename_owned);
 						                       });
 						current_value->value = (uint16_t)parsed_value;
 						xmlFree(tmp);
@@ -168,7 +173,9 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			}
 
 			xmlFree(options_valueid);
-			xmlFree(options_valuename);
+			if (options_valuename_owned) {
+				xmlFree(options_valuename);
+			}
 		}
 		
 		value = value->next;
