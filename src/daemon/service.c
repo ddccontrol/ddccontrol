@@ -82,13 +82,20 @@ static void rescan_monitors()
 	if (!devices || !supported || !names || !digital ||
 	    !open_monitors || !monitor_open || !monitor_ret) {
 		fprintf(stderr, _("rescan_monitors: memory allocation failed\n"));
-		free(devices);      devices = NULL;
-		free(supported);    supported = NULL;
-		free(names);        names = NULL;
-		free(digital);      digital = NULL;
-		free(open_monitors); open_monitors = NULL;
-		free(monitor_open); monitor_open = NULL;
-		free(monitor_ret);  monitor_ret = NULL;
+		free(devices);
+		devices = NULL;
+		free(supported);
+		supported = NULL;
+		free(names);
+		names = NULL;
+		free(digital);
+		digital = NULL;
+		free(open_monitors);
+		open_monitors = NULL;
+		free(monitor_open);
+		monitor_open = NULL;
+		free(monitor_ret);
+		monitor_ret = NULL;
 		ddcci_free_list(monlist);
 		monlist = NULL;
 		devices_count = 0;
