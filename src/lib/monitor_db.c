@@ -49,16 +49,33 @@ xmlDocPtr options_doc = NULL;
 
 int get_verbosity(); /* Defined in ddcci.c */
 
+static void ddcci_free_value_db_entry(struct value_db *value)
+{
+	if (value) {
+		xmlFree(value->id);
+		xmlFree(value->name);
+		ddcci_value_db_free(value);
+	}
+}
+
+static void ddcci_free_value_db_list(struct value_db *value)
+{
+	while (value) {
+		struct value_db *next = value->next;
+		ddcci_free_value_db_entry(value);
+		value = next;
+	}
+}
+
 static void ddcci_free_pending_value_parse(xmlChar *tmp, xmlChar *mon_valueid, struct value_db *current_value,
-                                           char *matchedvalues, xmlChar *options_valueid,
-                                           xmlChar *options_valuename, int options_valuename_owned) {
+                                           struct value_db *parsed_values, char *matchedvalues,
+                                           xmlChar *options_valueid, xmlChar *options_valuename,
+                                           int options_valuename_owned)
+{
 	xmlFree(tmp);
 	xmlFree(mon_valueid);
-	if (current_value) {
-		xmlFree(current_value->id);
-		xmlFree(current_value->name);
-		ddcci_value_db_free(current_value);
-	}
+	ddcci_free_value_db_entry(current_value);
+	ddcci_free_value_db_list(parsed_values);
 	free(matchedvalues);
 	xmlFree(options_valueid);
 	if (options_valuename_owned) {
@@ -87,18 +104,23 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 		cur = cur->next;
 	}
 	
-	matchedvalues = malloc((nvalues+1)*sizeof(char)); /* Will not be freed on error, no problem */
+	matchedvalues = malloc((nvalues+1)*sizeof(char));
 	memset(matchedvalues, 0, nvalues*sizeof(char));
 	
 	struct value_db *current_value = ddcci_value_db_new();
-	struct value_db **last_value_ref = &current_control->value_list;
+	struct value_db *parsed_values = NULL;
+	struct value_db **last_value_ref = &parsed_values;
 	
 	value = options_control->xmlChildrenNode;
 	while (value != NULL)
 	{
 		if (!xmlStrcmp(value->name, (const xmlChar *) "value")) {
 			options_valueid   = xmlGetProp(value, BAD_CAST "id");
-			DDCCI_DB_RETURN_IF(options_valueid == NULL, -1, _("Can't find id property."), value);
+			options_valuename = NULL;
+			DDCCI_DB_RETURN_IF_RUN(options_valueid == NULL, -1, _("Can't find id property."), value, {
+				ddcci_free_pending_value_parse(NULL, NULL, current_value, parsed_values, matchedvalues,
+				                               options_valueid, options_valuename, 0);
+			});
 			options_valuename = xmlGetProp(value, BAD_CAST "name");
 			int options_valuename_owned = options_valuename != NULL;
 			if (command) {
@@ -107,7 +129,11 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				}
 			}
 			else {
-				DDCCI_DB_RETURN_IF(options_valuename == NULL, -1, _("Can't find name property."), value);
+				DDCCI_DB_RETURN_IF_RUN(options_valuename == NULL, -1, _("Can't find name property."), value, {
+					ddcci_free_pending_value_parse(NULL, NULL, current_value, parsed_values, matchedvalues,
+					                               options_valueid, options_valuename,
+					                               options_valuename_owned);
+				});
 			}
 			
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
@@ -124,7 +150,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"value"))) {
 					mon_valueid = xmlGetProp(cur, BAD_CAST "id");
 					DDCCI_DB_RETURN_IF_RUN(mon_valueid == NULL, -1, _("Can't find id property."), cur, {
-						ddcci_free_pending_value_parse(NULL, mon_valueid, current_value, matchedvalues,
+						ddcci_free_pending_value_parse(NULL, mon_valueid, current_value, parsed_values, matchedvalues,
 						                               options_valueid, options_valuename,
 						                               options_valuename_owned);
 					});
@@ -135,20 +161,21 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						tmp = xmlGetProp(cur, BAD_CAST "value");
 						
 						DDCCI_DB_RETURN_IF_RUN(tmp == NULL, -1, _("Can't find value property."), cur, {
-							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, matchedvalues,
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, parsed_values, matchedvalues,
 							                               options_valueid, options_valuename,
 							                               options_valuename_owned);
 						});
 						long parsed_value = strtol((char*)tmp, &endptr, 0);
 						DDCCI_DB_RETURN_IF_RUN(*endptr != 0, -1, _("Can't convert value to int."), cur, {
-							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, matchedvalues,
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, parsed_values, matchedvalues,
 							                               options_valueid, options_valuename,
 							                               options_valuename_owned);
 						});
 						DDCCI_DB_RETURN_IF_RUN((parsed_value < 0) || (parsed_value > UINT16_MAX), -1,
 						                       _("Value is outside the supported 0-65535 range."), cur, {
 							                       ddcci_free_pending_value_parse(tmp, mon_valueid, current_value,
-							                                                           matchedvalues, options_valueid,
+							                                                           parsed_values, matchedvalues,
+							                                                           options_valueid,
 							                                                           options_valuename,
 							                                                           options_valuename_owned);
 						                       });
@@ -192,8 +219,12 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				tmp = xmlGetProp(cur, BAD_CAST "id");
 				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
 				xmlFree(tmp);
-				if (!faulttolerance)
+				if (!faulttolerance) {
+					ddcci_free_value_db_list(parsed_values);
+					ddcci_value_db_free(current_value);
+					free(matchedvalues);
 					return -1;
+				}
 			}
 			i++;
 		}
@@ -202,6 +233,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	
 	free(matchedvalues);
 	ddcci_value_db_free(current_value);
+	current_control->value_list = parsed_values;
 	
 	return 0;
 }
