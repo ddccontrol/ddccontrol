@@ -1,7 +1,7 @@
-[![Build Status][travis-badge]][travis]
+[![Build Status][ci-badge]][ci]
 
-[travis-badge]: https://travis-ci.org/ddccontrol/ddccontrol.svg?branch=master
-[travis]: https://travis-ci.org/ddccontrol/ddccontrol
+[ci-badge]: https://github.com/ddccontrol/ddccontrol/actions/workflows/ci.yml/badge.svg?branch=master
+[ci]: https://github.com/ddccontrol/ddccontrol/actions/workflows/ci.yml
 
 
 # DDC/CI control
