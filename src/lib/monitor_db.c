@@ -444,7 +444,8 @@ int ddcci_create_db_protected(
 		return 0;
 	}
 	
-	if (snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname) >= 256) {
+	int path_len = snprintf(buffer, sizeof(buffer), "%s/monitor/%s.xml", datadir, pnpname);
+	if (path_len < 0 || path_len >= (int)sizeof(buffer)) {
 		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname);
 		return 0;
 	}
