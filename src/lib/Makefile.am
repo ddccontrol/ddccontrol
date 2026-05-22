@@ -19,7 +19,6 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
    monitor_db_internal.h
 
 libddccontrol_la_LIBADD = $(LIBXML2_LIBS)
-libddccontrol_la_LDFLAGS = -version-info 1:0:0
 
 check_PROGRAMS = test_issueurl
 TESTS = $(check_PROGRAMS)

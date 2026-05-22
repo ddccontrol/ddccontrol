@@ -23,8 +23,6 @@
 
 #include "ddcci.h"
 
-#include <stdint.h>
-
 #include <libxml/xmlstring.h>
 
 /* Current database version */
@@ -64,7 +62,6 @@ struct value_db {
 	unsigned char value;
 	
 	struct value_db* next;
-	uint16_t value16;
 };
 typedef struct value_db ValueDB;
 

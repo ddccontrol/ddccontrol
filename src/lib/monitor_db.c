@@ -90,9 +90,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	matchedvalues = malloc((nvalues+1)*sizeof(char)); /* Will not be freed on error, no problem */
 	memset(matchedvalues, 0, nvalues*sizeof(char));
 	
-	struct value_db *current_value = malloc(sizeof(struct value_db));
+	struct value_db *current_value = ddcci_value_db_new();
 	struct value_db **last_value_ref = &current_control->value_list;
-	memset(current_value, 0, sizeof(struct value_db));
 	
 	value = options_control->xmlChildrenNode;
 	while (value != NULL)
@@ -153,8 +152,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 							                                                           options_valuename,
 							                                                           options_valuename_owned);
 						                       });
-						current_value->value16 = (uint16_t)parsed_value;
-						current_value->value = (unsigned char)(current_value->value16 & 0xFF);
+						ddcci_value_db_set_value16(current_value, (uint16_t)parsed_value);
 						xmlFree(tmp);
 						
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 
@@ -162,8 +160,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						
 						*last_value_ref = current_value;
 						last_value_ref = &current_value->next;
-						current_value = malloc(sizeof(struct value_db));
-						memset(current_value, 0, sizeof(struct value_db));
+						current_value = ddcci_value_db_new();
 						
 						matchedvalues[i] = 1;
 						
@@ -321,11 +318,10 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 								return 0;
 							}
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
-								struct value_db *current_value = malloc(sizeof(struct value_db));
+								struct value_db *current_value = ddcci_value_db_new();
 								current_value->id = xmlCharStrdup("default");
 								current_value->name = _D((char*)options_ctrlname);
-								current_value->value = 0x01;
-								current_value->value16 = 0x01;
+								ddcci_value_db_set_value16(current_value, 0x01);
 								current_value->next = NULL;
 								current_control->value_list = current_value;
 							}

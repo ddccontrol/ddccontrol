@@ -21,6 +21,7 @@
 #include "config.h"
 #include "gui.h"
 #include "internal.h"
+#include "monitor_db_internal.h"
 
 #include <string.h>
 
@@ -390,7 +391,7 @@ static GtkWidget* create_info_tree(struct profile* profile, GtkWidget* dialog)
 							tmp3 = NULL;
 							for (value_db = control->value_list; value_db != NULL; value_db = value_db->next)
 							{
-								if (value_db->value16 == profile->value[i])
+								if (ddcci_value_db_value16(value_db) == profile->value[i])
 								{
 									tmp3 = g_strdup((gchar*)value_db->name);
 								}

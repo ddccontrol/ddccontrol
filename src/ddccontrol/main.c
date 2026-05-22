@@ -25,6 +25,7 @@
 #include "ddcci.h"
 #include "internal.h"
 #include "monitor_db.h"
+#include "monitor_db_internal.h"
 #include "conf.h"
 #include "issueurl.h"
 
@@ -579,7 +580,8 @@ int main(int argc, char **argv)
 							}
 
 							for (; valued != NULL; valued = valued->next) {
-								printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value16);
+								printf(_("\t\t\t> id=%s - name=%s, value=%u\n"), valued->id, valued->name,
+								       (unsigned int)ddcci_value_db_value16(valued));
 							}
 
 							for (retry = RETRYS; retry; retry--) {

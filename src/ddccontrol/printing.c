@@ -24,6 +24,7 @@
 #include "config.h"
 #include "internal.h"
 #include "monitor_db.h"
+#include "monitor_db_internal.h"
 
 #include <stdio.h>
 
@@ -51,7 +52,7 @@ void print_control_value(struct monitor *mon, unsigned char ctrl, unsigned short
 						controlname = control->name;
 						/* look for the value */
 						for (valued = control->value_list; (valued != NULL); valued = valued->next) {
-							if (valued->value16 == value) {
+							if (ddcci_value_db_value16(valued) == value) {
 								valuename = valued->name;
 								break;
 							}
