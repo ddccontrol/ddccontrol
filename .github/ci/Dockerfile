@@ -16,4 +16,9 @@ RUN apt-get update \
         libpci-dev \
         libxml2-dev \
         pkg-config \
+        xsltproc \
+        tidy \
+        docbook-xml \
+        docbook-xsl \
+        xml-core \
     && rm -rf /var/lib/apt/lists/*
