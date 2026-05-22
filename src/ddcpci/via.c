@@ -1,11 +1,11 @@
 /*
     ddc/ci direct PCI memory interface for VIA Unichrome cards
 
-    Based on nvidia.c and via_i2c  from the openchrome Project openchrome@sourceforge.net
+    Based on nvidia.c and via_i2c from the OpenChrome project
     and the savagefb-i2c.c from the Kernel sources
 
     Copyright 2006 Johannes Deisenhofer j.deisenhofer@tomorrow-focus.de
-    Copyright 2004 The Unichrome Project  [unichrome.sf.net]
+    Copyright 2004 The Unichrome Project
     Copyright 1998-2003 VIA Technologies, Inc. All Rights Reserved.
     Copyright 2001-2003 S3 Graphics, Inc. All Rights Reserved.
     Copyright 2004 Nicolas Boichat (nicolas@boichat.ch)
@@ -220,4 +220,3 @@ void via_close(struct card* via_card)
 	
 	free(via_card);
 }
-
