@@ -528,7 +528,7 @@ int ddcci_create_db_protected(
 			}
 			
 			matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
-			memset(matchedcontrols, 0, ncontrols*sizeof(char));
+			memset(matchedcontrols, 0, (ncontrols+1)*sizeof(char));
 			
 			/*printf("Filling struct...\n");*/
 			
