@@ -57,7 +57,7 @@ static void ddcci_free_pending_value_parse(xmlChar *tmp, xmlChar *mon_valueid, s
 	if (current_value) {
 		xmlFree(current_value->id);
 		xmlFree(current_value->name);
-		free(current_value);
+		ddcci_value_db_free(current_value);
 	}
 	free(matchedvalues);
 	xmlFree(options_valueid);
@@ -201,7 +201,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	}
 	
 	free(matchedvalues);
-	free(current_value);
+	ddcci_value_db_free(current_value);
 	
 	return 0;
 }
@@ -721,7 +721,7 @@ void ddcci_free_db(struct monitor_db* monitor)
 					
 					ovalue = value;
 					value = ovalue->next;
-					free(ovalue);
+					ddcci_value_db_free(ovalue);
 				}
 				
 				ocontrol = control;

@@ -44,6 +44,13 @@ static inline struct value_db *ddcci_value_db_new(void)
 	return value ? &value->public_value : NULL;
 }
 
+static inline void ddcci_value_db_free(struct value_db *value)
+{
+	if (value) {
+		free(ddcci_value_db_private_from_public(value));
+	}
+}
+
 static inline uint16_t ddcci_value_db_value16(const struct value_db *value)
 {
 	return ddcci_value_db_private_from_const_public(value)->value16;

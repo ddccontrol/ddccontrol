@@ -15,7 +15,7 @@ static void free_value_list(struct value_db *value) {
         struct value_db *next = value->next;
         xmlFree(value->id);
         xmlFree(value->name);
-        free(value);
+        ddcci_value_db_free(value);
         value = next;
     }
 }
