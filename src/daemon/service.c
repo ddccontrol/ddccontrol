@@ -19,6 +19,7 @@
 
 #include "interface.h"
 
+#include <glib-object.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
@@ -399,6 +400,10 @@ int check_or_load_i2c_dev()
 int main(void)
 {
 	GMainLoop *loop;
+
+#if !GLIB_CHECK_VERSION(2, 36, 0)
+	g_type_init();
+#endif
 
 	if (check_or_load_i2c_dev() == FALSE) {
 		fprintf(stderr, _("Kernel module i2c_dev isn't available, functionality might be limited, or unavailable...\n"));
