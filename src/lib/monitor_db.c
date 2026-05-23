@@ -105,7 +105,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	}
 	
 	matchedvalues = malloc((nvalues+1)*sizeof(char));
-	memset(matchedvalues, 0, nvalues*sizeof(char));
+	memset(matchedvalues, 0, (nvalues+1)*sizeof(char));
 	
 	struct value_db *current_value = ddcci_value_db_new();
 	struct value_db *parsed_values = NULL;
@@ -600,7 +600,7 @@ int ddcci_create_db_protected(
 			}
 			
 			matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
-			memset(matchedcontrols, 0, ncontrols*sizeof(char));
+			memset(matchedcontrols, 0, (ncontrols+1)*sizeof(char));
 			
 			/*printf("Filling struct...\n");*/
 			
