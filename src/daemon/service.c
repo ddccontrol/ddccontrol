@@ -48,7 +48,7 @@ static int *monitor_ret = NULL;
 
 static void rescan_monitors()
 {
-	int i, count;
+	int i, count, alloc_count;
 	struct monitorlist *current;
 
 	if (monlist != NULL) {
@@ -70,14 +70,15 @@ static void rescan_monitors()
 	monlist = ddcci_probe();
 	for (count = 0, current = monlist; current != NULL; current = current->next)
 		count += 1;
+	alloc_count = count > 0 ? count : 1;
 
 	devices      = malloc(sizeof(char *) * (count + 1));
-	supported    = malloc(sizeof(char) * (count));
+	supported    = malloc(sizeof(char) * alloc_count);
 	names        = malloc(sizeof(char *) * (count + 1));
-	digital      = malloc(sizeof(char) * (count));
-	open_monitors = malloc(sizeof(struct monitor) * (count));
-	monitor_open = malloc(sizeof(gboolean) * (count));
-	monitor_ret  = malloc(sizeof(int) * (count));
+	digital      = malloc(sizeof(char) * alloc_count);
+	open_monitors = malloc(sizeof(struct monitor) * alloc_count);
+	monitor_open = malloc(sizeof(gboolean) * alloc_count);
+	monitor_ret  = malloc(sizeof(int) * alloc_count);
 
 	if (!devices || !supported || !names || !digital ||
 	    !open_monitors || !monitor_open || !monitor_ret) {
