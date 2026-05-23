@@ -1365,6 +1365,10 @@ int ddcci_create_config_dir()
 	struct stat buf;
 	
 	home     = getenv("HOME");
+	if ((home == NULL) || (home[0] == '\0')) {
+		fprintf(stderr, _("Cannot get home directory (HOME is unset or empty)\n"));
+		return 0;
+	}
 	trailing = (home[strlen(home)-1] == '/');
 	
 	len = strlen(home) + 32;
