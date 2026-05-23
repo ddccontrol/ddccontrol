@@ -120,7 +120,7 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
-		char buffer[7];
+		char buffer[8]; /* 3 chars (pnpid) + 3 chars (suffix) + 1 null terminator + 1 for safety */
 		buffer[0] = 0;
 		strncat(buffer, mon->pnpid, 3); /* copy manufacturer id */
 		switch (mon->caps.type) {

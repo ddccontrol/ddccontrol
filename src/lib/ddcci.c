@@ -1022,7 +1022,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
-		char buffer[7];
+		char buffer[8]; /* 3 chars (pnpid) + 3 chars (suffix) + 1 null terminator + 1 for safety */
 		buffer[0] = 0;
 		strncat(buffer, mon->pnpid, 3); /* copy manufacturer id */
 		switch(mon->caps.type) {
