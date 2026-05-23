@@ -29,24 +29,19 @@ Release Check List (Nicolas Boichat)
 
 - in doc/: make publish publish-release
 - ./commit.sh "Prepare release 0.xx"
-- svn cp https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol/trunk/ddccontrol https://ddccontrol.svn.sourceforge.net/svnroot/ddccontrol/tags/ddccontrol-0.xx -m "Tag release 0.xx"
+- git tag -a ddccontrol-0.xx -m "Tag release 0.xx"
 
 - make dist-bzip2
-- ftp upload.sourceforge.net:
-  - cd incoming
-  - bin
-  - put ddccontrol-0.x.tar.bz2
-- add file to SF
+- upload ddccontrol-0.x.tar.bz2 to the GitHub release
 
 - update website :
-  - Update website.xml news
-  - Update layout.xml
-  - Add old doc to archives
-  - ./commit.sh
+  - Update news in the ddccontrol.github.io repository
+  - Add old generated docs to the website archives
+  - commit the website update
 
-- Send a message to the lists
+- Announce the release on GitHub
 
-- update FreshMeat infos
+- update external release trackers, if any
 
 - update Gentoo ebuild
 

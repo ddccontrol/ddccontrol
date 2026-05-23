@@ -25,6 +25,7 @@
 #include "ddcci.h"
 #include "internal.h"
 #include "monitor_db.h"
+#include "monitor_db_internal.h"
 #include "conf.h"
 #include "issueurl.h"
 
@@ -93,7 +94,7 @@ static void usage(char *name)
 	            "\t-W : relatively change ctrl value (+/-)\n"
 	            "\t-t : toggle ctrl value between value1 and value2\n"
 	            "\t-f : force (avoid validity checks)\n"
-	            "\t-s : save settings\n"
+	            "\t-s : ask the monitor to save current settings (if supported)\n"
 	            "\t-v : verbosity (specify more to increase)\n"
 	            "\t-b : ddccontrol-db directory (if other than %s)\n"
 	            "\t-l : load values from XML profile file\n"
@@ -579,7 +580,8 @@ int main(int argc, char **argv)
 							}
 
 							for (; valued != NULL; valued = valued->next) {
-								printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value);
+								printf(_("\t\t\t> id=%s - name=%s, value=%u\n"), valued->id, valued->name,
+								       (unsigned int)ddcci_value_db_value16(valued));
 							}
 
 							for (retry = RETRYS; retry; retry--) {

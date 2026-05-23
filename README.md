@@ -1,7 +1,7 @@
-[![Build Status][travis-badge]][travis]
+[![Build Status][ci-badge]][ci]
 
-[travis-badge]: https://travis-ci.org/ddccontrol/ddccontrol.svg?branch=master
-[travis]: https://travis-ci.org/ddccontrol/ddccontrol
+[ci-badge]: https://github.com/ddccontrol/ddccontrol/actions/workflows/ci.yml/badge.svg?branch=master
+[ci]: https://github.com/ddccontrol/ddccontrol/actions/workflows/ci.yml
 
 
 # DDC/CI control
@@ -94,6 +94,9 @@ To set value of control `0x10` (brightness on VESA compliant monitors) to `75` f
 
 ```shell
 sudo ddccontrol -r 0x10 -w 75 dev:/dev/i2c-4
+
+# Save current monitor settings to non-volatile memory (if supported)
+sudo ddccontrol -r 0x10 -w 75 -s dev:/dev/i2c-4
 ```
 
 See `ddccontrol -h` for more information.

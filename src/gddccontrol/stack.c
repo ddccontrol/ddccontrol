@@ -30,6 +30,7 @@
 
 #include "gui.h"
 #include "internal.h"
+#include "monitor_db_internal.h"
 
 #include "daemon/dbus_client.h"
 	
@@ -154,7 +155,7 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 		
 		if ((control) && (control->type == list)) {
 			struct value_db *value = (struct value_db*)g_object_get_data(G_OBJECT(widget), "ddc_value");
-			unsigned short val = value->value;
+			unsigned short val = ddcci_value_db_value16(value);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), (long)nval == val);
 		}
 		return;
@@ -228,7 +229,7 @@ static void group_callback(GtkWidget *widget, gpointer data)
 	unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(parent),"ddc_default");
 	
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		unsigned short val = value->value;
+		unsigned short val = ddcci_value_db_value16(value);
 		
 #if 0
 		printf("Would change %#x to %#x\n", currentControl->address, val);
@@ -254,7 +255,7 @@ static void command_callback(GtkWidget *widget, gpointer data)
 	
 	unsigned short val;
 	
-	val = value->value;
+	val = ddcci_value_db_value16(value);
 	
 #if 0
 	printf("Would change %#x to %#x\n", currentControl->address, val);
@@ -418,7 +419,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				for (value = control->value_list; value != NULL; value = value->next)
 				{
 					GtkWidget* radio = gtk_radio_button_new_with_label(group, (char*)value->name);
-					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (value->value == currentDefault));
+					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (ddcci_value_db_value16(value) == currentDefault));
 					g_object_set_data(G_OBJECT(radio), "ddc_value", value);
 					gtk_widget_show(radio);
 					gtk_box_pack_start(GTK_BOX(widget), radio, TRUE, TRUE, 0);
