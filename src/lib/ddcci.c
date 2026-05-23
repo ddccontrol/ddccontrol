@@ -875,8 +875,10 @@ int ddcci_caps(struct monitor* mon)
 		last_substr += len;
 	}
 	
-	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
-	
+	if (ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1) < 0) {
+		return -1;
+	}
+
 	return bufferpos;
 }
 
