@@ -51,13 +51,14 @@ static char* get_monitorlist_filename() {
 	int len, ret;
 	char* home;
 	
-	ddcci_create_config_dir();
-	
 	home = getenv("HOME");
-	if (home == NULL) {
+	if ((home == NULL) || (home[0] == '\0')) {
 		fprintf(stderr, _("Cannot get home directory (HOME is not set)\n"));
 		return NULL;
 	}
+	
+	ddcci_create_config_dir();
+	
 	trailing = (home[strlen(home)-1] == '/');
 	
 	len = strlen(home) + 64;
@@ -255,7 +256,7 @@ struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* a
 	time_t tm = time(NULL);
 	len      = strftime(&date[0], 32, "%Y%m%d-%H%M%S", localtime(&tm));
 	home = getenv("HOME");
-	if (home == NULL) {
+	if ((home == NULL) || (home[0] == '\0')) {
 		fprintf(stderr, _("Cannot get home directory (HOME is not set)\n"));
 		ddcci_free_profile(profile);
 		return 0;
@@ -310,7 +311,7 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 	struct profile* profile;
 	
 	home = getenv("HOME");
-	if (home == NULL) {
+	if ((home == NULL) || (home[0] == '\0')) {
 		fprintf(stderr, _("Cannot get home directory (HOME is not set)\n"));
 		return 0;
 	}
