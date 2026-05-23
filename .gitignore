@@ -60,6 +60,9 @@
 /src/lib/test_issueurl
 /src/lib/test_issueurl.log
 /src/lib/test_issueurl.trs
+/src/lib/test_parse_caps
+/src/lib/test_parse_caps.log
+/src/lib/test_parse_caps.trs
 /src/stamp-h1
 Makefile
 Makefile.in

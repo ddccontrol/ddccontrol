@@ -706,7 +706,15 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				buf[2] = 0;
 				ind = strtol(buf, &endptr, 16);
 				if (*endptr != 0) {
-					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
 					return -1;
 				}
 				if (add) {
@@ -721,14 +729,46 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 			}
 			else if ((svcp == 1) && (level == 3)) {
 				i = 0;
-				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
+				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')') && (caps_str[pos+i] != 0)) {
+					if (i >= (int)sizeof(buf) - 1) {
+						fprintf(stderr, _("CAPS token too long, invalid CAPS (pos=%d).\n"), pos);
+						int _ci;
+						for (_ci = 0; _ci < 256; _ci++) {
+							if (caps->vcp[_ci]) {
+								free(caps->vcp[_ci]->values);
+								free(caps->vcp[_ci]);
+								caps->vcp[_ci] = NULL;
+							}
+						}
+						return -1;
+					}
 					buf[i] = caps_str[pos+i];
 					i++;
+				}
+				if (caps_str[pos+i] == 0) {
+					fprintf(stderr, _("Invalid CAPS, unexpected end of string at pos=%d.\n"), pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
+					return -1;
 				}
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
 				if (*endptr != 0) {
-					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
 					return -1;
 				}
 				if (add) {
@@ -867,8 +907,12 @@ int ddcci_caps(struct monitor* mon)
 		last_substr += len;
 	}
 	
-	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
-	
+	if (ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1) < 0) {
+		free(mon->caps.raw_caps);
+		mon->caps.raw_caps = NULL;
+		return -1;
+	}
+
 	return bufferpos;
 }
 

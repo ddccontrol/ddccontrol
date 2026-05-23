@@ -20,8 +20,11 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
 
 libddccontrol_la_LIBADD = $(LIBXML2_LIBS)
 
-check_PROGRAMS = test_issueurl
+check_PROGRAMS = test_issueurl test_parse_caps
 TESTS = $(check_PROGRAMS)
 
 test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
 test_issueurl_LDADD = libddccontrol.la $(LIBXML2_LIBS)
+
+test_parse_caps_SOURCES = tests/test_parse_caps.c
+test_parse_caps_LDADD = libddccontrol.la $(LIBXML2_LIBS)
