@@ -85,6 +85,26 @@ static void ddcci_free_pending_value_parse(xmlChar *tmp, xmlChar *mon_valueid, s
 
 /* End of CAPS structs/functions */
 
+static int ddcci_is_valid_monitor_profile_name(const char *name)
+{
+	const unsigned char *p;
+
+	if (!name || !*name) {
+		return 0;
+	}
+
+	for (p = (const unsigned char *)name; *p; p++) {
+		if (!(('0' <= *p && *p <= '9') ||
+				('A' <= *p && *p <= 'Z') ||
+				('a' <= *p && *p <= 'z') ||
+				*p == '_' || *p == '-')) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
 {
 	xmlNodePtr value, cur;
@@ -418,8 +438,17 @@ int ddcci_create_db_protected(
 		fprintf(stderr, _("Database must be inited before reading a monitor file.\n"));
 		return 0;
 	}
+
+	if (!ddcci_is_valid_monitor_profile_name(pnpname)) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname ? pnpname : _("(null)"));
+		return 0;
+	}
 	
-	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
+	int path_len = snprintf(buffer, sizeof(buffer), "%s/monitor/%s.xml", datadir, pnpname);
+	if (path_len < 0 || path_len >= (int)sizeof(buffer)) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname);
+		return 0;
+	}
 	/* Treat missing monitor profile as unsupported monitor, not parser failure.
 	 * This avoids noisy libxml "failed to load external entity" warnings for ENOENT.
 	 */
