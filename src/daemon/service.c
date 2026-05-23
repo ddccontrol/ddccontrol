@@ -158,7 +158,7 @@ static int find_write_delay(struct monitor *mon, char ctrl)
 
 static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation)
 {
-	if (open_monitors == NULL) {
+	if (open_monitors == NULL || devices_count == 0) {
 		if (!rescan_monitors()) {
 			g_dbus_method_invocation_return_dbus_error(
 			    invocation,
@@ -452,6 +452,7 @@ int check_or_load_i2c_dev()
 
 int main(void)
 {
+	int i;
 	GMainLoop *loop;
 
 	if (check_or_load_i2c_dev() == FALSE) {
@@ -472,6 +473,10 @@ int main(void)
 	g_main_loop_run(loop);
 
 	if (open_monitors != NULL) {
+		for (i = 0; i < devices_count; i++) {
+			if (monitor_open[i] == TRUE)
+				ddcci_close(&(open_monitors[i]));
+		}
 		free(devices);
 		free(supported);
 		free(names);
