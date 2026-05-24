@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- GNOME Shell top-bar brightness menu extension example in `contrib/gnome-shell-extension`
+
 ### Fixed
 
 - fix drop-down monitor identity bug: non-deterministic directory

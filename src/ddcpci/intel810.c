@@ -2,8 +2,7 @@
     ddc/ci direct PCI memory interface for intel i810/815/865...
     Copyright(c) 2005 Nicolas Boichat (nicolas@boichat.ch)
 
-    Based on i810-i2c.c from the kernel source patch available
-    at http://i810fb.sourceforge.net/.
+    Based on i810-i2c.c from the kernel source patch.
     
     Copyright (C) 2004 Antonino Daplas <adaplas@pol.net>
     
@@ -251,4 +250,3 @@ void i810_close(struct card* i810_card)
 	
 	free(i810_card);
 }
-

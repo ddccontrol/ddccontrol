@@ -59,7 +59,7 @@ GtkWidget* refresh_controls_button = NULL;
 
 struct monitor* mon;
 
-int current_monitor; /* current monitor */
+GdkMonitor* current_monitor = NULL; /* current monitor */
 int num_monitor; /* total number of monitors */
 
 struct monitorlist* monlist;
@@ -78,9 +78,24 @@ int current_main_component = 0;
 int currentid = -1;
 int nextid = -1;
 
-static GMutex* combo_change_mutex;
+static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
+int hide_unsupported_monitor_warning = 0;
+
+static int verbosity = 0;
+
+static gboolean parse_verbosity_option(const gchar *option_name, const gchar *value, gpointer data, GError **error)
+{
+	(void)option_name;
+	(void)value;
+	(void)data;
+	(void)error;
+
+	verbosity++;
+
+	return TRUE;
+}
 
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
@@ -103,7 +118,7 @@ static void loadprofile_callback(GtkWidget *widget, gpointer data)
 static void combo_change(GtkWidget *widget, gpointer data)
 {
 	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
-	if (!g_mutex_trylock(combo_change_mutex)) {
+	if (!g_mutex_trylock(&combo_change_mutex)) {
 		if (get_verbosity())
 			printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
 		return;
@@ -171,7 +186,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 		printf("currentid == nextid (%d)\n", currentid);
 	
 	gtk_widget_set_sensitive(widget, TRUE);
-	g_mutex_unlock(combo_change_mutex);
+	g_mutex_unlock(&combo_change_mutex);
 }
 
 static gboolean window_changed(GtkWidget *widget, 
@@ -196,14 +211,14 @@ static gboolean window_changed(GtkWidget *widget,
 			return FALSE;
 		}
 		
-		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
-		
-		if (i != current_monitor) {
+		GdkMonitor* monitor = gdk_display_get_monitor_at_window(gdk_display_get_default(), gtk_widget_get_window(main_app_window));
+
+		if (monitor != current_monitor) {
 			int k = nextid;
 			if (get_verbosity())
-				printf(_("Monitor changed (%d %d).\n"), i, k);
+				printf(_("Monitor changed (combo index %d).\n"), k);
 			k = (k == 0) ? 1 : 0;
-			current_monitor = i;
+			current_monitor = monitor;
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
 		}
 		
@@ -392,8 +407,16 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 }
 
 int main( int argc, char *argv[] )
-{ 
-	int i, verbosity = 0;
+{
+	GError *option_error = NULL;
+	GOptionContext *option_context = NULL;
+	const GOptionEntry option_entries[] = {
+		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
+		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
+		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
+		  N_("Increase verbosity (use multiple times for more output)"), NULL },
+		{ NULL }
+	};
 	
 	mon = NULL;
 	monitor_manager = NULL;
@@ -407,24 +430,28 @@ int main( int argc, char *argv[] )
 	textdomain(PACKAGE);
 #endif
 
-	while ((i=getopt(argc,argv,"v")) >= 0)
-	{
-		switch(i) {
-		case 'v':
-			verbosity++;
-			break;
-		}
+	option_context = g_option_context_new(NULL);
+	g_option_context_add_main_entries(option_context, option_entries, PACKAGE);
+	g_option_context_add_group(option_context, gtk_get_option_group(FALSE));
+
+	if (!g_option_context_parse(option_context, &argc, &argv, &option_error)) {
+		fprintf(stderr, "%s\n", option_error->message);
+		g_error_free(option_error);
+		g_option_context_free(option_context);
+		return 1;
 	}
-	
+
+	g_option_context_free(option_context);
+
+	gtk_init(&argc, &argv);
+
 	ddcci_verbosity(verbosity);
 
 	ddccontrol_proxy = ddcci_dbus_open_proxy();
 	if(ddccontrol_proxy == NULL)
 		return 1;
 
-	gtk_init(&argc, &argv);
-	
-	combo_change_mutex = g_mutex_new();
+	g_mutex_init(&combo_change_mutex);
 	
 	/* Full screen patterns test */
 	/*create_fullscreen_patterns_window();
@@ -614,18 +641,18 @@ int main( int argc, char *argv[] )
 	
 	gtk_widget_show(main_app_window);
 	
-	GdkScreen* screen = gdk_screen_get_default();
-	
-	num_monitor = gdk_screen_get_n_monitors(screen);
-	
-	/*for (i = 0; i < nscreen; i++) {
+	GdkDisplay* display = gdk_display_get_default();
+
+	num_monitor = gdk_display_get_n_monitors(display);
+
+	/*for (i = 0; i < num_monitor; i++) {
 		GdkRectangle dest;
-		
-		gdk_screen_get_monitor_geometry(screen, i, &dest);
-		printf("%d: %d, %d %dx%d\n", nscreen, dest.x, dest.y, dest.width, dest.height);
+		GdkMonitor* m = gdk_display_get_monitor(display, i);
+		gdk_monitor_get_geometry(m, &dest);
+		printf("%d: %d, %d %dx%d\n", i, dest.x, dest.y, dest.width, dest.height);
 	}*/
-	
-	current_monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(main_app_window));
+
+	current_monitor = gdk_display_get_monitor_at_window(display, gtk_widget_get_window(main_app_window));
 	
 	probe_monitors(NULL, NULL);
 	
