@@ -1,0 +1,12 @@
+{
+  "uuid": "ddccontrol-menu@ddccontrol",
+  "name": "DDCControl Menu",
+  "description": "Top-bar monitor brightness controls using ddccontrol D-Bus service",
+  "version": 1,
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48"
+  ]
+}

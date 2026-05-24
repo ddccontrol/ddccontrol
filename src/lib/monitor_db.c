@@ -19,6 +19,7 @@
 */
 
 #include <errno.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -29,7 +30,7 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
-#include "monitor_db.h"
+#include "monitor_db_internal.h"
 #include "ddcci.h"
 #include "internal.h"
 
@@ -48,7 +49,61 @@ xmlDocPtr options_doc = NULL;
 
 int get_verbosity(); /* Defined in ddcci.c */
 
+static void ddcci_free_value_db_entry(struct value_db *value)
+{
+	if (value) {
+		xmlFree(value->id);
+		xmlFree(value->name);
+		ddcci_value_db_free(value);
+	}
+}
+
+static void ddcci_free_value_db_list(struct value_db *value)
+{
+	while (value) {
+		struct value_db *next = value->next;
+		ddcci_free_value_db_entry(value);
+		value = next;
+	}
+}
+
+static void ddcci_free_pending_value_parse(xmlChar *tmp, xmlChar *mon_valueid, struct value_db *current_value,
+                                           struct value_db *parsed_values, char *matchedvalues,
+                                           xmlChar *options_valueid, xmlChar *options_valuename,
+                                           int options_valuename_owned)
+{
+	xmlFree(tmp);
+	xmlFree(mon_valueid);
+	ddcci_free_value_db_entry(current_value);
+	ddcci_free_value_db_list(parsed_values);
+	free(matchedvalues);
+	xmlFree(options_valueid);
+	if (options_valuename_owned) {
+		xmlFree(options_valuename);
+	}
+}
+
 /* End of CAPS structs/functions */
+
+static int ddcci_is_valid_monitor_profile_name(const char *name)
+{
+	const unsigned char *p;
+
+	if (!name || !*name) {
+		return 0;
+	}
+
+	for (p = (const unsigned char *)name; *p; p++) {
+		if (!(('0' <= *p && *p <= '9') ||
+				('A' <= *p && *p <= 'Z') ||
+				('a' <= *p && *p <= 'z') ||
+				*p == '_' || *p == '-')) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
 
 int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, struct control_db *current_control, int command, int faulttolerance)
 {
@@ -69,27 +124,36 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 		cur = cur->next;
 	}
 	
-	matchedvalues = malloc((nvalues+1)*sizeof(char)); /* Will not be freed on error, no problem */
-	memset(matchedvalues, 0, nvalues*sizeof(char));
+	matchedvalues = malloc((nvalues+1)*sizeof(char));
+	memset(matchedvalues, 0, (nvalues+1)*sizeof(char));
 	
-	struct value_db *current_value = malloc(sizeof(struct value_db));
-	struct value_db **last_value_ref = &current_control->value_list;
-	memset(current_value, 0, sizeof(struct value_db));
+	struct value_db *current_value = ddcci_value_db_new();
+	struct value_db *parsed_values = NULL;
+	struct value_db **last_value_ref = &parsed_values;
 	
 	value = options_control->xmlChildrenNode;
 	while (value != NULL)
 	{
 		if (!xmlStrcmp(value->name, (const xmlChar *) "value")) {
 			options_valueid   = xmlGetProp(value, BAD_CAST "id");
-			DDCCI_DB_RETURN_IF(options_valueid == NULL, -1, _("Can't find id property."), value);
+			options_valuename = NULL;
+			DDCCI_DB_RETURN_IF_RUN(options_valueid == NULL, -1, _("Can't find id property."), value, {
+				ddcci_free_pending_value_parse(NULL, NULL, current_value, parsed_values, matchedvalues,
+				                               options_valueid, options_valuename, 0);
+			});
 			options_valuename = xmlGetProp(value, BAD_CAST "name");
+			int options_valuename_owned = options_valuename != NULL;
 			if (command) {
 				if (options_valuename == NULL) {
 					options_valuename = current_control->name;
 				}
 			}
 			else {
-				DDCCI_DB_RETURN_IF(options_valuename == NULL, -1, _("Can't find name property."), value);
+				DDCCI_DB_RETURN_IF_RUN(options_valuename == NULL, -1, _("Can't find name property."), value, {
+					ddcci_free_pending_value_parse(NULL, NULL, current_value, parsed_values, matchedvalues,
+					                               options_valueid, options_valuename,
+					                               options_valuename_owned);
+				});
 			}
 			
 			//printf("!!control id=%s group=%s name=%s\n", options_ctrlid, options_groupname, options_ctrlname);
@@ -105,15 +169,37 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				}
 				if (!(xmlStrcmp(cur->name, (const xmlChar *)"value"))) {
 					mon_valueid = xmlGetProp(cur, BAD_CAST "id");
+					DDCCI_DB_RETURN_IF_RUN(mon_valueid == NULL, -1, _("Can't find id property."), cur, {
+						ddcci_free_pending_value_parse(NULL, mon_valueid, current_value, parsed_values, matchedvalues,
+						                               options_valueid, options_valuename,
+						                               options_valuename_owned);
+					});
 					if (!xmlStrcmp(mon_valueid, options_valueid)) {
 						current_value->id   = xmlStrdup(options_valueid);
 						current_value->name = _D((char*)options_valuename);
 						
 						tmp = xmlGetProp(cur, BAD_CAST "value");
 						
-						DDCCI_DB_RETURN_IF(tmp == NULL, -1, _("Can't find value property."), cur);
-						current_value->value = strtol((char*)tmp, &endptr, 0);
-						DDCCI_DB_RETURN_IF(*endptr != 0, -1, _("Can't convert value to int."), cur);
+						DDCCI_DB_RETURN_IF_RUN(tmp == NULL, -1, _("Can't find value property."), cur, {
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, parsed_values, matchedvalues,
+							                               options_valueid, options_valuename,
+							                               options_valuename_owned);
+						});
+						long parsed_value = strtol((char*)tmp, &endptr, 0);
+						DDCCI_DB_RETURN_IF_RUN(*endptr != 0, -1, _("Can't convert value to int."), cur, {
+							ddcci_free_pending_value_parse(tmp, mon_valueid, current_value, parsed_values, matchedvalues,
+							                               options_valueid, options_valuename,
+							                               options_valuename_owned);
+						});
+						DDCCI_DB_RETURN_IF_RUN((parsed_value < 0) || (parsed_value > UINT16_MAX), -1,
+						                       _("Value is outside the supported 0-65535 range."), cur, {
+							                       ddcci_free_pending_value_parse(tmp, mon_valueid, current_value,
+							                                                           parsed_values, matchedvalues,
+							                                                           options_valueid,
+							                                                           options_valuename,
+							                                                           options_valuename_owned);
+						                       });
+						ddcci_value_db_set_value16(current_value, (uint16_t)parsed_value);
 						xmlFree(tmp);
 						
 						/*printf("**control id=%s group=%s name=%s address=%s\n", 
@@ -121,8 +207,7 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 						
 						*last_value_ref = current_value;
 						last_value_ref = &current_value->next;
-						current_value = malloc(sizeof(struct value_db));
-						memset(current_value, 0, sizeof(struct value_db));
+						current_value = ddcci_value_db_new();
 						
 						matchedvalues[i] = 1;
 						
@@ -138,7 +223,9 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 			}
 
 			xmlFree(options_valueid);
-			xmlFree(options_valuename);
+			if (options_valuename_owned) {
+				xmlFree(options_valuename);
+			}
 		}
 		
 		value = value->next;
@@ -152,8 +239,12 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 				tmp = xmlGetProp(cur, BAD_CAST "id");
 				fprintf(stderr, _("Element %s (id=%s) has not been found (line %ld).\n"), cur->name, tmp, XML_GET_LINE(cur));
 				xmlFree(tmp);
-				if (!faulttolerance)
+				if (!faulttolerance) {
+					ddcci_free_value_db_list(parsed_values);
+					ddcci_value_db_free(current_value);
+					free(matchedvalues);
 					return -1;
+				}
 			}
 			i++;
 		}
@@ -161,7 +252,8 @@ int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control, str
 	}
 	
 	free(matchedvalues);
-	free(current_value);
+	ddcci_value_db_free(current_value);
+	current_control->value_list = parsed_values;
 	
 	return 0;
 }
@@ -278,10 +370,10 @@ int ddcci_add_controls_to_subgroup(xmlNodePtr control, xmlNodePtr mon_control,
 								return 0;
 							}
 							if (current_control->value_list == NULL) { /* No value defined, use the default 0x01 value */
-								struct value_db *current_value = malloc(sizeof(struct value_db));
+								struct value_db *current_value = ddcci_value_db_new();
 								current_value->id = xmlCharStrdup("default");
 								current_value->name = _D((char*)options_ctrlname);
-								current_value->value = 0x01;
+								ddcci_value_db_set_value16(current_value, 0x01);
 								current_value->next = NULL;
 								current_control->value_list = current_value;
 							}
@@ -346,10 +438,39 @@ int ddcci_create_db_protected(
 		fprintf(stderr, _("Database must be inited before reading a monitor file.\n"));
 		return 0;
 	}
+
+	if (!ddcci_is_valid_monitor_profile_name(pnpname)) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname ? pnpname : _("(null)"));
+		return 0;
+	}
 	
-	snprintf(buffer, 256, "%s/monitor/%s.xml", datadir, pnpname);
+	int path_len = snprintf(buffer, sizeof(buffer), "%s/monitor/%s.xml", datadir, pnpname);
+	if (path_len < 0 || path_len >= (int)sizeof(buffer)) {
+		fprintf(stderr, _("Invalid monitor profile name (%s).\n"), pnpname);
+		return 0;
+	}
+	/* Treat missing monitor profile as unsupported monitor, not parser failure.
+	 * This avoids noisy libxml "failed to load external entity" warnings for ENOENT.
+	 */
+	if (access(buffer, R_OK) != 0) {
+		if (errno == ENOENT) {
+			fprintf(stderr, _("No database entry found for monitor ID %s.\n"), pnpname);
+			fprintf(stderr, _("This monitor is not yet supported by ddccontrol-db.\n"));
+			fprintf(stderr, _("Basic DDC communication may still work.\n"));
+		}
+		else {
+			fprintf(stderr, _("Unable to access monitor database file %s: %s.\n"), buffer, strerror(errno));
+		}
+		return 0;
+	}
+
+	errno = 0;
 	mon_doc = xmlParseFile(buffer);
 	if (mon_doc == NULL) {
+		if (errno != 0) {
+			fprintf(stderr, _("I/O error while reading monitor database file %s: %s.\n"), buffer, strerror(errno));
+			return 0;
+		}
 		fprintf(stderr, _("Document not parsed successfully.\n"));
 		return 0;
 	}
@@ -508,7 +629,7 @@ int ddcci_create_db_protected(
 			}
 			
 			matchedcontrols = malloc((ncontrols+1)*sizeof(char)); /* Will not be freed on error, no problem */
-			memset(matchedcontrols, 0, ncontrols*sizeof(char));
+			memset(matchedcontrols, 0, (ncontrols+1)*sizeof(char));
 			
 			/*printf("Filling struct...\n");*/
 			
@@ -681,7 +802,7 @@ void ddcci_free_db(struct monitor_db* monitor)
 					
 					ovalue = value;
 					value = ovalue->next;
-					free(ovalue);
+					ddcci_value_db_free(ovalue);
 				}
 				
 				ocontrol = control;

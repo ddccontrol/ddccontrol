@@ -89,7 +89,7 @@ extern GtkWidget* cancelprofile_button;
 extern GtkWidget* refresh_controls_button;
 
 /* Multimonitor support */
-extern int current_monitor; /* current monitor */
+extern GdkMonitor* current_monitor; /* current monitor */
 extern int num_monitor; /* total number of monitors */
 
 #endif //NOTEBOOK_H

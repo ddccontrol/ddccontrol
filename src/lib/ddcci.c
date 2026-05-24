@@ -24,6 +24,7 @@
 #include <stdio.h>
 
 #include <fcntl.h>
+#include <strings.h>
 #include <sys/ioctl.h>
 #include <string.h>
 
@@ -682,11 +683,11 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				}
 			}
 			else if ((stype == 1) && (level == 2)) {
-				if ((strncmp(caps_str+pos, "lcd", 3) == 0) || (strncmp(caps_str+pos, "LCD", 3) == 0)) {
+				if (strncasecmp(caps_str+pos, "lcd", 3) == 0) {
 					caps->type = lcd;
 					pos += 2;
 				}
-				else if ((strncmp(caps_str+pos, "crt", 3) == 0) || (strncmp(caps_str+pos, "CRT", 3) == 0)) {
+				else if (strncasecmp(caps_str+pos, "crt", 3) == 0) {
 					caps->type = crt;
 					pos += 2;
 				}
@@ -706,7 +707,15 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				buf[2] = 0;
 				ind = strtol(buf, &endptr, 16);
 				if (*endptr != 0) {
-					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
 					return -1;
 				}
 				if (add) {
@@ -721,14 +730,46 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 			}
 			else if ((svcp == 1) && (level == 3)) {
 				i = 0;
-				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')')) {
+				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')') && (caps_str[pos+i] != 0)) {
+					if (i >= (int)sizeof(buf) - 1) {
+						fprintf(stderr, _("CAPS token too long, invalid CAPS (pos=%d).\n"), pos);
+						int _ci;
+						for (_ci = 0; _ci < 256; _ci++) {
+							if (caps->vcp[_ci]) {
+								free(caps->vcp[_ci]->values);
+								free(caps->vcp[_ci]);
+								caps->vcp[_ci] = NULL;
+							}
+						}
+						return -1;
+					}
 					buf[i] = caps_str[pos+i];
 					i++;
+				}
+				if (caps_str[pos+i] == 0) {
+					fprintf(stderr, _("Invalid CAPS, unexpected end of string at pos=%d.\n"), pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
+					return -1;
 				}
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
 				if (*endptr != 0) {
-					printf(_("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
+					int _ci;
+					for (_ci = 0; _ci < 256; _ci++) {
+						if (caps->vcp[_ci]) {
+							free(caps->vcp[_ci]->values);
+							free(caps->vcp[_ci]);
+							caps->vcp[_ci] = NULL;
+						}
+					}
 					return -1;
 				}
 				if (add) {
@@ -867,8 +908,12 @@ int ddcci_caps(struct monitor* mon)
 		last_substr += len;
 	}
 	
-	ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1);
-	
+	if (ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1) < 0) {
+		free(mon->caps.raw_caps);
+		mon->caps.raw_caps = NULL;
+		return -1;
+	}
+
 	return bufferpos;
 }
 
@@ -1022,7 +1067,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
-		char buffer[7];
+		char buffer[8]; /* 3 chars (pnpid) + 3 chars (suffix) + 1 null terminator + 1 for safety */
 		buffer[0] = 0;
 		strncat(buffer, mon->pnpid, 3); /* copy manufacturer id */
 		switch(mon->caps.type) {
@@ -1365,6 +1410,10 @@ int ddcci_create_config_dir()
 	struct stat buf;
 	
 	home     = getenv("HOME");
+	if ((home == NULL) || (home[0] == '\0')) {
+		fprintf(stderr, _("Cannot get home directory (HOME is unset or empty)\n"));
+		return 0;
+	}
 	trailing = (home[strlen(home)-1] == '/');
 	
 	len = strlen(home) + 32;

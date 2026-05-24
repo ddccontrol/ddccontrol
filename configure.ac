@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[1.0.3],[DDCControl users list <ddccontrol-users@lists.sourceforge.net>],[ddccontrol])
+AC_INIT([DDC/CI control tool],[1.0.3],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol])
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -162,8 +162,8 @@ if test x$support_gnome = xyes; then
       AC_MSG_ERROR(pkg-config not found, please install pkg-config)
    fi
 
-   echo -n "checking for gtk+>=3.0... "
-   if $PKG_CONFIG --atleast-version=3.0 gtk+-3.0 ; then
+   echo -n "checking for gtk+>=3.22... "
+   if $PKG_CONFIG --atleast-version=3.22 gtk+-3.0 ; then
       GNOME_LDFLAGS="$LIBXML2_LIBS `$PKG_CONFIG --libs gtk+-3.0`"
       GNOME_CFLAGS="$LIBXML2_CFLAGS `$PKG_CONFIG --cflags gtk+-3.0`"
       GDDCCONTROL=gddccontrol
@@ -173,7 +173,7 @@ if test x$support_gnome = xyes; then
       AC_PATH_XTRA
    else
       echo "no"
-      AC_MSG_ERROR([gtk+>=3.0 development packages not found])
+      AC_MSG_ERROR([gtk+>=3.22 development packages not found])
    fi
 fi
 
@@ -224,8 +224,8 @@ if test x$support_doc = xyes; then
       if test x$check_xsltproc = xyes ; then
          AC_MSG_CHECKING([whether xsltproc works])
 
-         DOCBOOK_ROOT="http://docbook.sourceforge.net/release/xsl/current/xhtml"
-         DB_FILE="$DOCBOOK_ROOT/docbook.xsl"
+         DOCBOOK_ROOT="$srcdir/doc"
+         DB_FILE="$DOCBOOK_ROOT/style.xsl"
 
          $XSLTPROC $XSLTPROC_FLAGS $DB_FILE >/dev/null 2>&1 << END
 <?xml version="1.0" encoding='ISO-8859-1'?>
