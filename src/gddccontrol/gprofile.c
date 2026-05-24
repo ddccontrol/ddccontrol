@@ -459,11 +459,11 @@ void show_profile_information(struct profile* profile, gboolean new_profile) {
 	gchar* title = g_strdup_printf("%s %s", _("Profile information:"), profile->name);
 	gchar* tmp;
 	
-	GtkWidget *dialog = gtk_dialog_new_with_buttons(
-		title,
-		GTK_WINDOW(main_app_window),
-		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-		NULL);
+	GtkWidget *dialog = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(dialog), title);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(main_app_window));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
 	
 	if (new_profile) {
 		g_object_set_data(G_OBJECT(dialog), "ok_button", NULL);
