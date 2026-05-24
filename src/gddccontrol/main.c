@@ -83,14 +83,16 @@ static GMutex combo_change_mutex;
 DDCControl *ddccontrol_proxy;
 int hide_unsupported_monitor_warning = 0;
 
+static int verbosity = 0;
+
 static gboolean parse_verbosity_option(const gchar *option_name, const gchar *value, gpointer data, GError **error)
 {
 	(void)option_name;
 	(void)value;
+	(void)data;
 	(void)error;
 
-	int *verbosity = (int*)data;
-	(*verbosity)++;
+	verbosity++;
 
 	return TRUE;
 }
@@ -405,14 +407,13 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 }
 
 int main( int argc, char *argv[] )
-{ 
-	int verbosity = 0;
+{
 	GError *option_error = NULL;
 	GOptionContext *option_context = NULL;
 	const GOptionEntry option_entries[] = {
 		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
 		  "Hide unsupported monitor warning when using fallback profiles", NULL },
-		{ "verbose", 'v', 0, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
+		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
 		  "Increase verbosity (use multiple times for more output)", NULL },
 		{ NULL }
 	};
