@@ -81,6 +81,21 @@ int nextid = -1;
 static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
+int hide_unsupported_monitor_warning = 0;
+
+static int verbosity = 0;
+
+static gboolean parse_verbosity_option(const gchar *option_name, const gchar *value, gpointer data, GError **error)
+{
+	(void)option_name;
+	(void)value;
+	(void)data;
+	(void)error;
+
+	verbosity++;
+
+	return TRUE;
+}
 
 static gboolean delete_event( GtkWidget *widget,
                               GdkEvent  *event,
@@ -392,8 +407,16 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 }
 
 int main( int argc, char *argv[] )
-{ 
-	int i, verbosity = 0;
+{
+	GError *option_error = NULL;
+	GOptionContext *option_context = NULL;
+	const GOptionEntry option_entries[] = {
+		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
+		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
+		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
+		  N_("Increase verbosity (use multiple times for more output)"), NULL },
+		{ NULL }
+	};
 	
 	mon = NULL;
 	monitor_manager = NULL;
@@ -407,23 +430,27 @@ int main( int argc, char *argv[] )
 	textdomain(PACKAGE);
 #endif
 
-	while ((i=getopt(argc,argv,"v")) >= 0)
-	{
-		switch(i) {
-		case 'v':
-			verbosity++;
-			break;
-		}
+	option_context = g_option_context_new(NULL);
+	g_option_context_add_main_entries(option_context, option_entries, PACKAGE);
+	g_option_context_add_group(option_context, gtk_get_option_group(FALSE));
+
+	if (!g_option_context_parse(option_context, &argc, &argv, &option_error)) {
+		fprintf(stderr, "%s\n", option_error->message);
+		g_error_free(option_error);
+		g_option_context_free(option_context);
+		return 1;
 	}
-	
+
+	g_option_context_free(option_context);
+
+	gtk_init(&argc, &argv);
+
 	ddcci_verbosity(verbosity);
 
 	ddccontrol_proxy = ddcci_dbus_open_proxy();
 	if(ddccontrol_proxy == NULL)
 		return 1;
 
-	gtk_init(&argc, &argv);
-	
 	g_mutex_init(&combo_change_mutex);
 	
 	/* Full screen patterns test */
