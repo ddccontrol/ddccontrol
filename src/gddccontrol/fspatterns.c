@@ -230,9 +230,9 @@ static void show_pattern(gchar* patternname)
 	// TODO create and draw fullscreen window instead which we can close with [ESC] key
 	GdkRectangle drect;
 	
-	GdkScreen* screen = gdk_screen_get_default();
-	int i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
-	gdk_screen_get_monitor_geometry(screen, i, &drect);
+	GdkDisplay* display = gdk_display_get_default();
+	GdkMonitor* monitor = gdk_display_get_monitor_at_window(display, gtk_widget_get_window(main_app_window));
+	gdk_monitor_get_geometry(monitor, &drect);
 		
 	int top = 7*drect.height/12, bottom = 11*drect.height/12, left = drect.width/3, right = 2*drect.width/3;
 	
@@ -289,13 +289,13 @@ static void show_pattern(gchar* patternname)
 	
 	if (images[0])
 	{ /* GtkImages already exist */
-		for (i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			gtk_image_set_from_pixbuf(GTK_IMAGE(images[i]), pixbufs[i]);
 		}
 	}
 	else
 	{
-		for (i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			images[i] = gtk_image_new_from_pixbuf(pixbufs[i]);
 			gtk_widget_show(images[i]);
 		}
@@ -317,7 +317,7 @@ static void show_pattern(gchar* patternname)
 		gtk_widget_set_vexpand(images[1], TRUE);
 		gtk_widget_show(grid);
 	}
-	for (i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		g_object_unref(pixbufs[i]);
 	}
 	

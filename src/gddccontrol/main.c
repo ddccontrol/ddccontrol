@@ -59,7 +59,7 @@ GtkWidget* refresh_controls_button = NULL;
 
 struct monitor* mon;
 
-int current_monitor; /* current monitor */
+GdkMonitor* current_monitor = NULL; /* current monitor */
 int num_monitor; /* total number of monitors */
 
 struct monitorlist* monlist;
@@ -78,7 +78,7 @@ int current_main_component = 0;
 int currentid = -1;
 int nextid = -1;
 
-static GMutex* combo_change_mutex;
+static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
 
@@ -103,7 +103,7 @@ static void loadprofile_callback(GtkWidget *widget, gpointer data)
 static void combo_change(GtkWidget *widget, gpointer data)
 {
 	nextid = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
-	if (!g_mutex_trylock(combo_change_mutex)) {
+	if (!g_mutex_trylock(&combo_change_mutex)) {
 		if (get_verbosity())
 			printf("Tried to change to %d, but mutex locked.\n", gtk_combo_box_get_active(GTK_COMBO_BOX(widget)));
 		return;
@@ -171,7 +171,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 		printf("currentid == nextid (%d)\n", currentid);
 	
 	gtk_widget_set_sensitive(widget, TRUE);
-	g_mutex_unlock(combo_change_mutex);
+	g_mutex_unlock(&combo_change_mutex);
 }
 
 static gboolean window_changed(GtkWidget *widget, 
@@ -196,14 +196,14 @@ static gboolean window_changed(GtkWidget *widget,
 			return FALSE;
 		}
 		
-		i = gdk_screen_get_monitor_at_window(gdk_screen_get_default(), gtk_widget_get_window(main_app_window));
-		
-		if (i != current_monitor) {
+		GdkMonitor* monitor = gdk_display_get_monitor_at_window(gdk_display_get_default(), gtk_widget_get_window(main_app_window));
+
+		if (monitor != current_monitor) {
 			int k = nextid;
 			if (get_verbosity())
-				printf(_("Monitor changed (%d %d).\n"), i, k);
+				printf(_("Monitor changed (combo index %d).\n"), k);
 			k = (k == 0) ? 1 : 0;
-			current_monitor = i;
+			current_monitor = monitor;
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), k);
 		}
 		
@@ -424,7 +424,7 @@ int main( int argc, char *argv[] )
 
 	gtk_init(&argc, &argv);
 	
-	combo_change_mutex = g_mutex_new();
+	g_mutex_init(&combo_change_mutex);
 	
 	/* Full screen patterns test */
 	/*create_fullscreen_patterns_window();
@@ -614,18 +614,18 @@ int main( int argc, char *argv[] )
 	
 	gtk_widget_show(main_app_window);
 	
-	GdkScreen* screen = gdk_screen_get_default();
-	
-	num_monitor = gdk_screen_get_n_monitors(screen);
-	
-	/*for (i = 0; i < nscreen; i++) {
+	GdkDisplay* display = gdk_display_get_default();
+
+	num_monitor = gdk_display_get_n_monitors(display);
+
+	/*for (i = 0; i < num_monitor; i++) {
 		GdkRectangle dest;
-		
-		gdk_screen_get_monitor_geometry(screen, i, &dest);
-		printf("%d: %d, %d %dx%d\n", nscreen, dest.x, dest.y, dest.width, dest.height);
+		GdkMonitor* m = gdk_display_get_monitor(display, i);
+		gdk_monitor_get_geometry(m, &dest);
+		printf("%d: %d, %d %dx%d\n", i, dest.x, dest.y, dest.width, dest.height);
 	}*/
-	
-	current_monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(main_app_window));
+
+	current_monitor = gdk_display_get_monitor_at_window(display, gtk_widget_get_window(main_app_window));
 	
 	probe_monitors(NULL, NULL);
 	
