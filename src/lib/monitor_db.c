@@ -457,7 +457,7 @@ int ddcci_create_db_protected(
 			return 0;
 		}
 		else {
-			fprintf(stderr, _("Cannot access monitor/%s.xml: %s\n"), pnpname, strerror(errno));
+			fprintf(stderr, _("Cannot access %s: %s\n"), buffer, strerror(errno));
 		}
 		return 0;
 	}
