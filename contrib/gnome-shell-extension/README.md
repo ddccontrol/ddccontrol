@@ -23,5 +23,6 @@ gnome-extensions enable ddccontrol-menu@ddccontrol
 
 - The system D-Bus service `ddccontrol.DDCControl` must be installed and running.
 - Non-root users are allowed to call the D-Bus API by default project policy.
+- The extension targets GNOME Shell 45+ and uses the ES module extension API.
 - The extension is intentionally minimal and can be used as a base for richer
   GNOME integration.

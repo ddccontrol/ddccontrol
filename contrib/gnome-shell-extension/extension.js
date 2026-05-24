@@ -1,10 +1,13 @@
-'use strict';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
 
-const { Gio, GLib, GObject, St } = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
-const Util = imports.misc.util;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as Util from 'resource:///org/gnome/shell/misc/util.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const DDC_DEST = 'ddccontrol.DDCControl';
 const DDC_PATH = '/ddccontrol/DDCControl';
@@ -12,22 +15,21 @@ const DDC_IFACE = 'ddccontrol.DDCControl';
 const BRIGHTNESS_CTRL = 0x10;
 const STEP = 10;
 
-function _getMonitors() {
+function _call(method, params) {
     return new Promise((resolve, reject) => {
         Gio.DBus.system.call(
             DDC_DEST,
             DDC_PATH,
             DDC_IFACE,
-            'GetMonitors',
-            null,
+            method,
+            params,
             null,
             Gio.DBusCallFlags.NONE,
             -1,
             null,
             (_connection, result) => {
                 try {
-                    const value = Gio.DBus.system.call_finish(result);
-                    resolve(value.deepUnpack());
+                    resolve(Gio.DBus.system.call_finish(result));
                 } catch (e) {
                     reject(e);
                 }
@@ -36,52 +38,18 @@ function _getMonitors() {
     });
 }
 
-function _getControl(device, control) {
-    return new Promise((resolve, reject) => {
-        Gio.DBus.system.call(
-            DDC_DEST,
-            DDC_PATH,
-            DDC_IFACE,
-            'GetControl',
-            new GLib.Variant('(su)', [device, control]),
-            null,
-            Gio.DBusCallFlags.NONE,
-            -1,
-            null,
-            (_connection, result) => {
-                try {
-                    const value = Gio.DBus.system.call_finish(result);
-                    resolve(value.deepUnpack());
-                } catch (e) {
-                    reject(e);
-                }
-            }
-        );
-    });
+async function _getMonitors() {
+    const reply = await _call('GetMonitors', null);
+    return reply.deepUnpack();
 }
 
-function _setControl(device, control, value) {
-    return new Promise((resolve, reject) => {
-        Gio.DBus.system.call(
-            DDC_DEST,
-            DDC_PATH,
-            DDC_IFACE,
-            'SetControl',
-            new GLib.Variant('(suu)', [device, control, value]),
-            null,
-            Gio.DBusCallFlags.NONE,
-            -1,
-            null,
-            (_connection, result) => {
-                try {
-                    Gio.DBus.system.call_finish(result);
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            }
-        );
-    });
+async function _getControl(device, control) {
+    const reply = await _call('GetControl', new GLib.Variant('(su)', [device, control]));
+    return reply.deepUnpack();
+}
+
+async function _setControl(device, control, value) {
+    await _call('SetControl', new GLib.Variant('(suu)', [device, control, value]));
 }
 
 const DDCIndicator = GObject.registerClass(
@@ -118,9 +86,12 @@ class DDCIndicator extends PanelMenu.Button {
         if (!devices || devices.length === 0)
             throw new Error('No DDC-capable monitor found');
 
+        // `supported` is D-Bus type a(y); each element unpacks to a single-byte
+        // tuple [byte], so the supported flag is at index [0].
         let chosen = null;
         for (let i = 0; i < devices.length; i++) {
-            if (supported[i]) {
+            const flag = Array.isArray(supported[i]) ? supported[i][0] : supported[i];
+            if (flag) {
                 chosen = devices[i];
                 break;
             }
@@ -142,24 +113,16 @@ class DDCIndicator extends PanelMenu.Button {
     }
 });
 
-class Extension {
-    constructor() {
-        this._indicator = null;
-    }
-
+export default class DDCControlMenuExtension extends Extension {
     enable() {
         this._indicator = new DDCIndicator();
         Main.panel.addToStatusArea('ddccontrol-menu', this._indicator, 0, 'right');
     }
 
     disable() {
-        if (this._indicator !== null) {
+        if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
         }
     }
-}
-
-function init() {
-    return new Extension();
 }
