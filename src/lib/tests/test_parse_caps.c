@@ -44,9 +44,31 @@ static void test_rejects_unterminated_token(void) {
 	free_caps_entries(&caps);
 }
 
+static void test_uppercase_lcd_type(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(prot(monitor)type(LCD))", &caps, 1) >= 0);
+	assert(caps.type == lcd);
+
+	free_caps_entries(&caps);
+}
+
+static void test_uppercase_crt_type(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(prot(monitor)type(CRT))", &caps, 1) >= 0);
+	assert(caps.type == crt);
+
+	free_caps_entries(&caps);
+}
+
 int main(void) {
 	test_valid_caps();
 	test_rejects_overlong_value_token();
 	test_rejects_unterminated_token();
+	test_uppercase_lcd_type();
+	test_uppercase_crt_type();
 	return 0;
 }
