@@ -205,6 +205,7 @@ int main(int argc, char **argv)
 	int suppress_warning = 0;
 	int verbosity = 0;
 	int probe = 0;
+	int caps_read_failed = 0;
 
 #ifdef HAVE_GETTEXT
 	setlocale(LC_ALL, "");
@@ -483,6 +484,7 @@ int main(int argc, char **argv)
 			}
 
 			if (retry == 0) {
+				caps_read_failed = 1;
 				fprintf(stderr, _("Capabilities read fail.\n"));
 			}
 		}
@@ -554,10 +556,14 @@ int main(int argc, char **argv)
 			}
 			free(profilefile);
 		} else if (dump) {
-			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
+			if (caps_read_failed) {
+				fprintf(stderr, _("\nSkipping control scan: monitor did not return valid DDC/CI capabilities.\n"));
+			} else {
+				fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
-			for (i = 0; i < 256; i++) {
-				dumpctrl(mon, i, force);
+				for (i = 0; i < 256; i++) {
+					dumpctrl(mon, i, force);
+				}
 			}
 		} else if (ctrl == -1 && caps == 0) {
 			struct monitor_db *monitor = mon->db;
