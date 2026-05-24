@@ -454,12 +454,10 @@ int ddcci_create_db_protected(
 	 */
 	if (access(buffer, R_OK) != 0) {
 		if (errno == ENOENT) {
-			fprintf(stderr, _("No database entry found for monitor ID %s.\n"), pnpname);
-			fprintf(stderr, _("This monitor is not yet supported by ddccontrol-db.\n"));
-			fprintf(stderr, _("Basic DDC communication may still work.\n"));
+			return 0;
 		}
 		else {
-			fprintf(stderr, _("Unable to access monitor database file %s: %s.\n"), buffer, strerror(errno));
+			fprintf(stderr, _("Cannot access monitor/%s.xml: %s\n"), pnpname, strerror(errno));
 		}
 		return 0;
 	}
