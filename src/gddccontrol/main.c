@@ -412,9 +412,9 @@ int main( int argc, char *argv[] )
 	GOptionContext *option_context = NULL;
 	const GOptionEntry option_entries[] = {
 		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
-		  "Hide unsupported monitor warning when using fallback profiles", NULL },
+		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
 		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
-		  "Increase verbosity (use multiple times for more output)", NULL },
+		  N_("Increase verbosity (use multiple times for more output)"), NULL },
 		{ NULL }
 	};
 	
@@ -432,7 +432,7 @@ int main( int argc, char *argv[] )
 
 	option_context = g_option_context_new(NULL);
 	g_option_context_add_main_entries(option_context, option_entries, PACKAGE);
-	g_option_context_add_group(option_context, gtk_get_option_group(TRUE));
+	g_option_context_add_group(option_context, gtk_get_option_group(FALSE));
 
 	if (!g_option_context_parse(option_context, &argc, &argv, &option_error)) {
 		fprintf(stderr, "%s\n", option_error->message);
@@ -442,13 +442,15 @@ int main( int argc, char *argv[] )
 	}
 
 	g_option_context_free(option_context);
-	
+
+	gtk_init(&argc, &argv);
+
 	ddcci_verbosity(verbosity);
 
 	ddccontrol_proxy = ddcci_dbus_open_proxy();
 	if(ddccontrol_proxy == NULL)
 		return 1;
-	
+
 	g_mutex_init(&combo_change_mutex);
 	
 	/* Full screen patterns test */
