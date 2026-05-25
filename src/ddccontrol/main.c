@@ -636,7 +636,11 @@ int main(int argc, char **argv)
 		fn = selected_fns[i];
 		report.device = fn;
 		report.monitor_name = selected_names[i];
-
+			if (mon == NULL) {
+				ret = -1;
+			} else {
+				ret = ddcci_open(mon, fn, 0);
+			}
 		fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 
 		if (can_use_dbus_daemon()) {
