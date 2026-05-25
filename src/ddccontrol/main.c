@@ -559,8 +559,9 @@ int main(int argc, char **argv)
 							if (selected_fns[selected_count] == NULL
 							    || (current->name && selected_names[selected_count] == NULL)) {
 								fprintf(stderr, _("Memory allocation failed\n"));
-								ddcci_close(candidate);
-								free(candidate);
+int candidate_needs_free = (candidate->__vtable == NULL);
+ddcci_close(candidate);
+if (candidate_needs_free) free(candidate);
 								ddcci_free_list(monlist);
 								free(selector);
 								ddcci_release();
