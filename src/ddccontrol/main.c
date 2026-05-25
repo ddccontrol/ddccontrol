@@ -718,9 +718,9 @@ int main(int argc, char **argv)
 
 				if (current_relative) {
 					unsigned short old_value, maximum;
-					int retry, result;
+					int relative_retry, result;
 
-					for (retry = RETRYS; retry || (result = ddcci_readctrl(mon, ctrl, &old_value, &maximum)) < 0; retry--)
+					for (relative_retry = RETRYS; relative_retry || (result = ddcci_readctrl(mon, ctrl, &old_value, &maximum)) < 0; relative_retry--)
 						;
 
 					current_value += old_value;
