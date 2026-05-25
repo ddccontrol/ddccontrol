@@ -883,9 +883,10 @@ if (ret >= 0 || !can_use_dbus_daemon()) {
 			free(selected_fns[i]);
 			free(selected_names[i]);
 		}
-	} else if (probe) {
-		free(selected_monitor_name);
-	}
+} else if (probe) {
+	free(selected_fns[0]);
+	free(selected_monitor_name);
+}
 	free(selected_fns);
 	free(selected_names);
 
