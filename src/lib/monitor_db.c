@@ -454,6 +454,9 @@ int ddcci_create_db_protected(
 	 */
 	if (access(buffer, R_OK) != 0) {
 		if (errno == ENOENT) {
+			if (!faulttolerance) {
+				fprintf(stderr, _("Cannot access %s: %s\n"), buffer, strerror(errno));
+			}
 			return 0;
 		}
 		else {

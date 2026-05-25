@@ -557,13 +557,12 @@ int main(int argc, char **argv)
 			free(profilefile);
 		} else if (dump) {
 			if (caps_read_failed) {
-				fprintf(stderr, _("\nSkipping control scan: monitor did not return valid DDC/CI capabilities.\n"));
-			} else {
-				fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
+				fprintf(stderr, _("\nCapabilities query failed; continuing control scan.\n"));
+			}
+			fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
-				for (i = 0; i < 256; i++) {
-					dumpctrl(mon, i, force);
-				}
+			for (i = 0; i < 256; i++) {
+				dumpctrl(mon, i, force);
 			}
 		} else if (ctrl == -1 && caps == 0) {
 			struct monitor_db *monitor = mon->db;
