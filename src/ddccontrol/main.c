@@ -866,8 +866,11 @@ int main(int argc, char **argv)
 			}
 		}
 
-		ddcci_close(mon);
-		free(mon);
+if (ret >= 0 || !can_use_dbus_daemon()) {
+	int mon_needs_free = (mon->__vtable == NULL);
+	ddcci_close(mon);
+	if (mon_needs_free) free(mon);
+}
 	}
 
 	free(profilefile);
