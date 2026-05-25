@@ -522,10 +522,17 @@ int main(int argc, char **argv)
 
 					if (can_use_dbus_daemon()) {
 						open_ret = ddcci_dbus_open(proxy, &candidate, current->filename);
-					} else {
-						candidate = malloc(sizeof(struct monitor));
-						open_ret = ddcci_open(candidate, current->filename, 0);
-					}
+} else {
+	candidate = malloc(sizeof(struct monitor));
+	if (candidate == NULL) {
+		fprintf(stderr, _("Memory allocation failed\n"));
+		ddcci_free_list(monlist);
+		free(selector);
+		ddcci_release();
+		exit(1);
+	}
+	open_ret = ddcci_open(candidate, current->filename, 0);
+}
 					if (open_ret >= 0 && monitor_matches_selector(selector, current, candidate)) {
 						if (!has_index || (selected_index == matched_count)) {
 							if (selected_count == selected_alloc) {
