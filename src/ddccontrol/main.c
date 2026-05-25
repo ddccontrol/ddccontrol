@@ -859,9 +859,7 @@ int main(int argc, char **argv)
 		free(mon);
 	}
 
-	if (profilefile) {
-		free(profilefile);
-	}
+	free(profilefile);
 	if (selected_need_free) {
 		for (i = 0; i < selected_count; i++) {
 			free(selected_fns[i]);
