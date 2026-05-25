@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "interface.h"
 
+#include <glib-object.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -120,7 +121,7 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
-		char buffer[7];
+		char buffer[8]; /* 3 chars (pnpid) + 3 chars (suffix) + 1 null terminator + 1 for safety */
 		buffer[0] = 0;
 		strncat(buffer, mon->pnpid, 3); /* copy manufacturer id */
 		switch (mon->caps.type) {
@@ -223,6 +224,10 @@ struct monitorlist *ddcci_dbus_rescan_monitors(DDCControl *proxy)
 DDCControl *ddcci_dbus_open_proxy()
 {
 	GError *error = NULL;
+
+#if !GLIB_CHECK_VERSION(2, 36, 0)
+	g_type_init();
+#endif
 
 	DDCControl *proxy = ddccontrol_proxy_new_for_bus_sync(
 	                        G_BUS_TYPE_SYSTEM,

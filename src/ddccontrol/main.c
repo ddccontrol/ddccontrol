@@ -25,6 +25,7 @@
 #include "ddcci.h"
 #include "internal.h"
 #include "monitor_db.h"
+#include "monitor_db_internal.h"
 #include "conf.h"
 #include "issueurl.h"
 
@@ -84,7 +85,7 @@ static void usage(char *name)
 {
 	fprintf(stderr, _(
 	            "Usage:\n"
-	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
+	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-S] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
 	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (name/model[/index])\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
@@ -94,7 +95,8 @@ static void usage(char *name)
 	            "\t-W : relatively change ctrl value (+/-)\n"
 	            "\t-t : toggle ctrl value between value1 and value2\n"
 	            "\t-f : force (avoid validity checks)\n"
-	            "\t-s : save settings\n"
+	            "\t-s : ask the monitor to save current settings (if supported)\n"
+	            "\t-S : suppress unsupported-monitor fallback warning\n"
 	            "\t-v : verbosity (specify more to increase)\n"
 	            "\t-b : ddccontrol-db directory (if other than %s)\n"
 	            "\t-l : load values from XML profile file\n"
@@ -268,8 +270,10 @@ int main(int argc, char **argv)
 	int caps = 0;
 	int save = 0;
 	int force = 0;
+	int suppress_warning = 0;
 	int verbosity = 0;
 	int probe = 0;
+	int caps_read_failed = 0;
 
 #ifdef HAVE_GETTEXT
 	setlocale(LC_ALL, "");
@@ -285,7 +289,7 @@ int main(int argc, char **argv)
 	          "This program comes with ABSOLUTELY NO WARRANTY.\n"
 	          "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 
-	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:")) >= 0) {
+	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:S")) >= 0) {
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
@@ -382,6 +386,9 @@ int main(int argc, char **argv)
 			break;
 		case 's':
 			save++;
+			break;
+		case 'S':
+			suppress_warning++;
 			break;
 		case 'f':
 			force++;
@@ -752,6 +759,9 @@ int main(int argc, char **argv)
 					fprintf(stderr, _("Failed to apply profile: %s\n"), profilefile->name);
 				}
 			} else if (dump) {
+				if (caps_read_failed) {
+					fprintf(stderr, _("\nCapabilities query failed; continuing control scan.\n"));
+				}
 				fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
 
 				for (int j = 0; j < 256; j++) {
@@ -783,7 +793,8 @@ int main(int argc, char **argv)
 								}
 
 								for (; valued != NULL; valued = valued->next) {
-									printf(_("\t\t\t> id=%s - name=%s, value=%d\n"), valued->id, valued->name, valued->value);
+									printf(_("\t\t\t> id=%s - name=%s, value=%u\n"), valued->id, valued->name,
+									       (unsigned int)ddcci_value_db_value16(valued));
 								}
 
 								for (retry = RETRYS; retry; retry--) {
@@ -798,7 +809,6 @@ int main(int argc, char **argv)
 										break;
 									}
 								}
-							}
 						}
 					}
 				}
@@ -810,7 +820,7 @@ int main(int argc, char **argv)
 				ddcci_save(mon);
 			}
 
-			if (mon->fallback) {
+			if (mon->fallback && !suppress_warning) {
 				char *issue_url;
 
 				report.fallback_profile = "yes";

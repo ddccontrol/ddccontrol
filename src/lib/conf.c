@@ -45,16 +45,27 @@
 
 /* Read/write monitor list */
 
+static int ddcci_get_home_dir(char** home, int* trailing) {
+	*home = getenv("HOME");
+	if ((*home == NULL) || ((*home)[0] == '\0')) {
+		fprintf(stderr, _("Cannot get home directory (HOME is unset or empty)\n"));
+		return 0;
+	}
+	*trailing = ((*home)[strlen(*home)-1] == '/');
+	return 1;
+}
+
 static char* get_monitorlist_filename() {
 	char* filename;
 	int trailing;
 	int len, ret;
 	char* home;
 	
-	ddcci_create_config_dir();
+	if (!ddcci_get_home_dir(&home, &trailing))
+		return NULL;
 	
-	home     = getenv("HOME");
-	trailing = (home[strlen(home)-1] == '/');
+	if (!ddcci_create_config_dir())
+		return NULL;
 	
 	len = strlen(home) + 64;
 	
@@ -250,8 +261,10 @@ struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* a
 	
 	time_t tm = time(NULL);
 	len      = strftime(&date[0], 32, "%Y%m%d-%H%M%S", localtime(&tm));
-	home     = getenv("HOME");
-	trailing = (home[strlen(home)-1] == '/');
+	if (!ddcci_get_home_dir(&home, &trailing)) {
+		ddcci_free_profile(profile);
+		return 0;
+	}
 	
 	len += strlen(home) + 32;
 	
@@ -300,8 +313,8 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 	struct profile** next = &mon->profiles;
 	struct profile* profile;
 	
-	home     = getenv("HOME");
-	trailing = (home[strlen(home)-1] == '/');
+	if (!ddcci_get_home_dir(&home, &trailing))
+		return 0;
 	
 	len = strlen(home) + 64;
 	
@@ -441,7 +454,8 @@ int ddcci_save_profile(struct profile* profile, struct monitor* monitor) {
 	xmlTextWriterPtr writer;
 	int i;
 
-	ddcci_create_config_dir();
+	if (!ddcci_create_config_dir())
+		return 0;
 
 	writer = xmlNewTextWriterFilename(profile->filename, 0);
 	DDCCI_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})

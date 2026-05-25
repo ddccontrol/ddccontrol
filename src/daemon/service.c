@@ -19,6 +19,7 @@
 
 #include "interface.h"
 
+#include <glib-object.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
@@ -33,6 +34,7 @@
 // DDC Control D-Bus error declarations
 #define DC_BUS_ERROR_OPEN_FAILED        "ddccontrol.DDCControl.Error.OpenFailed"
 #define DC_BUS_ERROR_INVALID_DEVICE     "ddccontrol.DDCControl.Error.InvalidDevice"
+#define DC_BUS_ERROR_SCAN_FAILED        "ddccontrol.DDCControl.Error.ScanFailed"
 
 static struct monitorlist *monlist = NULL;
 
@@ -46,38 +48,75 @@ static struct monitor *open_monitors = NULL;
 static gboolean *monitor_open = NULL;
 static int *monitor_ret = NULL;
 
-static void rescan_monitors()
+static gboolean rescan_monitors()
 {
-	int i, count;
+	int i, count, alloc_count;
 	struct monitorlist *current;
 
-	if (monlist != NULL) {
+	if (open_monitors != NULL) {
 		free(devices);
+		devices = NULL;
 		free(supported);
+		supported = NULL;
 		free(names);
+		names = NULL;
 		free(digital);
+		digital = NULL;
 
 		for (i = 0; i < devices_count; i++) {
 			if (monitor_open[i] == TRUE)
 				ddcci_close(&(open_monitors[i]));
 		}
 		free(open_monitors);
+		open_monitors = NULL;
 		free(monitor_open);
+		monitor_open = NULL;
 		free(monitor_ret);
-		ddcci_free_list(monlist);
+		monitor_ret = NULL;
+
+		if (monlist != NULL) {
+			ddcci_free_list(monlist);
+			monlist = NULL;
+		}
+		devices_count = 0;
 	}
 
 	monlist = ddcci_probe();
 	for (count = 0, current = monlist; current != NULL; current = current->next)
 		count += 1;
+	alloc_count = count > 0 ? count : 1;
 
-	devices = malloc(sizeof(char *) * (count + 1));
-	supported = malloc(sizeof(char) * (count));
-	names = malloc(sizeof(char *) * (count + 1));
-	digital = malloc(sizeof(char) * (count));
-	open_monitors = malloc(sizeof(struct monitor) * (count));
-	monitor_open = malloc(sizeof(gboolean) * (count));
-	monitor_ret = malloc(sizeof(int) * (count));
+	devices      = malloc(sizeof(char *) * (count + 1));
+	supported    = malloc(sizeof(char) * alloc_count);
+	names        = malloc(sizeof(char *) * (count + 1));
+	digital      = malloc(sizeof(char) * alloc_count);
+	open_monitors = malloc(sizeof(struct monitor) * alloc_count);
+	monitor_open = malloc(sizeof(gboolean) * alloc_count);
+	monitor_ret  = malloc(sizeof(int) * alloc_count);
+
+	if (!devices || !supported || !names || !digital ||
+	    !open_monitors || !monitor_open || !monitor_ret) {
+		fprintf(stderr, _("rescan_monitors: memory allocation failed\n"));
+		free(devices);
+		devices = NULL;
+		free(supported);
+		supported = NULL;
+		free(names);
+		names = NULL;
+		free(digital);
+		digital = NULL;
+		free(open_monitors);
+		open_monitors = NULL;
+		free(monitor_open);
+		monitor_open = NULL;
+		free(monitor_ret);
+		monitor_ret = NULL;
+		ddcci_free_list(monlist);
+		monlist = NULL;
+		devices_count = 0;
+		return FALSE;
+	}
+
 	for (i = 0, current = monlist; current != NULL; current = current->next, i = i + 1) {
 		devices[i] = current->filename;
 		supported[i] = current->supported;
@@ -88,6 +127,7 @@ static void rescan_monitors()
 	devices[i] = NULL;
 	names[i] = NULL;
 	devices_count = count;
+	return TRUE;
 }
 
 // TODO: duplicate in main.c
@@ -119,8 +159,16 @@ static int find_write_delay(struct monitor *mon, char ctrl)
 
 static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation)
 {
-	if (monlist == NULL)
-		rescan_monitors();
+	if (open_monitors == NULL || devices_count == 0) {
+		if (!rescan_monitors()) {
+			g_dbus_method_invocation_return_dbus_error(
+			    invocation,
+			    DC_BUS_ERROR_SCAN_FAILED,
+			    "Failed to scan monitors"
+			);
+			return TRUE;
+		}
+	}
 	ddccontrol_complete_get_monitors(
 	    skeleton,
 	    invocation,
@@ -134,7 +182,14 @@ static gboolean handle_get_monitors(DDCControl *skeleton, GDBusMethodInvocation 
 
 static gboolean handle_rescan_monitors(DDCControl *skeleton, GDBusMethodInvocation *invocation)
 {
-	rescan_monitors();
+	if (!rescan_monitors()) {
+		g_dbus_method_invocation_return_dbus_error(
+		    invocation,
+		    DC_BUS_ERROR_SCAN_FAILED,
+		    "Failed to scan monitors"
+		);
+		return TRUE;
+	}
 	ddccontrol_complete_rescan_monitors(
 	    skeleton,
 	    invocation,
@@ -183,7 +238,7 @@ static gboolean can_open_device(gchar *device)
 {
 	// THIS IS A SECURITY PRECAUTION
 	int i;
-	if (monlist != NULL && devices != NULL) {
+	if (open_monitors != NULL) {
 		for (i = 0; i < devices_count; i++) {
 			if (same_device(devices[i], device))
 				return TRUE;
@@ -398,7 +453,12 @@ int check_or_load_i2c_dev()
 
 int main(void)
 {
+	int i;
 	GMainLoop *loop;
+
+#if !GLIB_CHECK_VERSION(2, 36, 0)
+	g_type_init();
+#endif
 
 	if (check_or_load_i2c_dev() == FALSE) {
 		fprintf(stderr, _("Kernel module i2c_dev isn't available, functionality might be limited, or unavailable...\n"));
@@ -417,8 +477,21 @@ int main(void)
 
 	g_main_loop_run(loop);
 
-	if (devices != NULL)
-		ddcci_free_list(monlist);
+	if (open_monitors != NULL) {
+		for (i = 0; i < devices_count; i++) {
+			if (monitor_open[i] == TRUE)
+				ddcci_close(&(open_monitors[i]));
+		}
+		free(devices);
+		free(supported);
+		free(names);
+		free(digital);
+		free(open_monitors);
+		free(monitor_open);
+		free(monitor_ret);
+		if (monlist != NULL)
+			ddcci_free_list(monlist);
+	}
 	ddcci_release();
 	return 0;
 }
