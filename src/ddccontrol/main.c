@@ -569,9 +569,10 @@ int main(int argc, char **argv)
 							selected_count++;
 							selected_need_free = 1;
 							if (has_index) {
-								ddcci_close(candidate);
-								free(candidate);
-								break;
+int candidate_needs_free = (candidate->__vtable == NULL);
+ddcci_close(candidate);
+if (candidate_needs_free) free(candidate);
+break;
 							}
 						}
 						matched_count++;
