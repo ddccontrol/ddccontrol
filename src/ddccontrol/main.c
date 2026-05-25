@@ -576,10 +576,14 @@ int main(int argc, char **argv)
 						}
 						matched_count++;
 					}
-					if (open_ret >= 0) {
-						ddcci_close(candidate);
-						free(candidate);
-					}
+if (open_ret >= 0) {
+	int candidate_needs_free = (candidate->__vtable == NULL);
+	ddcci_close(candidate);
+	if (candidate_needs_free) free(candidate);
+} else if (!can_use_dbus_daemon()) {
+	ddcci_close(candidate);
+	free(candidate);
+}
 				}
 				current = current->next;
 			}
