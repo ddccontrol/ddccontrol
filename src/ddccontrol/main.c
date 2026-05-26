@@ -522,17 +522,17 @@ int main(int argc, char **argv)
 
 					if (can_use_dbus_daemon()) {
 						open_ret = ddcci_dbus_open(proxy, &candidate, current->filename);
-} else {
-	candidate = malloc(sizeof(struct monitor));
-	if (candidate == NULL) {
-		fprintf(stderr, _("Memory allocation failed\n"));
-		ddcci_free_list(monlist);
-		free(selector);
-		ddcci_release();
-		exit(1);
-	}
-	open_ret = ddcci_open(candidate, current->filename, 0);
-}
+					} else {
+						candidate = malloc(sizeof(struct monitor));
+						if (candidate == NULL) {
+							fprintf(stderr, _("Memory allocation failed\n"));
+							ddcci_free_list(monlist);
+							free(selector);
+							ddcci_release();
+							exit(1);
+						}
+						open_ret = ddcci_open(candidate, current->filename, 0);
+					}
 					if (open_ret >= 0 && monitor_matches_selector(selector, current, candidate)) {
 						if (!has_index || (selected_index == matched_count)) {
 							if (selected_count == selected_alloc) {
@@ -543,9 +543,9 @@ int main(int argc, char **argv)
 									free(new_fns);
 									free(new_names);
 									fprintf(stderr, _("Memory allocation failed\n"));
-int candidate_needs_free = (candidate->__vtable == NULL);
-ddcci_close(candidate);
-if (candidate_needs_free) free(candidate);
+									int candidate_needs_free = (candidate->__vtable == NULL);
+									ddcci_close(candidate);
+									if (candidate_needs_free) free(candidate);
 									ddcci_free_list(monlist);
 									free(selector);
 									ddcci_release();
@@ -560,9 +560,9 @@ if (candidate_needs_free) free(candidate);
 							if (selected_fns[selected_count] == NULL
 							    || (current->name && selected_names[selected_count] == NULL)) {
 								fprintf(stderr, _("Memory allocation failed\n"));
-int candidate_needs_free = (candidate->__vtable == NULL);
-ddcci_close(candidate);
-if (candidate_needs_free) free(candidate);
+								int candidate_needs_free = (candidate->__vtable == NULL);
+								ddcci_close(candidate);
+								if (candidate_needs_free) free(candidate);
 								ddcci_free_list(monlist);
 								free(selector);
 								ddcci_release();
@@ -571,22 +571,22 @@ if (candidate_needs_free) free(candidate);
 							selected_count++;
 							selected_need_free = 1;
 							if (has_index) {
-int candidate_needs_free = (candidate->__vtable == NULL);
-ddcci_close(candidate);
-if (candidate_needs_free) free(candidate);
-break;
+								int candidate_needs_free = (candidate->__vtable == NULL);
+								ddcci_close(candidate);
+								if (candidate_needs_free) free(candidate);
+								break;
 							}
 						}
 						matched_count++;
 					}
-if (open_ret >= 0) {
-	int candidate_needs_free = (candidate->__vtable == NULL);
-	ddcci_close(candidate);
-	if (candidate_needs_free) free(candidate);
-} else if (!can_use_dbus_daemon()) {
-	ddcci_close(candidate);
-	free(candidate);
-}
+					if (open_ret >= 0) {
+						int candidate_needs_free = (candidate->__vtable == NULL);
+						ddcci_close(candidate);
+						if (candidate_needs_free) free(candidate);
+					} else if (!can_use_dbus_daemon()) {
+						ddcci_close(candidate);
+						free(candidate);
+					}
 				}
 				current = current->next;
 			}
@@ -643,11 +643,11 @@ if (open_ret >= 0) {
 		fn = selected_fns[i];
 		report.device = fn;
 		report.monitor_name = selected_names[i];
-			if (mon == NULL) {
-				ret = -1;
-			} else {
-				ret = ddcci_open(mon, fn, 0);
-			}
+		if (mon == NULL) {
+			ret = -1;
+		} else {
+			ret = ddcci_open(mon, fn, 0);
+		}
 		fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 
 		if (can_use_dbus_daemon()) {
@@ -873,11 +873,11 @@ if (open_ret >= 0) {
 			}
 		}
 
-if (ret >= 0 || !can_use_dbus_daemon()) {
-	int mon_needs_free = (mon->__vtable == NULL);
-	ddcci_close(mon);
-	if (mon_needs_free) free(mon);
-}
+		if (ret >= 0 || !can_use_dbus_daemon()) {
+			int mon_needs_free = (mon->__vtable == NULL);
+			ddcci_close(mon);
+			if (mon_needs_free) free(mon);
+		}
 	}
 
 	free(profilefile);
@@ -886,10 +886,10 @@ if (ret >= 0 || !can_use_dbus_daemon()) {
 			free(selected_fns[i]);
 			free(selected_names[i]);
 		}
-} else if (probe) {
-	free(selected_fns[0]);
-	free(selected_monitor_name);
-}
+	} else if (probe) {
+		free(selected_fns[0]);
+		free(selected_monitor_name);
+	}
 	free(selected_fns);
 	free(selected_names);
 
