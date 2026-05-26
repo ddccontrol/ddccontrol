@@ -333,7 +333,12 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 	filename = malloc(len);
 	strcpy(filename, dirname);
 	pos = strlen(filename);
-	while ((entry = readdir(dir))) {
+	while (1) {
+		errno = 0;
+		entry = readdir(dir);
+		if (!entry) {
+			break;
+		}
 		strcpy(filename+pos, entry->d_name);
 		if (!stat(filename, &buf)) {
 			if (S_ISREG(buf.st_mode)) { /* Is a regular file ? */
