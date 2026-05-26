@@ -189,8 +189,13 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 		return 0;
 	}
 
-	if (slash == NULL || slash == selector || *(slash + 1) == '\0') {
+	if (slash == NULL) {
 		return 1;
+	}
+	if (slash == selector || *(slash + 1) == '\0') {
+		free(*base_selector);
+		*base_selector = NULL;
+		return 0;
 	}
 
 	suffix = slash + 1;
