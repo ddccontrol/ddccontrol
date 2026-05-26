@@ -550,24 +550,33 @@ int main(int argc, char **argv)
 					if (open_ret >= 0 && monitor_matches_selector(selector, current, candidate)) {
 						if (!has_index || (selected_index == matched_count)) {
 							if (selected_count == selected_alloc) {
-								int new_alloc = selected_alloc ? selected_alloc * 2 : 4;
-								char **new_fns = realloc(selected_fns, sizeof(char *) * (size_t)new_alloc);
-								char **new_names = realloc(selected_names, sizeof(char *) * (size_t)new_alloc);
-								if (!new_fns || !new_names) {
-									free(new_fns);
-									free(new_names);
-									fprintf(stderr, _("Memory allocation failed\n"));
-									int candidate_needs_free = (candidate->__vtable == NULL);
-									ddcci_close(candidate);
-									if (candidate_needs_free) free(candidate);
-									ddcci_free_list(monlist);
-									free(selector);
-									ddcci_release();
-									exit(1);
-								}
-								selected_fns = new_fns;
-								selected_names = new_names;
-								selected_alloc = new_alloc;
+							int new_alloc = selected_alloc ? selected_alloc * 2 : 4;
+							char **new_fns = realloc(selected_fns, sizeof(char *) * (size_t)new_alloc);
+							if (!new_fns) {
+								fprintf(stderr, _("Memory allocation failed\n"));
+								int candidate_needs_free = (candidate->__vtable == NULL);
+								ddcci_close(candidate);
+								if (candidate_needs_free) free(candidate);
+								ddcci_free_list(monlist);
+								free(selector);
+								ddcci_release();
+								exit(1);
+							}
+							selected_fns = new_fns;
+
+							char **new_names = realloc(selected_names, sizeof(char *) * (size_t)new_alloc);
+							if (!new_names) {
+								fprintf(stderr, _("Memory allocation failed\n"));
+								int candidate_needs_free = (candidate->__vtable == NULL);
+								ddcci_close(candidate);
+								if (candidate_needs_free) free(candidate);
+								ddcci_free_list(monlist);
+								free(selector);
+								ddcci_release();
+								exit(1);
+							}
+							selected_names = new_names;
+							selected_alloc = new_alloc;
 							}
 							selected_fns[selected_count] = strdup(current->filename);
 							selected_names[selected_count] = current->name ? strdup(current->name) : NULL;
