@@ -29,6 +29,7 @@
 #include "conf.h"
 #include "issueurl.h"
 
+#include <errno.h>
 #include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -87,7 +88,7 @@ static void usage(char *name)
 	fprintf(stderr, _(
 	            "Usage:\n"
 	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-S] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
-	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (selector[/index])\n"
+	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (selector[/zero-based-index])\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
 	            "\t-d : query ctrls 0 - 255\n"
@@ -195,8 +196,9 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 		}
 	}
 
+	errno = 0;
 	parsed_index = strtol(slash + 1, &endptr, 10);
-	if (*endptr != '\0' || parsed_index < 0 || parsed_index > INT_MAX) {
+	if (errno == ERANGE || *endptr != '\0' || parsed_index < 0 || parsed_index > INT_MAX) {
 		return 1;
 	}
 
@@ -587,6 +589,11 @@ int main(int argc, char **argv)
 						ddcci_close(candidate);
 						if (candidate_needs_free) free(candidate);
 					} else if (!can_use_dbus_daemon()) {
+						if (open_ret == -3) {
+							free(candidate);
+							current = current->next;
+							continue;
+						}
 						ddcci_close(candidate);
 						free(candidate);
 					}
@@ -888,10 +895,12 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (ret >= 0 || !can_use_dbus_daemon()) {
+		if (ret >= 0 || (!can_use_dbus_daemon() && ret != -3)) {
 			int mon_needs_free = (mon->__vtable == NULL);
 			ddcci_close(mon);
 			if (mon_needs_free) free(mon);
+		} else if (!can_use_dbus_daemon()) {
+			free(mon);
 		}
 	}
 
