@@ -201,9 +201,8 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 	suffix = slash + 1;
 	for (const char *p = suffix; *p != '\0'; p++) {
 		if (!isdigit((unsigned char)*p)) {
-			free(*base_selector);
-			*base_selector = NULL;
-			return 0;
+			/* Treat as a literal selector containing '/', not selector/index. */
+			return 1;
 		}
 	}
 
