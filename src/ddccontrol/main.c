@@ -525,7 +525,7 @@ int main(int argc, char **argv)
 			int matched_count = 0;
 
 			if (!parse_selector_index(requested_target, &selector, &has_index, &selected_index)) {
-				fprintf(stderr, _("Failed to parse monitor selector.\n"));
+				fprintf(stderr, _("Failed to parse monitor selector '%s'. Expected selector or selector/N (zero-based index).\n"), requested_target);
 				ddcci_release();
 				exit(1);
 			}
