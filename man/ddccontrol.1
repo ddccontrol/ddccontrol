@@ -58,7 +58,8 @@ command.
 A summary of options is included below.
 .TP
 .B dev
-a device specifier, for example: \fBdev:/dev/i2c-0\fP
+a device specifier, for example: \fBdev:/dev/i2c-0\fP, or a monitor selector string (exact match against the PnP ID, the monitor name shown by \fB-p\fP (may include the PnP ID in brackets), or the database model name).
+Use \fBselector\fP to select all matching (DDC/CI-supported) monitors and \fBselector/N\fP (for example \fBSAM083C/0\fP) to select one match by zero-based index.
 .TP
 .B \-p
 probe I2C devices to find monitor buses
