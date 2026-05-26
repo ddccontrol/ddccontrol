@@ -176,8 +176,11 @@ static int can_use_dbus_daemon()
 static int parse_selector_index(const char *selector, char **base_selector, int *has_index, int *index)
 {
 	const char *slash = strrchr(selector, '/');
+	const char *suffix = NULL;
 	char *endptr = NULL;
 	long parsed_index;
+	size_t base_len;
+	char *parsed_selector;
 
 	*has_index = 0;
 	*index = -1;
@@ -190,24 +193,30 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 		return 1;
 	}
 
-	for (const char *p = slash + 1; *p != '\0'; p++) {
+	suffix = slash + 1;
+	for (const char *p = suffix; *p != '\0'; p++) {
 		if (!isdigit((unsigned char)*p)) {
 			return 1;
 		}
 	}
 
 	errno = 0;
-	parsed_index = strtol(slash + 1, &endptr, 10);
+	parsed_index = strtol(suffix, &endptr, 10);
 	if (errno == ERANGE || *endptr != '\0' || parsed_index < 0 || parsed_index > INT_MAX) {
-		return 1;
+		free(*base_selector);
+		*base_selector = NULL;
+		return 0;
 	}
 
-	char *parsed_selector = strndup(selector, (size_t)(slash - selector));
+	base_len = (size_t)(slash - selector);
+	parsed_selector = malloc(base_len + 1);
 	if (parsed_selector == NULL) {
 		free(*base_selector);
 		*base_selector = NULL;
 		return 0;
 	}
+	memcpy(parsed_selector, selector, base_len);
+	parsed_selector[base_len] = '\0';
 	free(*base_selector);
 	*base_selector = parsed_selector;
 	if (*base_selector == NULL || (*base_selector)[0] == '\0') {
