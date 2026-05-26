@@ -87,7 +87,7 @@ static void usage(char *name)
 	fprintf(stderr, _(
 	            "Usage:\n"
 	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-S] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
-	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (name/model[/index])\n"
+	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (selector[/index])\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
 	            "\t-d : query ctrls 0 - 255\n"
@@ -202,6 +202,8 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 
 	char *parsed_selector = strndup(selector, (size_t)(slash - selector));
 	if (parsed_selector == NULL) {
+		free(*base_selector);
+		*base_selector = NULL;
 		return 0;
 	}
 	free(*base_selector);
@@ -738,19 +740,30 @@ int main(int argc, char **argv)
 
 				if (current_relative) {
 					unsigned short old_value, maximum;
-					int relative_retry, result;
+					int result = -1;
 
-					for (relative_retry = RETRYS; relative_retry || (result = ddcci_readctrl(mon, ctrl, &old_value, &maximum)) < 0; relative_retry--)
-						;
-
-					current_value += old_value;
-					if (current_value < 0) {
-						fprintf(stderr, _("Value cannot be lower than zero! %d -> %d\n"), old_value, current_value);
-						current_relative = 0;
-					} else if (current_value > maximum) {
-						fprintf(stderr, _("Value cannot be higher than maximum! %d / %d\n"), current_value, maximum);
+					for (retry = RETRYS; retry; retry--) {
+						result = ddcci_readctrl(mon, ctrl, &old_value, &maximum);
+						if (result >= 0) {
+							break;
+						}
+					}
+					if (result < 0) {
+						fprintf(stderr, _("Control read fail.\n"));
 						current_relative = 0;
 						current_value = -1;
+					}
+
+					if (current_relative) {
+						current_value += old_value;
+						if (current_value < 0) {
+							fprintf(stderr, _("Value cannot be lower than zero! %d -> %d\n"), old_value, current_value);
+							current_relative = 0;
+						} else if (current_value > maximum) {
+							fprintf(stderr, _("Value cannot be higher than maximum! %d / %d\n"), current_value, maximum);
+							current_relative = 0;
+							current_value = -1;
+						}
 					}
 				}
 
@@ -882,7 +895,9 @@ int main(int argc, char **argv)
 		}
 	}
 
-	ddcci_free_profile(profilefile);
+	if (profilefile) {
+		ddcci_free_profile(profilefile);
+	}
 	if (selected_need_free) {
 		for (i = 0; i < selected_count; i++) {
 			free(selected_fns[i]);
