@@ -29,6 +29,7 @@
 #include "conf.h"
 #include "issueurl.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -195,7 +196,7 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 	}
 
 	parsed_index = strtol(slash + 1, &endptr, 10);
-	if (*endptr != '\0' || parsed_index < 0) {
+	if (*endptr != '\0' || parsed_index < 0 || parsed_index > INT_MAX) {
 		return 1;
 	}
 
@@ -238,7 +239,7 @@ int main(int argc, char **argv)
 	DDCControl *proxy = NULL;
 
 	/* filedescriptor and name of device */
-	struct monitor *mon;
+	struct monitor *mon = NULL;
 	char *fn;
 	char **selected_fns = NULL;
 	char **selected_names = NULL;
@@ -639,21 +640,21 @@ int main(int argc, char **argv)
 		int current_relative = requested_relative;
 		int current_toggle = requested_toggle;
 		int current_value = requested_value;
+		caps_read_failed = 0;
 
 		fn = selected_fns[i];
 		report.device = fn;
 		report.monitor_name = selected_names[i];
-		if (mon == NULL) {
-			ret = -1;
-		} else {
-			ret = ddcci_open(mon, fn, 0);
-		}
 		fprintf(stdout, _("Reading EDID and initializing DDC/CI at bus %s...\n"), fn);
 
 		if (can_use_dbus_daemon()) {
 			ret = ddcci_dbus_open(proxy, &mon, fn);
 		} else {
 			mon = malloc(sizeof(struct monitor));
+			if (mon == NULL) {
+				perror("malloc");
+				exit(1);
+			}
 			ret = ddcci_open(mon, fn, 0);
 		}
 
@@ -707,6 +708,7 @@ int main(int argc, char **argv)
 
 				if (retry == 0) {
 					fprintf(stderr, _("Capabilities read fail.\n"));
+					caps_read_failed = 1;
 				}
 			}
 
@@ -880,7 +882,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	free(profilefile);
+	ddcci_free_profile(profilefile);
 	if (selected_need_free) {
 		for (i = 0; i < selected_count; i++) {
 			free(selected_fns[i]);
