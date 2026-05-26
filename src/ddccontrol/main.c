@@ -621,10 +621,12 @@ int main(int argc, char **argv)
 				current = current->next;
 			}
 			if (selected_count == 0) {
-				if (has_index) {
-					fprintf(stderr, _("No monitor matched selector '%s'.\n"), requested_target);
+				if (has_index && matched_count > 0) {
+					fprintf(stderr,
+					        _("Selector '%s' matched %d monitor(s); index %d is out of range.\n"),
+					        selector, matched_count, selected_index);
 				} else {
-					fprintf(stderr, _("No monitor matched selector '%s'.\n"), requested_target);
+					fprintf(stderr, _("No monitor matched selector '%s'.\n"), selector);
 				}
 				ddcci_free_list(monlist);
 				free(selector);
