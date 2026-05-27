@@ -60,7 +60,7 @@ struct monitor {
 	unsigned int addr;
 	int adl_adapter, adl_display;
 	char pnpid[8];
-	unsigned char digital; /* 0 - digital, 1 - analog */
+	unsigned char digital; /* 0x80 - digital, 0x00 - analog */
 	struct timeval last;
 	struct monitor_db* db;
 	struct caps caps;
@@ -90,7 +90,7 @@ struct monitorlist {
 	
 	unsigned char supported; /* 0 - DDC/CI not supported, 1 - DDC/CI supported */
 	char* name;
-	unsigned char digital; /* 0 - digital, 1 - analog */
+	unsigned char digital; /* 0x80 - digital, 0x00 - analog */
 	
 	struct monitorlist* next;
 };
