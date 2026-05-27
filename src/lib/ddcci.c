@@ -927,6 +927,47 @@ int ddcci_command(struct monitor* mon, unsigned char cmd)
 	return ddcci_write(mon, _buf, sizeof(_buf));
 }
 
+/* Parse an EDID buffer and fill in mon->pnpid and mon->digital.
+ * Requires at least DDCCI_EDID_MIN_PARSE_LEN bytes and a valid EDID header.
+ * Returns 0 on success, -1 on failure. */
+int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
+{
+	if (!mon || !buf || len < DDCCI_EDID_MIN_PARSE_LEN)
+		return -1;
+
+	if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
+	    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
+		return -1;
+
+	snprintf(mon->pnpid, 8, "%c%c%c%02X%02X",
+	         ((buf[8] >> 2) & 31) + 'A' - 1,
+	         ((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1,
+	         (buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
+
+	if (!mon->probing && verbosity) {
+		unsigned int sn = (unsigned int)buf[0xc] |
+		                  ((unsigned int)buf[0xd] << 8) |
+		                  ((unsigned int)buf[0xe] << 16) |
+		                  ((unsigned int)buf[0xf] << 24);
+		printf(_("Serial number: %u\n"), sn);
+		int week = buf[0x10];
+		int year = buf[0x11] + 1990;
+		printf(_("Manufactured: Week %d, %d\n"), week, year);
+		int ver = buf[0x12];
+		int rev = buf[0x13];
+		printf(_("EDID version: %d.%d\n"), ver, rev);
+		int maxwidth = buf[0x15];
+		int maxheight = buf[0x16];
+		printf(_("Maximum size: %d x %d (cm)\n"), maxwidth, maxheight);
+
+		/* Parse more infos... */
+	}
+
+	mon->digital = (buf[0x14] & 0x80);
+
+	return 0;
+}
+
 int ddcci_read_edid(struct monitor* mon, int addr) 
 {
 	unsigned char buf[128];
@@ -938,37 +979,12 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 		if (i2c_write(mon, addr, buf, 1) > 0 &&
 		    i2c_read(mon, addr, buf, sizeof(buf)) > 0) 
 		{		
-			if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
-			    buf[4] != 0xff || buf[5] != 0xff || buf[6] != 0xff || buf[7] != 0)
-			{
+			if (ddcci_parse_edid_buf(mon, buf, sizeof(buf)) == 0) {
+				return 0;
+			} else {
 				if (retry == 2 && (!mon->probing || verbosity)) {
 					fprintf(stderr, _("Corrupted EDID at 0x%02x.\n"), addr);
 				}
-			} else {
-				snprintf(mon->pnpid, 8, "%c%c%c%02X%02X", 
-				         ((buf[8] >> 2) & 31) + 'A' - 1, 
-				         ((buf[8] & 3) << 3) + (buf[9] >> 5) + 'A' - 1, 
-				         (buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
-
-				if (!mon->probing && verbosity) {
-					int sn = buf[0xc] + (buf[0xd]<<8) + (buf[0xe]<<16) + (buf[0xf]<<24);
-					printf(_("Serial number: %d\n"), sn);
-					int week = buf[0x10];
-					int year = buf[0x11] + 1990;
-					printf(_("Manufactured: Week %d, %d\n"), week, year);
-					int ver = buf[0x12];
-					int rev = buf[0x13];
-					printf(_("EDID version: %d.%d\n"), ver, rev);
-					int maxwidth = buf[0x15];
-					int maxheight = buf[0x16];
-					printf(_("Maximum size: %d x %d (cm)\n"), maxwidth, maxheight);
-					
-					/* Parse more infos... */
-				}
-
-				mon->digital = (buf[0x14] & 0x80);
-
-				return 0;
 			}
 		} else if (retry == 2 && (!mon->probing || verbosity)) {
 			fprintf(stderr, _("Reading EDID 0x%02x failed.\n"), addr);

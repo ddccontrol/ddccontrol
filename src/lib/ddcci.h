@@ -60,7 +60,7 @@ struct monitor {
 	unsigned int addr;
 	int adl_adapter, adl_display;
 	char pnpid[8];
-	unsigned char digital; /* 0 - digital, 1 - analog */
+	unsigned char digital; /* 0x80 - digital, 0x00 - analog */
 	struct timeval last;
 	struct monitor_db* db;
 	struct caps caps;
@@ -90,7 +90,7 @@ struct monitorlist {
 	
 	unsigned char supported; /* 0 - DDC/CI not supported, 1 - DDC/CI supported */
 	char* name;
-	unsigned char digital; /* 0 - digital, 1 - analog */
+	unsigned char digital; /* 0x80 - digital, 0x00 - analog */
 	
 	struct monitorlist* next;
 };
@@ -114,6 +114,15 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 /* return values: < 0 - failure, 0 - contron not supported, > 0 - supported */
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
 	unsigned short *value, unsigned short *maximum);
+
+enum {
+	DDCCI_EDID_MIN_PARSE_LEN = 0x17
+};
+
+/* Parse an EDID buffer into mon->pnpid and mon->digital (0x80 for digital, 0x00 for analog).
+ * The buffer must be at least DDCCI_EDID_MIN_PARSE_LEN bytes and contain a valid EDID header.
+ * Returns 0 on success, -1 on failure. */
+int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len);
 
 /* Parse a monitor capabilities string. */
 int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add);
