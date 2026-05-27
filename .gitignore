@@ -63,6 +63,9 @@
 /src/lib/test_parse_caps
 /src/lib/test_parse_caps.log
 /src/lib/test_parse_caps.trs
+/src/lib/test_edid
+/src/lib/test_edid.log
+/src/lib/test_edid.trs
 /src/stamp-h1
 Makefile
 Makefile.in
