@@ -927,11 +927,12 @@ int ddcci_command(struct monitor* mon, unsigned char cmd)
 	return ddcci_write(mon, _buf, sizeof(_buf));
 }
 
-/* Parse a raw 128-byte EDID buffer and fill in mon->pnpid and mon->digital.
- * Returns 0 on success, -1 if the buffer is too short or the header is invalid. */
+/* Parse an EDID buffer and fill in mon->pnpid and mon->digital.
+ * Requires at least DDCCI_EDID_MIN_PARSE_LEN bytes and a valid EDID header.
+ * Returns 0 on success, -1 on failure. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
 {
-	if (!mon || !buf || len < 0x17)
+	if (!mon || !buf || len < DDCCI_EDID_MIN_PARSE_LEN)
 		return -1;
 
 	if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||

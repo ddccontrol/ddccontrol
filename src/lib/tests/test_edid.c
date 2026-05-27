@@ -1,7 +1,17 @@
 #include "../ddcci.h"
 
-#include <assert.h>
+#include <stdio.h>
 #include <string.h>
+
+static int failures = 0;
+
+#define CHECK(cond) \
+	do { \
+		if (!(cond)) { \
+			fprintf(stderr, "FAIL: %s:%d: %s\n", __FILE__, __LINE__, #cond); \
+			failures++; \
+		} \
+	} while (0)
 
 /* Build a minimal valid 128-byte EDID buffer with the given manufacturer bytes,
  * product code (little-endian), and video input definition byte (0x14). */
@@ -39,20 +49,20 @@ static void test_valid_header_returns_zero(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
 }
 
 static void test_null_monitor_returns_error(void)
 {
 	unsigned char buf[128];
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(NULL, buf, 128) == -1);
+	CHECK(ddcci_parse_edid_buf(NULL, buf, 128) == -1);
 }
 
 static void test_null_buffer_returns_error(void)
 {
 	struct monitor mon = make_mon();
-	assert(ddcci_parse_edid_buf(&mon, NULL, 128) == -1);
+	CHECK(ddcci_parse_edid_buf(&mon, NULL, 128) == -1);
 }
 
 static void test_buffer_too_short_returns_error(void)
@@ -60,10 +70,10 @@ static void test_buffer_too_short_returns_error(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	/* Need at least 0x17 = 23 bytes */
-	assert(ddcci_parse_edid_buf(&mon, buf, 22) == -1);
-	assert(ddcci_parse_edid_buf(&mon, buf, 0)  == -1);
-	assert(ddcci_parse_edid_buf(&mon, buf, -1) == -1);
+	/* Need at least DDCCI_EDID_MIN_PARSE_LEN bytes */
+	CHECK(ddcci_parse_edid_buf(&mon, buf, DDCCI_EDID_MIN_PARSE_LEN - 1) == -1);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 0) == -1);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, -1) == -1);
 }
 
 static void test_exact_minimum_length_accepted(void)
@@ -71,7 +81,7 @@ static void test_exact_minimum_length_accepted(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 0x17) == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, DDCCI_EDID_MIN_PARSE_LEN) == 0);
 }
 
 static void test_wrong_first_byte_rejected(void)
@@ -80,7 +90,7 @@ static void test_wrong_first_byte_rejected(void)
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
 	buf[0] = 0x01;
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
 }
 
 static void test_wrong_last_header_byte_rejected(void)
@@ -89,7 +99,7 @@ static void test_wrong_last_header_byte_rejected(void)
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
 	buf[7] = 0x01;
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
 }
 
 static void test_wrong_middle_header_byte_rejected(void)
@@ -100,7 +110,7 @@ static void test_wrong_middle_header_byte_rejected(void)
 	for (i = 1; i <= 6; i++) {
 		make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
 		buf[i] = 0x00; /* should be 0xff */
-		assert(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
+		CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
 	}
 }
 
@@ -116,9 +126,9 @@ static void test_pnpid_samsung(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0xa1, 0x01, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
 	/* product code little-endian: lo=0xa1 hi=0x01 -> printed as "01A1" */
-	assert(strcmp(mon.pnpid, "SAM01A1") == 0);
+	CHECK(strcmp(mon.pnpid, "SAM01A1") == 0);
 }
 
 /* Dell: manufacturer code DEL
@@ -131,8 +141,8 @@ static void test_pnpid_dell(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x10, 0xac, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(strcmp(mon.pnpid, "DEL0000") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(strcmp(mon.pnpid, "DEL0000") == 0);
 }
 
 /* LG Electronics: manufacturer code GSM (as used in EDID)
@@ -145,8 +155,8 @@ static void test_pnpid_gsm(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x1e, 0x6d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(strcmp(mon.pnpid, "GSM0000") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(strcmp(mon.pnpid, "GSM0000") == 0);
 }
 
 static void test_pnpid_product_code_little_endian(void)
@@ -155,8 +165,8 @@ static void test_pnpid_product_code_little_endian(void)
 	struct monitor mon = make_mon();
 	/* SAM, product lo=0x34, hi=0x12 → printed as "1234" */
 	make_edid(buf, 0x4c, 0x2d, 0x34, 0x12, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(strcmp(mon.pnpid, "SAM1234") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(strcmp(mon.pnpid, "SAM1234") == 0);
 }
 
 static void test_pnpid_max_product_code(void)
@@ -165,8 +175,8 @@ static void test_pnpid_max_product_code(void)
 	struct monitor mon = make_mon();
 	/* product lo=0xFF, hi=0xFF → printed as "FFFF" */
 	make_edid(buf, 0x4c, 0x2d, 0xff, 0xff, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(strcmp(mon.pnpid, "SAMFFFF") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(strcmp(mon.pnpid, "SAMFFFF") == 0);
 }
 
 static void test_pnpid_zero_product_code(void)
@@ -174,8 +184,8 @@ static void test_pnpid_zero_product_code(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(strcmp(mon.pnpid, "SAM0000") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(strcmp(mon.pnpid, "SAM0000") == 0);
 }
 
 /* ---- digital / analog flag ----------------------------------------------- */
@@ -185,8 +195,8 @@ static void test_digital_flag_set_when_bit7_high(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x80);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x80);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x80);
 }
 
 static void test_digital_flag_clear_when_bit7_low(void)
@@ -194,8 +204,8 @@ static void test_digital_flag_clear_when_bit7_low(void)
 	unsigned char buf[128];
 	struct monitor mon = make_mon();
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x00);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x00);
 }
 
 static void test_digital_flag_ignores_lower_bits(void)
@@ -204,12 +214,12 @@ static void test_digital_flag_ignores_lower_bits(void)
 	struct monitor mon = make_mon();
 	/* Only bit 7 matters */
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x7f);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x00);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x00);
 
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0xff);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x80);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x80);
 }
 
 /* ---- idempotence / repeated calls --------------------------------------- */
@@ -220,15 +230,15 @@ static void test_successive_calls_overwrite_fields(void)
 	struct monitor mon = make_mon();
 
 	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x80);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x80);
-	assert(strcmp(mon.pnpid, "SAM0000") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x80);
+	CHECK(strcmp(mon.pnpid, "SAM0000") == 0);
 
 	/* Second call with different data overwrites */
 	make_edid(buf, 0x10, 0xac, 0xab, 0xcd, 0x00);
-	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
-	assert(mon.digital == 0x00);
-	assert(strcmp(mon.pnpid, "DELCDAB") == 0);
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x00);
+	CHECK(strcmp(mon.pnpid, "DELCDAB") == 0);
 }
 
 int main(void)
@@ -251,5 +261,5 @@ int main(void)
 	test_digital_flag_clear_when_bit7_low();
 	test_digital_flag_ignores_lower_bits();
 	test_successive_calls_overwrite_fields();
-	return 0;
+	return failures ? 1 : 0;
 }

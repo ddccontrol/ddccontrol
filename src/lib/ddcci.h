@@ -115,7 +115,12 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
 	unsigned short *value, unsigned short *maximum);
 
-/* Parse a raw EDID buffer (minimum 0x17 bytes) into mon->pnpid and mon->digital.
+enum {
+	DDCCI_EDID_MIN_PARSE_LEN = 0x17
+};
+
+/* Parse an EDID buffer into mon->pnpid and mon->digital.
+ * The buffer must be at least DDCCI_EDID_MIN_PARSE_LEN bytes and contain a valid EDID header.
  * Returns 0 on success, -1 on failure. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len);
 
