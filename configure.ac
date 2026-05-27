@@ -269,6 +269,7 @@ AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$systemdsystemunitdir"])
 AC_CONFIG_FILES([
 	po/Makefile.in
 	Makefile
+	data/Makefile
 	src/Makefile
 	src/lib/Makefile
 	src/lib/ddccontrol.pc
