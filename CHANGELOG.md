@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - GNOME Shell top-bar brightness menu extension example in `contrib/gnome-shell-extension`
 
+### Changed
+
+- Deprecate AMD ADL and legacy direct PCI backends, disable both by default,
+  and require explicit configure flags to build them.
+
 ### Fixed
 
 - fix drop-down monitor identity bug: non-deterministic directory
