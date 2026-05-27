@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 
 #include <fcntl.h>
 #include <string.h>
@@ -330,6 +331,7 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 		return 0;
 	}
 	
+	len = strlen(dirname) + NAME_MAX + 1;
 	filename = malloc(len);
 	strcpy(filename, dirname);
 	pos = strlen(filename);
@@ -339,7 +341,10 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 		if (!entry) {
 			break;
 		}
-		strcpy(filename+pos, entry->d_name);
+		ret = snprintf(filename + pos, len - pos, "%s", entry->d_name);
+		if ((ret < 0) || (ret >= len - pos)) {
+			continue;
+		}
 		if (!stat(filename, &buf)) {
 			if (S_ISREG(buf.st_mode)) { /* Is a regular file ? */
 				profile = ddcci_load_profile(filename);
