@@ -17,7 +17,7 @@ ddccontrol_service_LDADD   = libdbusinterface.la ../lib/libddccontrol.la
 # D-Bus client library
 lib_LTLIBRARIES = libddccontrol_dbus_client.la
 
-libddccontrol_dbus_client_la_SOURCES = dbus_client.c
+libddccontrol_dbus_client_la_SOURCES = dbus_client.c dbus_client.h
 libddccontrol_dbus_client_la_LDFLAGS = $(LIBXML2_LIBS)
 libddccontrol_dbus_client_la_LIBADD   = libdbusinterface.la ../lib/libddccontrol.la
 

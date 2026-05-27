@@ -385,145 +385,113 @@ msgid "Thank you.\n"
 msgstr ""
 
 #. arbitration or no acknowledge
-#: ../src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr "sendbytes: 错误 - bailout.\n"
 
 #. read timed out
-#: ../src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr "i2c-algo-bit.o: readbytes: i2c_inb 超时.\n"
 
-#: ../src/ddcpci/i2c-algo-bit.c:414
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: 确认时超时\n"
 
-#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:162
-#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
-#: ../src/ddcpci/sis.c:174 ../src/ddcpci/via.c:167
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: malloc 出错.\n"
 
-#: ../src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
 msgstr "%s: ioperm 失败"
 
-#: ../src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr "%s: 错误: 未知的显卡类型 (%#x)\n"
 
-#: ../src/ddcpci/intel810.c:105
 #, c-format
 msgid "%s: Malloc error."
 msgstr "%s: malloc 出错."
 
-#: ../src/ddcpci/intel810.c:172
 msgid "i810_open: cannot open /dev/mem"
 msgstr "i810_open: 打不开 /dev/mem"
 
-#: ../src/ddcpci/intel810.c:207
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr "i810_open: 错误 :找不到任何有效的 MMIO　PCI　区域.\n"
 
-#: ../src/ddcpci/intel810.c:214
 msgid "i810_open: mmap failed"
 msgstr "i810_open: mmap 失败"
 
-#: ../src/ddcpci/main.c:160
 msgid "==>Error while sending open message"
 msgstr "==>发送打开消息时出错"
 
-#: ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:190 ../src/ddcpci/main.c:208
 msgid "==>Error while sending data answer message"
 msgstr "==>发送数据应答消息时出错"
 
-#: ../src/ddcpci/main.c:257 ../src/ddcpci/main.c:272
 msgid "==>Error while sending list message"
 msgstr "==>发送列表消息时出错"
 
-#: ../src/ddcpci/main.c:290
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "无效的参数.\n"
 
-#: ../src/ddcpci/main.c:296
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>不能读取详细资料.\n"
 
-#: ../src/ddcpci/main.c:303
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>不能读取键值.\n"
 
-#: ../src/ddcpci/main.c:308
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>打不开键值 %u\n"
 
-#: ../src/ddcpci/main.c:322
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>在 %ld 秒时间内没收到命令, 中止.\n"
 
-#: ../src/ddcpci/main.c:330
 msgid "==>Error while receiving query\n"
 msgstr "==>接收查询时出错\n"
 
-#: ../src/ddcpci/main.c:365
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>无效的查询...\n"
 
-#: ../src/ddcpci/nvidia.c:122
 #, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: malloc 出错."
 
-#: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
 msgstr "nvidia_open: 打不开 /dev/mem"
 
-#: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: mmap 失败"
 
-#: ../src/ddcpci/radeon.c:173
 #, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
 msgstr "radeon.c:init_i2c_bus: malloc 出错."
 
-#: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
 msgstr "radeon_open: 打不开 /dev/mem"
 
-#: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
 msgstr "radeon_open: mmap 失败"
 
-#: ../src/ddcpci/sis.c:133
 #, fuzzy, c-format
 msgid "sis.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: malloc 出错."
 
-#: ../src/ddcpci/via.c:125
 #, fuzzy, c-format
 msgid "via.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: malloc 出错."
 
-#: ../src/ddcpci/via.c:177
 #, fuzzy
 msgid "via_open: cannot open /dev/mem"
 msgstr "nvidia_open: 打不开 /dev/mem"
 
-#: ../src/ddcpci/via.c:186
 #, fuzzy
 msgid "via_open: mmap failed"
 msgstr "nvidia_open: mmap 失败"

@@ -511,9 +511,13 @@ int main(int argc, char **argv)
 		ddcci_free_list(monlist);
 	} else {
 		const char *requested_target = argv[optind];
-		int use_selector = strncmp(requested_target, "dev:", 4) != 0
-		                   && strncmp(requested_target, "pci:", 4) != 0
-		                   && strncmp(requested_target, "adl:", 4) != 0;
+		int use_selector = strncmp(requested_target, "dev:", 4) != 0;
+
+		if (strncmp(requested_target, "pci:", 4) == 0 || strncmp(requested_target, "adl:", 4) == 0) {
+			fprintf(stderr, _("Legacy PCI and AMD ADL backends have been removed. Use dev:/dev/i2c-N instead.\n"));
+			ddcci_release();
+			exit(1);
+		}
 
 		if (use_selector) {
 			struct monitorlist *monlist;

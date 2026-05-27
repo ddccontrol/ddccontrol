@@ -397,146 +397,114 @@ msgid "Thank you.\n"
 msgstr "Dziêkujê.\n"
 
 #. arbitration or no acknowledge
-#: ../src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr "sendbytes: b³±d - przerwano.\n"
 
 #. read timed out
-#: ../src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr "i2c-algo-bit.o: readbytes: i2c_inb przekroczy³o limit czasu.\n"
 
-#: ../src/ddcpci/i2c-algo-bit.c:414
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: Przekroczony limit czasu przy ack\n"
 
-#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:162
-#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
-#: ../src/ddcpci/sis.c:174 ../src/ddcpci/via.c:167
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: B³±d malloca.\n"
 
-#: ../src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
 msgstr "%s: ioperm nie powiod³o siê"
 
-#: ../src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr "%s: B³±d: nieznany typ karty (%#x)\n"
 
-#: ../src/ddcpci/intel810.c:105
 #, c-format
 msgid "%s: Malloc error."
 msgstr "%s: B³±d malloca."
 
-#: ../src/ddcpci/intel810.c:172
 msgid "i810_open: cannot open /dev/mem"
 msgstr "i810_open: nie mo¿na otworzyæ /dev/mem"
 
-#: ../src/ddcpci/intel810.c:207
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr ""
 "i810_open: B³±d: nie mo¿na odnale¼æ ¿adnego poprawnego regionu PCI MMIO.\n"
 
-#: ../src/ddcpci/intel810.c:214
 msgid "i810_open: mmap failed"
 msgstr "i810_open: mmap nie powiod³o siê"
 
-#: ../src/ddcpci/main.c:160
 msgid "==>Error while sending open message"
 msgstr "==>B³±d podczas wysy³ania open message"
 
-#: ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:190 ../src/ddcpci/main.c:208
 msgid "==>Error while sending data answer message"
 msgstr "==>B³±d podczas wysy³ania data answer message"
 
-#: ../src/ddcpci/main.c:257 ../src/ddcpci/main.c:272
 msgid "==>Error while sending list message"
 msgstr "==>B³±d podczas wysy³ania list message"
 
-#: ../src/ddcpci/main.c:290
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "B³êdne argumenty.\n"
 
-#: ../src/ddcpci/main.c:296
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>Nie mo¿na odczytaæ gadatliwo¶ci.\n"
 
-#: ../src/ddcpci/main.c:303
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>Nie mo¿na odczytaæ klucza.\n"
 
-#: ../src/ddcpci/main.c:308
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>Nie mo¿na otworzyæ klucza %u\n"
 
-#: ../src/ddcpci/main.c:322
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>Nie otrzymano polecenia przez %ld sekund, przerwano.\n"
 
-#: ../src/ddcpci/main.c:330
 msgid "==>Error while receiving query\n"
 msgstr "==>B³±d podczas odbierania zapytania\n"
 
-#: ../src/ddcpci/main.c:365
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>B³êdne zapytanie...\n"
 
-#: ../src/ddcpci/nvidia.c:122
 #, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: B³±d malloca."
 
-#: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
 msgstr "nvidia_open: nie mo¿na otworzyæ /dev/mem"
 
-#: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: mmap nie powiod³o siê"
 
-#: ../src/ddcpci/radeon.c:173
 #, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
 msgstr "radeon.c:init_i2c_bus: B³±d malloca."
 
-#: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
 msgstr "radeon_open: nie mo¿na otworzyæ /dev/mem"
 
-#: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
 msgstr "radeon_open: mmap nie powiod³o siê"
 
-#: ../src/ddcpci/sis.c:133
 #, fuzzy, c-format
 msgid "sis.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: B³±d malloca."
 
-#: ../src/ddcpci/via.c:125
 #, fuzzy, c-format
 msgid "via.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c:init_i2c_bus: B³±d malloca."
 
-#: ../src/ddcpci/via.c:177
 #, fuzzy
 msgid "via_open: cannot open /dev/mem"
 msgstr "nvidia_open: nie mo¿na otworzyæ /dev/mem"
 
-#: ../src/ddcpci/via.c:186
 #, fuzzy
 msgid "via_open: mmap failed"
 msgstr "nvidia_open: mmap nie powiod³o siê"

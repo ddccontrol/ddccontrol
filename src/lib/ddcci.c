@@ -40,7 +40,6 @@
 
 #include "ddcci.h"
 #include "internal.h"
-#include "amd_adl.h"
 
 #include "conf.h"
 
@@ -125,139 +124,17 @@ static void dumphex(FILE *f, char *text, unsigned char *buf, int len)
 	}
 }
 
-/* IPC functions */
-#ifdef HAVE_DDCPCI
-#include "ddcpci-ipc.h"
-#include <sys/msg.h>
-#include <sys/ipc.h>
-
-#define DDCPCI_RETRY_DELAY 10000 /* in us */
-#define DDCPCI_RETRIES 100000
-
-static int msqid = -2;
-
-int ddcpci_init()
-{
-	if (msqid == -2) {
-		if (verbosity) {
-			printf("ddcpci initing...\n");
-		}
-		
-		key_t key = ftok(DDCPCIDIR "/ddcpci", getpid());
-		
-		if ((msqid = msgget(key, IPC_CREAT | 0666)) < 0) {
-			perror(_("Error while initialisating the message queue"));
-			return 0;
-		}
-		
-		char buffer[256];
-		
-		snprintf(buffer, 256, DDCPCIDIR "/ddcpci %d %d &", verbosity, key);
-		
-		if (verbosity) {
-			printf("Starting %s...\n", buffer);
-		}
-		
-		system(buffer);
-	}
-	return (msqid >= 0);
-}
-
-void ddcpci_release()
-{
-	if (verbosity) {
-		printf("ddcpci being released...\n");
-	}
-	if (msqid >= 0) {
-		struct query qlist;
-		memset(&qlist, 0, sizeof(struct query));
-		qlist.mtype = 1;
-		qlist.qtype = QUERY_QUIT;
-		
-		if (msgsnd(msqid, &qlist, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending quit message"));
-		}
-		
-		usleep(20000);
-		
-		msgctl(msqid, IPC_RMID, NULL);
-	}
-}
-
-/* Returns : 0 - OK, negative value - timed out or another error */
-int ddcpci_read(struct answer* manswer)
-{
-	int i, ret;
-	for (i = DDCPCI_RETRIES;; i--) {
-		if ((ret = msgrcv(msqid, manswer, sizeof(struct answer) - sizeof(long), 2, IPC_NOWAIT)) < 0) {
-			if (errno != ENOMSG) {
-				return -errno;
-			}
-		}
-		else {
-			if (manswer->status < 0) {
-				errno = EBADMSG;
-				return -EBADMSG;
-			}
-			else {
-				return ret;
-			}
-		}
-		
-		if (i == 0) {
-			errno = ETIMEDOUT;
-			return -ETIMEDOUT;
-		}
-		usleep(DDCPCI_RETRY_DELAY);
-	}
-}
-
-/* Send heartbeat so ddcpci doesn't timeout */
-void ddcpci_send_heartbeat() {
-	if (msqid >= 0) {
-		struct query qheart;
-		memset(&qheart, 0, sizeof(struct query));
-		qheart.mtype = 1;
-		qheart.qtype = QUERY_HEARTBEAT;
-		
-		if (msgsnd(msqid, &qheart, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending heartbeat message"));
-		}
-	}
-}
-
-#else
-int ddcpci_init() {
-	return 1;
-}
-
-void ddcpci_release() {}
-
-void ddcpci_send_heartbeat() {}
-#endif
-
 int ddcci_init(char* usedatadir)
 {
 	if (!ddcci_init_db(usedatadir)) {
 		printf(_("Failed to initialize ddccontrol database...\n"));
 		return 0;
 	}
-#ifdef HAVE_AMDADL
-	if (!amd_adl_init()){
-		if (verbosity) {
-			printf(_("Failed to initialize ADL...\n"));
-		}
-	}
-#endif
-	return ddcpci_init();
+	return 1;
 }
 
 void ddcci_release() {
-	ddcpci_release();
 	ddcci_release_db();
-#ifdef HAVE_AMDADL
-	amd_adl_free();
-#endif
 }
 
 /* write len bytes (stored in buf) to i2c address addr */
@@ -304,46 +181,6 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 #endif
 
 		return i;
-	}
-#endif
-#ifdef HAVE_DDCPCI
-	case pci:
-	{
-		struct query qdata;
-		memset(&qdata, 0, sizeof(struct query));
-		qdata.mtype = 1;
-		qdata.qtype = QUERY_DATA;
-		qdata.addr = addr;
-		qdata.flags = 0;
-		memcpy(qdata.buffer, buf, len);
-		
-		if (msgsnd(msqid, &qdata, QUERY_SIZE + len, IPC_NOWAIT) < 0) {
-			if (!mon->probing || verbosity) {
-				perror(_("Error while sending write message"));
-			}
-			return -3;
-		}
-		
-		struct answer adata;
-		
-		if (ddcpci_read(&adata) < 0) {
-			if (!mon->probing || verbosity) {
-				perror(_("Error while reading write message answer"));
-			}
-			return -1;
-		}
-
-		if (verbosity > 1) {
-			dumphex(stderr, "Send", buf, len);
-		}
-
-		return adata.status;
-	}
-#endif
-#ifdef HAVE_AMDADL
-	case type_adl:
-	{
-		return amd_adl_i2c_write(mon->adl_adapter, mon->adl_display, addr, buf, len);
 	}
 #endif
 	default:
@@ -395,49 +232,6 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 #endif
 
 		return i;
-	}
-#endif
-#ifdef HAVE_DDCPCI
-	case pci:
-	{
-		int ret;
-		struct query qdata;
-		memset(&qdata, 0, sizeof(struct query));
-		qdata.mtype = 1;
-		qdata.qtype = QUERY_DATA;
-		qdata.addr = addr;
-		qdata.flags = I2C_M_RD;
-		qdata.len = len;
-		
-		if (msgsnd(msqid, &qdata, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			if (!mon->probing || verbosity) {
-				perror(_("Error while sending read message"));
-			}
-			return -3;
-		}
-		
-		struct answer adata;
-		
-		if ((ret = ddcpci_read(&adata)) < 0) {
-			if (!mon->probing || verbosity) {
-				perror(_("Error while reading read message answer"));
-			}
-			return -1;
-		}
-		
-		memcpy(buf, adata.buffer, ret - ANSWER_SIZE);
-		
-		if (verbosity > 1) {
-			dumphex(stderr, "Recv", buf, ret - ANSWER_SIZE);
-		}
-
-		return ret - ANSWER_SIZE;
-	}
-#endif
-#ifdef HAVE_AMDADL
-	case type_adl:
-	{
-		return amd_adl_i2c_read(mon->adl_adapter, mon->adl_display, addr, buf, len);
 	}
 #endif
 	default:
@@ -1017,55 +811,6 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		}
 		mon->type = dev;
 	}
-#ifdef HAVE_DDCPCI
-	else if (strncmp(filename, "pci:", 4) == 0) {
-		if (verbosity)
-			printf(_("Device: %s\n"), filename);
-		
-		struct query qopen;
-		memset(&qopen, 0, sizeof(struct query));
-		qopen.mtype = 1;
-		qopen.qtype = QUERY_OPEN;
-		
-		sscanf(filename, "pci:%02x:%02x.%d-%d\n", 
-			(unsigned int*)&qopen.bus.bus,
-			(unsigned int*)&qopen.bus.dev,
-			(unsigned int*)&qopen.bus.func,
-			&qopen.bus.i2cbus);
-		
-		if (msgsnd(msqid, &qopen, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending open message"));
-			return -3;
-		}
-		
-		
-		struct answer aopen;
-		
-		if (ddcpci_read(&aopen) < 0) {
-			perror(_("Error while reading open message answer"));
-			return -3;
-		}
-		
-		mon->type = pci;
-	}
-#endif
-#ifdef HAVE_AMDADL
-	else if (strncmp(filename, "adl:", 4) == 0) {
-		mon->adl_adapter = -1;
-		mon->adl_display = -1;
-		if (sscanf(filename, "adl:%d:%d", &mon->adl_adapter, &mon->adl_display) != 2){
-			fprintf(stderr, _("Invalid filename (%s).\n"), filename);
-			return -3;
-		}
-
-		if (amd_adl_check_display(mon->adl_adapter, mon->adl_display)){
-			fprintf(stderr, _("ADL display not found (%s).\n"), filename);
-			return -3;
-		}
-
-		mon->type = type_adl;
-	}
-#endif
 	else {
 		fprintf(stderr, _("Invalid filename (%s).\n"), filename);
 		return -3;
@@ -1267,60 +1012,6 @@ struct monitorlist* ddcci_probe() {
 		printf("...\n");
 	fflush(stdout);
 	
-#ifdef HAVE_DDCPCI
-	/* Fetch bus list from ddcpci */
-	if (msqid >= 0) {
-		struct query qlist;
-		memset(&qlist, 0, sizeof(struct query));
-		qlist.mtype = 1;
-		qlist.qtype = QUERY_LIST;
-		
-		if (msgsnd(msqid, &qlist, QUERY_SIZE, IPC_NOWAIT) < 0) {
-			perror(_("Error while sending list message"));
-		}
-		else {
-			int len = 0, i;
-			struct answer alist;
-			char** filelist = NULL;
-			
-			while (1) {
-				if (ddcpci_read(&alist) < 0){
-					perror(_("Error while reading list entry"));
-					break;
-				}
-				else {
-					if (alist.last == 1) {
-						break;
-					}
-					
-					filelist = realloc(filelist, (len+1)*sizeof(struct answer));
-					
-					//printf("<==%02x:%02x.%d-%d\n", alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
-					filelist[len] = malloc(32);
-					
-					snprintf(filelist[len], 32, "pci:%02x:%02x.%d-%d", 
-						alist.bus.bus, alist.bus.dev, alist.bus.func, alist.bus.i2cbus);
-					
-					if (verbosity) {
-						printf(_("Found PCI device (%s)\n"), filelist[len]);
-					}
-					
-					len++;
-				}
-			}
-			
-			for (i = 0; i < len; i++) {
-				ddcci_probe_device(filelist[i], &current, &last);
-				if (!verbosity) {
-					printf(".");
-					fflush(stdout);
-				}
-			}
-			free(filelist);
-		}
-	}
-#endif
-	
 	/* Probe real I2C device */
 	DIR *dirp;
 	struct dirent *direntp;
@@ -1378,28 +1069,6 @@ struct monitorlist* ddcci_probe() {
 	}
 	free(dev_filenames);
 	
-#ifdef HAVE_AMDADL
-	/* ADL probe */
-	int adl_disp;
-
-	for (adl_disp=0; adl_disp<amd_adl_get_displays_count(); adl_disp++){
-		int adapter, display;
-		if (amd_adl_get_display(adl_disp, &adapter, &display))
-		    break;
-
-			filename = malloc(64);
-			snprintf(filename, 64, "adl:%d:%d", adapter, display);
-			if (verbosity) {
-				printf(_("Found ADL display (%s)\n"), filename);
-			}
-			ddcci_probe_device(filename, &current, &last);
-			if (!verbosity) {
-				printf(".");
-				fflush(stdout);
-		}
-	}
-#endif
-
 	if (!verbosity)
 		printf("\n");
 	
