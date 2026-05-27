@@ -119,7 +119,7 @@ enum {
 	DDCCI_EDID_MIN_PARSE_LEN = 0x17
 };
 
-/* Parse an EDID buffer into mon->pnpid and mon->digital.
+/* Parse an EDID buffer into mon->pnpid and mon->digital (0x80 for digital, 0x00 for analog).
  * The buffer must be at least DDCCI_EDID_MIN_PARSE_LEN bytes and contain a valid EDID header.
  * Returns 0 on success, -1 on failure. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len);

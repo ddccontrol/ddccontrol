@@ -945,8 +945,11 @@ int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
 	         (buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
 
 	if (!mon->probing && verbosity) {
-		int sn = buf[0xc] + (buf[0xd]<<8) + (buf[0xe]<<16) + (buf[0xf]<<24);
-		printf(_("Serial number: %d\n"), sn);
+		unsigned int sn = (unsigned int)buf[0xc] |
+		                  ((unsigned int)buf[0xd] << 8) |
+		                  ((unsigned int)buf[0xe] << 16) |
+		                  ((unsigned int)buf[0xf] << 24);
+		printf(_("Serial number: %u\n"), sn);
 		int week = buf[0x10];
 		int year = buf[0x11] + 1990;
 		printf(_("Manufactured: Week %d, %d\n"), week, year);
