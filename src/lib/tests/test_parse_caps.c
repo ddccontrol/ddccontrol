@@ -64,11 +64,53 @@ static void test_uppercase_crt_type(void) {
 	free_caps_entries(&caps);
 }
 
+static void test_add_values_then_remove_one_value(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10(01 02)))", &caps, 1) == 1);
+	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x10]->values != NULL);
+
+	assert(ddcci_parse_caps("(vcp(10(01)))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] != NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_remove_whole_control_without_value_list(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10 12))", &caps, 1) == 2);
+	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x12] != NULL);
+
+	assert(ddcci_parse_caps("(vcp(10))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] == NULL);
+	assert(caps.vcp[0x12] != NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_rejects_invalid_vcp_identifier(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(GG))", &caps, 1) < 0);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
 int main(void) {
 	test_valid_caps();
 	test_rejects_overlong_value_token();
 	test_rejects_unterminated_token();
 	test_uppercase_lcd_type();
 	test_uppercase_crt_type();
+	test_add_values_then_remove_one_value();
+	test_remove_whole_control_without_value_list();
+	test_rejects_invalid_vcp_identifier();
 	return 0;
 }
