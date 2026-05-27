@@ -66,14 +66,21 @@ static void test_uppercase_crt_type(void) {
 
 static void test_add_values_then_remove_one_value(void) {
 	struct caps caps;
+	int initial_len;
 	memset(&caps, 0, sizeof(caps));
 
-	assert(ddcci_parse_caps("(vcp(10(01 02)))", &caps, 1) == 1);
+	assert(ddcci_parse_caps("(vcp(10(01)))", &caps, 1) == 1);
 	assert(caps.vcp[0x10] != NULL);
 	assert(caps.vcp[0x10]->values != NULL);
+	initial_len = caps.vcp[0x10]->values_len;
+	assert(initial_len > 0);
+
+	assert(ddcci_parse_caps("(vcp(10(03)))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x10]->values_len == initial_len);
 
 	assert(ddcci_parse_caps("(vcp(10(01)))", &caps, 0) == 1);
-	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x10] == NULL);
 
 	free_caps_entries(&caps);
 }
@@ -132,7 +139,19 @@ static void test_rejects_invalid_hex_value_in_value_list(void) {
 	memset(&caps, 0, sizeof(caps));
 
 	assert(ddcci_parse_caps("(vcp(10(0G)))", &caps, 1) < 0);
+	assert(ddcci_parse_caps("(vcp(10(-1)))", &caps, 1) < 0);
+	assert(ddcci_parse_caps("(vcp(10(10000)))", &caps, 1) < 0);
 	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_rejects_out_of_range_vcp_identifier(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(-1))", &caps, 1) < 0);
+	assert(caps.vcp[0x00] == NULL);
 
 	free_caps_entries(&caps);
 }
@@ -177,6 +196,65 @@ static void test_repeated_add_remove_sequence_on_same_control(void) {
 	free_caps_entries(&caps);
 }
 
+static void test_remove_nonexistent_control_with_value_list_is_safe(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10(01)))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_rejects_unbalanced_parentheses(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10)", &caps, 1) < 0);
+	assert(ddcci_parse_caps(")(vcp(10))", &caps, 1) < 0);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_rejects_value_without_vcp_id(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp((01)))", &caps, 1) < 0);
+	assert(caps.vcp[0x01] == NULL);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_boundary_control_and_value_ranges(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(00(0000) FF(FFFF)))", &caps, 1) == 2);
+	assert(caps.vcp[0x00] != NULL);
+	assert(caps.vcp[0x00]->values != NULL);
+	assert(caps.vcp[0x00]->values_len == 1);
+	assert(caps.vcp[0x00]->values[0] == 0x0000);
+	assert(caps.vcp[0xFF] != NULL);
+	assert(caps.vcp[0xFF]->values != NULL);
+	assert(caps.vcp[0xFF]->values_len == 1);
+	assert(caps.vcp[0xFF]->values[0] == 0xFFFF);
+
+	free_caps_entries(&caps);
+}
+
+static void test_repeated_same_control_in_single_string(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10 10 10))", &caps, 1) == 3);
+	assert(caps.vcp[0x10] != NULL);
+
+	free_caps_entries(&caps);
+}
+
 int main(void) {
 	test_valid_caps();
 	test_rejects_overlong_value_token();
@@ -189,8 +267,14 @@ int main(void) {
 	test_remove_nonexistent_control_is_safe();
 	test_mixed_controls_and_value_lists();
 	test_rejects_invalid_hex_value_in_value_list();
+	test_rejects_out_of_range_vcp_identifier();
 	test_nested_sections_still_allow_top_level_vcp();
 	test_unknown_type_does_not_override_existing_type();
 	test_repeated_add_remove_sequence_on_same_control();
+	test_remove_nonexistent_control_with_value_list_is_safe();
+	test_rejects_unbalanced_parentheses();
+	test_rejects_value_without_vcp_id();
+	test_boundary_control_and_value_ranges();
+	test_repeated_same_control_in_single_string();
 	return 0;
 }

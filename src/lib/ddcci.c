@@ -656,15 +656,34 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 	int removeprevious = 0;
 	
 	int num = 0;
+	int step = 1;
+
+#define DDCCI_PARSE_CAPS_FAIL() \
+	do { \
+		int _ci; \
+		for (_ci = 0; _ci < 256; _ci++) { \
+			if (caps->vcp[_ci]) { \
+				free(caps->vcp[_ci]->values); \
+				free(caps->vcp[_ci]); \
+				caps->vcp[_ci] = NULL; \
+			} \
+		} \
+		return -1; \
+	} while (0)
 	
-	for (pos = 0; caps_str[pos] != 0; pos++)
+	for (pos = 0; caps_str[pos] != 0; pos += step)
 	{
+		step = 1;
 		if (caps_str[pos] == '(') {
 			level++;
 		}
 		else if (caps_str[pos] == ')')
 		{
 			level--;
+			if (level < 0) {
+				fprintf(stderr, _("Invalid CAPS, unbalanced parentheses.\n"));
+				DDCCI_PARSE_CAPS_FAIL();
+			}
 			if (level == 1) {
 				svcp = 0;
 				stype = 0;
@@ -693,8 +712,8 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				}
 			}
 			else if ((svcp == 1) && (level == 2)) {
-				if (!add && ((removeprevious == 1) || (caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
-					if(caps->vcp[ind]) {
+				if (!add && ((removeprevious == 1) || (ind >= 0 && ind < 256 && caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
+					if(ind >= 0 && ind < 256 && caps->vcp[ind]) {
 						if (caps->vcp[ind]->values) {
 							free(caps->vcp[ind]->values);
 						}
@@ -706,17 +725,9 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				buf[1] = caps_str[++pos];
 				buf[2] = 0;
 				ind = strtol(buf, &endptr, 16);
-				if (*endptr != 0) {
+				if (*endptr != 0 || ind < 0 || ind > 255) {
 					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
-					int _ci;
-					for (_ci = 0; _ci < 256; _ci++) {
-						if (caps->vcp[_ci]) {
-							free(caps->vcp[_ci]->values);
-							free(caps->vcp[_ci]);
-							caps->vcp[_ci] = NULL;
-						}
-					}
-					return -1;
+					DDCCI_PARSE_CAPS_FAIL();
 				}
 				if (add) {
 					caps->vcp[ind] = malloc(sizeof(struct vcp_entry));
@@ -733,46 +744,26 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 				while ((caps_str[pos+i] != ' ') && (caps_str[pos+i] != ')') && (caps_str[pos+i] != 0)) {
 					if (i >= (int)sizeof(buf) - 1) {
 						fprintf(stderr, _("CAPS token too long, invalid CAPS (pos=%d).\n"), pos);
-						int _ci;
-						for (_ci = 0; _ci < 256; _ci++) {
-							if (caps->vcp[_ci]) {
-								free(caps->vcp[_ci]->values);
-								free(caps->vcp[_ci]);
-								caps->vcp[_ci] = NULL;
-							}
-						}
-						return -1;
+						DDCCI_PARSE_CAPS_FAIL();
 					}
 					buf[i] = caps_str[pos+i];
 					i++;
 				}
 				if (caps_str[pos+i] == 0) {
 					fprintf(stderr, _("Invalid CAPS, unexpected end of string at pos=%d.\n"), pos);
-					int _ci;
-					for (_ci = 0; _ci < 256; _ci++) {
-						if (caps->vcp[_ci]) {
-							free(caps->vcp[_ci]->values);
-							free(caps->vcp[_ci]);
-							caps->vcp[_ci] = NULL;
-						}
-					}
-					return -1;
+					DDCCI_PARSE_CAPS_FAIL();
 				}
 				buf[i] = 0;
 				val = strtol(buf, &endptr, 16);
-				if (*endptr != 0) {
+				if (*endptr != 0 || val < 0 || val > 0xFFFF) {
 					fprintf(stderr, _("Can't convert value to int, invalid CAPS (buf=%s, pos=%d).\n"), buf, pos);
-					int _ci;
-					for (_ci = 0; _ci < 256; _ci++) {
-						if (caps->vcp[_ci]) {
-							free(caps->vcp[_ci]->values);
-							free(caps->vcp[_ci]);
-							caps->vcp[_ci] = NULL;
-						}
-					}
-					return -1;
+					DDCCI_PARSE_CAPS_FAIL();
 				}
 				if (add) {
+					if (ind < 0 || ind >= 256 || !caps->vcp[ind]) {
+						fprintf(stderr, _("Invalid CAPS, value without VCP id (pos=%d).\n"), pos);
+						DDCCI_PARSE_CAPS_FAIL();
+					}
 					if (caps->vcp[ind]->values_len == -1) {
 						caps->vcp[ind]->values_len = 1;
 					}
@@ -783,22 +774,29 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 					caps->vcp[ind]->values[caps->vcp[ind]->values_len-1] = val;
 				}
 				else {
-					if (caps->vcp[ind]->values_len > 0) {
+					if (ind >= 0 && ind < 256 && caps->vcp[ind] && caps->vcp[ind]->values_len > 0) {
 						removeprevious = 0;
 						int j = 0;
-						for (i = 0; i < caps->vcp[ind]->values_len; i++) {
-							if (caps->vcp[ind]->values[i] != val) {
-								caps->vcp[ind]->values[j++] = caps->vcp[ind]->values[i];
+						int vi;
+						for (vi = 0; vi < caps->vcp[ind]->values_len; vi++) {
+							if (caps->vcp[ind]->values[vi] != val) {
+								caps->vcp[ind]->values[j++] = caps->vcp[ind]->values[vi];
 							}
 						}
-						caps->vcp[ind]->values_len--;
+						caps->vcp[ind]->values_len = j;
 					}
 				}
+				step = i;
 			}
 		}
 	}
+
+	if (level != 0) {
+		fprintf(stderr, _("Invalid CAPS, unbalanced parentheses.\n"));
+		DDCCI_PARSE_CAPS_FAIL();
+	}
 	
-	if (!add && ((removeprevious == 1) || (caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
+	if (!add && ind >= 0 && ind < 256 && ((removeprevious == 1) || (caps->vcp[ind] && caps->vcp[ind]->values_len == 0))) {
 		if(caps->vcp[ind]) {
 			if (caps->vcp[ind]->values) {
 				free(caps->vcp[ind]->values);
@@ -809,6 +807,8 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 	}
 	
 	return num;
+
+#undef DDCCI_PARSE_CAPS_FAIL
 }
 
 /* read capabilities raw data of ddc/ci at address addr starting at offset to buf */
