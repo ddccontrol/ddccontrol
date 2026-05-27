@@ -23,7 +23,6 @@
 #include "internal.h"
 #include "interface.h"
 
-#include <glib-object.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -224,10 +223,6 @@ struct monitorlist *ddcci_dbus_rescan_monitors(DDCControl *proxy)
 DDCControl *ddcci_dbus_open_proxy()
 {
 	GError *error = NULL;
-
-#if !GLIB_CHECK_VERSION(2, 36, 0)
-	g_type_init();
-#endif
 
 	DDCControl *proxy = ddccontrol_proxy_new_for_bus_sync(
 	                        G_BUS_TYPE_SYSTEM,
