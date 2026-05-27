@@ -33,10 +33,17 @@ You might need to restart your system after installing `i2c-tools`.
 
 Install build dependencies:
 
-* on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libpci-dev libgtk3.0-dev liblzma-dev`
+* on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libgtk3.0-dev liblzma-dev`
 * on Solus: `sudo eopkg install -c system.devel`  
- `sudo eopkg install autoconf automake intltool i2c-tools m4 diffutils libtool-devel xz-devel pciutils-devel libxml2-devel libgtk-3-devel`
+ `sudo eopkg install autoconf automake intltool i2c-tools m4 diffutils libtool-devel xz-devel libxml2-devel libgtk-3-devel`
 * on others: `TODO`
+
+Deprecated AMD ADL and legacy direct PCI backends are disabled by default.
+Use `/dev/i2c-N` devices through `i2c-dev` instead. Builds that explicitly
+enable the deprecated AMD ADL backend with `--enable-amd-adl` or the
+deprecated legacy PCI backend with `--enable-legacy-pci` still require their
+extra development packages. For legacy PCI, that means the pciutils development
+package, for example `libpci-dev` on Ubuntu or `pciutils-devel` on Solus.
 
 Clone, build and install built version:
 

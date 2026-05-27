@@ -12,27 +12,21 @@
 </listitem>
 <listitem>
 <para>
-<ulink url="http://atrey.karlin.mff.cuni.cz/~mj/pciutils.shtml">pci-utils</ulink>
-</para>
-</listitem>
-<listitem>
-<para>
 <ulink url="http://www.gtk.org/">gtk+&gt;=2.4</ulink>
 </para>
 </listitem>
 </itemizedlist>
 <para>In addition to the library packages, you also need the development
 packages, which are not usually installed. For example, on Debian, their names
-are <filename>libxml2-dev</filename>, <filename>pciutils-dev</filename> and
-<filename>libgtk-3-dev</filename>. Other distributions probably have similar
-package names. On Fedora Core 5, you will also need
-<filename>gnome-panel-devel</filename> package.
+are <filename>libxml2-dev</filename> and <filename>libgtk-3-dev</filename>.
+Other distributions probably have similar package names. On Fedora Core 5, you
+will also need <filename>gnome-panel-devel</filename> package.
 </para>
 <note>
 <para>
-You don't need pci-utils if you don't use direct PCI memory access, and you 
-don't need gtk+ if you don't plan to use the Gnome GUI. Usually, this is not the
-case, so you will almost certainly want these packages for compiling ddccontrol.
+You only need pci-utils if you explicitly enable the deprecated direct PCI
+memory access backend, and you don't need gtk+ if you don't plan to use the
+Gnome GUI.
 </para>
 </note>
 </sect1>
