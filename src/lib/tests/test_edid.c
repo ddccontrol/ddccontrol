@@ -42,6 +42,13 @@ static void test_valid_header_returns_zero(void)
 	assert(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
 }
 
+static void test_null_monitor_returns_error(void)
+{
+	unsigned char buf[128];
+	make_edid(buf, 0x4c, 0x2d, 0x00, 0x00, 0x00);
+	assert(ddcci_parse_edid_buf(NULL, buf, 128) == -1);
+}
+
 static void test_null_buffer_returns_error(void)
 {
 	struct monitor mon = make_mon();
@@ -227,6 +234,7 @@ static void test_successive_calls_overwrite_fields(void)
 int main(void)
 {
 	test_valid_header_returns_zero();
+	test_null_monitor_returns_error();
 	test_null_buffer_returns_error();
 	test_buffer_too_short_returns_error();
 	test_exact_minimum_length_accepted();

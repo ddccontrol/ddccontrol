@@ -931,7 +931,7 @@ int ddcci_command(struct monitor* mon, unsigned char cmd)
  * Returns 0 on success, -1 if the buffer is too short or the header is invalid. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
 {
-	if (!buf || len < 0x17)
+	if (!mon || !buf || len < 0x17)
 		return -1;
 
 	if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
