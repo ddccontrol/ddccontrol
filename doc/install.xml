@@ -24,9 +24,13 @@ will also need <filename>gnome-panel-devel</filename> package.
 </para>
 <note>
 <para>
-You only need pci-utils if you explicitly enable the deprecated direct PCI
-memory access backend, and you don't need gtk+ if you don't plan to use the
-Gnome GUI.
+You only need PCI support if you explicitly enable the deprecated direct PCI
+memory access backend at configure time with <option>--enable-legacy-pci</option>
+or <option>--enable-ddcpci</option>. In that case, you will also need the PCI
+development package for your distribution, for example
+<filename>libpci-dev</filename> on Debian-based systems or
+<filename>pciutils-devel</filename> on Fedora/RHEL-based systems. You don't need
+gtk+ if you don't plan to use the Gnome GUI.
 </para>
 </note>
 </sect1>
