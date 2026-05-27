@@ -103,6 +103,80 @@ static void test_rejects_invalid_vcp_identifier(void) {
 	free_caps_entries(&caps);
 }
 
+static void test_remove_nonexistent_control_is_safe(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_mixed_controls_and_value_lists(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10(01 02) 12 14(0A)))", &caps, 1) == 3);
+	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x10]->values != NULL);
+	assert(caps.vcp[0x12] != NULL);
+	assert(caps.vcp[0x14] != NULL);
+	assert(caps.vcp[0x14]->values != NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_rejects_invalid_hex_value_in_value_list(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10(0G)))", &caps, 1) < 0);
+	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_nested_sections_still_allow_top_level_vcp(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(prot(monitor)foo(bar(baz))vcp(10))", &caps, 1) == 1);
+	assert(caps.vcp[0x10] != NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_unknown_type_does_not_override_existing_type(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+	caps.type = lcd;
+
+	assert(ddcci_parse_caps("(type(OLED))", &caps, 1) >= 0);
+	assert(caps.type == lcd);
+
+	free_caps_entries(&caps);
+}
+
+static void test_repeated_add_remove_sequence_on_same_control(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(vcp(10(01 02)))", &caps, 1) == 1);
+	assert(caps.vcp[0x10] != NULL);
+
+	assert(ddcci_parse_caps("(vcp(10(01)))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] != NULL);
+
+	assert(ddcci_parse_caps("(vcp(10))", &caps, 0) == 1);
+	assert(caps.vcp[0x10] == NULL);
+
+	assert(ddcci_parse_caps("(vcp(10))", &caps, 1) == 1);
+	assert(caps.vcp[0x10] != NULL);
+
+	free_caps_entries(&caps);
+}
+
 int main(void) {
 	test_valid_caps();
 	test_rejects_overlong_value_token();
@@ -112,5 +186,11 @@ int main(void) {
 	test_add_values_then_remove_one_value();
 	test_remove_whole_control_without_value_list();
 	test_rejects_invalid_vcp_identifier();
+	test_remove_nonexistent_control_is_safe();
+	test_mixed_controls_and_value_lists();
+	test_rejects_invalid_hex_value_in_value_list();
+	test_nested_sections_still_allow_top_level_vcp();
+	test_unknown_type_does_not_override_existing_type();
+	test_repeated_add_remove_sequence_on_same_control();
 	return 0;
 }
