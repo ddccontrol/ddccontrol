@@ -35,7 +35,7 @@ Install build dependencies:
 
 * on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libgtk3.0-dev liblzma-dev`
 * on Solus: `sudo eopkg install -c system.devel`  
- `sudo eopkg install autoconf automake intltool i2c-tools m4 diffutils libtool-devel xz-devel libxml2-devel libgtk-3-devel`
+  `sudo eopkg install autoconf automake intltool i2c-tools m4 diffutils libtool-devel xz-devel libxml2-devel libgtk-3-devel`
 * on others: `TODO`
 
 Deprecated AMD ADL and legacy direct PCI backends are disabled by default.
