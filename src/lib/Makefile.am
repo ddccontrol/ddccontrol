@@ -19,6 +19,7 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
    i2c-dev.h conf.c conf.h internal.h \
    monitor_db_internal.h
 
+libddccontrol_la_LDFLAGS = -version-info 1:0:0
 libddccontrol_la_LIBADD = $(LIBXML2_LIBS)
 
 check_PROGRAMS = test_issueurl test_parse_caps test_edid
