@@ -135,8 +135,7 @@ mailing lists (see <xref linkend="report"/>).</para>
 fail to service I2C requests, causing DDC/CI communication to fail.</para>
 <para>The fix is to force the driver to use software I2C by adding an Xorg
 configuration snippet.  DDCcontrol ships a ready-made file at
-<filename>$(datadir)/ddccontrol/90-nvidia-i2c.conf</filename> (typically
-<filename>/usr/share/ddccontrol/90-nvidia-i2c.conf</filename>).
+<filename>/usr/share/ddccontrol/90-nvidia-i2c.conf</filename>.
 Copy it to the Xorg configuration directory and restart your X session:</para>
 <screen format="linespecific">
 # cp /usr/share/ddccontrol/90-nvidia-i2c.conf /etc/X11/xorg.conf.d/
