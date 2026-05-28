@@ -4,30 +4,11 @@
 #include "../urlencode.h"
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-
-static void free_value_list(struct value_db *value) {
-    while (value != NULL) {
-        struct value_db *next = value->next;
-        xmlFree(value->id);
-        xmlFree(value->name);
-        ddcci_value_db_free(value);
-        value = next;
-    }
-}
-
-static xmlNodePtr get_element(xmlNodePtr root, const char *name) {
-    for (xmlNodePtr cur = root->children; cur != NULL; cur = cur->next) {
-        if (cur->type == XML_ELEMENT_NODE && xmlStrcmp(cur->name, BAD_CAST name) == 0) {
-            return cur;
-        }
-    }
-    return NULL;
-}
+#include <sys/stat.h>
+#include <unistd.h>
 
 static void assert_encoded(const char *input, const char *expected) {
     char *encoded = url_encode(input);
@@ -93,71 +74,131 @@ static void test_build_issue_url_with_null_fields(void) {
 }
 
 static void test_monitor_db_parses_16bit_value(void) {
-    const char *xml =
-        "<root>"
-        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
-        "  <mon_control><value id='gamma' value='40960'/></mon_control>"
-        "</root>";
-    xmlDocPtr doc = xmlReadMemory(xml, (int)strlen(xml), "regression.xml", NULL, XML_PARSE_NONET);
-    assert(doc != NULL);
+    char template[] = "/tmp/ddccontrol-test-XXXXXX";
+    char *dir = mkdtemp(template);
+    assert(dir != NULL);
 
-    xmlNodePtr root = xmlDocGetRootElement(doc);
-    assert(root != NULL);
+    char monitor_dir[256];
+    snprintf(monitor_dir, sizeof(monitor_dir), "%s/monitor", dir);
+    assert(mkdir(monitor_dir, 0700) == 0);
 
-    struct control_db control = {0};
-    xmlNodePtr options = get_element(root, "options_control");
-    xmlNodePtr mon = get_element(root, "mon_control");
+    char options_path[256];
+    snprintf(options_path, sizeof(options_path), "%s/options.xml", dir);
+    FILE *options = fopen(options_path, "w");
     assert(options != NULL);
-    assert(mon != NULL);
+    fputs(
+        "<options date='20260528' dbversion='3'>"
+        "  <group name='Image'>"
+        "    <subgroup name='Color'>"
+        "      <control id='gamma' name='Gamma' type='list'>"
+        "        <value id='wide' name='Wide gamut'/>"
+        "      </control>"
+        "    </subgroup>"
+        "  </group>"
+        "</options>",
+        options);
+    assert(fclose(options) == 0);
 
-    int result = ddcci_get_value_list(options, mon, &control, 0, 0);
-    assert(result == 0);
-    assert(control.value_list != NULL);
-    assert(ddcci_value_db_value16(control.value_list) == 40960);
-    assert(control.value_list->value == (40960 % 256));
-    assert(control.value_list->next == NULL);
+    char monitor_path[256];
+    snprintf(monitor_path, sizeof(monitor_path), "%s/TST001.xml", monitor_dir);
+    FILE *monitor_file = fopen(monitor_path, "w");
+    assert(monitor_file != NULL);
+    fputs(
+        "<monitor name='Test Monitor' init='standard'>"
+        "  <controls>"
+        "    <control id='gamma' address='0x10'>"
+        "      <value id='wide' value='40960'/>"
+        "    </control>"
+        "  </controls>"
+        "</monitor>",
+        monitor_file);
+    assert(fclose(monitor_file) == 0);
 
-    free_value_list(control.value_list);
-    xmlFreeDoc(doc);
+    assert(ddcci_init_db(dir) == 1);
+    struct caps caps = {0};
+    assert(ddcci_parse_caps("(vcp(10))", &caps, 1) == 1);
+    struct monitor_db *db = ddcci_create_db("TST001", &caps, 0);
+    assert(db != NULL);
+    assert(db->group_list != NULL);
+    struct control_db *control = db->group_list->subgroup_list->control_list;
+    assert(control != NULL);
+    assert(control->value_list != NULL);
+    assert(ddcci_value_db_value16(control->value_list) == 40960);
+    assert(control->value_list->value == (40960 % 256));
+    assert(control->value_list->next == NULL);
+
+    ddcci_free_db(db);
+    for (int i = 0; i < 256; i++) {
+        if (caps.vcp[i]) {
+            free(caps.vcp[i]->values);
+            free(caps.vcp[i]);
+        }
+    }
+    ddcci_release_db();
+
+    assert(unlink(monitor_path) == 0);
+    assert(unlink(options_path) == 0);
+    assert(rmdir(monitor_dir) == 0);
+    assert(rmdir(dir) == 0);
 }
 
 static void test_monitor_db_rejects_invalid_values(void) {
-    const char *xml_too_large =
-        "<root>"
-        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
-        "  <mon_control><value id='gamma' value='65536'/></mon_control>"
-        "</root>";
-    const char *xml_negative =
-        "<root>"
-        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
-        "  <mon_control><value id='gamma' value='-1'/></mon_control>"
-        "</root>";
-    const char *xml_missing_id =
-        "<root>"
-        "  <options_control><value id='gamma' name='Gamma mode'/></options_control>"
-        "  <mon_control><value value='40960'/></mon_control>"
-        "</root>";
-    const char *inputs[] = {xml_too_large, xml_negative, xml_missing_id};
+    char template[] = "/tmp/ddccontrol-test-invalid-XXXXXX";
+    char *dir = mkdtemp(template);
+    assert(dir != NULL);
 
-    for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++) {
-        xmlDocPtr doc = xmlReadMemory(inputs[i], (int)strlen(inputs[i]), "regression.xml", NULL, XML_PARSE_NONET);
-        assert(doc != NULL);
+    char monitor_dir[256];
+    snprintf(monitor_dir, sizeof(monitor_dir), "%s/monitor", dir);
+    assert(mkdir(monitor_dir, 0700) == 0);
 
-        xmlNodePtr root = xmlDocGetRootElement(doc);
-        assert(root != NULL);
+    char options_path[256];
+    snprintf(options_path, sizeof(options_path), "%s/options.xml", dir);
+    FILE *options = fopen(options_path, "w");
+    assert(options != NULL);
+    fputs(
+        "<options date='20260528' dbversion='3'>"
+        "  <group name='Image'><subgroup name='Color'>"
+        "    <control id='gamma' name='Gamma' type='list'>"
+        "      <value id='wide' name='Wide gamut'/>"
+        "    </control>"
+        "  </subgroup></group>"
+        "</options>",
+        options);
+    assert(fclose(options) == 0);
 
-        struct control_db control = {0};
-        xmlNodePtr options = get_element(root, "options_control");
-        xmlNodePtr mon = get_element(root, "mon_control");
-        assert(options != NULL);
-        assert(mon != NULL);
+    const char *bad_values[] = {"65536", "-1"};
+    for (size_t i = 0; i < sizeof(bad_values) / sizeof(bad_values[0]); i++) {
+        char monitor_path[256];
+        snprintf(monitor_path, sizeof(monitor_path), "%s/TST001.xml", monitor_dir);
+        FILE *monitor_file = fopen(monitor_path, "w");
+        assert(monitor_file != NULL);
+        fprintf(
+            monitor_file,
+            "<monitor name='Test Monitor' init='standard'>"
+            "  <controls><control id='gamma' address='0x10'>"
+            "    <value id='wide' value='%s'/>"
+            "  </control></controls>"
+            "</monitor>",
+            bad_values[i]);
+        assert(fclose(monitor_file) == 0);
 
-        int result = ddcci_get_value_list(options, mon, &control, 0, 0);
-        assert(result < 0);
-        assert(control.value_list == NULL);
-
-        xmlFreeDoc(doc);
+        assert(ddcci_init_db(dir) == 1);
+        struct caps caps = {0};
+        assert(ddcci_parse_caps("(vcp(10))", &caps, 1) == 1);
+        assert(ddcci_create_db("TST001", &caps, 0) == NULL);
+        for (int j = 0; j < 256; j++) {
+            if (caps.vcp[j]) {
+                free(caps.vcp[j]->values);
+                free(caps.vcp[j]);
+            }
+        }
+        ddcci_release_db();
+        assert(unlink(monitor_path) == 0);
     }
+
+    assert(unlink(options_path) == 0);
+    assert(rmdir(monitor_dir) == 0);
+    assert(rmdir(dir) == 0);
 }
 
 int main(void) {

@@ -10,3 +10,4 @@ description = "Minimal ddccontrol monitor capability string parser"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
+roxmltree = "0.20"

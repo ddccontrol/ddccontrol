@@ -9,4 +9,3 @@ src/gddccontrol/main.c
 src/gddccontrol/stack.c
 src/lib/conf.c
 src/lib/ddcci.c
-src/lib/monitor_db.c

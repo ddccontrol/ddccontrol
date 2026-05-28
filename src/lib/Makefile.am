@@ -28,9 +28,9 @@ RUST_CAPS_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-caps/fixtures/nested_values.caps
 
 $(RUST_CAPS_LIB): $(RUST_CAPS_DEPS)
-	cd $(top_srcdir) && CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-caps
+	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-caps
 
-libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.c monitor_db.h \
+libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h \
    i2c-dev.h conf.c conf.h internal.h \
    monitor_db_internal.h
 
