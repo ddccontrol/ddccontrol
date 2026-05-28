@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "crates/ddccontrol-caps",
+    "crates/ddccontrol-db",
 ]
 resolver = "2"
 

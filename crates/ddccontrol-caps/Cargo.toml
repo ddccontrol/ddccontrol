@@ -7,7 +7,4 @@ repository.workspace = true
 description = "Minimal ddccontrol monitor capability string parser"
 
 [lib]
-crate-type = ["rlib", "staticlib"]
-
-[dependencies]
-roxmltree = "0.20"
+crate-type = ["rlib"]

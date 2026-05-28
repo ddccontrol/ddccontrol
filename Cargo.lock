@@ -5,7 +5,12 @@ version = 4
 [[package]]
 name = "ddccontrol-caps"
 version = "0.1.0"
+
+[[package]]
+name = "ddccontrol-db"
+version = "0.1.0"
 dependencies = [
+ "ddccontrol-caps",
  "roxmltree",
 ]
 
