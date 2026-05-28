@@ -129,60 +129,31 @@ mailing lists (see <xref linkend="report"/>).</para>
 <title><filename>/dev/i2c-*</filename> devices support</title>
 <sect3>
 <title>Using proprietary drivers</title>
-<para>Starting with the proprietary drivers version 8762, nVidia provides access
-to the i2c bus through standard <filename>/dev/i2c-*</filename> interface.</para>
-<para>To use it, nothing special has to be done, just install and run the
-proprietary drivers. Then, when <filename>nvidia</filename> driver is loaded,
-the correct devices are accessible as with standard framebuffer drivers.</para>
-</sect3>
-<sect3>
-<title>Using <filename>rivafb</filename> or <filename>nvidiafb</filename></title>
-<para>Most nVidia cards, starting with TNT, work with
-<filename>/dev/i2c-*</filename> devices. To use them, you must load the
-<filename>nvidiafb</filename> (or <filename>rivafb</filename> for old cards)
-module by typing, as root:</para>
+<para>The NVIDIA proprietary driver exposes the I2C bus through the standard
+<filename>/dev/i2c-*</filename> interface.  However, on modern drivers
+(particularly with monitors connected via DisplayPort or HDMI) the driver may
+fail to service I2C requests, causing DDC/CI communication to fail.</para>
+<para>The fix is to force the driver to use software I2C by adding an Xorg
+configuration snippet.  DDCcontrol ships a ready-made file at
+<filename>/usr/share/ddccontrol/90-nvidia-i2c.conf</filename>.
+Copy it to the Xorg configuration directory and restart your X session:</para>
 <screen format="linespecific">
-# modprobe nvidiafb
+# cp /usr/share/ddccontrol/90-nvidia-i2c.conf /etc/X11/xorg.conf.d/
 </screen>
-or
+<para>The file sets the following NVIDIA registry keys:</para>
 <screen format="linespecific">
-# modprobe rivafb
+Option "RegistryDwords" "RMUseSwI2c=0x01; RMI2cSpeed=100"
 </screen>
-<para>The kernel configuration options needed to enable nVidia framebuffer and
-I2C support are:</para>
-<itemizedlist mark='bullet'>
-<listitem>
-<menuchoice>
-  <guimenu>Devices drivers</guimenu>
-  <guimenuitem>Graphics support</guimenuitem>
-  <guimenuitem>Support for frame buffer devices</guimenuitem>
-  <guimenuitem>nVidia Framebuffer support (or nVidia Riva support)</guimenuitem>
-</menuchoice>.
-</listitem>
-<listitem>
-<menuchoice>
-  <guimenu>Devices drivers</guimenu>
-  <guimenuitem>Graphics support</guimenuitem>
-  <guimenuitem>Support for frame buffer devices</guimenuitem>
-  <guimenuitem>nVidia Framebuffer support (or nVidia Riva support)</guimenuitem>
-  <guimenuitem>Enable DDC Support</guimenuitem>
-</menuchoice>.
-</listitem>
-</itemizedlist>
-<warning>
-<para>These kernel modules are <emphasis>not</emphasis> compatible with binary
-nVidia X drivers, which are the only drivers for nVidia cards to provide 3D
-acceleration.</para>
-<para>This is why we recommend that you either use direct PCI memory access with 
-nVidia cards, or i2c-dev access through the proprietary drivers.</para>
-</warning>
+<para>See the
+<ulink url="https://forums.developer.nvidia.com/t/gddccontrol-issues-with-nvidia-drivers-i2c-monitor-display-ddc-dp-hdmi-failing/30427">NVIDIA developer forum</ulink>
+for more background on this issue.</para>
 </sect3>
 </sect2>
 <sect2>
 <title>Direct PCI memory access support</title>
 <para>Almost every nVidia card works with direct PCI memory access, and this
 method is compatible with the nVidia proprietary drivers.</para>
-<para>To use it, you have nothing special to do, everything is done by 
+<para>To use it, you have nothing special to do, everything is done by
 DDCcontrol.</para>
 </sect2>
 <sect3>

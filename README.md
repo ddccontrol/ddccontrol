@@ -111,6 +111,36 @@ sudo ddccontrol -r 0x10 -w 75 -s dev:/dev/i2c-4
 
 See `ddccontrol -h` for more information.
 
+## Troubleshooting
+
+### NVIDIA proprietary driver — I2C/DDC not working over DisplayPort or HDMI
+
+The NVIDIA proprietary driver sometimes fails to expose `/dev/i2c-*` devices for
+DDC/CI communication, causing `ddccontrol -p` to find no monitors (or to return
+I2C errors) when connected via DisplayPort or HDMI.
+
+The fix is to add an Xorg configuration snippet that enables software I2C in the
+NVIDIA driver.  A ready-made configuration file is shipped with DDCcontrol at
+`$(datadir)/ddccontrol/90-nvidia-i2c.conf` (typically
+`/usr/share/ddccontrol/90-nvidia-i2c.conf` after installation).  Copy it into
+place and restart your X session:
+
+```shell
+sudo cp /usr/share/ddccontrol/90-nvidia-i2c.conf /etc/X11/xorg.conf.d/
+```
+
+If you built from source without installing, you can copy the file directly from
+the source tree:
+
+```shell
+sudo cp data/90-nvidia-i2c.conf /etc/X11/xorg.conf.d/
+```
+
+After restarting X, `ddccontrol -p` should detect your monitors normally.
+
+See the [NVIDIA developer forum thread](https://forums.developer.nvidia.com/t/gddccontrol-issues-with-nvidia-drivers-i2c-monitor-display-ddc-dp-hdmi-failing/30427)
+for background on this issue.
+
 ## License
 
 The project is licensed under `GNU General Public License v2.0` license. See [COPYING](COPYING) for details.
