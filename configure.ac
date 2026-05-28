@@ -11,6 +11,9 @@ GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
 
 AC_PROG_CC
+AC_PATH_PROG([CARGO], [cargo], [no])
+AS_IF([test "x$CARGO" = "xno"],
+      [AC_MSG_ERROR([cargo is required to build the Rust CAPS parser])])
 AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P

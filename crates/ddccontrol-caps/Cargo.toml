@@ -6,4 +6,7 @@ license.workspace = true
 repository.workspace = true
 description = "Minimal ddccontrol monitor capability string parser"
 
+[lib]
+crate-type = ["rlib", "staticlib"]
+
 [dependencies]

@@ -1,5 +1,10 @@
 use std::collections::BTreeMap;
+use std::ffi::CStr;
 use std::fmt;
+use std::os::raw::{c_char, c_int, c_ushort, c_void};
+use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::ptr;
+use std::slice;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum MonitorType {
@@ -106,6 +111,152 @@ impl Caps {
         }
 
         Ok(parsed.vcp.len())
+    }
+}
+
+#[repr(C)]
+pub struct CVcpEntry {
+    values_len: c_int,
+    values: *mut c_ushort,
+}
+
+#[repr(C)]
+pub struct CCaps {
+    vcp: [*mut CVcpEntry; 256],
+    monitor_type: c_int,
+    raw_caps: *mut c_char,
+}
+
+unsafe extern "C" {
+    fn malloc(size: usize) -> *mut c_void;
+    fn free(ptr: *mut c_void);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn ddccontrol_caps_parse(
+    caps_str: *const c_char,
+    caps: *mut CCaps,
+    add: c_int,
+) -> c_int {
+    match catch_unwind(AssertUnwindSafe(|| {
+        ddccontrol_caps_parse_inner(caps_str, caps, add)
+    })) {
+        Ok(result) => result,
+        Err(_) => -1,
+    }
+}
+
+unsafe fn ddccontrol_caps_parse_inner(
+    caps_str: *const c_char,
+    caps: *mut CCaps,
+    add: c_int,
+) -> c_int {
+    if caps_str.is_null() || caps.is_null() {
+        return -1;
+    }
+
+    let input = CStr::from_ptr(caps_str).to_string_lossy();
+    let mut rust_caps = caps_from_c(caps);
+    let result = if add != 0 {
+        rust_caps.apply_add(&input)
+    } else {
+        rust_caps.apply_remove(&input)
+    };
+
+    match result {
+        Ok(count) => {
+            if replace_c_caps(caps, &rust_caps) {
+                count as c_int
+            } else {
+                free_c_vcp_entries(caps);
+                -1
+            }
+        }
+        Err(_) => {
+            free_c_vcp_entries(caps);
+            -1
+        }
+    }
+}
+
+unsafe fn caps_from_c(caps: *mut CCaps) -> Caps {
+    let mut rust_caps = Caps::default();
+    rust_caps.monitor_type = match (*caps).monitor_type {
+        1 => MonitorType::Lcd,
+        2 => MonitorType::Crt,
+        _ => MonitorType::Unknown,
+    };
+
+    for code in 0..256 {
+        let entry = (*caps).vcp[code];
+        if entry.is_null() {
+            continue;
+        }
+
+        let values_len = (*entry).values_len;
+        let values = if values_len < 0 {
+            None
+        } else if values_len == 0 || (*entry).values.is_null() {
+            Some(Vec::new())
+        } else {
+            Some(slice::from_raw_parts((*entry).values, values_len as usize).to_vec())
+        };
+
+        rust_caps.vcp.insert(code as u8, VcpEntry { values });
+    }
+
+    rust_caps
+}
+
+unsafe fn replace_c_caps(caps: *mut CCaps, rust_caps: &Caps) -> bool {
+    free_c_vcp_entries(caps);
+    (*caps).monitor_type = match rust_caps.monitor_type {
+        MonitorType::Unknown => 0,
+        MonitorType::Lcd => 1,
+        MonitorType::Crt => 2,
+    };
+
+    for (&code, entry) in &rust_caps.vcp {
+        let c_entry = malloc(std::mem::size_of::<CVcpEntry>()) as *mut CVcpEntry;
+        if c_entry.is_null() {
+            return false;
+        }
+
+        match &entry.values {
+            Some(values) => {
+                (*c_entry).values_len = values.len() as c_int;
+                if values.is_empty() {
+                    (*c_entry).values = ptr::null_mut();
+                } else {
+                    let values_size = values.len() * std::mem::size_of::<c_ushort>();
+                    let c_values = malloc(values_size) as *mut c_ushort;
+                    if c_values.is_null() {
+                        free(c_entry as *mut c_void);
+                        return false;
+                    }
+                    ptr::copy_nonoverlapping(values.as_ptr(), c_values, values.len());
+                    (*c_entry).values = c_values;
+                }
+            }
+            None => {
+                (*c_entry).values_len = -1;
+                (*c_entry).values = ptr::null_mut();
+            }
+        }
+
+        (*caps).vcp[code as usize] = c_entry;
+    }
+
+    true
+}
+
+unsafe fn free_c_vcp_entries(caps: *mut CCaps) {
+    for entry in &mut (*caps).vcp {
+        if !entry.is_null() {
+            free((**entry).values as *mut c_void);
+            free(*entry as *mut c_void);
+            *entry = ptr::null_mut();
+        }
     }
 }
 
