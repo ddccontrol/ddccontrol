@@ -393,144 +393,112 @@ msgid "Thank you.\n"
 msgstr "Děkujeme.\n"
 
 #. arbitration or no acknowledge
-#: ../src/ddcpci/i2c-algo-bit.c:368
 #, c-format
 msgid "sendbytes: error - bailout.\n"
 msgstr "sendbytes: chyba - pomoc.\n"
 
 #. read timed out
-#: ../src/ddcpci/i2c-algo-bit.c:395
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: i2c_inb timed out.\n"
 msgstr "i2c-algo-bit.o: readbytes: čas i2c_inb vypršel.\n"
 
-#: ../src/ddcpci/i2c-algo-bit.c:414
 #, c-format
 msgid "i2c-algo-bit.o: readbytes: Timeout at ack\n"
 msgstr "i2c-algo-bit.o: readbytes: v ACK timeout\n"
 
-#: ../src/ddcpci/intel740.c:103 ../src/ddcpci/intel810.c:162
-#: ../src/ddcpci/nvidia.c:155 ../src/ddcpci/radeon.c:209
-#: ../src/ddcpci/sis.c:174 ../src/ddcpci/via.c:167
 #, c-format
 msgid "%s: Malloc error.\n"
 msgstr "%s: Chyba malloc.\n"
 
-#: ../src/ddcpci/intel740.c:109
 #, c-format
 msgid "%s: ioperm failed"
 msgstr "%s: ioperm selhalo"
 
-#: ../src/ddcpci/intel740.c:121
 #, c-format
 msgid "%s: Error: unknown card type (%#x)\n"
 msgstr "%s: Chyba: neznámý typ karty (%#x)\n"
 
-#: ../src/ddcpci/intel810.c:105
 #, c-format
 msgid "%s: Malloc error."
 msgstr " %s: Chyba malloc."
 
-#: ../src/ddcpci/intel810.c:172
 msgid "i810_open: cannot open /dev/mem"
 msgstr "i810_open: nelze otevřít /dev/mem"
 
-#: ../src/ddcpci/intel810.c:207
 #, c-format
 msgid "i810_open: Error: cannot find any valid MMIO PCI region.\n"
 msgstr "i810_open: Chyba: nelze najít žádný platný MMIO PCI region.\n"
 
-#: ../src/ddcpci/intel810.c:214
 msgid "i810_open: mmap failed"
 msgstr "i810_open: mmap selhalo"
 
-#: ../src/ddcpci/main.c:160
 msgid "==>Error while sending open message"
 msgstr "==>Chyba při odesílání otevírací zprávy"
 
-#: ../src/ddcpci/main.c:184 ../src/ddcpci/main.c:190 ../src/ddcpci/main.c:208
 msgid "==>Error while sending data answer message"
 msgstr "==>Chyba při odesílání dat zprávy s odpovědí"
 
-#: ../src/ddcpci/main.c:257 ../src/ddcpci/main.c:272
 msgid "==>Error while sending list message"
 msgstr "==>Chyba při odesílání zprávy se seznamem"
 
-#: ../src/ddcpci/main.c:290
 #, c-format
 msgid "Invalid arguments.\n"
 msgstr "Neplatné argumenty.\n"
 
-#: ../src/ddcpci/main.c:296
 #, c-format
 msgid "==>Can't read verbosity.\n"
 msgstr "==>Nelze přečíst upovídanost.\n"
 
-#: ../src/ddcpci/main.c:303
 #, c-format
 msgid "==>Can't read key.\n"
 msgstr "==>Nelze načíst klíč.\n"
 
-#: ../src/ddcpci/main.c:308
 #, c-format
 msgid "==>Can't open key %u\n"
 msgstr "==>Nelze otevřít klíč %u\n"
 
-#: ../src/ddcpci/main.c:322
 #, c-format
 msgid "==>No command received for %ld seconds, aborting.\n"
 msgstr "==>Během %ld sekund nebyl přijat Žádný příkaz, ruší se.\n"
 
-#: ../src/ddcpci/main.c:330
 msgid "==>Error while receiving query\n"
 msgstr "==>Chyba při příjmu dotazu\n"
 
-#: ../src/ddcpci/main.c:365
 #, c-format
 msgid "==>Invalid query...\n"
 msgstr "==>Neplatný dotaz...\n"
 
-#: ../src/ddcpci/nvidia.c:122
 #, c-format
 msgid "nvidia.c:init_i2c_bus: Malloc error."
 msgstr "nvidia.c: init_i2c_bus: Chyba malloc."
 
-#: ../src/ddcpci/nvidia.c:165
 msgid "nvidia_open: cannot open /dev/mem"
 msgstr "nvidia_open: nelze otevřít /dev/mem"
 
-#: ../src/ddcpci/nvidia.c:175
 msgid "nvidia_open: mmap failed"
 msgstr "nvidia_open: mmap selhalo"
 
-#: ../src/ddcpci/radeon.c:173
 #, c-format
 msgid "radeon.c:init_i2c_bus: Malloc error."
 msgstr "radeon.c: init_i2c_bus: Chyba malloc."
 
-#: ../src/ddcpci/radeon.c:221
 msgid "radeon_open: cannot open /dev/mem"
 msgstr "radeon_open: nelze otevřít /dev/mem"
 
-#: ../src/ddcpci/radeon.c:230
 msgid "radeon_open: mmap failed"
 msgstr "radeon_open: mmap selhalo"
 
-#: ../src/ddcpci/sis.c:133
 #, c-format
 msgid "sis.c:init_i2c_bus: Malloc error."
 msgstr "sis.c: init_i2c_bus: Chyba malloc."
 
-#: ../src/ddcpci/via.c:125
 #, c-format
 msgid "via.c:init_i2c_bus: Malloc error."
 msgstr "via.c: init_i2c_bus: Chyba malloc."
 
-#: ../src/ddcpci/via.c:177
 msgid "via_open: cannot open /dev/mem"
 msgstr "via_open: cannot open /dev/mem"
 
-#: ../src/ddcpci/via.c:186
 msgid "via_open: mmap failed"
 msgstr "via_open: mmap selhalo"
 

@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Remove AMD ADL and legacy direct PCI backends.
+
+## [2.2.0] - 2026-05-27
+
 ### Added
 
 - GNOME Shell top-bar brightness menu extension example in `contrib/gnome-shell-extension`

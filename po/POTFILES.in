@@ -2,14 +2,6 @@ src/ddccontrol/main.c
 src/ddccontrol/printing.c
 src/daemon/dbus_client.c
 src/daemon/service.c
-src/ddcpci/i2c-algo-bit.c
-src/ddcpci/intel740.c
-src/ddcpci/intel810.c
-src/ddcpci/main.c
-src/ddcpci/nvidia.c
-src/ddcpci/radeon.c
-src/ddcpci/sis.c
-src/ddcpci/via.c
 src/gddccontrol/fspatterns.c
 src/gddccontrol/gddccontrol.desktop.in
 src/gddccontrol/gprofile.c

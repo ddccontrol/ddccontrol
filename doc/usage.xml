@@ -42,23 +42,22 @@ Copyright 2004 Nicolas Boichat (nicolas-at-boichat.ch)
 This program comes with ABSOLUTELY NO WARRANTY.
 You may redistribute copies of this program under the terms of the GNU General Public License.
 
-Device : pci:01:00.0-0
-Error while reading write message answer: Bad message
+Device : dev:/dev/i2c-0
 Reading EDID 0x50 failed.
-Device : pci:01:00.0-1
-Device : pci:01:00.0-2
+Device : dev:/dev/i2c-1
+Device : dev:/dev/i2c-2
 Detected monitors :
- - Device : pci:01:00.0-1
+ - Device : dev:/dev/i2c-1
    DDC/CI supported : Yes
    Monitor Name : Samsung SyncMaster 173P (DVI)
    Input type : Digital
   (Automatically selected)
- - Device : pci:01:00.0-2
+ - Device : dev:/dev/i2c-2
    DDC/CI supported : Yes
    Monitor Name : NEC Multisync 2080UX+
    Input type : Analog
-Reading EDID and initializing DDC/CI at bus pci:01:00.0-1...
-Device : pci:01:00.0-1
+Reading EDID and initializing DDC/CI at bus dev:/dev/i2c-1...
+Device : dev:/dev/i2c-1
 
 EDID readings:
    Plug and Play ID: SAM00E2 [Samsung SyncMaster 173P (DVI)]

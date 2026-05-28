@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://docbook.org/xml/4.3/docbookx.dtd" [
-<!ENTITY about SYSTEM "about.xml">
-<!ENTITY install SYSTEM "install.xml">
-<!ENTITY usage SYSTEM "usage.xml">
-<!ENTITY report SYSTEM "report.xml">
-<!ENTITY supportedmonitors SYSTEM "supportedmonitors.xml">
-<!ENTITY supportedgc SYSTEM "supportedgc.xml">
-<!ENTITY thanks SYSTEM "thanks.xml">
-<!ENTITY techdocs SYSTEM "techdocs.xml">
-<!ENTITY gpl SYSTEM "gpl.xml">
+<!ENTITY about SYSTEM "@srcdir@/about.xml">
+<!ENTITY install SYSTEM "@srcdir@/install.xml">
+<!ENTITY usage SYSTEM "@srcdir@/usage.xml">
+<!ENTITY report SYSTEM "@srcdir@/report.xml">
+<!ENTITY supportedmonitors SYSTEM "@srcdir@/supportedmonitors.xml">
+<!ENTITY supportedgc SYSTEM "@srcdir@/supportedgc.xml">
+<!ENTITY thanks SYSTEM "@srcdir@/thanks.xml">
+<!ENTITY techdocs SYSTEM "@srcdir@/techdocs.xml">
+<!ENTITY gpl SYSTEM "@srcdir@/gpl.xml">
 ]>
  
 <book>

@@ -24,8 +24,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define IDLE_TIMEOUT 60
-
 #include "gui.h"
 #include "internal.h"
 
@@ -313,12 +311,6 @@ void set_message_ok(char* message, int with_ok)
 		gtk_main_iteration();
 }
 
-static gboolean heartbeat(gpointer data)
-{
-	ddcpci_send_heartbeat();
-	return G_SOURCE_CONTINUE;
-}
-
 /* Create a new button with an image and a label packed into it
  * and return the button. */
 GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_text, const gchar *tool_tip)
@@ -470,8 +462,6 @@ int main( int argc, char *argv[] )
 		gtk_widget_destroy (dialog);
 		return 1;
 	}
-	
-	g_timeout_add( IDLE_TIMEOUT*1000, heartbeat, NULL );
 	
 	gtk_window_set_default_icon_name ("gddccontrol");
 
