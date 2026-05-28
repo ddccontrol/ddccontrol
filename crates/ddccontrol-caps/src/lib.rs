@@ -271,6 +271,7 @@ mod monitor_db {
     use std::sync::Mutex;
 
     const DBVERSION: i64 = 3;
+    #[cfg(not(test))]
     const DBPACKAGE: &[u8] = b"ddccontrol-db\0";
     const DEFAULT_DATADIR: &str = match option_env!("DDCONTROL_DATADIR") {
         Some(value) => value,
@@ -334,6 +335,7 @@ mod monitor_db {
         group_list: *mut CGroupDb,
     }
 
+    #[cfg(not(test))]
     unsafe extern "C" {
         fn dgettext(domainname: *const c_char, msgid: *const c_char) -> *mut c_char;
     }
@@ -422,8 +424,8 @@ mod monitor_db {
     }
 
     struct MonitorValue {
-        id: String,
-        value16: u16,
+        id: Option<String>,
+        raw_value: Option<String>,
         line: u32,
     }
 
@@ -897,9 +899,20 @@ mod monitor_db {
                 .values
                 .iter()
                 .enumerate()
-                .find(|(_, value)| value.id == option_value.id)
+                .find(|(_, value)| value.id.as_deref() == Some(option_value.id.as_str()))
             {
                 matched[monitor_index] = true;
+                let raw_value = monitor_value
+                    .raw_value
+                    .as_deref()
+                    .ok_or_else(|| DbError::new("Can't find value property.".to_string()))?;
+                let parsed_value = parse_int(raw_value)
+                    .map_err(|_| DbError::new("Can't convert value to int.".to_string()))?;
+                if !(0..=u16::MAX as i64).contains(&parsed_value) {
+                    return Err(DbError::new(
+                        "Value is outside the supported 0-65535 range.".to_string(),
+                    ));
+                }
                 let name = if option_control.control_type == CONTROL_TYPE_COMMAND {
                     option_value
                         .name
@@ -915,7 +928,7 @@ mod monitor_db {
                 values.push(DbValue {
                     id: option_value.id.clone(),
                     name: translate(&name),
-                    value16: monitor_value.value16,
+                    value16: parsed_value as u16,
                 });
             }
         }
@@ -924,7 +937,8 @@ mod monitor_db {
             if !matched[index] {
                 eprintln!(
                     "Element value (id={}) has not been found (line {}).",
-                    value.id, value.line
+                    value.id.as_deref().unwrap_or("(null)"),
+                    value.line
                 );
                 if !faulttolerance {
                     return Err(DbError::new("Unmatched value in monitor XML.".to_string()));
@@ -961,17 +975,9 @@ mod monitor_db {
             };
             for value in element_children(control).filter(|node| node.tag_name().name() == "value")
             {
-                let parsed_value = parse_int(required_attr(value, "value")?)
-                    .map_err(|_| node_error(value, "Can't convert value to int."))?;
-                if !(0..=u16::MAX as i64).contains(&parsed_value) {
-                    return Err(node_error(
-                        value,
-                        "Value is outside the supported 0-65535 range.",
-                    ));
-                }
                 monitor_control.values.push(MonitorValue {
-                    id: required_attr(value, "id")?.to_string(),
-                    value16: parsed_value as u16,
+                    id: value.attribute("id").map(ToString::to_string),
+                    raw_value: value.attribute("value").map(ToString::to_string),
                     line: line(value),
                 });
             }
@@ -1152,15 +1158,23 @@ mod monitor_db {
     }
 
     fn translate(input: &str) -> String {
-        let Ok(c_input) = CString::new(input) else {
+        #[cfg(test)]
+        {
             return input.to_string();
-        };
-        unsafe {
-            let translated = dgettext(DBPACKAGE.as_ptr() as *const c_char, c_input.as_ptr());
-            if translated.is_null() {
-                input.to_string()
-            } else {
-                CStr::from_ptr(translated).to_string_lossy().into_owned()
+        }
+
+        #[cfg(not(test))]
+        {
+            let Ok(c_input) = CString::new(input) else {
+                return input.to_string();
+            };
+            unsafe {
+                let translated = dgettext(DBPACKAGE.as_ptr() as *const c_char, c_input.as_ptr());
+                if translated.is_null() {
+                    input.to_string()
+                } else {
+                    CStr::from_ptr(translated).to_string_lossy().into_owned()
+                }
             }
         }
     }
@@ -1183,9 +1197,14 @@ mod monitor_db {
     }
 
     fn parse_int(input: &str) -> Result<i64, std::num::ParseIntError> {
-        let (negative, rest) = input
-            .strip_prefix('-')
-            .map_or((false, input), |rest| (true, rest));
+        let input = input.trim_ascii_start();
+        let (negative, rest) = if let Some(rest) = input.strip_prefix('-') {
+            (true, rest)
+        } else if let Some(rest) = input.strip_prefix('+') {
+            (false, rest)
+        } else {
+            (false, input)
+        };
         let (radix, digits) =
             if let Some(rest) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
                 (16, rest)
@@ -1199,7 +1218,7 @@ mod monitor_db {
     }
 
     fn parse_int_decimal(input: &str) -> Result<i64, std::num::ParseIntError> {
-        input.parse::<i64>()
+        input.trim_ascii_start().parse::<i64>()
     }
 
     fn is_valid_monitor_profile_name(name: &str) -> bool {
@@ -1207,6 +1226,60 @@ mod monitor_db {
             && name
                 .bytes()
                 .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn parse_int_matches_strtol_style_database_values() {
+            assert_eq!(parse_int(" 1").unwrap(), 1);
+            assert_eq!(parse_int("+1").unwrap(), 1);
+            assert_eq!(parse_int("-1").unwrap(), -1);
+            assert_eq!(parse_int("0x10").unwrap(), 16);
+            assert_eq!(parse_int("010").unwrap(), 8);
+            assert!(parse_int("09").is_err());
+            assert!(parse_int("1 ").is_err());
+        }
+
+        #[test]
+        fn unmatched_monitor_values_are_not_parsed() {
+            let option_control = OptionControl {
+                id: "input".to_string(),
+                name: "Input".to_string(),
+                control_type: CONTROL_TYPE_LIST,
+                refresh: REFRESH_TYPE_NONE,
+                values: vec![OptionValue {
+                    id: "hdmi".to_string(),
+                    name: Some("HDMI".to_string()),
+                }],
+            };
+            let monitor_control = MonitorControl {
+                id: "input".to_string(),
+                address: 0x60,
+                delay: -1,
+                values: vec![
+                    MonitorValue {
+                        id: Some("hdmi".to_string()),
+                        raw_value: Some(" 1".to_string()),
+                        line: 1,
+                    },
+                    MonitorValue {
+                        id: Some("unused".to_string()),
+                        raw_value: Some("not-an-int".to_string()),
+                        line: 2,
+                    },
+                ],
+                line: 1,
+            };
+
+            let values = get_value_list(&option_control, &monitor_control, true).unwrap();
+
+            assert_eq!(values.len(), 1);
+            assert_eq!(values[0].id, "hdmi");
+            assert_eq!(values[0].value16, 1);
+        }
     }
 
     #[derive(Debug)]

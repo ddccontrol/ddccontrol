@@ -145,6 +145,7 @@ static void check_integrity(char *datadir, char *pnpname)
 	}
 
 	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
 	ddcci_parse_caps(buffer, &caps, 1);
 
 	printf(_("Checking %s integrity...\n"), pnpname);
