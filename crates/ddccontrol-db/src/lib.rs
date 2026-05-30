@@ -18,7 +18,7 @@ pub struct CCaps {
     raw_caps: *mut c_char,
 }
 
-unsafe extern "C" {
+extern "C" {
     fn malloc(size: usize) -> *mut c_void;
     fn free(ptr: *mut c_void);
 }
@@ -233,7 +233,7 @@ mod monitor_db {
     }
 
     #[cfg(not(test))]
-    unsafe extern "C" {
+    extern "C" {
         fn dgettext(domainname: *const c_char, msgid: *const c_char) -> *mut c_char;
     }
 
@@ -1094,7 +1094,7 @@ mod monitor_db {
     }
 
     fn parse_int(input: &str) -> Result<i64, std::num::ParseIntError> {
-        let input = input.trim_ascii_start();
+        let input = trim_ascii_start(input);
         let (negative, rest) = if let Some(rest) = input.strip_prefix('-') {
             (true, rest)
         } else if let Some(rest) = input.strip_prefix('+') {
@@ -1115,7 +1115,11 @@ mod monitor_db {
     }
 
     fn parse_int_decimal(input: &str) -> Result<i64, std::num::ParseIntError> {
-        input.trim_ascii_start().parse::<i64>()
+        trim_ascii_start(input).parse::<i64>()
+    }
+
+    fn trim_ascii_start(input: &str) -> &str {
+        input.trim_start_matches(|byte: char| byte.is_ascii_whitespace())
     }
 
     fn is_valid_monitor_profile_name(name: &str) -> bool {
