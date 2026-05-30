@@ -830,6 +830,16 @@ mod monitor_db {
         let mut values = Vec::new();
         let mut matched = vec![false; monitor_control.values.len()];
 
+        for monitor_value in monitor_control
+            .values
+            .iter()
+            .filter(|value| value.element_name == "value")
+        {
+            if monitor_value.id.is_none() {
+                return Err(DbError::new("Can't find id property.".to_string()));
+            }
+        }
+
         for option_value in &option_control.values {
             if let Some((monitor_index, monitor_value)) = monitor_control
                 .values
@@ -901,22 +911,20 @@ mod monitor_db {
             if control.tag_name().name() != "control" {
                 continue;
             }
+            let Some(id) = control.attribute("id") else {
+                continue;
+            };
             let mut monitor_control = MonitorControl {
-                id: required_attr(control, "id")?.to_string(),
+                id: id.to_string(),
                 raw_address: control.attribute("address").map(ToString::to_string),
                 raw_delay: control.attribute("delay").map(ToString::to_string),
                 values: Vec::new(),
                 child_index,
             };
             for value in element_children(control) {
-                let id = if value.tag_name().name() == "value" {
-                    Some(required_attr(value, "id")?.to_string())
-                } else {
-                    value.attribute("id").map(ToString::to_string)
-                };
                 monitor_control.values.push(MonitorValue {
                     element_name: value.tag_name().name().to_string(),
-                    id,
+                    id: value.attribute("id").map(ToString::to_string),
                     raw_value: value.attribute("value").map(ToString::to_string),
                     line: line(value),
                 });
@@ -1251,7 +1259,7 @@ mod monitor_db {
         }
 
         #[test]
-        fn parse_monitor_controls_requires_value_id() {
+        fn missing_value_id_is_deferred_until_control_is_matched() {
             let doc = Document::parse(
                 r#"<controls>
                     <control id="input" address="0x60">
@@ -1261,7 +1269,55 @@ mod monitor_db {
             )
             .unwrap();
 
-            assert!(parse_monitor_controls(doc.root_element()).is_err());
+            let parsed = parse_monitor_controls(doc.root_element()).unwrap();
+
+            assert_eq!(parsed.controls.len(), 1);
+            assert!(parsed.controls[0].values[0].id.is_none());
+        }
+
+        #[test]
+        fn matched_monitor_values_require_id() {
+            let option_control = OptionControl {
+                id: "input".to_string(),
+                name: "Input".to_string(),
+                control_type: CONTROL_TYPE_LIST,
+                refresh: REFRESH_TYPE_NONE,
+                values: vec![OptionValue {
+                    id: "hdmi".to_string(),
+                    name: Some("HDMI".to_string()),
+                }],
+            };
+            let monitor_control = MonitorControl {
+                id: "input".to_string(),
+                raw_address: Some("0x60".to_string()),
+                raw_delay: None,
+                values: vec![MonitorValue {
+                    element_name: "value".to_string(),
+                    id: None,
+                    raw_value: Some("1".to_string()),
+                    line: 1,
+                }],
+                child_index: 0,
+            };
+
+            assert!(get_value_list(&option_control, &monitor_control, true).is_err());
+        }
+
+        #[test]
+        fn parse_monitor_controls_keeps_control_without_id_unmatched() {
+            let doc = Document::parse(
+                r#"<controls>
+                    <control address="0x60"/>
+                </controls>"#,
+            )
+            .unwrap();
+
+            let parsed = parse_monitor_controls(doc.root_element()).unwrap();
+
+            assert_eq!(parsed.elements.len(), 1);
+            assert_eq!(parsed.elements[0].name, "control");
+            assert!(parsed.elements[0].id.is_none());
+            assert!(parsed.controls.is_empty());
         }
 
         #[test]
