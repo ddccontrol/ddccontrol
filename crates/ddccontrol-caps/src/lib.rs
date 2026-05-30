@@ -283,7 +283,10 @@ impl<'a> Parser<'a> {
                     self.skip_spaces();
 
                     let values = if self.consume(b'(') {
-                        Some(self.parse_vcp_values()?)
+                        match self.parse_vcp_values()? {
+                            values if values.is_empty() => None,
+                            values => Some(values),
+                        }
                     } else {
                         None
                     };
@@ -365,14 +368,13 @@ impl<'a> Parser<'a> {
             return Err(self.err_at(ErrorKind::InvalidHex, position));
         }
 
-        let end = self.pos + 2;
-        let token = &self.input[self.pos..end];
-        if !token.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        let token = &self.bytes[self.pos..self.pos + 2];
+        if !token.iter().all(u8::is_ascii_hexdigit) {
             return Err(self.err_at(ErrorKind::InvalidHex, position));
         }
 
-        self.pos = end;
-        Ok(u8::from_str_radix(token, 16).expect("validated hex byte"))
+        self.pos += 2;
+        Ok(hex_nibble(token[0]) * 16 + hex_nibble(token[1]))
     }
 
     fn take_name(&mut self) -> &'a str {
@@ -436,6 +438,15 @@ fn parse_hex_u16(token: &str) -> Option<u16> {
         return None;
     }
     u16::from_str_radix(token, 16).ok()
+}
+
+fn hex_nibble(byte: u8) -> u8 {
+    match byte {
+        b'0'..=b'9' => byte - b'0',
+        b'a'..=b'f' => byte - b'a' + 10,
+        b'A'..=b'F' => byte - b'A' + 10,
+        _ => unreachable!("validated hex byte"),
+    }
 }
 
 #[cfg(test)]
@@ -535,6 +546,15 @@ mod tests {
     }
 
     #[test]
+    fn empty_value_list_matches_legacy_all_values_entry() {
+        let mut caps = Caps::parse("(vcp(10()))").unwrap();
+
+        assert_eq!(caps.vcp(0x10).unwrap().values(), None);
+        assert_eq!(caps.apply_remove("(vcp(10()))").unwrap(), 1);
+        assert!(!caps.is_supported(0x10));
+    }
+
+    #[test]
     fn accepts_uppercase_type_names() {
         assert_eq!(
             Caps::parse("(type(LCD))").unwrap().monitor_type(),
@@ -575,6 +595,10 @@ mod tests {
         );
         assert_eq!(
             Caps::parse("(vcp(-1))").unwrap_err().kind(),
+            ErrorKind::InvalidHex
+        );
+        assert_eq!(
+            Caps::parse("(vcp(☃))").unwrap_err().kind(),
             ErrorKind::InvalidHex
         );
     }

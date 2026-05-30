@@ -325,8 +325,8 @@ mod monitor_db {
 
     struct MonitorControl {
         id: String,
-        address: u8,
-        delay: c_int,
+        raw_address: Option<String>,
+        raw_delay: Option<String>,
         values: Vec<MonitorValue>,
         child_index: usize,
     }
@@ -742,7 +742,7 @@ mod monitor_db {
                     };
 
                     matched[monitor_control.child_index] = true;
-                    let address = monitor_control.address as usize;
+                    let address = monitor_control_address(monitor_control)? as usize;
                     unsafe {
                         if (*caps).vcp[address].is_null() {
                             continue;
@@ -765,8 +765,8 @@ mod monitor_db {
                     let control = DbControl {
                         id: option_control.id.clone(),
                         name: translate(&option_control.name),
-                        address: monitor_control.address,
-                        delay: monitor_control.delay,
+                        address: address as u8,
+                        delay: monitor_control_delay(monitor_control)?,
                         control_type: option_control.control_type,
                         refresh: option_control.refresh,
                         values,
@@ -796,6 +796,30 @@ mod monitor_db {
         }
 
         Ok(())
+    }
+
+    fn monitor_control_address(monitor_control: &MonitorControl) -> Result<u8, DbError> {
+        let raw_address = monitor_control
+            .raw_address
+            .as_deref()
+            .ok_or_else(|| DbError::new("Can't find address property.".to_string()))?;
+        let address = parse_int(raw_address)
+            .map_err(|_| DbError::new("Can't convert address to int.".to_string()))?;
+        if !(0..=255).contains(&address) {
+            return Err(DbError::new(
+                "Address is outside the supported 0-255 range.".to_string(),
+            ));
+        }
+        Ok(address as u8)
+    }
+
+    fn monitor_control_delay(monitor_control: &MonitorControl) -> Result<c_int, DbError> {
+        match monitor_control.raw_delay.as_deref() {
+            Some(delay) => parse_int_decimal(delay)
+                .map(|delay| delay as c_int)
+                .map_err(|_| DbError::new("Can't convert delay to int.".to_string())),
+            None => Ok(-1),
+        }
     }
 
     fn get_value_list(
@@ -877,24 +901,10 @@ mod monitor_db {
             if control.tag_name().name() != "control" {
                 continue;
             }
-            let address = parse_int(required_attr(control, "address")?)
-                .map_err(|_| node_error(control, "Can't convert address to int."))?;
-            if !(0..=255).contains(&address) {
-                return Err(node_error(
-                    control,
-                    "Address is outside the supported 0-255 range.",
-                ));
-            }
-            let delay = match control.attribute("delay") {
-                Some(delay) => parse_int_decimal(delay)
-                    .map_err(|_| node_error(control, "Can't convert delay to int."))?
-                    as c_int,
-                None => -1,
-            };
             let mut monitor_control = MonitorControl {
                 id: required_attr(control, "id")?.to_string(),
-                address: address as u8,
-                delay,
+                raw_address: control.attribute("address").map(ToString::to_string),
+                raw_delay: control.attribute("delay").map(ToString::to_string),
                 values: Vec::new(),
                 child_index,
             };
@@ -1196,8 +1206,8 @@ mod monitor_db {
             };
             let monitor_control = MonitorControl {
                 id: "input".to_string(),
-                address: 0x60,
-                delay: -1,
+                raw_address: Some("0x60".to_string()),
+                raw_delay: None,
                 values: vec![
                     MonitorValue {
                         element_name: "value".to_string(),
@@ -1255,6 +1265,22 @@ mod monitor_db {
         }
 
         #[test]
+        fn parse_monitor_controls_defers_address_and_delay_validation() {
+            let doc = Document::parse(
+                r#"<controls>
+                    <control id="unknown" address="not-hex" delay="bad"/>
+                </controls>"#,
+            )
+            .unwrap();
+
+            let parsed = parse_monitor_controls(doc.root_element()).unwrap();
+
+            assert_eq!(parsed.controls.len(), 1);
+            assert!(monitor_control_address(&parsed.controls[0]).is_err());
+            assert!(monitor_control_delay(&parsed.controls[0]).is_err());
+        }
+
+        #[test]
         fn unknown_monitor_value_children_use_unmatched_validation() {
             let option_control = OptionControl {
                 id: "input".to_string(),
@@ -1268,8 +1294,8 @@ mod monitor_db {
             };
             let monitor_control = MonitorControl {
                 id: "input".to_string(),
-                address: 0x60,
-                delay: -1,
+                raw_address: Some("0x60".to_string()),
+                raw_delay: None,
                 values: vec![
                     MonitorValue {
                         element_name: "value".to_string(),
