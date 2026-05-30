@@ -9,6 +9,9 @@ description = "Rust monitor database XML parser and C ABI bridge for ddccontrol"
 [lib]
 crate-type = ["staticlib"]
 
+[features]
+gettext = []
+
 [dependencies]
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 roxmltree = "0.20"

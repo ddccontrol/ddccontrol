@@ -168,7 +168,7 @@ mod monitor_db {
     use std::sync::Mutex;
 
     const DBVERSION: i64 = 3;
-    #[cfg(not(test))]
+    #[cfg(all(not(test), feature = "gettext"))]
     const DBPACKAGE: &[u8] = b"ddccontrol-db\0";
     const DEFAULT_DATADIR: &str = match option_env!("DDCONTROL_DATADIR") {
         Some(value) => value,
@@ -232,7 +232,7 @@ mod monitor_db {
         group_list: *mut CGroupDb,
     }
 
-    #[cfg(not(test))]
+    #[cfg(all(not(test), feature = "gettext"))]
     extern "C" {
         fn dgettext(domainname: *const c_char, msgid: *const c_char) -> *mut c_char;
     }
@@ -1093,7 +1093,12 @@ mod monitor_db {
             return input.to_string();
         }
 
-        #[cfg(not(test))]
+        #[cfg(all(not(test), not(feature = "gettext")))]
+        {
+            input.to_string()
+        }
+
+        #[cfg(all(not(test), feature = "gettext"))]
         {
             let Ok(c_input) = CString::new(input) else {
                 return input.to_string();

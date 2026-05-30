@@ -9,6 +9,10 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18.1])
 GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
+AS_IF([test "x$USE_NLS" = "xyes"],
+      [RUST_GETTEXT_FEATURE="--features gettext"],
+      [RUST_GETTEXT_FEATURE=""])
+AC_SUBST([RUST_GETTEXT_FEATURE])
 
 AC_PROG_CC
 AC_PATH_PROG([CARGO], [cargo], [no])

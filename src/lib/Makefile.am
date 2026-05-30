@@ -30,7 +30,7 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
 $(RUST_DB_LIB): $(RUST_DB_DEPS)
-	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db
+	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
 
 libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h \
    i2c-dev.h conf.c conf.h internal.h \
@@ -43,7 +43,7 @@ check_PROGRAMS = test_issueurl test_parse_caps test_edid
 TESTS = $(check_PROGRAMS)
 
 check-local:
-	cd $(top_srcdir) && CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) test --workspace
+	cd $(top_srcdir) && CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) test --workspace $(RUST_GETTEXT_FEATURE)
 
 test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
 test_issueurl_LDADD = libddccontrol.la $(LIBXML2_LIBS)
