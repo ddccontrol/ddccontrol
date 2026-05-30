@@ -334,6 +334,7 @@ mod monitor_db {
             PathBuf::from(CStr::from_ptr(usedatadir).to_string_lossy().into_owned())
         };
 
+        *DB_CONTEXT.lock().unwrap() = None;
         match load_options(&datadir) {
             Ok(options) => {
                 *DB_CONTEXT.lock().unwrap() = Some(DbContext { datadir, options });
@@ -341,7 +342,6 @@ mod monitor_db {
             }
             Err(err) => {
                 eprintln!("{err}");
-                *DB_CONTEXT.lock().unwrap() = None;
                 0
             }
         }
