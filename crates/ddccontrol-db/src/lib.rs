@@ -312,15 +312,27 @@ mod monitor_db {
         value16: u16,
     }
 
+    struct ParsedMonitorControls {
+        controls: Vec<MonitorControl>,
+        elements: Vec<MonitorElement>,
+    }
+
+    struct MonitorElement {
+        name: String,
+        id: Option<String>,
+        line: u32,
+    }
+
     struct MonitorControl {
         id: String,
         address: u8,
         delay: c_int,
         values: Vec<MonitorValue>,
-        line: u32,
+        child_index: usize,
     }
 
     struct MonitorValue {
+        element_name: String,
         id: Option<String>,
         raw_value: Option<String>,
         line: u32,
@@ -711,25 +723,25 @@ mod monitor_db {
     fn add_controls_from_options(
         build: &mut MonitorBuild,
         options: &OptionsDb,
-        monitor_controls: &[MonitorControl],
+        monitor_controls: &ParsedMonitorControls,
         caps: *mut CCaps,
         defined: &mut [bool; 256],
         faulttolerance: bool,
     ) -> Result<(), DbError> {
-        let mut matched = vec![false; monitor_controls.len()];
+        let mut matched = vec![false; monitor_controls.elements.len()];
 
         for (group_index, option_group) in options.groups.iter().enumerate() {
             for (subgroup_index, option_subgroup) in option_group.subgroups.iter().enumerate() {
                 for option_control in &option_subgroup.controls {
-                    let Some((monitor_index, monitor_control)) = monitor_controls
+                    let Some(monitor_control) = monitor_controls
+                        .controls
                         .iter()
-                        .enumerate()
-                        .find(|(_, control)| control.id == option_control.id)
+                        .find(|control| control.id == option_control.id)
                     else {
                         continue;
                     };
 
-                    matched[monitor_index] = true;
+                    matched[monitor_control.child_index] = true;
                     let address = monitor_control.address as usize;
                     unsafe {
                         if (*caps).vcp[address].is_null() {
@@ -767,11 +779,13 @@ mod monitor_db {
             }
         }
 
-        for (index, control) in monitor_controls.iter().enumerate() {
+        for (index, control) in monitor_controls.elements.iter().enumerate() {
             if !matched[index] {
                 eprintln!(
-                    "Element control (id={}) has not been found (line {}).",
-                    control.id, control.line
+                    "Element {} (id={}) has not been found (line {}).",
+                    control.name,
+                    control.id.as_deref().unwrap_or("(null)"),
+                    control.line
                 );
                 if !faulttolerance {
                     return Err(DbError::new(
@@ -797,7 +811,10 @@ mod monitor_db {
                 .values
                 .iter()
                 .enumerate()
-                .find(|(_, value)| value.id.as_deref() == Some(option_value.id.as_str()))
+                .find(|(_, value)| {
+                    value.element_name == "value"
+                        && value.id.as_deref() == Some(option_value.id.as_str())
+                })
             {
                 matched[monitor_index] = true;
                 let raw_value = monitor_value
@@ -834,7 +851,8 @@ mod monitor_db {
         for (index, value) in monitor_control.values.iter().enumerate() {
             if !matched[index] {
                 eprintln!(
-                    "Element value (id={}) has not been found (line {}).",
+                    "Element {} (id={}) has not been found (line {}).",
+                    value.element_name,
                     value.id.as_deref().unwrap_or("(null)"),
                     value.line
                 );
@@ -847,9 +865,18 @@ mod monitor_db {
         Ok(values)
     }
 
-    fn parse_monitor_controls(node: Node<'_, '_>) -> Result<Vec<MonitorControl>, String> {
+    fn parse_monitor_controls(node: Node<'_, '_>) -> Result<ParsedMonitorControls, String> {
         let mut controls = Vec::new();
-        for control in element_children(node).filter(|node| node.tag_name().name() == "control") {
+        let mut elements = Vec::new();
+        for (child_index, control) in element_children(node).enumerate() {
+            elements.push(MonitorElement {
+                name: control.tag_name().name().to_string(),
+                id: control.attribute("id").map(ToString::to_string),
+                line: line(control),
+            });
+            if control.tag_name().name() != "control" {
+                continue;
+            }
             let address = parse_int(required_attr(control, "address")?)
                 .map_err(|_| node_error(control, "Can't convert address to int."))?;
             if !(0..=255).contains(&address) {
@@ -869,19 +896,24 @@ mod monitor_db {
                 address: address as u8,
                 delay,
                 values: Vec::new(),
-                line: line(control),
+                child_index,
             };
-            for value in element_children(control).filter(|node| node.tag_name().name() == "value")
-            {
+            for value in element_children(control) {
+                let id = if value.tag_name().name() == "value" {
+                    Some(required_attr(value, "id")?.to_string())
+                } else {
+                    value.attribute("id").map(ToString::to_string)
+                };
                 monitor_control.values.push(MonitorValue {
-                    id: value.attribute("id").map(ToString::to_string),
+                    element_name: value.tag_name().name().to_string(),
+                    id,
                     raw_value: value.attribute("value").map(ToString::to_string),
                     line: line(value),
                 });
             }
             controls.push(monitor_control);
         }
-        Ok(controls)
+        Ok(ParsedMonitorControls { controls, elements })
     }
 
     fn groups_from_options(options: &OptionsDb) -> Vec<DbGroup> {
@@ -1163,17 +1195,19 @@ mod monitor_db {
                 delay: -1,
                 values: vec![
                     MonitorValue {
+                        element_name: "value".to_string(),
                         id: Some("hdmi".to_string()),
                         raw_value: Some(" 1".to_string()),
                         line: 1,
                     },
                     MonitorValue {
+                        element_name: "value".to_string(),
                         id: Some("unused".to_string()),
                         raw_value: Some("not-an-int".to_string()),
                         line: 2,
                     },
                 ],
-                line: 1,
+                child_index: 0,
             };
 
             let values = get_value_list(&option_control, &monitor_control, true).unwrap();
@@ -1181,6 +1215,75 @@ mod monitor_db {
             assert_eq!(values.len(), 1);
             assert_eq!(values[0].id, "hdmi");
             assert_eq!(values[0].value16, 1);
+        }
+
+        #[test]
+        fn parse_monitor_controls_keeps_unknown_control_children_for_validation() {
+            let doc = Document::parse(
+                r#"<controls>
+                    <unknown id="bad"/>
+                    <control id="input" address="0x60"/>
+                </controls>"#,
+            )
+            .unwrap();
+
+            let parsed = parse_monitor_controls(doc.root_element()).unwrap();
+
+            assert_eq!(parsed.elements.len(), 2);
+            assert_eq!(parsed.elements[0].name, "unknown");
+            assert_eq!(parsed.controls.len(), 1);
+            assert_eq!(parsed.controls[0].child_index, 1);
+        }
+
+        #[test]
+        fn parse_monitor_controls_requires_value_id() {
+            let doc = Document::parse(
+                r#"<controls>
+                    <control id="input" address="0x60">
+                        <value value="1"/>
+                    </control>
+                </controls>"#,
+            )
+            .unwrap();
+
+            assert!(parse_monitor_controls(doc.root_element()).is_err());
+        }
+
+        #[test]
+        fn unknown_monitor_value_children_use_unmatched_validation() {
+            let option_control = OptionControl {
+                id: "input".to_string(),
+                name: "Input".to_string(),
+                control_type: CONTROL_TYPE_LIST,
+                refresh: REFRESH_TYPE_NONE,
+                values: vec![OptionValue {
+                    id: "hdmi".to_string(),
+                    name: Some("HDMI".to_string()),
+                }],
+            };
+            let monitor_control = MonitorControl {
+                id: "input".to_string(),
+                address: 0x60,
+                delay: -1,
+                values: vec![
+                    MonitorValue {
+                        element_name: "value".to_string(),
+                        id: Some("hdmi".to_string()),
+                        raw_value: Some("1".to_string()),
+                        line: 1,
+                    },
+                    MonitorValue {
+                        element_name: "unknown".to_string(),
+                        id: Some("extra".to_string()),
+                        raw_value: None,
+                        line: 2,
+                    },
+                ],
+                child_index: 0,
+            };
+
+            assert!(get_value_list(&option_control, &monitor_control, false).is_err());
+            assert!(get_value_list(&option_control, &monitor_control, true).is_ok());
         }
     }
 
