@@ -341,6 +341,7 @@ mod monitor_db {
             }
             Err(err) => {
                 eprintln!("{err}");
+                *DB_CONTEXT.lock().unwrap() = None;
                 0
             }
         }

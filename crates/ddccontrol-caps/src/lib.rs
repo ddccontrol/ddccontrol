@@ -107,6 +107,8 @@ impl Caps {
                                 if values.is_empty() {
                                     self.vcp.remove(&item.code);
                                 }
+                            } else {
+                                self.vcp.remove(&item.code);
                             }
                         }
                     }
@@ -522,6 +524,14 @@ mod tests {
         assert_eq!(caps.apply_add("(vcp(12 60(0f)))").unwrap(), 2);
         assert!(caps.is_supported(0x12));
         assert_eq!(caps.vcp(0x60).unwrap().values(), Some([0x0f].as_slice()));
+    }
+
+    #[test]
+    fn removing_specific_values_from_all_values_removes_control() {
+        let mut caps = Caps::parse("(vcp(10))").unwrap();
+
+        assert_eq!(caps.apply_remove("(vcp(10(01)))").unwrap(), 1);
+        assert!(!caps.is_supported(0x10));
     }
 
     #[test]

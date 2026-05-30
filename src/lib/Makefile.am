@@ -42,6 +42,9 @@ libddccontrol_la_LIBADD = $(RUST_DB_LIB) $(LIBXML2_LIBS)
 check_PROGRAMS = test_issueurl test_parse_caps test_edid
 TESTS = $(check_PROGRAMS)
 
+check-local:
+	cd $(top_srcdir) && CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) test --workspace
+
 test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
 test_issueurl_LDADD = libddccontrol.la $(LIBXML2_LIBS)
 
