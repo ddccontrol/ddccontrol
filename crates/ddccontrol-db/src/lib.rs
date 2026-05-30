@@ -280,25 +280,25 @@ mod monitor_db {
 
     #[derive(Default)]
     struct MonitorBuild {
-        name: Option<String>,
+        name: Option<Vec<u8>>,
         init: c_int,
         groups: Vec<DbGroup>,
     }
 
     struct DbGroup {
-        name: String,
+        name: Vec<u8>,
         subgroups: Vec<DbSubgroup>,
     }
 
     struct DbSubgroup {
-        name: String,
+        name: Vec<u8>,
         pattern: Option<String>,
         controls: Vec<DbControl>,
     }
 
     struct DbControl {
         id: String,
-        name: String,
+        name: Vec<u8>,
         address: u8,
         delay: c_int,
         control_type: c_int,
@@ -308,7 +308,7 @@ mod monitor_db {
 
     struct DbValue {
         id: String,
-        name: String,
+        name: Vec<u8>,
         value16: u16,
     }
 
@@ -634,7 +634,8 @@ mod monitor_db {
             build.name = Some(
                 root.attribute("name")
                     .ok_or_else(|| DbError::new(node_error(root, "Can't find name property.")))?
-                    .to_string(),
+                    .as_bytes()
+                    .to_vec(),
             );
         }
 
@@ -995,7 +996,7 @@ mod monitor_db {
             ptr::write(
                 monitor,
                 CMonitorDb {
-                    name: c_string(build.name.as_deref().unwrap_or_default())?,
+                    name: c_bytes(build.name.as_deref().unwrap_or_default())?,
                     init: build.init,
                     group_list: alloc_groups(&build.groups)?,
                 },
@@ -1015,7 +1016,7 @@ mod monitor_db {
             ptr::write(
                 node,
                 CGroupDb {
-                    name: c_string(&group.name)?,
+                    name: c_bytes(&group.name)?,
                     next: ptr::null_mut(),
                     subgroup_list: alloc_subgroups(&group.subgroups)?,
                 },
@@ -1037,7 +1038,7 @@ mod monitor_db {
             ptr::write(
                 node,
                 CSubgroupDb {
-                    name: c_string(&subgroup.name)?,
+                    name: c_bytes(&subgroup.name)?,
                     pattern: match &subgroup.pattern {
                         Some(pattern) => c_string(pattern)?,
                         None => ptr::null_mut(),
@@ -1064,7 +1065,7 @@ mod monitor_db {
                 node,
                 CControlDb {
                     id: c_string(&control.id)?,
-                    name: c_string(&control.name)?,
+                    name: c_bytes(&control.name)?,
                     address: control.address,
                     delay: control.delay,
                     control_type: control.control_type,
@@ -1092,7 +1093,7 @@ mod monitor_db {
                 CValueDbPrivate {
                     public_value: CValueDb {
                         id: c_string(&value.id)?,
-                        name: c_string(&value.name)?,
+                        name: c_bytes(&value.name)?,
                         value: (value.value16 & 0xff) as c_uchar,
                         next: ptr::null_mut(),
                     },
@@ -1106,7 +1107,10 @@ mod monitor_db {
     }
 
     unsafe fn c_string(input: &str) -> Option<*mut c_uchar> {
-        let bytes = input.as_bytes();
+        c_bytes(input.as_bytes())
+    }
+
+    unsafe fn c_bytes(bytes: &[u8]) -> Option<*mut c_uchar> {
         if bytes.contains(&0) {
             return None;
         }
@@ -1119,28 +1123,28 @@ mod monitor_db {
         Some(ptr)
     }
 
-    fn translate(input: &str) -> String {
+    fn translate(input: &str) -> Vec<u8> {
         #[cfg(test)]
         {
-            return input.to_string();
+            return input.as_bytes().to_vec();
         }
 
         #[cfg(all(not(test), not(feature = "gettext")))]
         {
-            input.to_string()
+            input.as_bytes().to_vec()
         }
 
         #[cfg(all(not(test), feature = "gettext"))]
         {
             let Ok(c_input) = CString::new(input) else {
-                return input.to_string();
+                return input.as_bytes().to_vec();
             };
             unsafe {
                 let translated = dgettext(DBPACKAGE.as_ptr() as *const c_char, c_input.as_ptr());
                 if translated.is_null() {
-                    input.to_string()
+                    input.as_bytes().to_vec()
                 } else {
-                    CStr::from_ptr(translated).to_string_lossy().into_owned()
+                    CStr::from_ptr(translated).to_bytes().to_vec()
                 }
             }
         }
@@ -1215,6 +1219,19 @@ mod monitor_db {
             let path = unsafe { pathbuf_from_c_path(c_path.as_ptr()) };
 
             assert_eq!(path.as_os_str().as_bytes(), raw_path);
+        }
+
+        #[test]
+        fn c_bytes_preserves_non_utf8_labels() {
+            let label = b"Contr\xf4le".to_vec();
+
+            let ptr = unsafe { c_bytes(&label).unwrap() };
+            let copied = unsafe { CStr::from_ptr(ptr as *const c_char).to_bytes().to_vec() };
+            unsafe {
+                free(ptr as *mut c_void);
+            }
+
+            assert_eq!(copied, label);
         }
 
         #[test]
