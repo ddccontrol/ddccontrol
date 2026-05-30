@@ -343,7 +343,7 @@ mod monitor_db {
         let datadir = if usedatadir.is_null() {
             PathBuf::from(DEFAULT_DATADIR)
         } else {
-            PathBuf::from(CStr::from_ptr(usedatadir).to_string_lossy().into_owned())
+            pathbuf_from_c_path(usedatadir)
         };
 
         *DB_CONTEXT.lock().unwrap() = None;
@@ -356,6 +356,20 @@ mod monitor_db {
                 eprintln!("{err}");
                 0
             }
+        }
+    }
+
+    unsafe fn pathbuf_from_c_path(path: *const c_char) -> PathBuf {
+        #[cfg(unix)]
+        {
+            use std::ffi::OsStr;
+            use std::os::unix::ffi::OsStrExt;
+
+            PathBuf::from(OsStr::from_bytes(CStr::from_ptr(path).to_bytes()))
+        }
+        #[cfg(not(unix))]
+        {
+            PathBuf::from(CStr::from_ptr(path).to_string_lossy().into_owned())
         }
     }
 
@@ -1188,6 +1202,20 @@ mod monitor_db {
     #[cfg(test)]
     mod tests {
         use super::*;
+
+        #[cfg(unix)]
+        #[test]
+        fn c_datadir_paths_preserve_non_utf8_bytes() {
+            use std::ffi::CString;
+            use std::os::unix::ffi::OsStrExt;
+
+            let raw_path = b"/tmp/ddccontrol-\xff-db".to_vec();
+            let c_path = CString::new(raw_path.clone()).unwrap();
+
+            let path = unsafe { pathbuf_from_c_path(c_path.as_ptr()) };
+
+            assert_eq!(path.as_os_str().as_bytes(), raw_path);
+        }
 
         #[test]
         fn parse_int_matches_strtol_style_database_values() {
