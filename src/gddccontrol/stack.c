@@ -830,7 +830,30 @@ void create_monitor_manager(struct monitorlist* monitor)
 	set_message(tmp);
 	g_free(tmp);
 	
-	if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
+	if (ddccontrol_proxy != NULL) {
+		if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
+			set_message(_(
+				"An error occurred while opening the monitor device.\n"
+				"Maybe this monitor was disconnected, please click on "
+				"the refresh button near the monitor list."));
+			monitor_manager = NULL;
+			return;
+		}
+	} else {
+		mon = malloc(sizeof(struct monitor));
+		if (mon == NULL || ddcci_open(mon, monitor->filename, 0) < 0) {
+			free(mon);
+			mon = NULL;
+			set_message(_(
+				"An error occurred while opening the monitor device.\n"
+				"Maybe this monitor was disconnected, please click on "
+				"the refresh button near the monitor list."));
+			monitor_manager = NULL;
+			return;
+		}
+	}
+
+	if (mon == NULL) {
 		set_message(_(
 			"An error occurred while opening the monitor device.\n"
 			"Maybe this monitor was disconnected, please click on "
@@ -933,6 +956,8 @@ void delete_monitor_manager()
 	if (mon) {
 		if (modified)
 			ddcci_save(mon);
+		if (ddccontrol_proxy == NULL)
+			ddcci_close(mon);
 	
 		free(mon);
 	}
