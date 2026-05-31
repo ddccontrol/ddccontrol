@@ -159,7 +159,9 @@ unsafe fn free_c_vcp_entries(caps: *mut CCaps) {
 
 mod monitor_db {
     use super::{ddccontrol_caps_parse, free, malloc, CCaps};
+    use encoding_rs::{Encoding, UTF_8};
     use roxmltree::{Document, Node};
+    use std::borrow::Cow;
     use std::ffi::{CStr, CString};
     use std::fs;
     use std::os::raw::{c_char, c_int, c_uchar, c_ushort, c_void};
@@ -489,7 +491,7 @@ mod monitor_db {
 
     fn load_options(datadir: &Path) -> Result<OptionsDb, String> {
         let path = datadir.join("options.xml");
-        let xml = fs::read_to_string(&path)
+        let xml = read_xml_file(&path)
             .map_err(|err| format!("I/O error while reading options.xml: {err}."))?;
         let doc =
             Document::parse(&xml).map_err(|_| "Document not parsed successfully.".to_string())?;
@@ -605,7 +607,7 @@ mod monitor_db {
             .datadir
             .join("monitor")
             .join(format!("{pnpname}.xml"));
-        let xml = match fs::read_to_string(&path) {
+        let xml = match read_xml_file(&path) {
             Ok(xml) => xml,
             Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
                 return Err(DbError::missing(format!(
@@ -811,6 +813,55 @@ mod monitor_db {
         }
 
         Ok(())
+    }
+
+    fn read_xml_file(path: &Path) -> std::io::Result<String> {
+        let bytes = fs::read(path)?;
+        Ok(decode_xml_bytes(&bytes).into_owned())
+    }
+
+    fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {
+        let encoding = xml_declared_encoding(bytes).unwrap_or(UTF_8);
+        let (decoded, _, _) = encoding.decode(bytes);
+        decoded
+    }
+
+    fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
+        let prefix_len = bytes.len().min(256);
+        let prefix = &bytes[..prefix_len];
+        let declaration_start = prefix.iter().position(|byte| !byte.is_ascii_whitespace())?;
+        let prefix = &prefix[declaration_start..];
+        if !prefix.starts_with(b"<?xml") {
+            return None;
+        }
+        let declaration_end = prefix
+            .windows(2)
+            .position(|window| window == b"?>")
+            .unwrap_or(prefix.len());
+        let declaration = &prefix[..declaration_end];
+        let encoding_index = declaration
+            .windows("encoding".len())
+            .position(|window| window == b"encoding")?;
+        let after_encoding = &declaration[encoding_index + "encoding".len()..];
+        let after_encoding = trim_ascii_bytes_start(after_encoding);
+        let after_equals = trim_ascii_bytes_start(after_encoding.strip_prefix(b"=")?);
+        let quote = after_equals.first().copied()?;
+        if quote != b'\'' && quote != b'"' {
+            return None;
+        }
+        let label_end = after_equals[1..]
+            .iter()
+            .position(|byte| *byte == quote)
+            .map(|index| index + 1)?;
+        Encoding::for_label(&after_equals[1..label_end])
+    }
+
+    fn trim_ascii_bytes_start(input: &[u8]) -> &[u8] {
+        let start = input
+            .iter()
+            .position(|byte| !byte.is_ascii_whitespace())
+            .unwrap_or(input.len());
+        &input[start..]
     }
 
     fn monitor_control_address(monitor_control: &MonitorControl) -> Result<u8, DbError> {
@@ -1232,6 +1283,16 @@ mod monitor_db {
             }
 
             assert_eq!(copied, label);
+        }
+
+        #[test]
+        fn decode_xml_bytes_uses_declared_non_utf8_encoding() {
+            let xml =
+                b"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><options name=\"Contr\xf4le\"/>";
+
+            let decoded = decode_xml_bytes(xml);
+
+            assert!(decoded.contains("Contr\u{00f4}le"));
         }
 
         #[test]

@@ -9,8 +9,8 @@ paths, so the Rust port has a small and testable compatibility surface.
 
 ## Ported Behavior
 
-The C parser is implemented in `src/lib/ddcci.c` as `ddcci_parse_caps`. Its
-primary consumers use two pieces of parsed data:
+The previous C parser was implemented in `src/lib/ddcci.c` as
+`ddcci_parse_caps`. Its primary consumers used two pieces of parsed data:
 
 - monitor type, used to choose LCD/CRT/VESA fallback profiles
 - the VCP support table, used to decide whether controls from the monitor

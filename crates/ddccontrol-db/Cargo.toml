@@ -14,4 +14,5 @@ gettext = []
 
 [dependencies]
 ddccontrol-caps = { path = "../ddccontrol-caps" }
+encoding_rs = "0.8"
 roxmltree = "0.20"
