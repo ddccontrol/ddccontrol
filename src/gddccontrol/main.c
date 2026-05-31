@@ -80,6 +80,7 @@ static GMutex combo_change_mutex;
 
 DDCControl *ddccontrol_proxy;
 int hide_unsupported_monitor_warning = 0;
+static gboolean high_contrast_dark = FALSE;
 
 static int verbosity = 0;
 
@@ -405,6 +406,8 @@ int main( int argc, char *argv[] )
 	const GOptionEntry option_entries[] = {
 		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
 		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
+		{ "high-contrast-dark", 0, 0, G_OPTION_ARG_NONE, &high_contrast_dark,
+		  N_("Enable high-contrast dark mode"), NULL },
 		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
 		  N_("Increase verbosity (use multiple times for more output)"), NULL },
 		{ NULL }
@@ -436,6 +439,15 @@ int main( int argc, char *argv[] )
 	g_option_context_free(option_context);
 
 	gtk_init(&argc, &argv);
+	if (high_contrast_dark) {
+		GtkSettings *settings = gtk_settings_get_default();
+		if (settings != NULL) {
+			g_object_set(settings,
+				"gtk-application-prefer-dark-theme", TRUE,
+				"gtk-theme-name", "HighContrastInverse",
+				NULL);
+		}
+	}
 
 	ddcci_verbosity(verbosity);
 
