@@ -14,8 +14,8 @@ DDCcontrol consists of:
 * `gddccontrol` - GUI tool for monitor parameters control
 
 DDCcontrol communicates with monitors from userspace through the Linux
-`i2c-dev` interface (`/dev/i2c-N`). AMD ADL and legacy direct PCI backends have
-been removed. For directly connected displays this uses the same kernel
+`i2c-dev` interface (`/dev/i2c-*`). AMD ADL and legacy direct PCI backends have
+been removed. For directly connected displays, this uses the same kernel
 userspace I2C path as `ddcutil`; USB-connected DDC/CI displays are not supported
 yet.
 
