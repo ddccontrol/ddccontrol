@@ -4,7 +4,7 @@
 <title><filename>/dev/i2c-*</filename> userspace I2C support</title>
 <para>DDCcontrol accesses monitor DDC/CI busses only through
 <filename>/dev/i2c-*</filename> devices provided by the operating system. This
-matches the same kernel userspace I2C path used by tools such as
+uses the same kernel userspace I2C path as tools such as
 <filename>ddcutil</filename> for directly connected displays.</para>
 <para>Legacy direct PCI memory access and AMD ADL support have been removed.
 Use the kernel graphics driver and <filename>i2c-dev</filename> support to
