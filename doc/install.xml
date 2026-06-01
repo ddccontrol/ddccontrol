@@ -90,7 +90,8 @@ distributions do this with an <filename>i2c</filename> group, for example by
 adding your user to that group. For quick local testing, this can also be done
 by typing as root:</para>
 <screen format="linespecific">
-# chmod a+rw /dev/i2c-*
+# chgrp i2c /dev/i2c-*
+# chmod g+rw /dev/i2c-*
 </screen>
 <sect2>
 <title>Kernel configuration options</title>
