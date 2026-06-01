@@ -15,8 +15,8 @@ user-friendly Gnome GUI.</para>
  
 <sect1 id="ddcci">
 <title>DDC/CI</title>
-<para>DDC/CI is a protocol designed by VESA to configure monitor by software,
-using an I2C bus carried by display connectors such as VGA, DVI, HDMI and
+<para>DDC/CI is a protocol designed by VESA to configure a monitor by software,
+using an I2C bus carried by display connectors such as VGA, DVI, HDMI, and
 DisplayPort.</para>
 <para>DDCcontrol accesses that bus from userspace through the operating
 system's <filename>/dev/i2c-*</filename> devices. Legacy direct PCI memory
