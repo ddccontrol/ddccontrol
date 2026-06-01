@@ -1,12 +1,15 @@
 <appendix id="supportedgc">
-<title>Supported graphics cards</title>
+<title>Display bus access</title>
 <sect1>
-<title><filename>/dev/i2c-*</filename> devices support</title>
-<para>DDCcontrol accesses monitor DDC/CI busses through
-<filename>/dev/i2c-*</filename> devices provided by the operating system.</para>
+<title><filename>/dev/i2c-*</filename> userspace I2C support</title>
+<para>DDCcontrol accesses monitor DDC/CI busses only through
+<filename>/dev/i2c-*</filename> devices provided by the operating system. This
+matches the same kernel userspace I2C path used by tools such as
+<filename>ddcutil</filename> for directly connected displays.</para>
 <para>Legacy direct PCI memory access and AMD ADL support have been removed.
 Use the kernel graphics driver and <filename>i2c-dev</filename> support to
 expose monitor DDC busses as <filename>/dev/i2c-*</filename> devices.</para>
+<para>USB-connected DDC/CI displays are not supported yet.</para>
 <sect2>
 <title>Using NVIDIA proprietary drivers</title>
 <para>The NVIDIA proprietary driver exposes the I2C bus through the standard
