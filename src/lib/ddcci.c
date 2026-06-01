@@ -709,6 +709,10 @@ int ddcci_open(struct monitor* mon, const char* filename, int probing)
 
 int ddcci_save(struct monitor* mon) 
 {
+	if (mon->__vtable) {
+		return 0;
+	}
+
 	return ddcci_command(mon, DDCCI_COMMAND_SAVE);
 }
 

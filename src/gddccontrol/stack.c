@@ -628,7 +628,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 			"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml"
 			"\nThen attach the resulting report file of the following command:"
 			"%s"),
-			"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n");
+			"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &amp;&gt; /tmp/ddccontrol-report.txt</tt>\n\n");
 		set_message(tmp);
 		g_free(tmp);
 		monitor_manager = NULL;
@@ -693,7 +693,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 				"version, please open a github issue:\n"
 				"https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml"
 				"\nThen attach the resulting report file of the following command:\n"),
-				"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt</tt>\n\n",
+				"\n<tt>LANG=C LC_ALL=C ddccontrol -p -c -d &amp;&gt; /tmp/ddccontrol-report.txt</tt>\n\n",
 				_("Thank you.\n"), NULL);
 		gtk_widget_show(monitor_manager);
 		set_message_ok(tmp, 1);
@@ -715,7 +715,8 @@ void delete_monitor_manager()
 		if (modified)
 			ddcci_save(mon);
 	
-		free(mon);
+		ddcci_close(mon);
+		mon = NULL;
 	}
 	
 	if (all_controls) {
