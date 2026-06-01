@@ -840,8 +840,23 @@ void create_monitor_manager(struct monitorlist* monitor)
 			return;
 		}
 	} else {
+		int open_result;
 		mon = malloc(sizeof(struct monitor));
-		if (mon == NULL || ddcci_open(mon, monitor->filename, 0) < 0) {
+		if (mon == NULL) {
+			free(mon);
+			mon = NULL;
+			set_message(_(
+				"An error occurred while opening the monitor device.\n"
+				"Maybe this monitor was disconnected, please click on "
+				"the refresh button near the monitor list."));
+			monitor_manager = NULL;
+			return;
+		}
+		open_result = ddcci_open(mon, monitor->filename, 0);
+		if (open_result < 0) {
+			if (open_result != -3) {
+				ddcci_close(mon);
+			}
 			free(mon);
 			mon = NULL;
 			set_message(_(
