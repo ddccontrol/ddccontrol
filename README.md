@@ -13,6 +13,12 @@ DDCcontrol consists of:
 * `ddccontrol` - command-line tool for monitor parameters control
 * `gddccontrol` - GUI tool for monitor parameters control
 
+DDCcontrol communicates with monitors from userspace through the Linux
+`i2c-dev` interface (`/dev/i2c-*`). AMD ADL and legacy direct PCI backends have
+been removed. For directly connected displays, this uses the same kernel
+userspace I2C path as `ddcutil`; USB-connected DDC/CI displays are not supported
+yet.
+
 ## Installation
 
 The most convenient way to install DDCcontrol is to use packages from official distribution repositories.
@@ -25,7 +31,7 @@ DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official 
 
 * on Ubuntu/Debian: `sudo apt install ddccontrol gddccontrol ddccontrol-db i2c-tools`
 * on Fedora: `sudo dnf install ddccontrol ddccontrol-gtk`
-* on openSUSE: `sudo zypper in ddccontrol`
+* on openSUSE: `sudo zypper in ddccontrol i2c-tools`
 
 You might need to restart your system after installing `i2c-tools`.
 
@@ -36,10 +42,9 @@ Install build dependencies:
 * on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libgtk3.0-dev liblzma-dev`
 * on Solus: `sudo eopkg install -c system.devel`  
   `sudo eopkg install autoconf automake intltool i2c-tools m4 diffutils libtool-devel xz-devel libxml2-devel libgtk-3-devel`
-* on others: `TODO`
-
-AMD ADL and legacy direct PCI backends have been removed. Use `/dev/i2c-N`
-devices through `i2c-dev` instead.
+* on others: install autotools, intltool, i2c-tools, libxml2 development files,
+  GTK 3 development files and xz/lzma development files using your
+  distribution's package manager.
 
 Clone, build and install built version:
 
@@ -66,7 +71,10 @@ It often merely involves adapting a few standard capabilities as many [pull requ
 
 `gddccontrol` is a graphical utility for monitor configuration. It is called **Monitor Settings** in list of applications.
 
-Following configuration is needed to allow non-root user to use `gddccontrol`:
+DDCcontrol needs readable and writable `/dev/i2c-*` devices. Most
+distributions provide this through the `i2c-dev` kernel module and an `i2c`
+group. Following configuration is needed to allow a non-root user to use
+`gddccontrol`:
 
 ```shell
 sudo adduser $USER i2c
