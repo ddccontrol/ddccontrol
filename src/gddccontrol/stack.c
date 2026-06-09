@@ -970,12 +970,15 @@ void create_monitor_manager(struct monitorlist* monitor)
 void delete_monitor_manager()
 {
 	if (mon) {
+		int needs_free = (mon->__vtable == NULL);
 		if (modified)
 			ddcci_save(mon);
-		if (ddccontrol_proxy == NULL)
-			ddcci_close(mon);
-	
-		free(mon);
+
+		ddcci_close(mon);
+
+		if (needs_free)
+			free(mon);
+		mon = NULL;
 	}
 	
 	if (all_controls) {
