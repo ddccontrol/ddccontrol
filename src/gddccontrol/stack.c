@@ -83,6 +83,18 @@ static void set_control_updating(GtkWidget *widget, gboolean updating)
 	g_object_set_data(G_OBJECT(widget), "ddc_updating", GINT_TO_POINTER(updating));
 }
 
+static guint digits_for_step(double step)
+{
+	guint digits = 0;
+
+	while (step > 0.0 && step < 1.0 && digits < 4) {
+		step *= 10.0;
+		digits++;
+	}
+
+	return digits;
+}
+
 static void write_dbctrl(struct control_db *control, unsigned short nval) {
 	ddcci_writectrl(mon, control->address, nval, control->delay);
 }
@@ -462,6 +474,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				GtkWidget *spinButton;
 				double step = 100.0/(double)currentMaximum;
 				double page_step = 10.0*step;
+				guint digits = digits_for_step(step);
 				double currentPercent = (double)100.0*currentDefault/(double)currentMaximum;
 				const gchar *control_name = (const gchar*)control->name;
 				gchar *value_description = g_strdup_printf(_("Value for %s"), control_name);
@@ -469,9 +482,9 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
 				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 				widget = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment);
-				spinButton = gtk_spin_button_new(adjustment, 1.0, 1);
+				spinButton = gtk_spin_button_new(adjustment, 1.0, digits);
 
-				gtk_scale_set_digits(GTK_SCALE(widget), 1);
+				gtk_scale_set_digits(GTK_SCALE(widget), digits);
 				gtk_scale_set_draw_value(GTK_SCALE(widget), FALSE);
 				gtk_widget_set_hexpand(widget, TRUE);
 				gtk_widget_set_size_request(widget, 240, -1);
