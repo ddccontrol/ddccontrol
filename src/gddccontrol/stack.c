@@ -432,10 +432,11 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				GtkAdjustment *adjustment;
 				GtkWidget *spinButton;
 				double step = 100.0/(double)currentMaximum;
+				double page_step = 10.0*step;
 				double currentPercent = (double)100.0*currentDefault/(double)currentMaximum;
 				gchar *value_description = g_strdup_printf(_("Value for %s"), control->name);
 
-				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, step, 0.0);
+				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
 				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 				widget = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment);
 				spinButton = gtk_spin_button_new(adjustment, step, 1);
