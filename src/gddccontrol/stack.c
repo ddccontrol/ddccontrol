@@ -469,7 +469,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
 				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 				widget = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment);
-				spinButton = gtk_spin_button_new(adjustment, step, 1);
+				spinButton = gtk_spin_button_new(adjustment, 1.0, 1);
 
 				gtk_scale_set_digits(GTK_SCALE(widget), 1);
 				gtk_scale_set_draw_value(GTK_SCALE(widget), FALSE);
