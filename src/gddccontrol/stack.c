@@ -188,7 +188,7 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 	}
 }
 
-static void range_callback(GtkWidget *widget, gpointer data)
+static void apply_range_value(GtkWidget *widget)
 {
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddc_control");
 	if (!control) {
@@ -221,10 +221,19 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	modified = 1;
 }
 
+static gboolean range_callback(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer data)
+{
+	(void)scroll;
+	(void)value;
+	(void)data;
+	apply_range_value(GTK_WIDGET(range));
+	return FALSE;
+}
+
 static void spin_button_callback(GtkWidget *widget, gpointer data)
 {
 	(void)widget;
-	range_callback(GTK_WIDGET(data), NULL);
+	apply_range_value(GTK_WIDGET(data));
 }
 	
 static void group_callback(GtkWidget *widget, gpointer data)
