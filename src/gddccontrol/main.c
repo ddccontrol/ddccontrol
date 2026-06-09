@@ -483,7 +483,10 @@ int main( int argc, char *argv[] )
 				G_CALLBACK (window_changed), NULL);
 	
 	gtk_container_set_border_width (GTK_CONTAINER (main_app_window), 4);
-	
+
+	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	gtk_window_add_accel_group(GTK_WINDOW(main_app_window), accel_group);
+
 	grid = gtk_grid_new();
 	gtk_widget_show (grid);
 	int crow = 0; /* Current row */
@@ -503,6 +506,8 @@ int main( int argc, char *argv[] )
 
 	refresh_monitors_button = button_from_icon_name("view-refresh", NULL, _("Refresh monitor list"));
 	g_signal_connect(G_OBJECT(refresh_monitors_button), "clicked", G_CALLBACK(probe_monitors), NULL);
+	gtk_widget_add_accelerator(refresh_monitors_button, "clicked", accel_group, GDK_KEY_F5, 0, GTK_ACCEL_VISIBLE);
+	g_object_unref(accel_group);
 	gtk_widget_show(refresh_monitors_button);
 	gtk_box_pack_start(GTK_BOX(choice_hbox),refresh_monitors_button, 0, 0, 0);
 	
