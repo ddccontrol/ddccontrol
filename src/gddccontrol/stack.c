@@ -411,7 +411,8 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 		case value:
 		case list:
 			{
-				gchar *reset_name = g_strdup_printf(_("Reset %s"), control->name);
+				const gchar *control_name = (const gchar*)control->name;
+				gchar *reset_name = g_strdup_printf(_("Reset %s"), control_name);
 
 				undoButton = button_from_icon_name("edit-undo", _("_Reset"), _("Reset to monitor default"));
 				set_accessible_name_and_description(undoButton, reset_name, _("Reset to monitor default"));
@@ -434,7 +435,8 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				double step = 100.0/(double)currentMaximum;
 				double page_step = 10.0*step;
 				double currentPercent = (double)100.0*currentDefault/(double)currentMaximum;
-				gchar *value_description = g_strdup_printf(_("Value for %s"), control->name);
+				const gchar *control_name = (const gchar*)control->name;
+				gchar *value_description = g_strdup_printf(_("Value for %s"), control_name);
 
 				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
 				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
