@@ -844,10 +844,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 		int open_result;
 		mon = malloc(sizeof(struct monitor));
 		if (mon == NULL) {
-			set_message(_(
-				"An error occurred while opening the monitor device.\n"
-				"Maybe this monitor was disconnected, please click on "
-				"the refresh button near the monitor list."));
+			set_message(_("Memory allocation failed while opening the monitor device."));
 			monitor_manager = NULL;
 			return;
 		}
@@ -969,7 +966,7 @@ void delete_monitor_manager()
 {
 	if (mon) {
 		int needs_free = (mon->__vtable == NULL);
-		if (modified)
+		if (modified && needs_free)
 			ddcci_save(mon);
 
 		ddcci_close(mon);
