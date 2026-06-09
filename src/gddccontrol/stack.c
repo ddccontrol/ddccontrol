@@ -63,6 +63,16 @@ extern DDCControl *ddccontrol_proxy;
 // Helpers
 ////////////////////
 
+static void set_accessible_name_and_description(GtkWidget *widget, const gchar *name, const gchar *description)
+{
+	AtkObject *accessible = gtk_widget_get_accessible(widget);
+
+	if (name)
+		atk_object_set_name(accessible, name);
+	if (description)
+		atk_object_set_description(accessible, description);
+}
+
 static void write_dbctrl(struct control_db *control, unsigned short nval) {
 	ddcci_writectrl(mon, control->address, nval, control->delay);
 }
@@ -210,6 +220,12 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	gtk_widget_set_sensitive(GTK_WIDGET(button), nval != Default);
 	modified = 1;
 }
+
+static void spin_button_callback(GtkWidget *widget, gpointer data)
+{
+	(void)widget;
+	range_callback(GTK_WIDGET(data), NULL);
+}
 	
 static void group_callback(GtkWidget *widget, gpointer data)
 {
@@ -305,6 +321,24 @@ static void tree_selection_changed_callback(GtkTreeSelection *selection, gpointe
 	}
 }
 
+static void section_cell_data_func(GtkTreeViewColumn *column,
+                                   GtkCellRenderer *renderer,
+                                   GtkTreeModel *model,
+                                   GtkTreeIter *iter,
+                                   gpointer data)
+{
+	GtkTreeIter parent;
+	gboolean is_group = !gtk_tree_model_iter_parent(model, &parent, iter);
+
+	(void)column;
+	(void)data;
+
+	g_object_set(renderer,
+			"weight", is_group ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL,
+			"weight-set", TRUE,
+			NULL);
+}
+
 
 // Initializers
 ////////////////////
@@ -359,6 +393,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	GtkWidget* outerBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
 	GtkWidget* controlWithUndo = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	GtkWidget *widget = NULL;
+	GtkWidget *displayWidget = NULL;
 	GtkWidget *undoButton = NULL;
 	GtkWidget *profileCheckBox = NULL;
 	
@@ -366,7 +401,13 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	{
 		case value:
 		case list:
-			undoButton = button_from_icon_name("edit-undo", NULL, NULL);
+			{
+				gchar *reset_name = g_strdup_printf(_("Reset %s"), control->name);
+
+				undoButton = button_from_icon_name("edit-undo", _("_Reset"), _("Reset to monitor default"));
+				set_accessible_name_and_description(undoButton, reset_name, _("Reset to monitor default"));
+				g_free(reset_name);
+			}
 			gtk_widget_set_sensitive(GTK_WIDGET(undoButton), FALSE);
 			
 			profileCheckBox = gtk_check_button_new_with_label(_("Include in new profile"));
@@ -379,20 +420,37 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	{
 		case value:
 			{
-				widget = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0.0, 100.0, 1.0);
+				GtkAdjustment *adjustment;
+				GtkWidget *spinButton;
+				double step = 100.0/(double)currentMaximum;
+				double currentPercent = (double)100.0*currentDefault/(double)currentMaximum;
+				gchar *value_description = g_strdup_printf(_("Value for %s"), control->name);
+
+				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, step, 0.0);
+				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+				widget = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment);
+				spinButton = gtk_spin_button_new(adjustment, step, 1);
+
 				gtk_scale_set_digits(GTK_SCALE(widget), 1);
+				gtk_scale_set_draw_value(GTK_SCALE(widget), FALSE);
+				gtk_widget_set_hexpand(widget, TRUE);
+				gtk_widget_set_size_request(widget, 240, -1);
+				gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spinButton), TRUE);
+				gtk_entry_set_width_chars(GTK_ENTRY(spinButton), 5);
+				set_accessible_name_and_description(widget, (gchar*)control->name, value_description);
+				set_accessible_name_and_description(spinButton, (gchar*)control->name, value_description);
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
 				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);
 				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
 				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
 				
-				gtk_range_set_increments(GTK_RANGE(widget),
-						100.0/(double)currentMaximum,
-						100.0/(double)currentMaximum);
-				gtk_range_set_value(GTK_RANGE(widget),
-						(double)100.0*currentDefault/(double)currentMaximum);
+				gtk_box_pack_start(GTK_BOX(displayWidget), widget, TRUE, TRUE, 0);
+				gtk_box_pack_start(GTK_BOX(displayWidget), spinButton, FALSE, FALSE, 0);
+				gtk_widget_show(spinButton);
 						
 				g_signal_connect_after(G_OBJECT(widget), "change-value", G_CALLBACK(range_callback), NULL);
+				g_signal_connect(G_OBJECT(spinButton), "value-changed", G_CALLBACK(spin_button_callback), widget);
+				g_free(value_description);
 			}
 			break;
 		case command:
@@ -421,6 +479,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 					GtkWidget* radio = gtk_radio_button_new_with_label(group, (char*)value->name);
 					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (ddcci_value_db_value16(value) == currentDefault));
 					g_object_set_data(G_OBJECT(radio), "ddc_value", value);
+					set_accessible_name_and_description(radio, (gchar*)value->name, (gchar*)control->name);
 					gtk_widget_show(radio);
 					gtk_box_pack_start(GTK_BOX(widget), radio, TRUE, TRUE, 0);
 					group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio));
@@ -444,7 +503,10 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	g_object_set_data(G_OBJECT(widget), "ddc_control", control);
 	/*g_print("%i - %i\n",all_controls,g_slist_length(all_controls));*/
 	gtk_widget_show(widget);
-	gtk_box_pack_start(GTK_BOX(controlWithUndo), widget, 1, 1, 0);
+	if (displayWidget == NULL)
+		displayWidget = widget;
+	gtk_widget_show(displayWidget);
+	gtk_box_pack_start(GTK_BOX(controlWithUndo), displayWidget, 1, 1, 0);
 	
 	if (undoButton) {
 		g_signal_connect(G_OBJECT(undoButton), "clicked", G_CALLBACK(restore_callback), widget);
@@ -512,7 +574,9 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer, "ypad", 4, NULL);
 	column = gtk_tree_view_column_new_with_attributes(_("Section"),renderer,"text",TITLE_COL,NULL);
+	gtk_tree_view_column_set_cell_data_func(column, renderer, section_cell_data_func, NULL, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
 	GtkTreeIter top_iter;
@@ -575,6 +639,8 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 	}
 	
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
+	gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(tree), TRUE);
+	gtk_tree_view_set_level_indentation(GTK_TREE_VIEW(tree), 6);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree),0);
 	// gtk_container_set_border_width(GTK_CONTAINER(tree),1);
 	

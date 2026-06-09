@@ -87,6 +87,20 @@ Utility can launched directly from commandline:
 sudo gddccontrol
 ```
 
+`gddccontrol` uses standard GTK3 widgets and follows the configured GTK theme.
+To try the GTK high-contrast dark theme for one launch, run:
+
+```shell
+GTK_THEME=HighContrastInverse gddccontrol
+```
+
+If you need to run `gddccontrol` through `sudo`, preserve the theme override
+with `env`:
+
+```shell
+sudo env GTK_THEME=HighContrastInverse gddccontrol
+```
+
 For GNOME Shell top-bar menu control, see the example extension in
 `contrib/gnome-shell-extension`.
 
