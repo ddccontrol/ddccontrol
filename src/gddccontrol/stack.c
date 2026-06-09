@@ -832,6 +832,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 	if (ddccontrol_proxy != NULL) {
 		if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
+			mon = NULL;
 			set_message(_(
 				"An error occurred while opening the monitor device.\n"
 				"Maybe this monitor was disconnected, please click on "
