@@ -507,6 +507,7 @@ int main( int argc, char *argv[] )
 	refresh_monitors_button = button_from_icon_name("view-refresh", NULL, _("Refresh monitor list"));
 	g_signal_connect(G_OBJECT(refresh_monitors_button), "clicked", G_CALLBACK(probe_monitors), NULL);
 	gtk_widget_add_accelerator(refresh_monitors_button, "clicked", accel_group, GDK_KEY_F5, 0, GTK_ACCEL_VISIBLE);
+	g_object_unref(accel_group);
 	gtk_widget_show(refresh_monitors_button);
 	gtk_box_pack_start(GTK_BOX(choice_hbox),refresh_monitors_button, 0, 0, 0);
 	
