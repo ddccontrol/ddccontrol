@@ -472,12 +472,24 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 			{
 				GtkAdjustment *adjustment;
 				GtkWidget *spinButton;
-				double step = 100.0/(double)currentMaximum;
+				gboolean has_control_range = currentMaximum > 0;
+				unsigned short controlMaximum = has_control_range ? currentMaximum : 1;
+				unsigned short controlValue = currentDefault;
+				double step = 100.0/(double)controlMaximum;
 				double page_step = 10.0*step;
 				guint digits = digits_for_step(step);
-				double currentPercent = (double)100.0*currentDefault/(double)currentMaximum;
+				double currentPercent;
 				const gchar *control_name = (const gchar*)control->name;
 				gchar *value_description = g_strdup_printf(_("Value for %s"), control_name);
+
+				if (!has_control_range) {
+					g_warning(_("Control %s reports a zero maximum value."), control->name);
+					controlValue = 0;
+				}
+				else if (controlValue > controlMaximum) {
+					controlValue = controlMaximum;
+				}
+				currentPercent = (double)100.0*controlValue/(double)controlMaximum;
 
 				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
 				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
@@ -492,10 +504,17 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				gtk_entry_set_width_chars(GTK_ENTRY(spinButton), 5);
 				set_accessible_name_and_description(widget, (gchar*)control->name, value_description);
 				set_accessible_name_and_description(spinButton, (gchar*)control->name, value_description);
-				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
-				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);
+				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)controlValue);
+				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)controlMaximum);
 				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
 				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
+
+				if (!has_control_range) {
+					gtk_widget_set_sensitive(widget, FALSE);
+					gtk_widget_set_sensitive(spinButton, FALSE);
+					if (profileCheckBox)
+						gtk_widget_set_sensitive(profileCheckBox, FALSE);
+				}
 				
 				gtk_box_pack_start(GTK_BOX(displayWidget), widget, TRUE, TRUE, 0);
 				gtk_box_pack_start(GTK_BOX(displayWidget), spinButton, FALSE, FALSE, 0);
