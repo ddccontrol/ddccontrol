@@ -1,5 +1,6 @@
 # ddccontrol
 # Copyright (C) 2007 Roberto C. Sánchez
+# Copyright (C) 2004-2026 DDCcontrol authors and contributors.
 # This file is distributed under the same license as the ddcontrol package.
 # Roberto C. Sánchez <roberto@connexer.com>, 2007
 #
@@ -70,6 +71,7 @@ msgid ""
 "ddccontrol version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 "You may redistribute copies of this program under the terms of the GNU "
 "General Public License.\n"
@@ -78,6 +80,7 @@ msgstr ""
 "ddccontrol versión %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "Este programa trae NINGUNA GARANTIA.\n"
 "Puedes redistribuir copias de este programa bajo los términos del GNU "
 "General Public License.\n"

@@ -1,3 +1,7 @@
+/*
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
+*/
+
 #include "../issueurl.h"
 #include "../monitor_db.h"
 #include "../monitor_db_internal.h"

@@ -2,6 +2,7 @@
     ddc/ci command line tool
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
     Copyright(c) 2004-2006 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -200,7 +201,7 @@ static int parse_selector_index(const char *selector, char **base_selector, int 
 
 	suffix = slash + 1;
 	for (const char *p = suffix; *p != '\0'; p++) {
-		if (!isdigit((unsigned char)*p)) {
+		if (!isdigit((unsigned char) * p)) {
 			/* Treat as a literal selector containing '/', not selector/index. */
 			return 1;
 		}
@@ -306,6 +307,8 @@ int main(int argc, char **argv)
 	        _("ddccontrol version %s\n"
 	          "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 	          "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+	          "Copyright 2004-2026 DDCcontrol authors and "
+	          "contributors (see AUTHORS and CONTRIBUTORS)\n"
 	          "This program comes with ABSOLUTELY NO WARRANTY.\n"
 	          "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 

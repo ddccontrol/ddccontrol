@@ -35,6 +35,10 @@
 <year>2005-2006</year>
 <holder>Nicolas Boichat</holder>
 </copyright>
+<copyright>
+<year>2004-2026</year>
+<holder>DDCcontrol authors and contributors</holder>
+</copyright>
 
 <releaseinfo role="meta">
 @PACKAGE@-@VERSION@

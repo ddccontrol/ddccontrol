@@ -1,3 +1,7 @@
+/*
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
+*/
+
 #ifndef URLENCODE_H
 #define URLENCODE_H
 

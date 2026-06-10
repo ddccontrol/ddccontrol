@@ -1,5 +1,6 @@
 # Polish translations for DDC/CI control tool package.
 # Copyright (C) 2005 Oleg I. Vdovikin and Nicolas Boichat
+# Copyright (C) 2004-2026 DDCcontrol authors and contributors.
 # This file is distributed under the same license as the DDC/CI control tool package.
 # Radek Marcinkowski <radek@cbk.waw.pl>, 2005.
 # Jakub Bogusz <qboosh@pld-linux.org>, 2006.
@@ -73,6 +74,7 @@ msgid ""
 "ddccontrol version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 "You may redistribute copies of this program under the terms of the GNU "
 "General Public License.\n"
@@ -81,6 +83,7 @@ msgstr ""
 "ddccontrol wersja %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "Ten program jest dostarczany BEZ JAKIEJKOLWIEK GWARANCJI.\n"
 "Mo¿na go rozprowadzaæ na warunkach Powszechnej Licencji Publicznej GNU\n"
 "(General Public License).\n"
