@@ -331,6 +331,12 @@ static void spin_button_commit_callback(GtkWidget *widget, gpointer data)
 	apply_range_value(range);
 }
 
+static void spin_button_change_value_callback(GtkSpinButton *spinButton, GtkScrollType scroll, gpointer data)
+{
+	(void)scroll;
+	spin_button_commit_callback(GTK_WIDGET(spinButton), data);
+}
+
 static gboolean spin_button_focus_out_callback(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
 	(void)event;
@@ -594,6 +600,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 						
 				g_signal_connect_after(G_OBJECT(widget), "change-value", G_CALLBACK(range_callback), NULL);
 				g_signal_connect(G_OBJECT(spinButton), "activate", G_CALLBACK(spin_button_commit_callback), widget);
+				g_signal_connect_after(G_OBJECT(spinButton), "change-value", G_CALLBACK(spin_button_change_value_callback), widget);
 				g_signal_connect(G_OBJECT(spinButton), "focus-out-event", G_CALLBACK(spin_button_focus_out_callback), widget);
 				g_free(value_description);
 			}
