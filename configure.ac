@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[1.0.3],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol])
+AC_INIT([DDC/CI control tool],[2.2.0],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol])
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -6,7 +6,7 @@ AM_INIT_AUTOMAKE([subdir-objects -Wall foreign])
 
 IT_PROG_INTLTOOL
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT_VERSION([0.21])
 GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
 
@@ -48,12 +48,12 @@ if test "x$support_i2c_dev" = "xyes" ; then
 
 	support_i2c_dev_works=no
 	AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
-	AC_COMPILE_IFELSE([
+	AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 	[#include <linux/types.h>]
 	[#include <linux/i2c-dev.h>]
 	[const int a = I2C_RDWR + I2C_M_RD;]
 	[struct i2c_msg i2cmsg;]
-	],
+	]])],
 	support_i2c_dev_works=yes
 	AC_MSG_RESULT(yes),
 	AC_MSG_RESULT(no)
@@ -61,12 +61,12 @@ if test "x$support_i2c_dev" = "xyes" ; then
 
 	if test "x$support_i2c_dev_works" = "xno" ; then
 	  AC_MSG_CHECKING([if $srcdir/src/lib/i2c-dev.h works instead])
-	  AC_COMPILE_IFELSE([
+	  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 	  [#define HAVE_BUGGY_I2C_DEV 1]
 	  [#include "$srcdir/src/lib/i2c-dev.h"]
 	  [const int a = I2C_RDWR + I2C_M_RD;]
 	  [struct i2c_msg i2cmsg;]
-	  ],
+	  ]])],
 	  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [Define if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
 	  support_i2c_dev_works=yes
 	  AC_MSG_RESULT(yes),
