@@ -1,6 +1,7 @@
 /*
     read/write configuration files in ~/.ddccontrol (profiles, cached monitor list)
     Copyright(c) 2005 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

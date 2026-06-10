@@ -1,5 +1,6 @@
 # German translation of ddccontrol.
 # Copyright (C) 2004-2006 Nicolas Boichat,Oleg I. Vdovikin,
+# Copyright (C) 2004-2026 DDCcontrol authors and contributors.
 # This file is distributed under the same license as the ddccontrol package.
 # Christian Schilling <cschilling@gmx.de>, 2005.
 # Chris Leick <c.leick@vollbio.de>, 2010.
@@ -71,6 +72,7 @@ msgid ""
 "ddccontrol version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 "You may redistribute copies of this program under the terms of the GNU "
 "General Public License.\n"
@@ -79,6 +81,7 @@ msgstr ""
 "Ddccontrol-Version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "Für dieses Programm gibt es ABSOLUT KEINE GEWÄHRLEISTUNG.\n"
 "Sie können Kopien dieses Programms unter den Bestimmungen der »GNU General "
 "Public License« weitergeben.\n"
