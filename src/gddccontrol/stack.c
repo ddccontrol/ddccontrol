@@ -95,11 +95,20 @@ static guint digits_for_step(double step)
 	return digits;
 }
 
+static gboolean can_reset_value_control(GtkWidget *widget)
+{
+	gboolean has_control_range = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "ddc_has_range"));
+	unsigned long Default = (unsigned long)g_object_get_data(G_OBJECT(widget), "ddc_default");
+	unsigned long Maximum = (unsigned long)g_object_get_data(G_OBJECT(widget), "ddc_max");
+	unsigned long Current = (unsigned long)(long)g_object_get_data(G_OBJECT(widget), "ddc_current");
+
+	return has_control_range && Default <= Maximum && Current != Default;
+}
+
 static void update_value_control_range(GtkWidget *widget, unsigned short maximum)
 {
 	gboolean has_control_range = maximum > 0;
 	unsigned long controlMaximum = has_control_range ? maximum : 1;
-	unsigned long Default = (unsigned long)g_object_get_data(G_OBJECT(widget), "ddc_default");
 	GtkWidget *spinButton = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "ddc_spin_button");
 	GtkWidget *button = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "restore_button");
 	GtkWidget *profileCheckBox = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "profile_check_box");
@@ -123,7 +132,7 @@ static void update_value_control_range(GtkWidget *widget, unsigned short maximum
 	if (profileCheckBox)
 		gtk_widget_set_sensitive(profileCheckBox, has_control_range);
 	if (button)
-		gtk_widget_set_sensitive(button, has_control_range && (unsigned long)(long)g_object_get_data(G_OBJECT(widget), "ddc_current") != Default);
+		gtk_widget_set_sensitive(button, can_reset_value_control(widget));
 }
 
 static void write_dbctrl(struct control_db *control, unsigned short nval) {
@@ -249,7 +258,7 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 			set_control_updating(widget, FALSE);
 			g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)value);
 			if (button)
-				gtk_widget_set_sensitive(GTK_WIDGET(button), has_control_range && value != Default);
+				gtk_widget_set_sensitive(GTK_WIDGET(button), can_reset_value_control(widget));
 			break;
 		}
 		case command:
@@ -275,7 +284,6 @@ static void apply_range_value(GtkWidget *widget)
 	
 	double val = gtk_range_get_value(GTK_RANGE(widget))/100.0;
 	
-	unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_default");
 	unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_max");
 	unsigned long Current = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_current");
 
@@ -299,7 +307,7 @@ static void apply_range_value(GtkWidget *widget)
 	gtk_range_set_value(GTK_RANGE(widget), (double)100.0*nval/(double)Maximum);
 	set_control_updating(widget, FALSE);
 	
-	gtk_widget_set_sensitive(GTK_WIDGET(button), nval != Default);
+	gtk_widget_set_sensitive(GTK_WIDGET(button), can_reset_value_control(widget));
 }
 
 static gboolean range_callback(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer data)
@@ -403,7 +411,7 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(cwidget),"ddc_control");
 	
 	if (control) {
-		if (control->type == value && !GPOINTER_TO_INT(g_object_get_data(G_OBJECT(cwidget), "ddc_has_range"))) {
+		if (control->type == value && !can_reset_value_control(cwidget)) {
 			return;
 		}
 
