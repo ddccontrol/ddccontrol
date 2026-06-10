@@ -200,12 +200,14 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 			unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_max");
 			unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_default");
 			GtkWidget* button = (GtkWidget*)g_object_get_data(G_OBJECT(widget),"restore_button");
+			unsigned long value = (unsigned long)nval;
 			set_control_updating(widget, TRUE);
 			gtk_range_set_increments(GTK_RANGE(widget), 100.0/(double)Maximum, 10.0*100.0/(double)Maximum);
-			gtk_range_set_value(GTK_RANGE(widget), 100.0*(double)(long)nval/(double)Maximum);
+			gtk_range_set_value(GTK_RANGE(widget), 100.0*(double)value/(double)Maximum);
 			set_control_updating(widget, FALSE);
+			g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)value);
 			if (button)
-				gtk_widget_set_sensitive(GTK_WIDGET(button), (unsigned long)nval != Default);
+				gtk_widget_set_sensitive(GTK_WIDGET(button), value != Default);
 			break;
 		}
 		case command:
@@ -233,6 +235,7 @@ static void apply_range_value(GtkWidget *widget)
 	
 	unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_default");
 	unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_max");
+	unsigned long Current = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_current");
 
 #if 0
 	printf("Would change %#x to %#x (%f, %f, %#x)\n",
@@ -244,8 +247,9 @@ static void apply_range_value(GtkWidget *widget)
 #endif
 	
 	unsigned short nval = (unsigned short)round(val*(double)Maximum);
-	if (!refreshing) {
+	if (!refreshing && nval != Current) {
 		write_dbctrl(control, nval);
+		g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)nval);
 		modified = 1;
 	}
 	
@@ -265,15 +269,23 @@ static gboolean range_callback(GtkRange *range, GtkScrollType scroll, gdouble va
 	return FALSE;
 }
 
-static void spin_button_callback(GtkWidget *widget, gpointer data)
+static void spin_button_commit_callback(GtkWidget *widget, gpointer data)
 {
 	GtkWidget *range = GTK_WIDGET(data);
 
-	if (!gtk_widget_has_focus(widget) || is_control_updating(range)) {
+	if (is_control_updating(range)) {
 		return;
 	}
 
+	gtk_spin_button_update(GTK_SPIN_BUTTON(widget));
 	apply_range_value(range);
+}
+
+static gboolean spin_button_focus_out_callback(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	(void)event;
+	spin_button_commit_callback(widget, data);
+	return FALSE;
 }
 	
 static void group_callback(GtkWidget *widget, gpointer data)
@@ -454,8 +466,8 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				const gchar *control_name = (const gchar*)control->name;
 				gchar *reset_name = g_strdup_printf(_("Reset %s"), control_name);
 
-				undoButton = button_from_icon_name("edit-undo", _("_Reset"), _("Reset to monitor default"));
-				set_accessible_name_and_description(undoButton, reset_name, _("Reset to monitor default"));
+				undoButton = button_from_icon_name("edit-undo", _("_Reset"), _("Reset to initial value"));
+				set_accessible_name_and_description(undoButton, reset_name, _("Reset to initial value"));
 				g_free(reset_name);
 			}
 			gtk_widget_set_sensitive(GTK_WIDGET(undoButton), FALSE);
@@ -506,6 +518,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				set_accessible_name_and_description(spinButton, (gchar*)control->name, value_description);
 				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)controlValue);
 				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)controlMaximum);
+				g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)controlValue);
 				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
 				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
 
@@ -521,7 +534,8 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 				gtk_widget_show(spinButton);
 						
 				g_signal_connect_after(G_OBJECT(widget), "change-value", G_CALLBACK(range_callback), NULL);
-				g_signal_connect(G_OBJECT(spinButton), "value-changed", G_CALLBACK(spin_button_callback), widget);
+				g_signal_connect(G_OBJECT(spinButton), "activate", G_CALLBACK(spin_button_commit_callback), widget);
+				g_signal_connect(G_OBJECT(spinButton), "focus-out-event", G_CALLBACK(spin_button_focus_out_callback), widget);
 				g_free(value_description);
 			}
 			break;
