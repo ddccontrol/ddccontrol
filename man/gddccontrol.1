@@ -37,6 +37,13 @@ Do not show the warning banner for unsupported monitors when a fallback profile 
 .TP
 \fB\-v\fP, \fB\-\-verbose\fP
 Increase verbosity. Repeat (e.g. \fB\-vv\fP) for more detailed output.
+.SH ENVIRONMENT
+.TP
+\fBGTK_THEME\fP
+Override the GTK theme for this launch. For example, run
+\fBGTK_THEME=HighContrastInverse gddccontrol\fP to use the GTK high\-contrast
+dark theme when it is installed. If running through \fBsudo\fP, use
+\fBsudo env GTK_THEME=HighContrastInverse gddccontrol\fP.
 .SH SEE ALSO
 The program is documented fully in
 .br

@@ -63,6 +63,78 @@ extern DDCControl *ddccontrol_proxy;
 // Helpers
 ////////////////////
 
+static void set_accessible_name_and_description(GtkWidget *widget, const gchar *name, const gchar *description)
+{
+	AtkObject *accessible = gtk_widget_get_accessible(widget);
+
+	if (name)
+		atk_object_set_name(accessible, name);
+	if (description)
+		atk_object_set_description(accessible, description);
+}
+
+static gboolean is_control_updating(GtkWidget *widget)
+{
+	return GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "ddc_updating"));
+}
+
+static void set_control_updating(GtkWidget *widget, gboolean updating)
+{
+	g_object_set_data(G_OBJECT(widget), "ddc_updating", GINT_TO_POINTER(updating));
+}
+
+static guint digits_for_step(double step)
+{
+	guint digits = 0;
+
+	while (step > 0.0 && step < 1.0 && digits < 4) {
+		step *= 10.0;
+		digits++;
+	}
+
+	return digits;
+}
+
+static gboolean can_reset_value_control(GtkWidget *widget)
+{
+	gboolean has_control_range = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "ddc_has_range"));
+	unsigned long Default = (unsigned long)g_object_get_data(G_OBJECT(widget), "ddc_default");
+	unsigned long Maximum = (unsigned long)g_object_get_data(G_OBJECT(widget), "ddc_max");
+	unsigned long Current = (unsigned long)(long)g_object_get_data(G_OBJECT(widget), "ddc_current");
+
+	return has_control_range && Default <= Maximum && Current != Default;
+}
+
+static void update_value_control_range(GtkWidget *widget, unsigned short maximum)
+{
+	gboolean has_control_range = maximum > 0;
+	unsigned long controlMaximum = has_control_range ? maximum : 1;
+	GtkWidget *spinButton = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "ddc_spin_button");
+	GtkWidget *button = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "restore_button");
+	GtkWidget *profileCheckBox = (GtkWidget*)g_object_get_data(G_OBJECT(widget), "profile_check_box");
+	double step = 100.0/(double)controlMaximum;
+	double page_step = 10.0*step;
+	guint digits = digits_for_step(step);
+
+	g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)controlMaximum);
+	g_object_set_data(G_OBJECT(widget), "ddc_has_range", GINT_TO_POINTER(has_control_range));
+
+	set_control_updating(widget, TRUE);
+	gtk_range_set_increments(GTK_RANGE(widget), step, page_step);
+	gtk_scale_set_digits(GTK_SCALE(widget), digits);
+	if (spinButton)
+		gtk_spin_button_set_digits(GTK_SPIN_BUTTON(spinButton), digits);
+	set_control_updating(widget, FALSE);
+
+	gtk_widget_set_sensitive(widget, has_control_range);
+	if (spinButton)
+		gtk_widget_set_sensitive(spinButton, has_control_range);
+	if (profileCheckBox)
+		gtk_widget_set_sensitive(profileCheckBox, has_control_range);
+	if (button)
+		gtk_widget_set_sensitive(button, can_reset_value_control(widget));
+}
+
 static void write_dbctrl(struct control_db *control, unsigned short nval) {
 	ddcci_writectrl(mon, control->address, nval, control->delay);
 }
@@ -125,6 +197,8 @@ void refresh_all_controls(GtkWidget *widget, gpointer data)
 		if (control) {
 			if (control->type != command) {
 				get_value_and_max(control, &currentValue, &currentMaximum);
+				if (control->type == value)
+					update_value_control_range(list->data, currentMaximum);
 				change_control_value(list->data, (gpointer)(long)currentValue);
 			}
 			tmp = g_strdup_printf(_("Refreshing controls values (%d%%)..."), (current*100)/count);
@@ -166,8 +240,25 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 		case value:
 		{
 			unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_max");
+			unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_default");
+			GtkWidget* button = (GtkWidget*)g_object_get_data(G_OBJECT(widget),"restore_button");
+			gboolean has_control_range = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "ddc_has_range"));
+			unsigned long value = (unsigned long)nval;
+
+			if (!has_control_range) {
+				value = Default;
+			}
+			else if (value > Maximum) {
+				value = Maximum;
+			}
+
+			set_control_updating(widget, TRUE);
 			gtk_range_set_increments(GTK_RANGE(widget), 100.0/(double)Maximum, 10.0*100.0/(double)Maximum);
-			gtk_range_set_value(GTK_RANGE(widget), 100.0*(double)(long)nval/(double)Maximum);
+			gtk_range_set_value(GTK_RANGE(widget), 100.0*(double)value/(double)Maximum);
+			set_control_updating(widget, FALSE);
+			g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)value);
+			if (button)
+				gtk_widget_set_sensitive(GTK_WIDGET(button), can_reset_value_control(widget));
 			break;
 		}
 		case command:
@@ -178,8 +269,12 @@ static void change_control_value(GtkWidget *widget, gpointer nval)
 	}
 }
 
-static void range_callback(GtkWidget *widget, gpointer data)
+static void apply_range_value(GtkWidget *widget)
 {
+	if (is_control_updating(widget)) {
+		return;
+	}
+
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(widget),"ddc_control");
 	if (!control) {
 		return;
@@ -189,8 +284,8 @@ static void range_callback(GtkWidget *widget, gpointer data)
 	
 	double val = gtk_range_get_value(GTK_RANGE(widget))/100.0;
 	
-	unsigned long Default = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_default");
 	unsigned long Maximum = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_max");
+	unsigned long Current = (unsigned long) g_object_get_data(G_OBJECT(widget),"ddc_current");
 
 #if 0
 	printf("Would change %#x to %#x (%f, %f, %#x)\n",
@@ -202,13 +297,51 @@ static void range_callback(GtkWidget *widget, gpointer data)
 #endif
 	
 	unsigned short nval = (unsigned short)round(val*(double)Maximum);
-	if (!refreshing)
+	if (!refreshing && nval != Current) {
 		write_dbctrl(control, nval);
+		g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)nval);
+		modified = 1;
+	}
 	
+	set_control_updating(widget, TRUE);
 	gtk_range_set_value(GTK_RANGE(widget), (double)100.0*nval/(double)Maximum);
+	set_control_updating(widget, FALSE);
 	
-	gtk_widget_set_sensitive(GTK_WIDGET(button), nval != Default);
-	modified = 1;
+	gtk_widget_set_sensitive(GTK_WIDGET(button), can_reset_value_control(widget));
+}
+
+static gboolean range_callback(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer data)
+{
+	(void)scroll;
+	(void)value;
+	(void)data;
+	apply_range_value(GTK_WIDGET(range));
+	return FALSE;
+}
+
+static void spin_button_commit_callback(GtkWidget *widget, gpointer data)
+{
+	GtkWidget *range = GTK_WIDGET(data);
+
+	if (is_control_updating(range)) {
+		return;
+	}
+
+	gtk_spin_button_update(GTK_SPIN_BUTTON(widget));
+	apply_range_value(range);
+}
+
+static void spin_button_change_value_callback(GtkSpinButton *spinButton, GtkScrollType scroll, gpointer data)
+{
+	(void)scroll;
+	spin_button_commit_callback(GTK_WIDGET(spinButton), data);
+}
+
+static gboolean spin_button_focus_out_callback(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	(void)event;
+	spin_button_commit_callback(widget, data);
+	return FALSE;
 }
 	
 static void group_callback(GtkWidget *widget, gpointer data)
@@ -235,16 +368,17 @@ static void group_callback(GtkWidget *widget, gpointer data)
 		printf("Would change %#x to %#x\n", currentControl->address, val);
 #endif
 	
-		if (!refreshing)
+		if (!refreshing) {
 			write_dbctrl(control, val);
+			modified = 1;
+
+			/* Refresh if needed */
+			if (control->refresh == all) {
+				refresh_all_controls(NULL, NULL);
+			}
+		}
 		
 		gtk_widget_set_sensitive(GTK_WIDGET(button), val != Default);
-		modified = 1;
-		
-		/* Refresh if needed */
-		if (control->refresh == all) {
-			refresh_all_controls(NULL, NULL);
-		}
 	}
 }
 	
@@ -283,6 +417,10 @@ static void restore_callback(GtkWidget *widget, gpointer data)
 	struct control_db *control = (struct control_db*)g_object_get_data(G_OBJECT(cwidget),"ddc_control");
 	
 	if (control) {
+		if (control->type == value && !can_reset_value_control(cwidget)) {
+			return;
+		}
+
 		write_dbctrl(control, Default);
 		
 		change_control_value(cwidget, (gpointer)Default);
@@ -303,6 +441,24 @@ static void tree_selection_changed_callback(GtkTreeSelection *selection, gpointe
 		
 		gtk_stack_set_visible_child(GTK_STACK(parent_container), page);
 	}
+}
+
+static void section_cell_data_func(GtkTreeViewColumn *column,
+                                   GtkCellRenderer *renderer,
+                                   GtkTreeModel *model,
+                                   GtkTreeIter *iter,
+                                   gpointer data)
+{
+	GtkTreeIter parent;
+	gboolean is_group = !gtk_tree_model_iter_parent(model, &parent, iter);
+
+	(void)column;
+	(void)data;
+
+	g_object_set(renderer,
+			"weight", is_group ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL,
+			"weight-set", TRUE,
+			NULL);
 }
 
 
@@ -359,6 +515,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	GtkWidget* outerBox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
 	GtkWidget* controlWithUndo = gtk_box_new(GTK_ORIENTATION_HORIZONTAL,0);
 	GtkWidget *widget = NULL;
+	GtkWidget *displayWidget = NULL;
 	GtkWidget *undoButton = NULL;
 	GtkWidget *profileCheckBox = NULL;
 	
@@ -366,7 +523,14 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	{
 		case value:
 		case list:
-			undoButton = button_from_icon_name("edit-undo", NULL, NULL);
+			{
+				const gchar *control_name = (const gchar*)control->name;
+				gchar *reset_name = g_strdup_printf(_("Reset %s"), control_name);
+
+				undoButton = button_from_icon_name("edit-undo", _("_Reset"), _("Reset to initial value"));
+				set_accessible_name_and_description(undoButton, reset_name, _("Reset to initial value"));
+				g_free(reset_name);
+			}
 			gtk_widget_set_sensitive(GTK_WIDGET(undoButton), FALSE);
 			
 			profileCheckBox = gtk_check_button_new_with_label(_("Include in new profile"));
@@ -379,20 +543,66 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	{
 		case value:
 			{
-				widget = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0.0, 100.0, 1.0);
-				gtk_scale_set_digits(GTK_SCALE(widget), 1);
-				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)currentDefault);
-				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)currentMaximum);
+				GtkAdjustment *adjustment;
+				GtkWidget *spinButton;
+				gboolean has_control_range = currentMaximum > 0;
+				unsigned short controlMaximum = has_control_range ? currentMaximum : 1;
+				unsigned short controlValue = currentDefault;
+				double step = 100.0/(double)controlMaximum;
+				double page_step = 10.0*step;
+				guint digits = digits_for_step(step);
+				double currentPercent;
+				const gchar *control_name = (const gchar*)control->name;
+				gchar *value_description = g_strdup_printf(_("Value for %s"), control_name);
+
+				if (!has_control_range) {
+					g_warning(_("Control %s reports a zero maximum value."), control->name);
+					controlValue = 0;
+				}
+				else if (controlValue > controlMaximum) {
+					controlValue = controlMaximum;
+				}
+				currentPercent = (double)100.0*controlValue/(double)controlMaximum;
+
+				adjustment = gtk_adjustment_new(currentPercent, 0.0, 100.0, step, page_step, 0.0);
+				displayWidget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+				widget = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment);
+				spinButton = gtk_spin_button_new(adjustment, 1.0, digits);
+
+				gtk_scale_set_digits(GTK_SCALE(widget), digits);
+				gtk_scale_set_draw_value(GTK_SCALE(widget), FALSE);
+				gtk_widget_set_hexpand(widget, TRUE);
+				gtk_widget_set_size_request(widget, 240, -1);
+				gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spinButton), TRUE);
+				gtk_entry_set_width_chars(GTK_ENTRY(spinButton), 5);
+				set_accessible_name_and_description(widget, (gchar*)control->name, value_description);
+				set_accessible_name_and_description(spinButton, (gchar*)control->name, value_description);
+				g_object_set_data(G_OBJECT(widget), "ddc_default", (gpointer)(long)controlValue);
+				g_object_set_data(G_OBJECT(widget), "ddc_max", (gpointer)(long)controlMaximum);
+				g_object_set_data(G_OBJECT(widget), "ddc_current", (gpointer)(long)controlValue);
+				g_object_set_data(G_OBJECT(widget), "ddc_has_range", GINT_TO_POINTER(has_control_range));
+				g_object_set_data(G_OBJECT(widget), "ddc_spin_button", spinButton);
 				g_object_set_data(G_OBJECT(widget), "restore_button", undoButton);
 				g_object_set_data(G_OBJECT(widget), "profile_check_box", profileCheckBox);
+
+				if (!has_control_range) {
+					gtk_widget_set_sensitive(widget, FALSE);
+					gtk_widget_set_sensitive(spinButton, FALSE);
+					if (undoButton)
+						gtk_widget_set_sensitive(undoButton, FALSE);
+					if (profileCheckBox)
+						gtk_widget_set_sensitive(profileCheckBox, FALSE);
+				}
 				
-				gtk_range_set_increments(GTK_RANGE(widget),
-						100.0/(double)currentMaximum,
-						100.0/(double)currentMaximum);
-				gtk_range_set_value(GTK_RANGE(widget),
-						(double)100.0*currentDefault/(double)currentMaximum);
+				gtk_box_pack_start(GTK_BOX(displayWidget), widget, TRUE, TRUE, 0);
+				gtk_box_pack_start(GTK_BOX(displayWidget), spinButton, FALSE, FALSE, 0);
+				gtk_widget_show(spinButton);
 						
 				g_signal_connect_after(G_OBJECT(widget), "change-value", G_CALLBACK(range_callback), NULL);
+				g_signal_connect(G_OBJECT(spinButton), "activate", G_CALLBACK(spin_button_commit_callback), widget);
+				g_signal_connect_after(G_OBJECT(spinButton), "change-value", G_CALLBACK(spin_button_change_value_callback), widget);
+				g_signal_connect(G_OBJECT(spinButton), "focus-out-event", G_CALLBACK(spin_button_focus_out_callback), widget);
+				g_free(value_description);
 			}
 			break;
 		case command:
@@ -421,6 +631,7 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 					GtkWidget* radio = gtk_radio_button_new_with_label(group, (char*)value->name);
 					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio), (ddcci_value_db_value16(value) == currentDefault));
 					g_object_set_data(G_OBJECT(radio), "ddc_value", value);
+					set_accessible_name_and_description(radio, (gchar*)value->name, (gchar*)control->name);
 					gtk_widget_show(radio);
 					gtk_box_pack_start(GTK_BOX(widget), radio, TRUE, TRUE, 0);
 					group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio));
@@ -444,7 +655,10 @@ static GtkWidget* createControlWidgets(struct control_db *control)
 	g_object_set_data(G_OBJECT(widget), "ddc_control", control);
 	/*g_print("%i - %i\n",all_controls,g_slist_length(all_controls));*/
 	gtk_widget_show(widget);
-	gtk_box_pack_start(GTK_BOX(controlWithUndo), widget, 1, 1, 0);
+	if (displayWidget == NULL)
+		displayWidget = widget;
+	gtk_widget_show(displayWidget);
+	gtk_box_pack_start(GTK_BOX(controlWithUndo), displayWidget, 1, 1, 0);
 	
 	if (undoButton) {
 		g_signal_connect(G_OBJECT(undoButton), "clicked", G_CALLBACK(restore_callback), widget);
@@ -512,7 +726,9 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer, "ypad", 4, NULL);
 	column = gtk_tree_view_column_new_with_attributes(_("Section"),renderer,"text",TITLE_COL,NULL);
+	gtk_tree_view_column_set_cell_data_func(column, renderer, section_cell_data_func, NULL, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree),column);
 	
 	GtkTreeIter top_iter;
@@ -575,6 +791,8 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 	}
 	
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree));
+	gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(tree), TRUE);
+	gtk_tree_view_set_level_indentation(GTK_TREE_VIEW(tree), 6);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree),0);
 	// gtk_container_set_border_width(GTK_CONTAINER(tree),1);
 	
