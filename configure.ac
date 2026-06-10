@@ -49,10 +49,10 @@ if test "x$support_i2c_dev" = "xyes" ; then
 	support_i2c_dev_works=no
 	AC_MSG_CHECKING([if linux/i2c-dev.h works with non-kernel linux/types.h])
 	AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
-	[#include <linux/types.h>]
-	[#include <linux/i2c-dev.h>]
-	[const int a = I2C_RDWR + I2C_M_RD;]
-	[struct i2c_msg i2cmsg;]
+	#include <linux/types.h>
+	#include <linux/i2c-dev.h>
+	const int a = I2C_RDWR + I2C_M_RD;
+	struct i2c_msg i2cmsg;
 	]])],
 	support_i2c_dev_works=yes
 	AC_MSG_RESULT(yes),
@@ -62,10 +62,10 @@ if test "x$support_i2c_dev" = "xyes" ; then
 	if test "x$support_i2c_dev_works" = "xno" ; then
 	  AC_MSG_CHECKING([if $srcdir/src/lib/i2c-dev.h works instead])
 	  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
-	  [#define HAVE_BUGGY_I2C_DEV 1]
-	  [#include "$srcdir/src/lib/i2c-dev.h"]
-	  [const int a = I2C_RDWR + I2C_M_RD;]
-	  [struct i2c_msg i2cmsg;]
+	  #define HAVE_BUGGY_I2C_DEV 1
+	  #include "$srcdir/src/lib/i2c-dev.h"
+	  const int a = I2C_RDWR + I2C_M_RD;
+	  struct i2c_msg i2cmsg;
 	  ]])],
 	  AC_DEFINE(HAVE_BUGGY_I2C_DEV, 1, [Define if linux/i2c-dev.h is buggy on your system, so defaults constants and structures must be used])
 	  support_i2c_dev_works=yes
