@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "include-component-in-tag": false,
+  "include-v-in-tag": false,
+  "pull-request-header": "This pull request prepares the next ddccontrol release. Edit CHANGELOG.md or this PR body before merging if the generated release notes need adjustment.",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "ddccontrol",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "configure.ac"
+        },
+        {
+          "type": "generic",
+          "path": "src/lib/tests/test_issueurl.c"
+        }
+      ]
+    }
+  }
+}
