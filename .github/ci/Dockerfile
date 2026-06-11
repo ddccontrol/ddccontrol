@@ -8,6 +8,7 @@ RUN apt-get update \
         autoconf \
         build-essential \
         ca-certificates \
+        cargo \
         clang \
         dh-autoreconf \
         git \
@@ -16,6 +17,7 @@ RUN apt-get update \
         libpci-dev \
         libxml2-dev \
         pkg-config \
+        rustc \
         xsltproc \
         tidy \
         docbook-xml \

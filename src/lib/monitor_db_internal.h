@@ -19,8 +19,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include <libxml/tree.h>
-
 struct value_db_private {
 	struct value_db public_value;
 	uint16_t value16;
@@ -62,8 +60,5 @@ static inline void ddcci_value_db_set_value16(struct value_db *value, uint16_t v
 	ddcci_value_db_private_from_public(value)->value16 = value16;
 	value->value = (unsigned char)(value16 & 0xFF);
 }
-
-int ddcci_get_value_list(xmlNodePtr options_control, xmlNodePtr mon_control,
-                         struct control_db *current_control, int command, int faulttolerance);
 
 #endif

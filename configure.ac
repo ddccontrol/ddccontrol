@@ -9,8 +9,15 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.21])
 GETTEXT_PACKAGE=ddccontrol
 AC_SUBST([GETTEXT_PACKAGE])
+AS_IF([test "x$USE_NLS" = "xyes"],
+      [RUST_GETTEXT_FEATURE="--features gettext"],
+      [RUST_GETTEXT_FEATURE=""])
+AC_SUBST([RUST_GETTEXT_FEATURE])
 
 AC_PROG_CC
+AC_PATH_PROG([CARGO], [cargo], [no])
+AS_IF([test "x$CARGO" = "xno"],
+      [AC_MSG_ERROR([cargo is required to build the Rust CAPS parser])])
 AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P

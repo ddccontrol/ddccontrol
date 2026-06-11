@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "crates/ddccontrol-caps",
+    "crates/ddccontrol-db",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "GPL-2.0-or-later"
+repository = "https://github.com/ddccontrol/ddccontrol"
