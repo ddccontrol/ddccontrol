@@ -5,7 +5,6 @@
 <!ENTITY install SYSTEM "@srcdir@/install.xml">
 <!ENTITY usage SYSTEM "@srcdir@/usage.xml">
 <!ENTITY report SYSTEM "@srcdir@/report.xml">
-<!ENTITY supportedmonitors SYSTEM "@srcdir@/supportedmonitors.xml">
 <!ENTITY supportedgc SYSTEM "@srcdir@/supportedgc.xml">
 <!ENTITY thanks SYSTEM "@srcdir@/thanks.xml">
 <!ENTITY techdocs SYSTEM "@srcdir@/techdocs.xml">
@@ -59,8 +58,6 @@ Documentation for DDCcontrol version @VERSION@.
 &usage;
 
 &report;
-
-&supportedmonitors;
 
 &supportedgc;
 
