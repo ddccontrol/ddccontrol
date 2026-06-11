@@ -104,6 +104,7 @@ static void reset_edid_info_button(void)
 
 	g_signal_handlers_disconnect_matched(G_OBJECT(edid_info_button), G_SIGNAL_MATCH_FUNC,
 	                                     0, 0, NULL, G_CALLBACK(toggle_edid_info), NULL);
+	g_object_set_data(G_OBJECT(edid_info_button), "ddc_edid_info_available", GINT_TO_POINTER(FALSE));
 	set_edid_info_button_label(FALSE);
 	gtk_widget_set_sensitive(edid_info_button, FALSE);
 }
@@ -1006,6 +1007,7 @@ void create_monitor_manager(struct monitorlist* monitor)
 	GtkWidget *edid_info = create_edid_info(monitor);
 	reset_edid_info_button();
 	g_signal_connect(G_OBJECT(edid_info_button), "clicked", G_CALLBACK(toggle_edid_info), edid_info);
+	g_object_set_data(G_OBJECT(edid_info_button), "ddc_edid_info_available", GINT_TO_POINTER(TRUE));
 	gtk_widget_set_sensitive(edid_info_button, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), edid_info, 0, 0, 3, 1);
 	gtk_widget_hide(edid_info);

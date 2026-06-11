@@ -99,6 +99,12 @@ static gboolean parse_verbosity_option(const gchar *option_name, const gchar *va
 	return TRUE;
 }
 
+static gboolean can_toggle_edid_info(void)
+{
+	return edid_info_button &&
+	       GPOINTER_TO_INT(g_object_get_data(G_OBJECT(edid_info_button), "ddc_edid_info_available"));
+}
+
 static int can_use_dbus_daemon(void)
 {
 	const char *disable_envvar = getenv("DDCCONTROL_NO_DAEMON");
@@ -247,7 +253,7 @@ static void widgets_set_sensitive(gboolean sensitive)
 	gtk_widget_set_sensitive(refresh_controls_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(close_button, sensitive);
 	gtk_widget_set_sensitive(profile_manager_button, sensitive && (current_main_component == 0));
-	gtk_widget_set_sensitive(edid_info_button, sensitive && (current_main_component == 0));
+	gtk_widget_set_sensitive(edid_info_button, sensitive && (current_main_component == 0) && can_toggle_edid_info());
 	gtk_widget_set_sensitive(saveprofile_button, sensitive);
 	gtk_widget_set_sensitive(cancelprofile_button, sensitive);
 }
@@ -265,7 +271,7 @@ void set_current_main_component(int component) {
 		gtk_widget_hide(profile_manager);
 		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		gtk_widget_set_sensitive(profile_manager_button, TRUE);
-		gtk_widget_set_sensitive(edid_info_button, TRUE);
+		gtk_widget_set_sensitive(edid_info_button, can_toggle_edid_info());
 	}
 	else if (current_main_component == 1) {
 		gtk_widget_hide(monitor_manager);
