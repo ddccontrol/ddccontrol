@@ -10,3 +10,5 @@ Also, always run "./scripts/check_git_clean_after_build.sh" after the build to e
 Also, always run "./scripts/format_code.sh" after the build to format the code, before committing.
 
 Also, always use the configured "docker-mcp-gateway" tool instead of running docker commands directly.
+
+Always use Conventional Commits for commit messages.
