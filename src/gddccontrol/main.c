@@ -253,7 +253,8 @@ static void widgets_set_sensitive(gboolean sensitive)
 	gtk_widget_set_sensitive(refresh_controls_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(close_button, sensitive);
 	gtk_widget_set_sensitive(profile_manager_button, sensitive && (current_main_component == 0));
-	gtk_widget_set_sensitive(edid_info_button, sensitive && (current_main_component == 0) && can_toggle_edid_info());
+	if (edid_info_button)
+		gtk_widget_set_sensitive(edid_info_button, sensitive && (current_main_component == 0) && can_toggle_edid_info());
 	gtk_widget_set_sensitive(saveprofile_button, sensitive);
 	gtk_widget_set_sensitive(cancelprofile_button, sensitive);
 }
@@ -271,14 +272,16 @@ void set_current_main_component(int component) {
 		gtk_widget_hide(profile_manager);
 		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		gtk_widget_set_sensitive(profile_manager_button, TRUE);
-		gtk_widget_set_sensitive(edid_info_button, can_toggle_edid_info());
+		if (edid_info_button)
+			gtk_widget_set_sensitive(edid_info_button, can_toggle_edid_info());
 	}
 	else if (current_main_component == 1) {
 		gtk_widget_hide(monitor_manager);
 		gtk_widget_show(profile_manager);
 		gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 		gtk_widget_set_sensitive(profile_manager_button, FALSE);
-		gtk_widget_set_sensitive(edid_info_button, FALSE);
+		if (edid_info_button)
+			gtk_widget_set_sensitive(edid_info_button, FALSE);
 	}
 }
 
