@@ -38,6 +38,11 @@ You don't need gtk+ if you don't plan to use the Gnome GUI.
 </screen>
 <para>You should now have two directories, <filename>ddccontrol</filename> and
 <filename>ddccontrol-db</filename>.</para>
+<para>Monitor profiles are maintained in
+<ulink url="https://github.com/ddccontrol/ddccontrol-db">ddccontrol-db</ulink>.
+Install the matching <filename>ddccontrol-db</filename> package to get the
+current monitor database. If your monitor is missing, follow the contribution
+instructions in that repository.</para>
 <para>Alternatively, download the latest source tarballs from the
 <ulink url="https://github.com/ddccontrol/ddccontrol/releases">releases page</ulink>
 and unpack them with:</para>
