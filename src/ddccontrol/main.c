@@ -306,12 +306,12 @@ int main(int argc, char **argv)
 
 	fprintf(stdout,
 	        _("ddccontrol version %s\n"
-	  "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
-	  "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
-	  "Copyright 2004-2026 DDCcontrol authors and "
-	  "contributors (see AUTHORS and CONTRIBUTORS)\n"
-	  "This program comes with ABSOLUTELY NO WARRANTY.\n"
-	  "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
+	          "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
+	          "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+	          "Copyright 2004-2026 DDCcontrol authors and "
+	          "contributors (see AUTHORS and CONTRIBUTORS)\n"
+	          "This program comes with ABSOLUTELY NO WARRANTY.\n"
+	          "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 
 	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:S")) >= 0) {
 		switch (i) {
