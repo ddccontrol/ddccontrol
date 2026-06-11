@@ -12,8 +12,8 @@
         { "type": "feat", "section": "Features", "hidden": false },
         { "type": "fix", "section": "Bug Fixes", "hidden": false },
         { "type": "docs", "section": "Documentation", "hidden": false },
-        { "type": "ci", "section": "Continuous Integration", "hidden": false },
-        { "type": "chore", "section": "Chores", "hidden": false },
+        { "type": "ci", "section": "Continuous Integration", "hidden": true },
+        { "type": "chore", "section": "Chores", "hidden": true },
         { "type": "refactor", "section": "Code Refactoring", "hidden": false },
         {
           "type": "perf",
