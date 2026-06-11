@@ -130,4 +130,18 @@ Control 0x10: +/70/100 [Brightness]
 </sect3>
 </sect2>
 </sect1>
+<sect1>
+<title>Environment variables</title>
+<variablelist>
+<varlistentry>
+<term><envar>DDCCONTROL_NO_DAEMON</envar></term>
+<listitem>
+<para>When set to a non-empty value, <command>ddccontrol</command> and
+<command>gddccontrol</command> bypass the D-Bus daemon and access
+<filename>/dev/i2c-*</filename> devices directly. This can be useful for
+testing, debugging, or working around a daemon startup or connection problem.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect1>
 </chapter>

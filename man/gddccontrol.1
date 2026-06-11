@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH GDDCCONTROL 1 "July 26, 2006"
+.TH GDDCCONTROL 1 "June 11, 2026"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -38,6 +38,11 @@ Do not show the warning banner for unsupported monitors when a fallback profile 
 \fB\-v\fP, \fB\-\-verbose\fP
 Increase verbosity. Repeat (e.g. \fB\-vv\fP) for more detailed output.
 .SH ENVIRONMENT
+.TP
+\fBDDCCONTROL_NO_DAEMON\fP
+When set to a non-empty value, \fBgddccontrol\fP bypasses the D-Bus daemon and
+accesses \fB/dev/i2c-*\fP devices directly. This can be useful for testing,
+debugging, or working around a daemon startup or connection problem.
 .TP
 \fBGTK_THEME\fP
 Override the GTK theme for this launch. For example, run
