@@ -54,6 +54,7 @@ GtkWidget* monitor_manager = NULL;
 GtkWidget* profile_manager = NULL;
 
 GtkWidget* profile_manager_button = NULL;
+GtkWidget* edid_info_button = NULL;
 GtkWidget* saveprofile_button = NULL;
 GtkWidget* cancelprofile_button = NULL;
 GtkWidget* refresh_controls_button = NULL;
@@ -246,6 +247,7 @@ static void widgets_set_sensitive(gboolean sensitive)
 	gtk_widget_set_sensitive(refresh_controls_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(close_button, sensitive);
 	gtk_widget_set_sensitive(profile_manager_button, sensitive && (current_main_component == 0));
+	gtk_widget_set_sensitive(edid_info_button, sensitive && (current_main_component == 0));
 	gtk_widget_set_sensitive(saveprofile_button, sensitive);
 	gtk_widget_set_sensitive(cancelprofile_button, sensitive);
 }
@@ -263,12 +265,14 @@ void set_current_main_component(int component) {
 		gtk_widget_hide(profile_manager);
 		gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 		gtk_widget_set_sensitive(profile_manager_button, TRUE);
+		gtk_widget_set_sensitive(edid_info_button, TRUE);
 	}
 	else if (current_main_component == 1) {
 		gtk_widget_hide(monitor_manager);
 		gtk_widget_show(profile_manager);
 		gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 		gtk_widget_set_sensitive(profile_manager_button, FALSE);
+		gtk_widget_set_sensitive(edid_info_button, FALSE);
 	}
 }
 
@@ -560,6 +564,12 @@ int main( int argc, char *argv[] )
 	gtk_box_pack_start(GTK_BOX(profile_hbox), profile_manager_button, 0, 0, 0);
 	gtk_widget_show (profile_manager_button);
 	gtk_widget_set_sensitive(profile_manager_button, FALSE);
+
+	edid_info_button = button_from_icon_name("dialog-information", _("EDID information"),
+	                   _("Show EDID information for the current monitor"));
+	gtk_box_pack_start(GTK_BOX(profile_hbox), edid_info_button, 0, 0, 0);
+	gtk_widget_show (edid_info_button);
+	gtk_widget_set_sensitive(edid_info_button, FALSE);
 	
 	saveprofile_button = button_from_icon_name("document-save", _("Save profile"), NULL);
 	g_signal_connect(G_OBJECT(saveprofile_button), "clicked", G_CALLBACK(saveprofile_callback), NULL);

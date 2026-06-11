@@ -50,6 +50,7 @@ enum
 // Protos
 ////////////////////
 static void change_control_value(GtkWidget *widget, gpointer nval);
+static void toggle_edid_info(GtkButton *button, gpointer data);
 
 // Globals
 ////////////////////
@@ -82,6 +83,38 @@ static gboolean is_control_updating(GtkWidget *widget)
 static void set_control_updating(GtkWidget *widget, gboolean updating)
 {
 	g_object_set_data(G_OBJECT(widget), "ddc_updating", GINT_TO_POINTER(updating));
+}
+
+static void set_edid_info_button_label(gboolean visible)
+{
+	GtkWidget *label = (GtkWidget*)g_object_get_data(G_OBJECT(edid_info_button), "button_label");
+
+	if (label) {
+		gtk_label_set_text(GTK_LABEL(label), visible ? _("Hide EDID information") : _("EDID information"));
+	}
+	gtk_widget_set_tooltip_text(edid_info_button,
+	                            visible ? _("Hide EDID information for the current monitor")
+	                            : _("Show EDID information for the current monitor"));
+}
+
+static void reset_edid_info_button(void)
+{
+	if (!edid_info_button)
+		return;
+
+	g_signal_handlers_disconnect_matched(G_OBJECT(edid_info_button), G_SIGNAL_MATCH_FUNC,
+	                                     0, 0, NULL, G_CALLBACK(toggle_edid_info), NULL);
+	set_edid_info_button_label(FALSE);
+	gtk_widget_set_sensitive(edid_info_button, FALSE);
+}
+
+static void toggle_edid_info(GtkButton *button, gpointer data)
+{
+	GtkWidget *edid_info = GTK_WIDGET(data);
+	gboolean visible = !gtk_widget_get_visible(edid_info);
+
+	gtk_widget_set_visible(edid_info, visible);
+	set_edid_info_button_label(visible);
 }
 
 static void attach_info_row(GtkWidget *grid, int row, const gchar *name, const gchar *value)
@@ -150,7 +183,6 @@ static GtkWidget *create_edid_info(const struct monitorlist *monitor)
 	gtk_container_add(GTK_CONTAINER(frame), grid);
 	gtk_widget_set_hexpand(frame, TRUE);
 	gtk_widget_show(grid);
-	gtk_widget_show(frame);
 
 	g_free(serial_number);
 	g_free(manufactured);
@@ -972,7 +1004,11 @@ void create_monitor_manager(struct monitorlist* monitor)
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 
 	GtkWidget *edid_info = create_edid_info(monitor);
+	reset_edid_info_button();
+	g_signal_connect(G_OBJECT(edid_info_button), "clicked", G_CALLBACK(toggle_edid_info), edid_info);
+	gtk_widget_set_sensitive(edid_info_button, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), edid_info, 0, 0, 3, 1);
+	gtk_widget_hide(edid_info);
 
 	gtk_widget_show (tree);
 	gtk_grid_attach(GTK_GRID(grid), tree, 0, 1, 1, 1);
@@ -1045,6 +1081,8 @@ void create_monitor_manager(struct monitorlist* monitor)
 	
 void delete_monitor_manager()
 {
+	reset_edid_info_button();
+
 	if (mon) {
 		int needs_free = (mon->__vtable == NULL);
 		if (modified && needs_free)
