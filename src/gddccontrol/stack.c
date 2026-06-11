@@ -84,6 +84,82 @@ static void set_control_updating(GtkWidget *widget, gboolean updating)
 	g_object_set_data(G_OBJECT(widget), "ddc_updating", GINT_TO_POINTER(updating));
 }
 
+static void attach_info_row(GtkWidget *grid, int row, const gchar *name, const gchar *value)
+{
+	GtkWidget *name_label = gtk_label_new(name);
+	GtkWidget *value_label = gtk_label_new(value && value[0] ? value : _("Unknown"));
+
+	gtk_widget_set_halign(name_label, GTK_ALIGN_START);
+	gtk_widget_set_valign(name_label, GTK_ALIGN_START);
+	gtk_widget_set_halign(value_label, GTK_ALIGN_START);
+	gtk_widget_set_valign(value_label, GTK_ALIGN_START);
+	gtk_label_set_selectable(GTK_LABEL(value_label), TRUE);
+	gtk_label_set_line_wrap(GTK_LABEL(value_label), TRUE);
+
+	gtk_grid_attach(GTK_GRID(grid), name_label, 0, row, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), value_label, 1, row, 1, 1);
+	gtk_widget_show(name_label);
+	gtk_widget_show(value_label);
+}
+
+static GtkWidget *create_edid_info(const struct monitorlist *monitor)
+{
+	GtkWidget *frame = gtk_frame_new(_("EDID information"));
+	GtkWidget *grid = gtk_grid_new();
+	const char *profile_name = mon->db ? (const char *)mon->db->name : NULL;
+	const struct edid_info *edid = &mon->edid_info;
+	gboolean digital = mon->digital || (monitor && monitor->digital);
+	gchar *serial_number = NULL;
+	gchar *manufactured = NULL;
+	gchar *edid_version = NULL;
+	gchar *max_size = NULL;
+	int row = 0;
+
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 3);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+	gtk_container_set_border_width(GTK_CONTAINER(grid), 6);
+
+	if (edid->monitor_name[0])
+		attach_info_row(grid, row++, _("Monitor name:"), edid->monitor_name);
+	attach_info_row(grid, row++, _("Plug and Play ID:"), mon->pnpid);
+	attach_info_row(grid, row++, _("Monitor profile:"), profile_name);
+	attach_info_row(grid, row++, _("Input type:"), digital ? _("Digital") : _("Analog"));
+	if (edid->serial_ascii[0])
+		attach_info_row(grid, row++, _("Serial text:"), edid->serial_ascii);
+	if (edid->serial_number > 0) {
+		serial_number = g_strdup_printf("%u", edid->serial_number);
+		attach_info_row(grid, row++, _("Serial number:"), serial_number);
+	}
+	if (edid->manufacture_year > 0) {
+		if (edid->manufacture_week > 0)
+			manufactured = g_strdup_printf(_("Week %d, %d"), edid->manufacture_week, edid->manufacture_year);
+		else
+			manufactured = g_strdup_printf("%d", edid->manufacture_year);
+		attach_info_row(grid, row++, _("Manufactured:"), manufactured);
+	}
+	if (edid->version > 0) {
+		edid_version = g_strdup_printf("%d.%d", edid->version, edid->revision);
+		attach_info_row(grid, row++, _("EDID version:"), edid_version);
+	}
+	if (edid->max_width_cm > 0 || edid->max_height_cm > 0) {
+		max_size = g_strdup_printf(_("%d x %d cm"), edid->max_width_cm, edid->max_height_cm);
+		attach_info_row(grid, row++, _("Maximum size:"), max_size);
+	}
+	attach_info_row(grid, row++, _("Device:"), monitor ? monitor->filename : NULL);
+
+	gtk_container_add(GTK_CONTAINER(frame), grid);
+	gtk_widget_set_hexpand(frame, TRUE);
+	gtk_widget_show(grid);
+	gtk_widget_show(frame);
+
+	g_free(serial_number);
+	g_free(manufactured);
+	g_free(edid_version);
+	g_free(max_size);
+
+	return frame;
+}
+
 static guint digits_for_step(double step)
 {
 	guint digits = 0;
@@ -893,8 +969,13 @@ void create_monitor_manager(struct monitorlist* monitor)
 	GtkWidget *tree = createTreeAndPages(stack);
 	
 	GtkWidget* grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+
+	GtkWidget *edid_info = create_edid_info(monitor);
+	gtk_grid_attach(GTK_GRID(grid), edid_info, 0, 0, 3, 1);
+
 	gtk_widget_show (tree);
-	gtk_grid_attach(GTK_GRID(grid), tree, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), tree, 0, 1, 1, 1);
 	gtk_widget_set_vexpand(tree, TRUE);
 	gtk_widget_set_margin_top(tree, 3);
 	gtk_widget_set_margin_bottom(tree, 0);
@@ -903,10 +984,10 @@ void create_monitor_manager(struct monitorlist* monitor)
 	gtk_widget_show (stack);
 	
 	GtkWidget* separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
-	gtk_grid_attach(GTK_GRID(grid), separator, 1, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), separator, 1, 1, 1, 1);
 	gtk_widget_show(separator);
 	
-	gtk_grid_attach(GTK_GRID(grid), stack, 2, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), stack, 2, 1, 1, 1);
 	gtk_widget_set_hexpand(stack, TRUE);
 	gtk_widget_set_vexpand(stack, TRUE);
 	gtk_widget_set_margin_top(stack, 3);

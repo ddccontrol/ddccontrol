@@ -301,7 +301,13 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
 		return TRUE;
 	}
 
-	ddccontrol_complete_open_monitor(skeleton, invocation, mon->pnpid, mon->caps.raw_caps);
+	ddccontrol_complete_open_monitor(
+	    skeleton,
+	    invocation,
+	    mon->pnpid,
+	    mon->caps.raw_caps,
+	    g_variant_new_fixed_array(G_VARIANT_TYPE_BYTE, mon->edid, mon->edid_len, sizeof(guchar))
+	);
 	return TRUE;
 }
 
