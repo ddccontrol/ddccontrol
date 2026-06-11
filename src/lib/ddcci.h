@@ -54,6 +54,25 @@ typedef struct caps Caps;
 
 #include "monitor_db.h"
 
+enum {
+	DDCCI_EDID_BLOCK_LEN = 128,
+	DDCCI_EDID_TEXT_LEN = 14,
+	DDCCI_EDID_MIN_PARSE_LEN = 0x17
+};
+
+struct edid_info {
+	unsigned int serial_number;
+	int manufacture_week;
+	int manufacture_year;
+	int version;
+	int revision;
+	int max_width_cm;
+	int max_height_cm;
+	char monitor_name[DDCCI_EDID_TEXT_LEN];
+	char serial_ascii[DDCCI_EDID_TEXT_LEN];
+};
+typedef struct edid_info EdidInfo;
+
 struct monitor {
 	const struct monitor_vtable *__vtable;
 
@@ -61,6 +80,9 @@ struct monitor {
 	unsigned int addr;
 	char pnpid[8];
 	unsigned char digital; /* 0x80 - digital, 0x00 - analog */
+	unsigned char edid[DDCCI_EDID_BLOCK_LEN];
+	int edid_len;
+	struct edid_info edid_info;
 	struct timeval last;
 	struct monitor_db* db;
 	struct caps caps;
@@ -111,11 +133,7 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 int ddcci_readctrl(struct monitor* mon, unsigned char ctrl, 
 	unsigned short *value, unsigned short *maximum);
 
-enum {
-	DDCCI_EDID_MIN_PARSE_LEN = 0x17
-};
-
-/* Parse an EDID buffer into mon->pnpid and mon->digital (0x80 for digital, 0x00 for analog).
+/* Parse an EDID buffer into mon->pnpid, mon->digital, mon->edid, and mon->edid_info.
  * The buffer must be at least DDCCI_EDID_MIN_PARSE_LEN bytes and contain a valid EDID header.
  * Returns 0 on success, -1 on failure. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len);

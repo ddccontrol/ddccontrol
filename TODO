@@ -1,5 +1,4 @@
 Nicolas:
- - Read EDID info, show it in gddccontrol
  - Add support for more than 2 monitors
  - See what to do with engineering VCP.
  - Better handling of --enable-doc.

@@ -301,7 +301,44 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
 		return TRUE;
 	}
 
-	ddccontrol_complete_open_monitor(skeleton, invocation, mon->pnpid, mon->caps.raw_caps);
+	ddccontrol_complete_open_monitor(
+	    skeleton,
+	    invocation,
+	    mon->pnpid,
+	    mon->caps.raw_caps
+	);
+	return TRUE;
+}
+
+static gboolean handle_get_edid(DDCControl *skeleton, GDBusMethodInvocation *invocation,
+                                gchar *device)
+{
+	int ret;
+	struct monitor *mon;
+
+	if (can_open_device(device) == FALSE) {
+		g_dbus_method_invocation_return_dbus_error(
+		    invocation,
+		    DC_BUS_ERROR_INVALID_DEVICE,
+		    "only detected devices are allowed"
+		);
+		return TRUE;
+	}
+
+	if ((ret = open_monitor(&mon, device)) < 0) {
+		g_dbus_method_invocation_return_dbus_error(
+		    invocation,
+		    DC_BUS_ERROR_OPEN_FAILED,
+		    "Failed to open monitor"
+		);
+		return TRUE;
+	}
+
+	ddccontrol_complete_get_edid(
+	    skeleton,
+	    invocation,
+	    g_variant_new_fixed_array(G_VARIANT_TYPE_BYTE, mon->edid, mon->edid_len, sizeof(guchar))
+	);
 	return TRUE;
 }
 
@@ -395,6 +432,7 @@ static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpo
 	g_signal_connect(skeleton, "handle-get-monitors", G_CALLBACK(handle_get_monitors), NULL);
 	g_signal_connect(skeleton, "handle-rescan-monitors", G_CALLBACK(handle_rescan_monitors), NULL);
 	g_signal_connect(skeleton, "handle-open-monitor", G_CALLBACK(handle_open_monitor), NULL);
+	g_signal_connect(skeleton, "handle-get-edid", G_CALLBACK(handle_get_edid), NULL);
 	g_signal_connect(skeleton, "handle-get-control",  G_CALLBACK(handle_get_control), NULL);
 	g_signal_connect(skeleton, "handle-set-control",  G_CALLBACK(handle_set_control), NULL);
 

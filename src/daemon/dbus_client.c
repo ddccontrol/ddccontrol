@@ -100,6 +100,7 @@ static int looks_like_caps(const char *value)
 int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filename)
 {
 	char *pnpid = NULL;
+	GVariant *v_edid = NULL;
 	GError *error = NULL;
 
 	struct dbus_monitor *dbus_mon;
@@ -119,7 +120,6 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 		return -1;
 	}
 
-
 	gboolean result = ddccontrol_call_open_monitor_sync(proxy, filename, &pnpid, &mon->caps.raw_caps, NULL, &error);
 	if (result == FALSE) {
 		fprintf(stderr, _("Open monitor failed: %s\n."), error->message);
@@ -138,6 +138,19 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 	strncpy((char *)&mon->pnpid, pnpid, 7);
 	mon->pnpid[7] = 0;
 	g_free(pnpid);
+
+	result = ddccontrol_call_get_edid_sync(proxy, filename, &v_edid, NULL, &error);
+	if (result == FALSE) {
+		g_clear_error(&error);
+	}
+	if (v_edid != NULL) {
+		gsize edid_len = 0;
+		const unsigned char *edid = g_variant_get_fixed_array(v_edid, &edid_len, sizeof(guchar));
+		if (edid != NULL && ddcci_parse_edid_buf(mon, edid, edid_len) < 0) {
+			mon->edid_len = 0;
+		}
+		g_variant_unref(v_edid);
+	}
 
 	if (ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1) < 0) {
 		mon->caps.type = unk;

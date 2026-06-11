@@ -85,6 +85,7 @@ void set_message_ok(char* message, int with_ok);
 GtkWidget *button_from_icon_name(const gchar * icon_name, const gchar *label_text, const gchar *tool_tip);
 
 extern GtkWidget* profile_manager_button;
+extern GtkWidget* edid_info_button;
 extern GtkWidget* saveprofile_button;
 extern GtkWidget* cancelprofile_button;
 extern GtkWidget* refresh_controls_button;

@@ -39,6 +39,19 @@ static void make_edid(unsigned char buf[128], unsigned char b8, unsigned char b9
 	buf[0x14] = vid_input;
 }
 
+static void set_descriptor_text(unsigned char buf[128], int descriptor, unsigned char type, const char *text)
+{
+	unsigned char *desc = buf + 0x36 + descriptor * 18;
+	size_t i;
+
+	memset(desc, 0, 18);
+	desc[3] = type;
+	for (i = 0; i < 13 && text[i] != 0; i++)
+		desc[5 + i] = (unsigned char)text[i];
+	if (i < 13)
+		desc[5 + i] = '\n';
+}
+
 static struct monitor make_mon(void)
 {
 	struct monitor mon;
@@ -226,6 +239,41 @@ static void test_digital_flag_ignores_lower_bits(void)
 	CHECK(mon.digital == 0x80);
 }
 
+/* ---- extended EDID fields ----------------------------------------------- */
+
+static void test_extended_edid_fields(void)
+{
+	unsigned char buf[128];
+	struct monitor mon = make_mon();
+
+	make_edid(buf, 0x4c, 0x2d, 0x34, 0x12, 0x80);
+	buf[0x0c] = 0x78;
+	buf[0x0d] = 0x56;
+	buf[0x0e] = 0x34;
+	buf[0x0f] = 0x12;
+	buf[0x10] = 22;
+	buf[0x11] = 30;
+	buf[0x12] = 1;
+	buf[0x13] = 4;
+	buf[0x15] = 60;
+	buf[0x16] = 34;
+	set_descriptor_text(buf, 0, 0xfc, "Panel 27");
+	set_descriptor_text(buf, 1, 0xff, "ABC123");
+
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.edid_len == 128);
+	CHECK(memcmp(mon.edid, buf, 128) == 0);
+	CHECK(mon.edid_info.serial_number == 0x12345678);
+	CHECK(mon.edid_info.manufacture_week == 22);
+	CHECK(mon.edid_info.manufacture_year == 2020);
+	CHECK(mon.edid_info.version == 1);
+	CHECK(mon.edid_info.revision == 4);
+	CHECK(mon.edid_info.max_width_cm == 60);
+	CHECK(mon.edid_info.max_height_cm == 34);
+	CHECK(strcmp(mon.edid_info.monitor_name, "Panel 27") == 0);
+	CHECK(strcmp(mon.edid_info.serial_ascii, "ABC123") == 0);
+}
+
 /* ---- idempotence / repeated calls --------------------------------------- */
 
 static void test_successive_calls_overwrite_fields(void)
@@ -243,6 +291,28 @@ static void test_successive_calls_overwrite_fields(void)
 	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
 	CHECK(mon.digital == 0x00);
 	CHECK(strcmp(mon.pnpid, "DELCDAB") == 0);
+	CHECK(mon.edid_info.monitor_name[0] == 0);
+	CHECK(mon.edid_info.serial_ascii[0] == 0);
+}
+
+static void test_invalid_call_clears_edid_fields(void)
+{
+	unsigned char buf[128];
+	struct monitor mon = make_mon();
+
+	make_edid(buf, 0x4c, 0x2d, 0x34, 0x12, 0x80);
+	set_descriptor_text(buf, 0, 0xfc, "Panel 27");
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x80);
+	CHECK(mon.edid_len == 128);
+	CHECK(mon.edid_info.monitor_name[0] != 0);
+
+	buf[0] = 0x01;
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
+	CHECK(mon.digital == 0x00);
+	CHECK(mon.edid_len == 0);
+	CHECK(mon.edid_info.monitor_name[0] == 0);
+	CHECK(mon.edid_info.serial_ascii[0] == 0);
 }
 
 int main(void)
@@ -264,6 +334,8 @@ int main(void)
 	test_digital_flag_set_when_bit7_high();
 	test_digital_flag_clear_when_bit7_low();
 	test_digital_flag_ignores_lower_bits();
+	test_extended_edid_fields();
 	test_successive_calls_overwrite_fields();
+	test_invalid_call_clears_edid_fields();
 	return failures ? 1 : 0;
 }
