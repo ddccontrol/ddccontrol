@@ -120,9 +120,7 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 		return -1;
 	}
 
-
-	gboolean result = ddccontrol_call_open_monitor_sync(proxy, filename, &pnpid, &mon->caps.raw_caps,
-	                  &v_edid, NULL, &error);
+	gboolean result = ddccontrol_call_open_monitor_sync(proxy, filename, &pnpid, &mon->caps.raw_caps, NULL, &error);
 	if (result == FALSE) {
 		fprintf(stderr, _("Open monitor failed: %s\n."), error->message);
 		g_clear_error(&error);
@@ -141,6 +139,10 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 	mon->pnpid[7] = 0;
 	g_free(pnpid);
 
+	result = ddccontrol_call_get_edid_sync(proxy, filename, &v_edid, NULL, &error);
+	if (result == FALSE) {
+		g_clear_error(&error);
+	}
 	if (v_edid != NULL) {
 		gsize edid_len = 0;
 		const unsigned char *edid = g_variant_get_fixed_array(v_edid, &edid_len, sizeof(guchar));

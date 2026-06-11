@@ -18,6 +18,9 @@
       <arg name="device"  type="s" direction="in"  />
       <arg name="pnpid"   type="s" direction="out" />
       <arg name="caps"    type="s" direction="out" />
+    </method>
+    <method name="GetEdid">
+      <arg name="device"  type="s" direction="in"  />
       <arg name="edid"    type="ay" direction="out">
         <annotation name="org.gtk.GDBus.C.ForceGVariant" value="true"/>
       </arg>
