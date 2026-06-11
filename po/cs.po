@@ -1,4 +1,5 @@
 # Czech translation for ddccontrol.
+# Copyright (C) 2004-2026 DDCcontrol authors and contributors.
 # This file is distributed under the same license as the ddccontrol package.
 # Stanislav Brabec <sbrabec@suse.cz>, 2010. INCOMPLETE.
 #
@@ -69,6 +70,7 @@ msgid ""
 "ddccontrol version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 "You may redistribute copies of this program under the terms of the GNU "
 "General Public License.\n"
@@ -77,6 +79,7 @@ msgstr ""
 "ddccontrol verze %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "Tento program je šířen ABSOLUTNĚ BEZ ZÁRUKY.\n"
 "Můžete šířit kopie tohoto programu za dodržení podmínek GNU General Public "
 "License.\n"

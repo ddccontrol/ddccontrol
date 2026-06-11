@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH GDDCCONTROL 1 "July 26, 2006"
+.TH GDDCCONTROL 1 "June 11, 2026"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -37,6 +37,18 @@ Do not show the warning banner for unsupported monitors when a fallback profile 
 .TP
 \fB\-v\fP, \fB\-\-verbose\fP
 Increase verbosity. Repeat (e.g. \fB\-vv\fP) for more detailed output.
+.SH ENVIRONMENT
+.TP
+\fBDDCCONTROL_NO_DAEMON\fP
+When set to a non-empty value, \fBgddccontrol\fP bypasses the D-Bus daemon and
+accesses \fB/dev/i2c-*\fP devices directly. This can be useful for testing,
+debugging, or working around a daemon startup or connection problem.
+.TP
+\fBGTK_THEME\fP
+Override the GTK theme for this launch. For example, run
+\fBGTK_THEME=HighContrastInverse gddccontrol\fP to use the GTK high\-contrast
+dark theme when it is installed. If running through \fBsudo\fP, use
+\fBsudo env GTK_THEME=HighContrastInverse gddccontrol\fP.
 .SH SEE ALSO
 The program is documented fully in
 .br
@@ -49,5 +61,7 @@ ddccontrol was written by Oleg I. Vdovikin and Nicolas Boichat.
 Copyright 2004\-2005 Oleg I. Vdovikin (oleg@cs.msu.su)
 .br
 Copyright 2004\-2006 Nicolas Boichat (nicolas@boichat.ch)
+.br
+Copyright 2004\-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 .PP
 This manual page was written by Roberto C. Sanchez <roberto@familiasanchez.net>.

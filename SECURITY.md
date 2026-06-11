@@ -2,20 +2,25 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Only the latest released version of ddccontrol is supported with security updates.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Older releases may receive fixes at the maintainers' discretion, but this is not guaranteed.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please do not report security vulnerabilities in public GitHub issues.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Use GitHub's private vulnerability reporting:
+https://github.com/ddccontrol/ddccontrol/security/advisories/new
+
+Please include:
+
+- affected ddccontrol version
+- operating system and distribution
+- affected component or command
+- reproduction steps
+- expected impact
+- whether the issue is already publicly known
+
+For non-sensitive security hardening suggestions or documentation improvements, a normal GitHub issue is fine:
+https://github.com/ddccontrol/ddccontrol/issues

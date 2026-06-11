@@ -1,6 +1,7 @@
 /*
     ddc/ci i2c-dev header
     Copyright(c) 2004 Nicolas Boichat (nicolas@boichat.ch)
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
     Copyright (C) 1995-2000 Simon G. Vogl (original i2c.h headers)
 
     This program is free software; you can redistribute it and/or modify

@@ -38,6 +38,11 @@ You don't need gtk+ if you don't plan to use the Gnome GUI.
 </screen>
 <para>You should now have two directories, <filename>ddccontrol</filename> and
 <filename>ddccontrol-db</filename>.</para>
+<para>Monitor profiles are maintained in
+<ulink url="https://github.com/ddccontrol/ddccontrol-db">ddccontrol-db</ulink>.
+Install the matching <filename>ddccontrol-db</filename> package to get the
+current monitor database. If your monitor is missing, follow the contribution
+instructions in that repository.</para>
 <para>Alternatively, download the latest source tarballs from the
 <ulink url="https://github.com/ddccontrol/ddccontrol/releases">releases page</ulink>
 and unpack them with:</para>
@@ -70,35 +75,34 @@ package, you must set it to the same value when configuring the other.</para>
 
 <sect1 id="kerneli2c">
 <title>Configure <filename>/dev/i2c-*</filename> devices</title>
-<note><filename>/dev/i2c-*</filename> devices are only working with kernel 2.6
-or greater.</note>
-<para>If your graphics card is supported by <filename>/dev/i2c-*</filename> 
-devices (see <xref linkend="supportedgc"/>), you must load the <filename>i2c-dev</filename>
-module by typing, as root:</para>
+<para>DDCcontrol only uses userspace I2C access through
+<filename>/dev/i2c-*</filename> devices. Legacy direct PCI memory access and AMD
+ADL support have been removed, and USB-connected DDC/CI displays are not
+supported yet.</para>
+<para>The kernel graphics driver must expose the monitor DDC bus as an I2C
+adapter, and the <filename>i2c-dev</filename> module must be loaded. To load it
+manually, type as root:</para>
 <screen format="linespecific">
 # modprobe i2c-dev
 </screen>
-<para>You must also load your graphics card framebuffer driver (for
-card-specific instructions see <xref linkend="supportedgc"/>).</para>
-<para>If you want to automatically load these modules when Linux starts, see 
-your distribution's documentation.</para>
-<para>On systems not using devfs, even after loading framebuffer and i2c-dev modules,
-the devices <filename>/dev/i2c/*</filename> or <filename>/dev/i2c-*</filename> does not
-exist. On Debian, these devices are created using this command :</para>
+<para>If you want to automatically load this module when Linux starts, see your
+distribution's documentation. DDCcontrol also installs a
+<filename>modules-load.d</filename> configuration file for this purpose on
+systems that use systemd.</para>
+<para>To allow standard (i.e. non-root) users to use DDCcontrol, grant read and
+write access to the relevant <filename>/dev/i2c-*</filename> devices. Many
+distributions do this with an <filename>i2c</filename> group, for example by
+adding your user to that group. For quick local testing, this can also be done
+by typing as root:</para>
 <screen format="linespecific">
-# /sbin/MAKEDEV i2c
-</screen>
-<para>To allow standard (i.e. non-root) users to use DDCcontrol, you must change
-permissions on <filename>/dev/i2c-*</filename>. This is done by typing, as 
-root:</para>
-<screen format="linespecific">
-# chmod a+rw /dev/i2c-*
+# chgrp i2c /dev/i2c-*
+# chmod g+rw /dev/i2c-*
 </screen>
 <sect2>
 <title>Kernel configuration options</title>
-<para>If <filename>i2c-dev</filename> or your graphics card's framebuffer
-modules are not available with your kernel, you can build your own kernel with
-the following options turned on (with recommend to build them as modules):
+<para>If <filename>i2c-dev</filename> or the relevant graphics driver support is
+not available with your kernel, you can build your own kernel with the
+following options turned on (we recommend building them as modules):
 </para>
 <itemizedlist mark='bullet'>
 <listitem>
@@ -118,11 +122,11 @@ the following options turned on (with recommend to build them as modules):
 <menuchoice>
   <guimenu>Devices drivers</guimenu>
   <guimenuitem>Graphics support</guimenuitem>
-  <guimenuitem>Framebuffer support</guimenuitem>
+  <guimenuitem>Direct Rendering Manager</guimenuitem>
 </menuchoice>.
 </listitem>
 <listitem>
-and a specific driver for your graphic card (see <xref linkend="supportedgc"/>).
+and a specific driver for your graphics card.
 </listitem>
 </itemizedlist>
 </sect2>

@@ -1,3 +1,7 @@
+/*
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
+*/
+
 #include "../issueurl.h"
 #include "../monitor_db.h"
 #include "../monitor_db_internal.h"
@@ -9,6 +13,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#define TEST_DDCCONTROL_VERSION "3.0.0" /* x-release-please-version */
 
 static void assert_encoded(const char *input, const char *expected) {
     char *encoded = url_encode(input);
@@ -32,7 +38,7 @@ static void test_build_issue_url_with_values(void) {
         .monitor_name = "Dell U2720Q",
         .pnp_id = "DEL1234",
         .device = "dev:/dev/i2c-4",
-        .ddccontrol_version = "1.0.3",
+        .ddccontrol_version = TEST_DDCCONTROL_VERSION,
         .fallback_profile = "VESA Monitor",
     };
     char *url = build_issue_url(&report);
@@ -45,7 +51,7 @@ static void test_build_issue_url_with_values(void) {
                "&monitor_name=Dell%20U2720Q"
                "&pnp_id=DEL1234"
                "&device=dev%3A%2Fdev%2Fi2c-4"
-               "&ddccontrol_version=1.0.3"
+               "&ddccontrol_version=" TEST_DDCCONTROL_VERSION
                "&fallback_profile=VESA%20Monitor") == 0);
     free(url);
 }

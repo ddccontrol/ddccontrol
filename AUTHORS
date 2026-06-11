@@ -1,5 +1,47 @@
-vdovikin:Oleg I. Vdovikin <oleg@cs.msu.su>
-nboichat:Nicolas Boichat <nicolas@boichat.ch>
-cs123:Christian Schilling <cschilling@gmx.de>
-el_cubano:Roberto C. Sanchez <roberto@connexer.com>
-kravemir:Miroslav Kravec <kravec.miroslav@gmail.com>
+DDCcontrol authors
+==================
+
+The following people have authored non-trivial code, documentation,
+translation, build-system, packaging, or project-maintenance changes in the
+DDCcontrol git history.  Some historical commits used aliases or older email
+addresses; this file uses a single canonical entry per person where known.
+
+Adrian Bunk <bunk@stusta.de>
+Antoine Beaupré <anarcat@debian.org>
+Barak A. Pearlmutter <barak+git@pearlmutter.net>
+Barry deFreese <bdefreese@debian.org>
+Bastian Germann <bage@debian.org>
+Benjamin R. Haskell <c@benizi.com>
+Bill Seremetis <bill@seremetis.net>
+Christian Schilling <cschilling@gmx.de>
+Christian Stadelmann <dev@genodeftest.de>
+Colin Kinloch <colin@kinlo.ch>
+Eduard Bloch <blade@debian.org>
+Ekaterine Papava <papava.e@gtu.ge>
+Enno <Konfekt@users.noreply.github.com>
+Erik Bročko <eb.skola@gmail.com>
+F David <flodavid@users.noreply.github.com>
+Fritz Reichwald <reichwald@b1-systems.de>
+Gluttton <gluttton@ukr.net>
+Henry Hu <henry.hu.sh@gmail.com>
+Hugo Chinchilla Carbonell <hugochinchilla@users.noreply.github.com>
+Igor Vlasenko <viy@altlinux.org>
+Ilya Orlov <iorlov@rzn.dlink.ru>
+Jaroslav Škarvada <jskarvad@redhat.com>
+Lars Tobias Skjong-Børsting <larstobi@relatime.no>
+Mike Frysinger <vapier@gentoo.org>
+Miroslav Kravec <kravec.miroslav@gmail.com>
+Nicolas Boichat <nicolas@boichat.ch>
+Ondřej Budai <ondrej@budai.cz>
+Oleg I. Vdovikin <oleg@cs.msu.su>
+parke <parke.nexus@gmail.com>
+Pavel Palát <pavel.palat@devsoft.cz>
+Robert Munteanu <robert.munteanu@gmail.com>
+Roberto C. Sánchez <roberto@connexer.com>
+Roberto Mansoni <roberto@users.sourceforge.net>
+Rodney Lorrimar <dev@rodney.id.au>
+Stanislav Brabec <sbrabec@suse.cz>
+Tomasz Kłoczko <31284574+kloczek@users.noreply.github.com>
+Vitaly V. Bursov <vitaly@bursov.com>
+William Ollivier <guneemwelloeux@users.sourceforge.net>
+mazepone <mazepone@mailinator.com>

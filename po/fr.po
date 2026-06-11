@@ -1,6 +1,7 @@
 # French translations for DDC/CI control tool package
 # Traduction anglaise du package DDC/CI control tool.
 # Copyright (C) 2004 Oleg I. Vdovikin and Nicolas Boichat
+# Copyright (C) 2004-2026 DDCcontrol authors and contributors.
 # This file is distributed under the same license as the DDC/CI control tool package.
 #  <nicolas@boichat.ch>, 2004.
 #
@@ -71,6 +72,7 @@ msgid ""
 "ddccontrol version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 "You may redistribute copies of this program under the terms of the GNU "
 "General Public License.\n"
@@ -79,6 +81,7 @@ msgstr ""
 "ddccontrol, version %s\n"
 "Copyright 2004-2005 Oleg I. Vdovikin (oleg@cs.msu.su)\n"
 "Copyright 2004-2006 Nicolas Boichat (nicolas@boichat.ch)\n"
+"Copyright 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)\n"
 "Ce programme est livré SANS AUCUNE GARANTIE.\n"
 "Vous pouvez redistribuer des copies de ce programme sous les termes de la "
 "licence générale publique de GNU (GNU General Public License).\n"

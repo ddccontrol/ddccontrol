@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "include-component-in-tag": false,
+  "include-v-in-tag": false,
+  "pull-request-header": "This pull request prepares the next ddccontrol release. Edit CHANGELOG.md or this PR body before merging if the generated release notes need adjustment.",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "ddccontrol",
+      "changelog-path": "CHANGELOG.md",
+      "changelog-sections": [
+        { "type": "feat", "section": "Features", "hidden": false },
+        { "type": "fix", "section": "Bug Fixes", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": false },
+        { "type": "ci", "section": "Continuous Integration", "hidden": true },
+        { "type": "chore", "section": "Chores", "hidden": true },
+        { "type": "refactor", "section": "Code Refactoring", "hidden": false },
+        {
+          "type": "perf",
+          "section": "Performance Improvements",
+          "hidden": false
+        },
+        { "type": "build", "section": "Build System", "hidden": false },
+        { "type": "test", "section": "Tests", "hidden": false }
+      ],
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "configure.ac"
+        },
+        {
+          "type": "generic",
+          "path": "src/lib/tests/test_issueurl.c"
+        }
+      ]
+    }
+  }
+}

@@ -3,6 +3,39 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0](https://github.com/ddccontrol/ddccontrol/compare/2.2.0...3.0.0) (2026-06-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* AMD ADL and legacy PCI backends were removed.
+
+### Features
+
+* **gddccontrol:** add F5 refresh monitor list shortcut ([#261](https://github.com/ddccontrol/ddccontrol/issues/261)) ([44e6afd](https://github.com/ddccontrol/ddccontrol/commit/44e6afdca3117af10fd0a9a60fbe30cd641050f6))
+* remove AMD ADL and legacy PCI backends ([#256](https://github.com/ddccontrol/ddccontrol/issues/256)) ([83add99](https://github.com/ddccontrol/ddccontrol/commit/83add993d4ad038aaddb45ee55869b0c292159ab))
+
+
+### Bug Fixes
+
+* Add escape syntax to un-break missing XML message ([#270](https://github.com/ddccontrol/ddccontrol/issues/270)) ([1eb0679](https://github.com/ddccontrol/ddccontrol/commit/1eb067999b3d4c7a035f9fb09652cee3fc8df144))
+* **gddccontrol:** honor DDCCONTROL_NO_DAEMON ([#262](https://github.com/ddccontrol/ddccontrol/issues/262)) ([abd1cac](https://github.com/ddccontrol/ddccontrol/commit/abd1cac4741e0ab70132d301b402d0fe05b5bb38))
+* **gddccontrol:** improve GTK high-contrast accessibility ([#264](https://github.com/ddccontrol/ddccontrol/issues/264)) ([7b098de](https://github.com/ddccontrol/ddccontrol/commit/7b098ded35d8d56bb44633d658c5daf7175867c7))
+* ship NVIDIA xorg I2C config and update DDC/CI docs ([#255](https://github.com/ddccontrol/ddccontrol/issues/255)) ([cf3b79d](https://github.com/ddccontrol/ddccontrol/commit/cf3b79ddca94670fb57761b9ac0d529e07bbc81e))
+
+
+### Documentation
+
+* credit contributors in copyright notices ([#266](https://github.com/ddccontrol/ddccontrol/issues/266)) ([967c8b5](https://github.com/ddccontrol/ddccontrol/commit/967c8b5a4e3eb9cf3551710560ecd9ee326ca385))
+* credit copyright contributors ([#268](https://github.com/ddccontrol/ddccontrol/issues/268)) ([f1f6e00](https://github.com/ddccontrol/ddccontrol/commit/f1f6e009c33cb728dc9ce479efb3e597dd000352))
+* replace SECURITY.md placeholder with accurate policy ([#260](https://github.com/ddccontrol/ddccontrol/issues/260)) ([5bb54b6](https://github.com/ddccontrol/ddccontrol/commit/5bb54b6655577a1f07a1bdb26adf55c4cd70797a))
+* update docs for userspace I2C-only backend ([#265](https://github.com/ddccontrol/ddccontrol/issues/265)) ([6166240](https://github.com/ddccontrol/ddccontrol/commit/61662403d3d1c32565ef7b2957435cb3e0e07471))
+
+
+### Chores
+
+* release 3.0.0 ([7c5cba1](https://github.com/ddccontrol/ddccontrol/commit/7c5cba170b42e25c2b6786f73228ab139c4971e1))
+
 ## [Unreleased]
 
 ### Changed
@@ -204,7 +237,8 @@ Re-tagged release of 0.6.4.
 
 -   original changelog written in GNU style, because it wasn't maintained
 
-[unreleased]: https://github.com/ddccontrol/ddccontrol/compare/2.0.0...master
+[unreleased]: https://github.com/ddccontrol/ddccontrol/compare/2.2.0...master
+[2.2.0]: https://github.com/ddccontrol/ddccontrol/compare/2.1.0...2.2.0
 [2.0.0]: https://github.com/ddccontrol/ddccontrol/compare/1.0.3...2.0.0
 [1.0.3]: https://github.com/ddccontrol/ddccontrol/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/ddccontrol/ddccontrol/compare/1.0.1...1.0.2

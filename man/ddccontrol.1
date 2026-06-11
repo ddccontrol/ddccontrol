@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH DDCCONTROL 1 "October 5, 2018"
+.TH DDCCONTROL 1 "May 28, 2026"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -54,6 +54,8 @@ command.
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
 .\" respectively.
 \fBddccontrol\fP is an open source utility which allows controlling monitor parameters via software.
+It communicates with monitors through userspace I2C using \fB/dev/i2c-*\fP devices.
+Legacy direct PCI memory access and AMD ADL backends have been removed, and USB-connected DDC/CI displays are not supported yet.
 .SH OPTIONS
 A summary of options is included below.
 .TP
@@ -62,7 +64,7 @@ a device specifier, for example: \fBdev:/dev/i2c-0\fP, or a monitor selector str
 Use \fBselector\fP to select all matching (DDC/CI-supported) monitors and \fBselector/N\fP (for example \fBSAM083C/0\fP) to select one match by zero-based index.
 .TP
 .B \-p
-probe I2C devices to find monitor buses
+probe /dev/i2c-* devices to find monitor buses
 .TP
 .B \-c
 query capability
@@ -96,6 +98,12 @@ verbosity (specify more to increase)
 .TP
 .B \-b
 ddccontrol-db directory (if other than /usr/share/ddccontrol-db)
+.SH ENVIRONMENT
+.TP
+.B DDCCONTROL_NO_DAEMON
+When set to a non-empty value, \fBddccontrol\fP bypasses the D-Bus daemon and
+accesses \fB/dev/i2c-*\fP devices directly. This can be useful for testing,
+debugging, or working around a daemon startup or connection problem.
 .SH SEE ALSO
 The program is documented fully in
 .br
@@ -108,5 +116,7 @@ ddccontrol was written by Oleg I. Vdovikin and Nicolas Boichat.
 Copyright 2004\-2005 Oleg I. Vdovikin (oleg@cs.msu.su)
 .br
 Copyright 2004\-2006 Nicolas Boichat (nicolas@boichat.ch)
+.br
+Copyright 2004\-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 .PP
 This manual page was written by Roberto C. Sanchez <roberto@connexer.com>.

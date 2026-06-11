@@ -1,5 +1,10 @@
 # DDCControl D-Bus daemon
 
+The daemon exposes the same monitor access path as the command-line and GTK
+tools: DDC/CI over userspace I2C through `/dev/i2c-*`. Legacy direct PCI memory
+access and AMD ADL backends have been removed. USB-connected DDC/CI displays are
+not supported yet.
+
 ## Installation
 
 Build and install the daemon:

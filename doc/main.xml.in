@@ -5,7 +5,6 @@
 <!ENTITY install SYSTEM "@srcdir@/install.xml">
 <!ENTITY usage SYSTEM "@srcdir@/usage.xml">
 <!ENTITY report SYSTEM "@srcdir@/report.xml">
-<!ENTITY supportedmonitors SYSTEM "@srcdir@/supportedmonitors.xml">
 <!ENTITY supportedgc SYSTEM "@srcdir@/supportedgc.xml">
 <!ENTITY thanks SYSTEM "@srcdir@/thanks.xml">
 <!ENTITY techdocs SYSTEM "@srcdir@/techdocs.xml">
@@ -35,6 +34,10 @@
 <year>2005-2006</year>
 <holder>Nicolas Boichat</holder>
 </copyright>
+<copyright>
+<year>2004-2026</year>
+<holder>DDCcontrol authors and contributors</holder>
+</copyright>
 
 <releaseinfo role="meta">
 @PACKAGE@-@VERSION@
@@ -55,8 +58,6 @@ Documentation for DDCcontrol version @VERSION@.
 &usage;
 
 &report;
-
-&supportedmonitors;
 
 &supportedgc;
 

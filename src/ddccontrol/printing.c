@@ -3,6 +3,7 @@
     Copyright(c) 2004 Oleg I. Vdovikin (oleg@cs.msu.su)
     Copyright(c) 2004-2006 Nicolas Boichat (nicolas@boichat.ch)
     Copyright(c) 2018 Miroslav Kravec (kravec.miroslav@gmail.com)
+    Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

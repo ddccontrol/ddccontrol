@@ -38,6 +38,10 @@ target/
 /po/POTFILES
 /po/Rules-quot
 /po/stamp-it
+/po/en@boldquot.header
+/po/en@quot.header
+/po/insert-header.sin
+/po/remove-potcdate.sin
 /src/config.h
 /src/config.h.in
 
