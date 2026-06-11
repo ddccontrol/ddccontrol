@@ -98,6 +98,12 @@ verbosity (specify more to increase)
 .TP
 .B \-b
 ddccontrol-db directory (if other than /usr/share/ddccontrol-db)
+.SH ENVIRONMENT
+.TP
+.B DDCCONTROL_NO_DAEMON
+When set to a non-empty value, \fBddccontrol\fP bypasses the D-Bus daemon and
+accesses \fB/dev/i2c-*\fP devices directly. This can be useful for testing,
+debugging, or working around a daemon startup or connection problem.
 .SH SEE ALSO
 The program is documented fully in
 .br
