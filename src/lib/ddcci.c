@@ -608,7 +608,15 @@ static void ddcci_parse_edid_descriptors(struct monitor* mon, const unsigned cha
  * Returns 0 on success, -1 on failure. */
 int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
 {
-	if (!mon || !buf || len < DDCCI_EDID_MIN_PARSE_LEN)
+	if (!mon)
+		return -1;
+
+	mon->digital = 0;
+	mon->edid_len = 0;
+	memset(mon->edid, 0, sizeof(mon->edid));
+	memset(&mon->edid_info, 0, sizeof(mon->edid_info));
+
+	if (!buf || len < DDCCI_EDID_MIN_PARSE_LEN)
 		return -1;
 
 	if (buf[0] != 0 || buf[1] != 0xff || buf[2] != 0xff || buf[3] != 0xff ||
@@ -621,7 +629,6 @@ int ddcci_parse_edid_buf(struct monitor* mon, const unsigned char* buf, int len)
 	         (buf[9] & 31) + 'A' - 1, buf[11], buf[10]);
 
 	mon->digital = (buf[0x14] & 0x80);
-	memset(&mon->edid_info, 0, sizeof(mon->edid_info));
 	mon->edid_info.serial_number = (unsigned int)buf[0xc] |
 	                               ((unsigned int)buf[0xd] << 8) |
 	                               ((unsigned int)buf[0xe] << 16) |

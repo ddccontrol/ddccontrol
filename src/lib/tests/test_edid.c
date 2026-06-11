@@ -295,6 +295,26 @@ static void test_successive_calls_overwrite_fields(void)
 	CHECK(mon.edid_info.serial_ascii[0] == 0);
 }
 
+static void test_invalid_call_clears_edid_fields(void)
+{
+	unsigned char buf[128];
+	struct monitor mon = make_mon();
+
+	make_edid(buf, 0x4c, 0x2d, 0x34, 0x12, 0x80);
+	set_descriptor_text(buf, 0, 0xfc, "Panel 27");
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == 0);
+	CHECK(mon.digital == 0x80);
+	CHECK(mon.edid_len == 128);
+	CHECK(mon.edid_info.monitor_name[0] != 0);
+
+	buf[0] = 0x01;
+	CHECK(ddcci_parse_edid_buf(&mon, buf, 128) == -1);
+	CHECK(mon.digital == 0x00);
+	CHECK(mon.edid_len == 0);
+	CHECK(mon.edid_info.monitor_name[0] == 0);
+	CHECK(mon.edid_info.serial_ascii[0] == 0);
+}
+
 int main(void)
 {
 	test_valid_header_returns_zero();
@@ -316,5 +336,6 @@ int main(void)
 	test_digital_flag_ignores_lower_bits();
 	test_extended_edid_fields();
 	test_successive_calls_overwrite_fields();
+	test_invalid_call_clears_edid_fields();
 	return failures ? 1 : 0;
 }
