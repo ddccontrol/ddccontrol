@@ -14,7 +14,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#define TEST_DDCCONTROL_VERSION "2.2.0" /* x-release-please-version */
+#define TEST_DDCCONTROL_VERSION "3.0.0" /* x-release-please-version */
 
 static void free_value_list(struct value_db *value) {
     while (value != NULL) {
