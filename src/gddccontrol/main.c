@@ -23,6 +23,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "gui.h"
@@ -94,6 +96,16 @@ static gboolean parse_verbosity_option(const gchar *option_name, const gchar *va
 	verbosity++;
 
 	return TRUE;
+}
+
+static int can_use_dbus_daemon(void)
+{
+	const char *disable_envvar = getenv("DDCCONTROL_NO_DAEMON");
+
+	if (disable_envvar != NULL && strlen(disable_envvar) > 0)
+		return 0;
+
+	return 1;
 }
 
 static gboolean delete_event( GtkWidget *widget,
@@ -363,7 +375,13 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	
 	set_message(_("Probing for available monitors..."));
 	// TODO: rescan on button, initial get only
-	monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
+	ddcci_free_list(monlist);
+	monlist = NULL;
+
+	if (can_use_dbus_daemon())
+		monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
+	else
+		monlist = ddcci_probe();
 
 	const struct monitorlist* current;
 	
@@ -440,9 +458,15 @@ int main( int argc, char *argv[] )
 
 	ddcci_verbosity(verbosity);
 
-	ddccontrol_proxy = ddcci_dbus_open_proxy();
-	if(ddccontrol_proxy == NULL)
-		return 1;
+	if (can_use_dbus_daemon()) {
+		ddccontrol_proxy = ddcci_dbus_open_proxy();
+		if(ddccontrol_proxy == NULL) {
+			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));
+			return 1;
+		}
+	} else {
+		ddccontrol_proxy = NULL;
+	}
 
 	g_mutex_init(&combo_change_mutex);
 	

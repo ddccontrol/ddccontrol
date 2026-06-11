@@ -830,7 +830,41 @@ void create_monitor_manager(struct monitorlist* monitor)
 	set_message(tmp);
 	g_free(tmp);
 	
-	if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
+	if (ddccontrol_proxy != NULL) {
+		if (ddcci_dbus_open(ddccontrol_proxy, &mon, monitor->filename) < 0) {
+			mon = NULL;
+			set_message(_(
+				"An error occurred while opening the monitor device.\n"
+				"Maybe this monitor was disconnected, please click on "
+				"the refresh button near the monitor list."));
+			monitor_manager = NULL;
+			return;
+		}
+	} else {
+		int open_result;
+		mon = malloc(sizeof(struct monitor));
+		if (mon == NULL) {
+			set_message(_("Memory allocation failed while opening the monitor device."));
+			monitor_manager = NULL;
+			return;
+		}
+		open_result = ddcci_open(mon, monitor->filename, 0);
+		if (open_result < 0) {
+			if (open_result != -3) {
+				ddcci_close(mon);
+			}
+			free(mon);
+			mon = NULL;
+			set_message(_(
+				"An error occurred while opening the monitor device.\n"
+				"Maybe this monitor was disconnected, please click on "
+				"the refresh button near the monitor list."));
+			monitor_manager = NULL;
+			return;
+		}
+	}
+
+	if (mon == NULL) {
 		set_message(_(
 			"An error occurred while opening the monitor device.\n"
 			"Maybe this monitor was disconnected, please click on "
@@ -931,10 +965,15 @@ void create_monitor_manager(struct monitorlist* monitor)
 void delete_monitor_manager()
 {
 	if (mon) {
-		if (modified)
+		int needs_free = (mon->__vtable == NULL);
+		if (modified && needs_free)
 			ddcci_save(mon);
-	
-		free(mon);
+
+		ddcci_close(mon);
+
+		if (needs_free)
+			free(mon);
+		mon = NULL;
 	}
 	
 	if (all_controls) {
