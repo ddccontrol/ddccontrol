@@ -375,6 +375,9 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	
 	set_message(_("Probing for available monitors..."));
 	// TODO: rescan on button, initial get only
+	ddcci_free_list(monlist);
+	monlist = NULL;
+
 	if (can_use_dbus_daemon())
 		monlist = ddcci_dbus_rescan_monitors(ddccontrol_proxy);
 	else
