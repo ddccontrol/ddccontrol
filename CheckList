@@ -1,50 +1,77 @@
-Release Check List (Nicolas Boichat)
+Release checklist
+=================
 
-- in po/:
-  - make update-po
-  - poedit fr.po
+This project uses Release Please on `master` for release PRs, changelog
+generation, version updates, tagging, and GitHub release creation.
 
-- git commit and PR
-- update CHANGELOG.md
-- update version in configure.ac
-- update version in doc/main.xml
-- make clean all
+Pre-release checks
+------------------
 
-# Test with other distributions linux headers
-# Fedora: glibc-kernheaders package
-- CFLAGS="-I/home/nicolas/dev/ddcci/headers/FC4/include" ./configure --disable-gnome && make clean all
-# Debian: http://packages.debian.org/testing/devel/linux-kernel-headers
-- CFLAGS="-I/home/nicolas/dev/ddcci/headers/Debian/include" ./configure --disable-gnome && make clean all
+- Make sure all release-worthy changes have landed through PRs with
+  Conventional Commit titles.
+- If translatable strings changed:
+  - run `make update-po` in `po/`
+  - review updated `.po` files, especially `po/fr.po`
+  - commit the translation updates before the release PR
+- If documentation changed, make sure the generated docs still build:
+  - `./autogen.sh`
+  - `./configure --enable-doc`
+  - `make -C doc all pdf`
+- Let normal CI pass on `master`.
 
-# Set back default config
-- ./configure --enable-maintainter-mode --enable-doc && make
+Release Please PR
+-----------------
 
-- make distdir
-- in ddccontrol-0.x/:
-  - ./configure
-  - make
-  - make install
-  - test at least /usr/local/bin/gddccontrol
-  - cd ..
+- Wait for the Release Please PR to be opened or updated.
+- Review the generated `CHANGELOG.md`.
+- Confirm the release version in `configure.ac`.
+- Confirm any other release-versioned files listed in
+  `.github/release-please-config.json` were updated.
+- If `doc/main.xml` is still versioned, make sure it matches the release
+  version generated from `doc/main.xml.in`.
+- Merge the Release Please PR after CI passes.
 
-- in doc/: make publish publish-release
-- ./commit.sh "Prepare release 0.xx"
-- git tag -a ddccontrol-0.xx -m "Tag release 0.xx"
+Automated by Release Please
+---------------------------
 
-- make dist-bzip2
-- upload ddccontrol-0.x.tar.bz2 to the GitHub release
+- Update `CHANGELOG.md`.
+- Update configured version files.
+- Create the release commit.
+- Create the release tag.
+- Create the GitHub release with generated release notes.
 
-- update website :
-  - Update news in the ddccontrol.github.io repository
-  - Add old generated docs to the website archives
-  - commit the website update
+Release artifacts
+-----------------
 
-- Announce the release on GitHub
+Until this is automated by a GitHub Actions release-artifact workflow:
 
-- update external release trackers, if any
+- Check out the release tag.
+- Build and test the distribution archive:
+  - `./autogen.sh`
+  - `./configure --enable-doc`
+  - `make clean all`
+  - `make distcheck`
+  - `make dist-bzip2`
+- Upload `ddccontrol-<version>.tar.bz2` to the GitHub release.
+- Verify the uploaded archive by unpacking it in a clean directory:
+  - `./configure`
+  - `make`
+  - `make install DESTDIR="$(mktemp -d)"`
 
-- update Gentoo ebuild
+Documentation and website
+-------------------------
 
-Set next version :
-- update version in configure.ac
-- update version in doc/main.xml
+- If release documentation changed:
+  - run `make -C doc publish publish-release`
+  - update news in the `ddccontrol.github.io` repository
+  - archive generated release docs in the website repository
+  - commit and push the website update
+
+Post-release
+------------
+
+- Verify the GitHub release page has the expected notes and assets.
+- Announce the release on GitHub if the generated release notes need a
+  separate announcement.
+- Update external release trackers, if any are still used.
+- Update downstream packaging notes or overlays, such as Gentoo, when needed.
