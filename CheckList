@@ -39,24 +39,15 @@ Automated by Release Please
 - Create the release commit.
 - Create the release tag.
 - Create the GitHub release with generated release notes.
+- Build and test the source distribution archive.
+- Upload `ddccontrol-<version>.tar.bz2` to the GitHub release.
 
 Release artifacts
 -----------------
 
-Until this is automated by a GitHub Actions release-artifact workflow:
-
-- Check out the release tag.
-- Build and test the distribution archive:
-  - `./autogen.sh`
-  - `./configure --enable-doc`
-  - `make clean all`
-  - `make distcheck`
-  - `make dist-bzip2`
-- Upload `ddccontrol-<version>.tar.bz2` to the GitHub release.
-- Verify the uploaded archive by unpacking it in a clean directory:
-  - `./configure`
-  - `make`
-  - `make install DESTDIR="$(mktemp -d)"`
+- Verify that the GitHub release contains `ddccontrol-<version>.tar.bz2`.
+- If the artifact upload failed, rerun the Release Please workflow or build and
+  upload the archive manually from the release tag.
 
 Documentation and website
 -------------------------
