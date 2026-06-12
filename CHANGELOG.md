@@ -233,9 +233,115 @@ Re-tagged release of 0.6.4.
 
 ## 0.4.3 - 2017-12-28
 
+### Added
+
+-   Support for Intel Mobile 945GME Express Graphics Controller.
+-   Support for AMD ADL as a backend.
+-   Support for FreeBSD.
+-   Convenient `.pc` file.
+
+### Changed
+
+-   Made desktop file conform to standards.
+-   Used custom icon instead of depending on an obsolete third-party icon.
+-   Various build, spelling, and buffer overflow fixes.
+
 ### Removed
 
 -   original changelog written in GNU style, because it wasn't maintained
+
+## 0.4.2 - 2006-07-30
+
+### Added
+
+-   Support for binary data in CAPS.
+-   More I2C busses to Intel 810-like chips.
+-   Manual pages.
+
+### Fixed
+
+-   gcc 4.0 and 4.1 compilation warnings.
+
+## 0.4.1 - 2006-03-10
+
+### Fixed
+
+-   Compilation error in Fedora Core 4, which may affect other distributions.
+
+## 0.4 - 2006-03-08
+
+### Added
+
+-   New database version (3), supporting generic profiles for monitors.
+-   Support for VIA and SiS chipsets, thanks to Johannes Deisenhofer.
+
+### Fixed
+
+-   Memory leaks found using valgrind.
+-   Various compilation errors.
+
+## 0.3 - 2005-11-14
+
+### Added
+
+-   Chinese translation, thanks to "waq_cn".
+-   Gnome icon, thanks to "lekma" on ddccontrol-users.
+-   New Gnome Panel Applet to switch between monitor profiles, thanks to
+    Christian Schilling.
+-   New fullscreen patterns.
+
+### Changed
+
+-   Used GTK/GDK high-level API to determine current screen instead of Xinerama
+    API.
+-   Sped up gddccontrol loading by caching monitor list.
+
+## 0.2 - 2005-08-13
+
+### Added
+
+-   Restore button for each control in gddccontrol.
+-   Refresh button in gddccontrol, and refresh all controls when needed.
+-   Support for profiles to save some controls values and restore them later.
+-   Fullscreen pattern to adjust brightness and contrast.
+-   New database version, requiring an upgrade to ddccontrol-db.
+
+## 0.1.3 - 2005-07-15
+
+### Added
+
+-   Support for i810/i815/i830/i845/i855/i865/i915/i945 chipsets, thanks to
+    Chernyavskyy Valentin for testing.
+-   Russian translation, thanks to Sergei Epiphanov.
+
+## 0.1.2 - 2005-06-08
+
+### Fixed
+
+-   Compilation error in Fedora Core 3.
+
+## 0.1.1 - 2005-06-07
+
+### Added
+
+-   Support for newest nVidia cards, such as GeForce 6200 TC.
+-   Static ddcpci build for security reasons.
+-   Status messages when gddccontrol loads.
+
+### Changed
+
+-   Displayed fewer error messages when devices are not usable.
+-   Other minor fixes.
+
+### Fixed
+
+-   Compile error with latest kernel headers.
+
+## 0.1 - 2005-03-29
+
+### Added
+
+-   Initial release.
 
 [unreleased]: https://github.com/ddccontrol/ddccontrol/compare/2.2.0...master
 [2.2.0]: https://github.com/ddccontrol/ddccontrol/compare/2.1.0...2.2.0
