@@ -20,6 +20,7 @@ target/
 /configure
 /test-driver
 /doc/html/
+/doc/html.old/
 /doc/main.xml
 /depcomp
 /install-sh

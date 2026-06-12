@@ -13,11 +13,12 @@ Pre-release checks
   - run `make update-po` in `po/`
   - review updated `.po` files, especially `po/fr.po`
   - commit the translation updates before the release PR
-- If documentation changed, make sure the generated docs still build:
+- If documentation changed, make sure the generated PDF still builds locally:
   - `./autogen.sh`
   - `./configure --enable-doc`
-  - `make -C doc all pdf`
-- Let normal CI pass on `master`.
+  - `make -C doc pdf`
+- Let normal CI pass on `master`; CI builds the generated HTML docs with
+  `--enable-doc`.
 
 Release Please PR
 -----------------
@@ -27,8 +28,6 @@ Release Please PR
 - Confirm the release version in `configure.ac`.
 - Confirm any other release-versioned files listed in
   `.github/release-please-config.json` were updated.
-- If `doc/main.xml` is still versioned, make sure it matches the release
-  version generated from `doc/main.xml.in`.
 - Merge the Release Please PR after CI passes.
 
 Automated by Release Please
