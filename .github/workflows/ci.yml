@@ -62,7 +62,7 @@ jobs:
               git config --global --add safe.directory /tmp/ddccontrol
               git clean -fdX
               ./autogen.sh
-              ./configure CFLAGS="$CFLAGS"
+              ./configure --enable-doc CFLAGS="$CFLAGS"
               make -j$(nproc)
               make -C src/lib check
               ./scripts/format_code.sh
