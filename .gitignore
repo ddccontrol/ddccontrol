@@ -21,6 +21,8 @@ target/
 /test-driver
 /doc/html/
 /doc/html.old/
+/doc/ddccontrol.fo
+/doc/ddccontrol.pdf
 /doc/main.xml
 /depcomp
 /install-sh
