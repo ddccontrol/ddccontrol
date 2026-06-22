@@ -17,8 +17,67 @@ concurrency:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: googleapis/release-please-action@v4
+        id: release
         with:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
+
+  release-artifacts:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            astyle \
+            autoconf \
+            build-essential \
+            cargo \
+            clang \
+            dh-autoreconf \
+            intltool \
+            libgtk-3-dev \
+            libpci-dev \
+            libxml2-dev \
+            pkg-config \
+            rustc \
+            xsltproc \
+            tidy \
+            docbook-xml \
+            docbook-xsl \
+            xml-core
+
+      - name: Build source distribution
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          ./autogen.sh
+          ./configure
+          make -j"$(nproc)"
+          make distcheck
+          make dist-bzip2
+          mkdir -p "$RUNNER_TEMP/release-artifacts"
+          mv ddccontrol-*.tar.bz2 "$RUNNER_TEMP/release-artifacts/"
+          rm -f ddccontrol-*.tar.gz
+          ./scripts/format_code.sh
+          find . -name "*.orig" -exec rm -v {} \;
+          ./scripts/check_git_clean_after_build.sh
+
+      - name: Upload source distribution
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: ${{ runner.temp }}/release-artifacts/ddccontrol-*.tar.bz2
