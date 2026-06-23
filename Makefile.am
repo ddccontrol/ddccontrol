@@ -16,7 +16,7 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/README.md \
 	crates/ddccontrol-db/src/lib.rs
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
-DISTCHECK_CONFIGURE_FLAGS = --enable-doc
+DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
 distclean-local:
 	rm -f po/.intltool-merge-cache.lock
