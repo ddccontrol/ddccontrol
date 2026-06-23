@@ -20,5 +20,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-doc
 
 distclean-local:
 	rm -f po/.intltool-merge-cache.lock
+	rm -rf target
 
 ACLOCAL_AMFLAGS = -I m4
