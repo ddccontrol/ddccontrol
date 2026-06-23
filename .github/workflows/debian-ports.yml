@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: debian-ports-${{ github.ref }}
@@ -42,13 +43,21 @@ jobs:
           docker buildx create --use
           docker buildx inspect --bootstrap
 
-      - name: Build CI image
+      - name: Prepare CI image
         run: |
-          docker buildx build \
-            --platform "${{ matrix.target.platform }}" \
-            --load \
-            --tag "ddccontrol-ci:${{ matrix.target.arch }}" \
-            .github/ci
+          echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
+          image=ghcr.io/ddccontrol/ddccontrol-debian-ports-ci:latest
+          if docker pull --platform "${{ matrix.target.platform }}" "$image"; then
+            echo "CI_IMAGE=$image" >> "$GITHUB_ENV"
+          else
+            image=ddccontrol-debian-ports-ci:${{ matrix.target.arch }}
+            docker buildx build \
+              --platform "${{ matrix.target.platform }}" \
+              --load \
+              --tag "$image" \
+              .github/ci
+            echo "CI_IMAGE=$image" >> "$GITHUB_ENV"
+          fi
 
       - name: Build ddccontrol
         run: |
@@ -56,7 +65,7 @@ jobs:
             --platform "${{ matrix.target.platform }}" \
             -e CC=gcc \
             -v "${{ github.workspace }}:/src:ro" \
-            "ddccontrol-ci:${{ matrix.target.arch }}" \
+            "$CI_IMAGE" \
             bash -lc '
               set -e
               cp -a /src /tmp/ddccontrol
