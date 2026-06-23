@@ -43,6 +43,11 @@
 
 #define RETRYS 3 /* number of retrys */
 
+static int is_engineering_vcp_control(unsigned char ctrl)
+{
+	return ctrl >= 0xe0;
+}
+
 static void dumpctrl(struct monitor *mon, unsigned char ctrl, int force)
 {
 	unsigned short value, maximum;
@@ -92,12 +97,12 @@ static void usage(char *name)
 	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (selector[/zero-based-index])\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
-	            "\t-d : query ctrls 0 - 255\n"
+	            "\t-d : query ctrls 0 - 255, except engineering/vendor-specific controls 0xe0 - 0xff unless -f is also used\n"
 	            "\t-r : query ctrl\n"
 	            "\t-w : value to write to ctrl\n"
 	            "\t-W : relatively change ctrl value (+/-)\n"
 	            "\t-t : toggle ctrl value between value1 and value2\n"
-	            "\t-f : force (avoid validity checks)\n"
+	            "\t-f : force (avoid validity checks and include engineering/vendor-specific controls 0xe0 - 0xff in -d output)\n"
 	            "\t-s : ask the monitor to save current settings (if supported)\n"
 	            "\t-S : suppress unsupported-monitor fallback warning\n"
 	            "\t-v : verbosity (specify more to increase)\n"
@@ -505,7 +510,7 @@ int main(int argc, char **argv)
 			            "If your graphics card need it, please check all the required kernel modules are loaded (i2c-dev, and your framebuffer driver).\n"
 			            "On many laptops, the internal eDP/LVDS panel does not expose DDC/CI, so only external monitors may work.\n"
 			            "For support, please include output from:\n"
-			            "LANG=C LC_ALL=C ddccontrol -p -c -d\n"
+			            "LANG=C LC_ALL=C ddccontrol -p -c -d -f\n"
 			        ));
 			ddcci_release();
 			exit(0);
@@ -836,8 +841,15 @@ int main(int argc, char **argv)
 					fprintf(stderr, _("\nCapabilities query failed; continuing control scan.\n"));
 				}
 				fprintf(stdout, _("\nControls (valid/current/max) [Description - Value name]:\n"));
+				if (!force) {
+					fprintf(stdout,
+					        _("Engineering/vendor-specific controls 0xe0-0xff are hidden; use -f to include them.\n"));
+				}
 
 				for (int j = 0; j < 256; j++) {
+					if (!force && is_engineering_vcp_control((unsigned char)j)) {
+						continue;
+					}
 					dumpctrl(mon, j, force);
 				}
 			} else if (ctrl == -1 && caps == 0) {
@@ -920,7 +932,7 @@ int main(int argc, char **argv)
 				printf("%s\n", issue_url ? issue_url : "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml");
 				printf(_(
 				           "Then attach the resulting report file of the following command:\n"));
-				printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d &> /tmp/ddccontrol-report.txt\n\n");
+				printf("\nLANG=C LC_ALL=C ddccontrol -p -c -d -f &> /tmp/ddccontrol-report.txt\n\n");
 				printf(_("Thank you.\n"));
 				printf("%s%s\n", _("=============================== WARNING ==============================="), isatty(1) ? "\x1B[0m" : "");
 

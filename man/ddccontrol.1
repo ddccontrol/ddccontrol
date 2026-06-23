@@ -70,7 +70,8 @@ probe /dev/i2c-* devices to find monitor buses
 query capability
 .TP
 .B \-d
-query ctrls 0 - 255
+query ctrls 0 - 255, except engineering/vendor-specific controls 0xe0 - 0xff
+unless \fB\-f\fP is also used
 .TP
 .B \-r
 query ctrl
@@ -85,7 +86,8 @@ relatively change ctrl value (+/-)
 toggle ctrl value between value1 and value2 (defaults to value1 if current value is neither)
 .TP
 .B \-f
-force (avoid validity checks)
+force (avoid validity checks and include engineering/vendor-specific controls
+0xe0 - 0xff in \fB\-d\fP output)
 .TP
 .B \-s
 ask the monitor to save current settings (if supported)
