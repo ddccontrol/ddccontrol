@@ -1,0 +1,73 @@
+name: Debian Ports
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: debian-ports-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build (${{ matrix.target.arch }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - arch: ppc64el
+            platform: linux/ppc64le
+            qemu: ppc64le
+          - arch: riscv64
+            platform: linux/riscv64
+            qemu: riscv64
+          - arch: s390x
+            platform: linux/s390x
+            qemu: s390x
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        run: docker run --privileged --rm tonistiigi/binfmt:qemu-v10.2.1 --install "${{ matrix.target.qemu }}"
+
+      - name: Set up Docker Buildx
+        run: |
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+
+      - name: Build CI image
+        run: |
+          docker buildx build \
+            --platform "${{ matrix.target.platform }}" \
+            --load \
+            --tag "ddccontrol-ci:${{ matrix.target.arch }}" \
+            .github/ci
+
+      - name: Build ddccontrol
+        run: |
+          docker run --rm \
+            --platform "${{ matrix.target.platform }}" \
+            -e CC=gcc \
+            -v "${{ github.workspace }}:/src:ro" \
+            "ddccontrol-ci:${{ matrix.target.arch }}" \
+            bash -lc '
+              set -e
+              cp -a /src /tmp/ddccontrol
+              cd /tmp/ddccontrol
+              git config --global --add safe.directory /tmp/ddccontrol
+              git clean -fdX
+              ./autogen.sh
+              ./configure --enable-doc CFLAGS="$CFLAGS"
+              make -j$(nproc)
+              make -C src/lib check
+              ./scripts/format_code.sh
+              find -name "*.orig" -exec rm -v {} \;
+              ./scripts/check_git_clean_after_build.sh
+            '
