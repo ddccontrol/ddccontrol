@@ -3,6 +3,29 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0](https://github.com/ddccontrol/ddccontrol/compare/3.0.0...3.1.0) (2026-06-23)
+
+
+### Features
+
+* **gddccontrol:** show extended EDID information ([#280](https://github.com/ddccontrol/ddccontrol/issues/280)) ([4f7be89](https://github.com/ddccontrol/ddccontrol/commit/4f7be8911e0dcf3536fa308d490603d624da1ece))
+
+
+### Bug Fixes
+
+* hide engineering VCP controls from dumps ([#295](https://github.com/ddccontrol/ddccontrol/issues/295)) ([0c1ec3c](https://github.com/ddccontrol/ddccontrol/commit/0c1ec3c40b44d5f76ba6ae592564e89fdac9c960))
+* improve doc build dependency handling ([#293](https://github.com/ddccontrol/ddccontrol/issues/293)) ([e88f655](https://github.com/ddccontrol/ddccontrol/commit/e88f655368283ef3208838a52d33e252349748dc))
+
+
+### Documentation
+
+* remove static supported monitors list ([#277](https://github.com/ddccontrol/ddccontrol/issues/277)) ([048c4c0](https://github.com/ddccontrol/ddccontrol/commit/048c4c0c6d2a5f76e6043785352db19faf82d815))
+
+
+### Code Refactoring
+
+* **parser:** replace monitor DB XML and CAPS parsers with Rust ([#257](https://github.com/ddccontrol/ddccontrol/issues/257)) ([c695559](https://github.com/ddccontrol/ddccontrol/commit/c695559fd137cb3706df3de52c14e31c25702b0c))
+
 ## [3.0.0](https://github.com/ddccontrol/ddccontrol/compare/2.2.0...3.0.0) (2026-06-11)
 
 
