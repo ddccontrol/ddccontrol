@@ -1,4 +1,4 @@
-AC_INIT([DDC/CI control tool],[3.1.0],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol]) dnl x-release-please-version
+AC_INIT([DDC/CI control tool],[3.1.1],[https://github.com/ddccontrol/ddccontrol/issues],[ddccontrol]) dnl x-release-please-version
 AC_CONFIG_SRCDIR([src/ddccontrol/main.c])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])

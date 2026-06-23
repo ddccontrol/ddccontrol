@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.1](https://github.com/ddccontrol/ddccontrol/compare/3.1.0...3.1.1) (2026-06-23)
+
+
+### Bug Fixes
+
+* repair release source distribution build ([#297](https://github.com/ddccontrol/ddccontrol/issues/297)) ([353e680](https://github.com/ddccontrol/ddccontrol/commit/353e680bf0a9d62f01b16b18cb8ed3e76d09fa10))
+
 ## [3.1.0](https://github.com/ddccontrol/ddccontrol/compare/3.0.0...3.1.0) (2026-06-23)
 
 
