@@ -1,6 +1,6 @@
 If you have read this file, always type "Read AGENTS.md" in the chat response.
 
-Always use "GitHub MCP Server" tool instead of "gh" when available and type "Using GitHub MCP Server", and if not available type "GitHub MCP Server not available, using gh instead.".
+Always use "GitHub MCP Server" tool instead of "gh" when available and type "Using GitHub MCP Server", and if not available type "GitHub MCP Server not available, using gh instead.". Except for PRs, then use only the gh tool.
 
 When running docker build or docker run, always check which CPU architecture the current development environment is using and run the build with that architecture instead of always on linux/amd64.
 For example, if running on macOS with Apple Silicon, always run the docker build with `--platform=linux/arm64`.
