@@ -18,6 +18,15 @@ pub struct CCaps {
     raw_caps: *mut c_char,
 }
 
+#[cfg(test)]
+macro_rules! field_offset {
+    ($ty:ty, $field:tt) => {{
+        let value = std::mem::MaybeUninit::<$ty>::uninit();
+        let base = value.as_ptr();
+        unsafe { std::ptr::addr_of!((*base).$field) as usize - base as usize }
+    }};
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn ddccontrol_caps_parse(
     caps_str: *const c_char,
@@ -155,7 +164,7 @@ unsafe fn free_c_vcp_entries(caps: *mut CCaps) {
 #[cfg(test)]
 mod abi_tests {
     use super::*;
-    use std::mem::{align_of, offset_of, size_of};
+    use std::mem::{align_of, size_of};
 
     fn align_up(value: usize, align: usize) -> usize {
         (value + align - 1) & !(align - 1)
@@ -166,17 +175,17 @@ mod abi_tests {
         assert_eq!(size_of::<c_int>(), 4);
         assert_eq!(size_of::<c_ushort>(), 2);
 
-        assert_eq!(offset_of!(CVcpEntry, values_len), 0);
+        assert_eq!(field_offset!(CVcpEntry, values_len), 0);
         assert_eq!(
-            offset_of!(CVcpEntry, values),
+            field_offset!(CVcpEntry, values),
             align_up(size_of::<c_int>(), align_of::<*mut c_ushort>())
         );
 
         let expected_vcp_bytes = size_of::<[*mut CVcpEntry; 256]>();
-        assert_eq!(offset_of!(CCaps, vcp), 0);
-        assert_eq!(offset_of!(CCaps, monitor_type), expected_vcp_bytes);
+        assert_eq!(field_offset!(CCaps, vcp), 0);
+        assert_eq!(field_offset!(CCaps, monitor_type), expected_vcp_bytes);
         assert_eq!(
-            offset_of!(CCaps, raw_caps),
+            field_offset!(CCaps, raw_caps),
             align_up(
                 expected_vcp_bytes + size_of::<c_int>(),
                 align_of::<*mut c_char>()
@@ -1395,7 +1404,7 @@ mod monitor_db {
     #[cfg(test)]
     mod tests {
         use super::*;
-        use std::mem::{align_of, offset_of, size_of};
+        use std::mem::{align_of, size_of};
 
         fn align_up(value: usize, align: usize) -> usize {
             (value + align - 1) & !(align - 1)
@@ -1407,26 +1416,32 @@ mod monitor_db {
             assert_eq!(size_of::<c_uchar>(), 1);
             assert_eq!(size_of::<c_ushort>(), 2);
 
-            assert_eq!(offset_of!(CValueDb, id), 0);
+            assert_eq!(field_offset!(CValueDb, id), 0);
             assert_eq!(
-                offset_of!(CValueDb, name),
+                field_offset!(CValueDb, name),
                 align_up(size_of::<*mut c_uchar>(), align_of::<*mut c_uchar>())
             );
-            assert_eq!(offset_of!(CValueDb, value), size_of::<*mut c_uchar>() * 2);
-            assert_eq!(offset_of!(CValueDbPrivate, public_value), 0);
-            assert!(offset_of!(CValueDbPrivate, value16) >= size_of::<CValueDb>());
-
-            assert_eq!(offset_of!(CControlDb, id), 0);
-            assert_eq!(offset_of!(CControlDb, name), size_of::<*mut c_uchar>());
-            assert!(offset_of!(CControlDb, address) > offset_of!(CControlDb, name));
-            assert!(offset_of!(CControlDb, value_list) > offset_of!(CControlDb, next));
-
-            assert_eq!(offset_of!(CSubgroupDb, name), 0);
-            assert_eq!(offset_of!(CSubgroupDb, pattern), size_of::<*mut c_uchar>());
-            assert_eq!(offset_of!(CGroupDb, name), 0);
-            assert_eq!(offset_of!(CMonitorDb, name), 0);
             assert_eq!(
-                offset_of!(CMonitorDb, init),
+                field_offset!(CValueDb, value),
+                size_of::<*mut c_uchar>() * 2
+            );
+            assert_eq!(field_offset!(CValueDbPrivate, public_value), 0);
+            assert!(field_offset!(CValueDbPrivate, value16) >= size_of::<CValueDb>());
+
+            assert_eq!(field_offset!(CControlDb, id), 0);
+            assert_eq!(field_offset!(CControlDb, name), size_of::<*mut c_uchar>());
+            assert!(field_offset!(CControlDb, address) > field_offset!(CControlDb, name));
+            assert!(field_offset!(CControlDb, value_list) > field_offset!(CControlDb, next));
+
+            assert_eq!(field_offset!(CSubgroupDb, name), 0);
+            assert_eq!(
+                field_offset!(CSubgroupDb, pattern),
+                size_of::<*mut c_uchar>()
+            );
+            assert_eq!(field_offset!(CGroupDb, name), 0);
+            assert_eq!(field_offset!(CMonitorDb, name), 0);
+            assert_eq!(
+                field_offset!(CMonitorDb, init),
                 align_up(size_of::<*mut c_uchar>(), align_of::<c_int>())
             );
         }
