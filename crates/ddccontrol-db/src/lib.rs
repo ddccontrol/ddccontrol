@@ -1,6 +1,6 @@
 use ddccontrol_caps::{Caps, MonitorType, VcpEntry};
+use libc::{c_char, c_int, c_ushort, c_void, free, malloc};
 use std::ffi::CStr;
-use std::os::raw::{c_char, c_int, c_ushort, c_void};
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 use std::slice;
@@ -16,11 +16,6 @@ pub struct CCaps {
     vcp: [*mut CVcpEntry; 256],
     monitor_type: c_int,
     raw_caps: *mut c_char,
-}
-
-extern "C" {
-    fn malloc(size: usize) -> *mut c_void;
-    fn free(ptr: *mut c_void);
 }
 
 #[no_mangle]
@@ -157,14 +152,47 @@ unsafe fn free_c_vcp_entries(caps: *mut CCaps) {
     }
 }
 
+#[cfg(test)]
+mod abi_tests {
+    use super::*;
+    use std::mem::{align_of, offset_of, size_of};
+
+    fn align_up(value: usize, align: usize) -> usize {
+        (value + align - 1) & !(align - 1)
+    }
+
+    #[test]
+    fn caps_ffi_layout_matches_c_abi_contract() {
+        assert_eq!(size_of::<c_int>(), 4);
+        assert_eq!(size_of::<c_ushort>(), 2);
+
+        assert_eq!(offset_of!(CVcpEntry, values_len), 0);
+        assert_eq!(
+            offset_of!(CVcpEntry, values),
+            align_up(size_of::<c_int>(), align_of::<*mut c_ushort>())
+        );
+
+        let expected_vcp_bytes = size_of::<[*mut CVcpEntry; 256]>();
+        assert_eq!(offset_of!(CCaps, vcp), 0);
+        assert_eq!(offset_of!(CCaps, monitor_type), expected_vcp_bytes);
+        assert_eq!(
+            offset_of!(CCaps, raw_caps),
+            align_up(
+                expected_vcp_bytes + size_of::<c_int>(),
+                align_of::<*mut c_char>()
+            )
+        );
+    }
+}
+
 mod monitor_db {
     use super::{ddccontrol_caps_parse, free, malloc, CCaps};
     use encoding_rs::{Encoding, UTF_8};
+    use libc::{c_char, c_int, c_uchar, c_ushort, c_void};
     use roxmltree::{Document, Node};
     use std::borrow::Cow;
     use std::ffi::{CStr, CString};
     use std::fs;
-    use std::os::raw::{c_char, c_int, c_uchar, c_ushort, c_void};
     use std::path::{Path, PathBuf};
     use std::ptr;
     use std::sync::Mutex;
@@ -442,51 +470,7 @@ mod monitor_db {
 
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_free_db(monitor: *mut CMonitorDb) {
-        if monitor.is_null() {
-            return;
-        }
-
-        free((*monitor).name as *mut c_void);
-
-        let mut group = (*monitor).group_list;
-        while !group.is_null() {
-            let next_group = (*group).next;
-            free((*group).name as *mut c_void);
-
-            let mut subgroup = (*group).subgroup_list;
-            while !subgroup.is_null() {
-                let next_subgroup = (*subgroup).next;
-                free((*subgroup).name as *mut c_void);
-                free((*subgroup).pattern as *mut c_void);
-
-                let mut control = (*subgroup).control_list;
-                while !control.is_null() {
-                    let next_control = (*control).next;
-                    free((*control).id as *mut c_void);
-                    free((*control).name as *mut c_void);
-
-                    let mut value = (*control).value_list;
-                    while !value.is_null() {
-                        let next_value = (*value).next;
-                        free((*value).id as *mut c_void);
-                        free((*value).name as *mut c_void);
-                        free(value as *mut c_void);
-                        value = next_value;
-                    }
-
-                    free(control as *mut c_void);
-                    control = next_control;
-                }
-
-                free(subgroup as *mut c_void);
-                subgroup = next_subgroup;
-            }
-
-            free(group as *mut c_void);
-            group = next_group;
-        }
-
-        free(monitor as *mut c_void);
+        free_monitor(monitor);
     }
 
     fn load_options(datadir: &Path) -> Result<OptionsDb, String> {
@@ -1040,16 +1024,27 @@ mod monitor_db {
 
     fn alloc_monitor(build: &MonitorBuild) -> Option<*mut CMonitorDb> {
         unsafe {
+            let name = c_bytes(build.name.as_deref().unwrap_or_default())?;
+            let group_list = match alloc_groups(&build.groups) {
+                Some(group_list) => group_list,
+                None => {
+                    free(name as *mut c_void);
+                    return None;
+                }
+            };
+
             let monitor = malloc(std::mem::size_of::<CMonitorDb>()) as *mut CMonitorDb;
             if monitor.is_null() {
+                free(name as *mut c_void);
+                free_groups(group_list);
                 return None;
             }
             ptr::write(
                 monitor,
                 CMonitorDb {
-                    name: c_bytes(build.name.as_deref().unwrap_or_default())?,
+                    name,
                     init: build.init,
-                    group_list: alloc_groups(&build.groups)?,
+                    group_list,
                 },
             );
             Some(monitor)
@@ -1060,16 +1055,34 @@ mod monitor_db {
         let mut head = ptr::null_mut();
         let mut tail = &mut head as *mut *mut CGroupDb;
         for group in groups {
+            let name = match c_bytes(&group.name) {
+                Some(name) => name,
+                None => {
+                    free_groups(head);
+                    return None;
+                }
+            };
+            let subgroup_list = match alloc_subgroups(&group.subgroups) {
+                Some(subgroup_list) => subgroup_list,
+                None => {
+                    free(name as *mut c_void);
+                    free_groups(head);
+                    return None;
+                }
+            };
             let node = malloc(std::mem::size_of::<CGroupDb>()) as *mut CGroupDb;
             if node.is_null() {
+                free(name as *mut c_void);
+                free_subgroups(subgroup_list);
+                free_groups(head);
                 return None;
             }
             ptr::write(
                 node,
                 CGroupDb {
-                    name: c_bytes(&group.name)?,
+                    name,
                     next: ptr::null_mut(),
-                    subgroup_list: alloc_subgroups(&group.subgroups)?,
+                    subgroup_list,
                 },
             );
             *tail = node;
@@ -1082,20 +1095,48 @@ mod monitor_db {
         let mut head = ptr::null_mut();
         let mut tail = &mut head as *mut *mut CSubgroupDb;
         for subgroup in subgroups {
+            let name = match c_bytes(&subgroup.name) {
+                Some(name) => name,
+                None => {
+                    free_subgroups(head);
+                    return None;
+                }
+            };
+            let pattern = match &subgroup.pattern {
+                Some(pattern) => match c_string(pattern) {
+                    Some(pattern) => pattern,
+                    None => {
+                        free(name as *mut c_void);
+                        free_subgroups(head);
+                        return None;
+                    }
+                },
+                None => ptr::null_mut(),
+            };
+            let control_list = match alloc_controls(&subgroup.controls) {
+                Some(control_list) => control_list,
+                None => {
+                    free(name as *mut c_void);
+                    free(pattern as *mut c_void);
+                    free_subgroups(head);
+                    return None;
+                }
+            };
             let node = malloc(std::mem::size_of::<CSubgroupDb>()) as *mut CSubgroupDb;
             if node.is_null() {
+                free(name as *mut c_void);
+                free(pattern as *mut c_void);
+                free_controls(control_list);
+                free_subgroups(head);
                 return None;
             }
             ptr::write(
                 node,
                 CSubgroupDb {
-                    name: c_bytes(&subgroup.name)?,
-                    pattern: match &subgroup.pattern {
-                        Some(pattern) => c_string(pattern)?,
-                        None => ptr::null_mut(),
-                    },
+                    name,
+                    pattern,
                     next: ptr::null_mut(),
-                    control_list: alloc_controls(&subgroup.controls)?,
+                    control_list,
                 },
             );
             *tail = node;
@@ -1108,21 +1149,49 @@ mod monitor_db {
         let mut head = ptr::null_mut();
         let mut tail = &mut head as *mut *mut CControlDb;
         for control in controls {
+            let id = match c_string(&control.id) {
+                Some(id) => id,
+                None => {
+                    free_controls(head);
+                    return None;
+                }
+            };
+            let name = match c_bytes(&control.name) {
+                Some(name) => name,
+                None => {
+                    free(id as *mut c_void);
+                    free_controls(head);
+                    return None;
+                }
+            };
+            let value_list = match alloc_values(&control.values) {
+                Some(value_list) => value_list,
+                None => {
+                    free(id as *mut c_void);
+                    free(name as *mut c_void);
+                    free_controls(head);
+                    return None;
+                }
+            };
             let node = malloc(std::mem::size_of::<CControlDb>()) as *mut CControlDb;
             if node.is_null() {
+                free(id as *mut c_void);
+                free(name as *mut c_void);
+                free_values(value_list);
+                free_controls(head);
                 return None;
             }
             ptr::write(
                 node,
                 CControlDb {
-                    id: c_string(&control.id)?,
-                    name: c_bytes(&control.name)?,
+                    id,
+                    name,
                     address: control.address,
                     delay: control.delay,
                     control_type: control.control_type,
                     refresh: control.refresh,
                     next: ptr::null_mut(),
-                    value_list: alloc_values(&control.values)?,
+                    value_list,
                 },
             );
             *tail = node;
@@ -1135,16 +1204,34 @@ mod monitor_db {
         let mut head = ptr::null_mut();
         let mut tail = &mut head as *mut *mut CValueDb;
         for value in values {
+            let id = match c_string(&value.id) {
+                Some(id) => id,
+                None => {
+                    free_values(head);
+                    return None;
+                }
+            };
+            let name = match c_bytes(&value.name) {
+                Some(name) => name,
+                None => {
+                    free(id as *mut c_void);
+                    free_values(head);
+                    return None;
+                }
+            };
             let node = malloc(std::mem::size_of::<CValueDbPrivate>()) as *mut CValueDbPrivate;
             if node.is_null() {
+                free(id as *mut c_void);
+                free(name as *mut c_void);
+                free_values(head);
                 return None;
             }
             ptr::write(
                 node,
                 CValueDbPrivate {
                     public_value: CValueDb {
-                        id: c_string(&value.id)?,
-                        name: c_bytes(&value.name)?,
+                        id,
+                        name,
                         value: (value.value16 & 0xff) as c_uchar,
                         next: ptr::null_mut(),
                     },
@@ -1155,6 +1242,57 @@ mod monitor_db {
             tail = &mut (*node).public_value.next;
         }
         Some(head)
+    }
+
+    unsafe fn free_monitor(monitor: *mut CMonitorDb) {
+        if monitor.is_null() {
+            return;
+        }
+        free((*monitor).name as *mut c_void);
+        free_groups((*monitor).group_list);
+        free(monitor as *mut c_void);
+    }
+
+    unsafe fn free_groups(mut group: *mut CGroupDb) {
+        while !group.is_null() {
+            let next = (*group).next;
+            free((*group).name as *mut c_void);
+            free_subgroups((*group).subgroup_list);
+            free(group as *mut c_void);
+            group = next;
+        }
+    }
+
+    unsafe fn free_subgroups(mut subgroup: *mut CSubgroupDb) {
+        while !subgroup.is_null() {
+            let next = (*subgroup).next;
+            free((*subgroup).name as *mut c_void);
+            free((*subgroup).pattern as *mut c_void);
+            free_controls((*subgroup).control_list);
+            free(subgroup as *mut c_void);
+            subgroup = next;
+        }
+    }
+
+    unsafe fn free_controls(mut control: *mut CControlDb) {
+        while !control.is_null() {
+            let next = (*control).next;
+            free((*control).id as *mut c_void);
+            free((*control).name as *mut c_void);
+            free_values((*control).value_list);
+            free(control as *mut c_void);
+            control = next;
+        }
+    }
+
+    unsafe fn free_values(mut value: *mut CValueDb) {
+        while !value.is_null() {
+            let next = (*value).next;
+            free((*value).id as *mut c_void);
+            free((*value).name as *mut c_void);
+            free(value as *mut c_void);
+            value = next;
+        }
     }
 
     unsafe fn c_string(input: &str) -> Option<*mut c_uchar> {
@@ -1257,6 +1395,41 @@ mod monitor_db {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use std::mem::{align_of, offset_of, size_of};
+
+        fn align_up(value: usize, align: usize) -> usize {
+            (value + align - 1) & !(align - 1)
+        }
+
+        #[test]
+        fn monitor_database_ffi_layout_matches_c_abi_contract() {
+            assert_eq!(size_of::<c_int>(), 4);
+            assert_eq!(size_of::<c_uchar>(), 1);
+            assert_eq!(size_of::<c_ushort>(), 2);
+
+            assert_eq!(offset_of!(CValueDb, id), 0);
+            assert_eq!(
+                offset_of!(CValueDb, name),
+                align_up(size_of::<*mut c_uchar>(), align_of::<*mut c_uchar>())
+            );
+            assert_eq!(offset_of!(CValueDb, value), size_of::<*mut c_uchar>() * 2);
+            assert_eq!(offset_of!(CValueDbPrivate, public_value), 0);
+            assert!(offset_of!(CValueDbPrivate, value16) >= size_of::<CValueDb>());
+
+            assert_eq!(offset_of!(CControlDb, id), 0);
+            assert_eq!(offset_of!(CControlDb, name), size_of::<*mut c_uchar>());
+            assert!(offset_of!(CControlDb, address) > offset_of!(CControlDb, name));
+            assert!(offset_of!(CControlDb, value_list) > offset_of!(CControlDb, next));
+
+            assert_eq!(offset_of!(CSubgroupDb, name), 0);
+            assert_eq!(offset_of!(CSubgroupDb, pattern), size_of::<*mut c_uchar>());
+            assert_eq!(offset_of!(CGroupDb, name), 0);
+            assert_eq!(offset_of!(CMonitorDb, name), 0);
+            assert_eq!(
+                offset_of!(CMonitorDb, init),
+                align_up(size_of::<*mut c_uchar>(), align_of::<c_int>())
+            );
+        }
 
         #[cfg(unix)]
         #[test]

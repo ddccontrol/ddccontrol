@@ -1,0 +1,122 @@
+Rust porting plan for ddccontrol
+================================
+
+Current status
+--------------
+
+ddccontrol already has an incremental Rust port in progress:
+
+- `ddccontrol-caps` parses monitor DDC/CI capability strings.
+- `ddccontrol-db` parses the monitor XML database and exposes the existing C ABI.
+- `libddccontrol` links the Rust static library through the current autotools build.
+
+This is the right first direction. The next step should not be to port more
+hardware-facing code immediately. The next step should be to make the current
+Rust/C boundary robust enough to release.
+
+Recommended next steps
+----------------------
+
+1. Stabilize the Rust/C ABI boundary.
+
+   Add explicit layout checks for the structs shared across C and Rust:
+
+   - `struct caps`
+   - `struct vcp_entry`
+   - `struct monitor_db`
+   - `struct value_db`
+   - `struct value_db_private`
+
+   Document ownership rules clearly. Today Rust allocates C-compatible data
+   using C `malloc`, and C frees it using `free`. Keep that rule explicit and
+   avoid mixing allocators.
+
+   Review partial-allocation failure paths in the Rust database bridge,
+   especially:
+
+   - `alloc_monitor`
+   - `alloc_groups`
+   - `alloc_subgroups`
+   - `alloc_controls`
+   - `alloc_values`
+
+   Consider using the `libc` crate for C ABI types and `malloc`/`free` instead
+   of hand-declared externs and `std::os::raw` types.
+
+2. Prove database parser compatibility.
+
+   Test the Rust database parser against a real `ddccontrol-db` checkout, not
+   only small synthetic fixtures.
+
+   Add golden-output tests for a representative set of monitor profiles and
+   compare:
+
+   - monitor name
+   - init mode
+   - group/subgroup structure
+   - control IDs and addresses
+   - value IDs and values
+   - 16-bit values
+   - profile includes
+   - `<caps add="...">` and `<caps remove="...">`
+   - fault-tolerant behavior
+
+3. Harden build and release integration.
+
+   Make the autotools messages and dependency checks reflect that Rust now
+   builds both CAPS parsing and the database parser.
+
+   Verify at least:
+
+   - `cargo test --workspace`
+   - `make check`
+   - `make distcheck`
+   - source distribution build from the generated tarball
+
+   Check Debian packaging implications early. Keep binary package
+   architecture support broad, normally `Architecture: any`, and avoid adding
+   assumptions that would break `ppc64el`, `riscv64`, or `s390x`.
+
+4. Port EDID parsing next.
+
+   After the current Rust bridge is stable, EDID parsing is the next best
+   candidate. It is isolated, hardware-independent, and already has C tests
+   around `ddcci_parse_edid_buf`.
+
+   Start with a small internal Rust crate, for example `ddccontrol-edid`, that
+   preserves the existing C behavior:
+
+   - EDID header validation
+   - PNP ID formatting
+   - product code endianness
+   - digital/analog flag
+   - serial number
+   - manufacture week/year
+   - EDID version/revision
+   - physical size
+   - monitor name descriptor
+   - ASCII serial descriptor
+
+   Evaluate external EDID crates such as `piaf` only after the internal API and
+   compatibility expectations are clear.
+
+5. Defer I2C, probing, D-Bus, CLI, and GUI.
+
+   Do not port the low-level I2C/DDC backend yet. That code is hardware-facing
+   and regression-prone. Keep it in C until the testable parser/model layers
+   are stable.
+
+   A future Rust 2.x direction can still use Linux `/dev/i2c-*` as the primary
+   backend, but that should be planned separately from the current incremental
+   Rust-in-C port.
+
+Summary
+-------
+
+The immediate next step is hardening and compatibility testing of the Rust
+CAPS and database bridge that already exists.
+
+After that, port EDID parsing.
+
+Only after those steps should ddccontrol consider a Rust I2C backend, probing
+model, daemon, CLI, or GTK frontend.

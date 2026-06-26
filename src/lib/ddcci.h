@@ -22,6 +22,7 @@
 #ifndef DDCCI_H
 #define DDCCI_H
 
+#include <stddef.h>
 #include <time.h>
 #include <sys/time.h>
 
@@ -37,12 +38,18 @@ enum monitor_type {
 };
 typedef enum monitor_type MonitorType;
 
+typedef char ddccontrol_abi_monitor_type_must_match_int[
+	sizeof(enum monitor_type) == sizeof(int) ? 1 : -1];
+
 /* Structure to store CAPS vcp entry (control and related values) */
 struct vcp_entry {
 	int values_len; /* -1 if values are not specified */
 	unsigned short* values;
 };
 typedef struct vcp_entry VcpEntry;
+
+typedef char ddccontrol_abi_vcp_entry_values_len_must_be_first[
+	offsetof(struct vcp_entry, values_len) == 0 ? 1 : -1];
 
 /* Structure to store CAPS */
 struct caps {
@@ -51,6 +58,9 @@ struct caps {
 	char* raw_caps; /* raw text caps */
 };
 typedef struct caps Caps;
+
+typedef char ddccontrol_abi_caps_vcp_must_be_first[
+	offsetof(struct caps, vcp) == 0 ? 1 : -1];
 
 #include "monitor_db.h"
 

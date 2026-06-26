@@ -18,6 +18,7 @@ version = "0.1.0"
 dependencies = [
  "ddccontrol-caps",
  "encoding_rs",
+ "libc",
  "roxmltree",
 ]
 
@@ -29,6 +30,12 @@ checksum = "75030f3c4f45dafd7586dd6780965a8c7e8e285a5ecb86713e63a79c5b2766f3"
 dependencies = [
  "cfg-if",
 ]
+
+[[package]]
+name = "libc"
+version = "0.2.186"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "roxmltree"
