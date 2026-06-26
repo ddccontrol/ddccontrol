@@ -232,9 +232,21 @@ static void test_rejects_unbalanced_parentheses(void) {
 	struct caps caps;
 	memset(&caps, 0, sizeof(caps));
 
-	assert(ddcci_parse_caps("(vcp(10)", &caps, 1) < 0);
+	assert(ddcci_parse_caps("(vcp(10", &caps, 1) < 0);
 	assert(ddcci_parse_caps(")(vcp(10))", &caps, 1) < 0);
 	assert(caps.vcp[0x10] == NULL);
+
+	free_caps_entries(&caps);
+}
+
+static void test_accepts_missing_outer_database_group_close(void) {
+	struct caps caps;
+	memset(&caps, 0, sizeof(caps));
+
+	assert(ddcci_parse_caps("(type(lcd)vcp(10 12)", &caps, 1) == 2);
+	assert(caps.type == lcd);
+	assert(caps.vcp[0x10] != NULL);
+	assert(caps.vcp[0x12] != NULL);
 
 	free_caps_entries(&caps);
 }
@@ -297,6 +309,7 @@ int main(void) {
 	test_repeated_add_remove_sequence_on_same_control();
 	test_remove_nonexistent_control_with_value_list_is_safe();
 	test_rejects_unbalanced_parentheses();
+	test_accepts_missing_outer_database_group_close();
 	test_rejects_value_without_vcp_id();
 	test_boundary_control_and_value_ranges();
 	test_repeated_same_control_in_single_string();

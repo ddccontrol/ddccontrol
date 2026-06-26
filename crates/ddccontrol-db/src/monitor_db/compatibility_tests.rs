@@ -106,8 +106,14 @@ fn real_database_profiles(datadir: &Path) -> Vec<String> {
         })
         .collect();
     profiles.sort();
-    profiles.truncate(25);
+    if !load_all_profiles_requested() {
+        profiles.truncate(25);
+    }
     profiles
+}
+
+fn load_all_profiles_requested() -> bool {
+    matches!(env::var("DDCCONTROL_DB_TEST_ALL").as_deref(), Ok("1"))
 }
 
 fn path_to_cstring(path: &Path) -> CString {

@@ -810,13 +810,35 @@ mod monitor_db {
 
     fn read_xml_file(path: &Path) -> std::io::Result<String> {
         let bytes = fs::read(path)?;
-        Ok(decode_xml_bytes(&bytes).into_owned())
+        Ok(normalize_xml_document(decode_xml_bytes(&bytes).into_owned()))
     }
 
     fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {
         let encoding = xml_declared_encoding(bytes).unwrap_or(UTF_8);
         let (decoded, _, _) = encoding.decode(bytes);
         decoded
+    }
+
+    fn normalize_xml_document(xml: String) -> String {
+        let mut cursor = 0;
+        loop {
+            cursor += xml[cursor..]
+                .find(|ch: char| !ch.is_whitespace())
+                .unwrap_or(xml.len() - cursor);
+            if !xml[cursor..].starts_with("<!--") {
+                break;
+            }
+            let Some(comment_end) = xml[cursor + 4..].find("-->") else {
+                return xml;
+            };
+            cursor += 4 + comment_end + 3;
+        }
+
+        if cursor > 0 && xml[cursor..].starts_with("<?xml") {
+            xml[cursor..].to_string()
+        } else {
+            xml
+        }
     }
 
     fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
@@ -1474,6 +1496,16 @@ mod monitor_db {
             let decoded = decode_xml_bytes(xml);
 
             assert!(decoded.contains("Contr\u{00f4}le"));
+        }
+
+        #[test]
+        fn normalize_xml_document_allows_comments_before_declaration() {
+            let xml = "<!-- source -->\n<?xml version=\"1.0\"?><monitor/>".to_string();
+
+            let normalized = normalize_xml_document(xml);
+
+            assert!(normalized.starts_with("<?xml version=\"1.0\"?>"));
+            Document::parse(&normalized).unwrap();
         }
 
         #[test]
