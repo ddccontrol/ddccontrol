@@ -74,6 +74,9 @@ target/
 /src/lib/test_edid
 /src/lib/test_edid.log
 /src/lib/test_edid.trs
+/src/lib/test_abi_layout
+/src/lib/test_abi_layout.log
+/src/lib/test_abi_layout.trs
 /src/stamp-h1
 Makefile
 Makefile.in

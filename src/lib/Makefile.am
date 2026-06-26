@@ -30,6 +30,11 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
 $(RUST_DB_LIB): $(RUST_DB_DEPS)
+	@$(CARGO) --version >/dev/null 2>&1 || { \
+		echo "error: cargo was found by configure but could not run."; \
+		echo "If this is rustup's cargo shim, run 'rustup default stable' or set CARGO to a working cargo binary and rerun configure."; \
+		exit 1; \
+	}
 	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
 
 libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h \
@@ -39,10 +44,15 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h \
 libddccontrol_la_LDFLAGS = -version-info 1:0:0
 libddccontrol_la_LIBADD = $(RUST_DB_LIB) $(LIBXML2_LIBS)
 
-check_PROGRAMS = test_issueurl test_parse_caps test_edid
+check_PROGRAMS = test_issueurl test_parse_caps test_edid test_abi_layout
 TESTS = $(check_PROGRAMS)
 
 check-local:
+	@$(CARGO) --version >/dev/null 2>&1 || { \
+		echo "error: cargo was found by configure but could not run."; \
+		echo "If this is rustup's cargo shim, run 'rustup default stable' or set CARGO to a working cargo binary and rerun configure."; \
+		exit 1; \
+	}
 	cd $(top_srcdir) && CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) test --workspace $(RUST_GETTEXT_FEATURE)
 
 test_issueurl_SOURCES = tests/test_issueurl.c issueurl.c urlencode.c
@@ -53,3 +63,5 @@ test_parse_caps_LDADD = libddccontrol.la $(LIBXML2_LIBS)
 
 test_edid_SOURCES = tests/test_edid.c
 test_edid_LDADD = libddccontrol.la $(LIBXML2_LIBS)
+
+test_abi_layout_SOURCES = tests/test_abi_layout.c
