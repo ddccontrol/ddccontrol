@@ -25,3 +25,15 @@ anything other than the documented C cleanup function.
 The Rust mirror structs are `#[repr(C)]`. Keep the Rust layout tests and the C
 `test_abi_layout` test in sync with `src/lib/ddcci.h`, `src/lib/monitor_db.h`,
 and `src/lib/monitor_db_internal.h`.
+
+## Compatibility Tests
+
+The normal test suite includes a golden monitor database fixture under
+`fixtures/compat-db`. To smoke-test a real `ddccontrol-db` checkout as well,
+set `DDCCONTROL_DB_TEST_DATADIR` to either the checkout root or the `db`
+directory that contains `options.xml` and `monitor/` before running
+`cargo test`.
+
+By default the real database test loads the first 25 monitor profiles in sorted
+order. Set `DDCCONTROL_DB_TEST_PROFILES` to a comma-separated profile list to
+select specific profiles.

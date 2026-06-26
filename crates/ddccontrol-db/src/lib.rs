@@ -889,16 +889,6 @@ mod monitor_db {
         let mut values = Vec::new();
         let mut matched = vec![false; monitor_control.values.len()];
 
-        for monitor_value in monitor_control
-            .values
-            .iter()
-            .filter(|value| value.element_name == "value")
-        {
-            if monitor_value.id.is_none() {
-                return Err(DbError::new("Can't find id property.".to_string()));
-            }
-        }
-
         for option_value in &option_control.values {
             if let Some((monitor_index, monitor_value)) = monitor_control
                 .values
@@ -1402,6 +1392,9 @@ mod monitor_db {
     }
 
     #[cfg(test)]
+    mod compatibility_tests;
+
+    #[cfg(test)]
     mod tests {
         use super::*;
         use std::mem::{align_of, size_of};
@@ -1570,7 +1563,7 @@ mod monitor_db {
         }
 
         #[test]
-        fn matched_monitor_values_require_id() {
+        fn monitor_values_without_id_use_unmatched_validation() {
             let option_control = OptionControl {
                 id: "input".to_string(),
                 name: "Input".to_string(),
@@ -1594,7 +1587,8 @@ mod monitor_db {
                 child_index: 0,
             };
 
-            assert!(get_value_list(&option_control, &monitor_control, true).is_err());
+            assert!(get_value_list(&option_control, &monitor_control, false).is_err());
+            assert!(get_value_list(&option_control, &monitor_control, true).is_ok());
         }
 
         #[test]
