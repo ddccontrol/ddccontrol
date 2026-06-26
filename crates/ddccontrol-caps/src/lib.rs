@@ -277,6 +277,20 @@ impl<'a> Parser<'a> {
                     return Ok(());
                 }
                 Some(b'(') => return Err(self.err(ErrorKind::ValueWithoutVcpCode)),
+                Some(byte) if is_name_byte(byte) && !byte.is_ascii_hexdigit() => {
+                    let name_position = self.pos;
+                    let name = self.take_name();
+                    self.skip_spaces();
+                    if self.consume(b'(') {
+                        if name.eq_ignore_ascii_case("vcp") {
+                            self.parse_vcp(parsed)?;
+                        } else {
+                            self.skip_balanced()?;
+                        }
+                    } else {
+                        return Err(self.err_at(ErrorKind::InvalidHex, name_position));
+                    }
+                }
                 Some(_) => {
                     let code_position = self.pos;
                     let code = self.take_vcp_code(code_position)?;
@@ -585,6 +599,18 @@ mod tests {
         );
         assert_eq!(caps.vcp(0x12).unwrap().values(), None);
         assert_eq!(caps.vcp(0x14).unwrap().values(), Some([0x0a].as_slice()));
+    }
+
+    #[test]
+    fn accepts_nested_database_vcp_sections() {
+        let caps = Caps::parse("type(lcd)vcp(vcp(10 14(01 05) C8 C9))").unwrap();
+
+        assert_eq!(caps.monitor_type(), MonitorType::Lcd);
+        assert_eq!(caps.vcp_codes().collect::<Vec<_>>(), vec![0x10, 0x14, 0xc8, 0xc9]);
+        assert_eq!(
+            caps.vcp(0x14).unwrap().values(),
+            Some([0x01, 0x05].as_slice())
+        );
     }
 
     #[test]

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<options dbversion="3" date="2026-06-26">
+  <group name="Image">
+    <subgroup name="Picture" pattern="image">
+      <control id="brightness" name="Brightness" type="value" refresh="all"/>
+      <control id="input" name="Input Source" type="list">
+        <value id="hdmi1" name="HDMI 1"/>
+        <value id="displayport" name="DisplayPort"/>
+      </control>
+      <control id="factory_reset" name="Factory Reset" type="command"/>
+    </subgroup>
+  </group>
+  <group name="Color">
+    <subgroup name="Presets" pattern="color">
+      <control id="color_preset" name="Color Preset" type="list">
+        <value id="srgb" name="sRGB"/>
+        <value id="native" name="Native"/>
+      </control>
+    </subgroup>
+  </group>
+</options>

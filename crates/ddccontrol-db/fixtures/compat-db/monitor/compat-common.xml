@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monitor name="Included Compatibility Controls">
+  <controls>
+    <control id="brightness" address="0x10" delay="120"/>
+    <control id="input" address="0x60">
+      <value id="hdmi1" value="0x11"/>
+      <value id="displayport" value="0x0f"/>
+    </control>
+    <control id="factory_reset" address="0x04"/>
+  </controls>
+</monitor>

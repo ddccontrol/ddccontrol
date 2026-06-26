@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monitor name="Compatibility Fixture Monitor" init="standard">
+  <caps remove="vcp(04)"/>
+  <caps add="vcp(C8(02 1234))"/>
+  <include file="compat-common"/>
+  <controls>
+    <control id="color_preset" address="0xC8">
+      <value id="srgb" value="0x1234"/>
+      <value id="native" value="0002"/>
+    </control>
+  </controls>
+</monitor>

@@ -14,6 +14,10 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-caps/src/lib.rs \
 	crates/ddccontrol-db/Cargo.toml \
 	crates/ddccontrol-db/README.md \
+	crates/ddccontrol-db/fixtures/compat-db/options.xml \
+	crates/ddccontrol-db/fixtures/compat-db/monitor/compat-common.xml \
+	crates/ddccontrol-db/fixtures/compat-db/monitor/compat-monitor.xml \
+	crates/ddccontrol-db/src/monitor_db/compatibility_tests.rs \
 	crates/ddccontrol-db/src/lib.rs
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
