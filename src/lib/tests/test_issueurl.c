@@ -14,7 +14,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define TEST_DDCCONTROL_VERSION "3.1.2" /* x-release-please-version */
+#define TEST_DDCCONTROL_VERSION "3.2.0" /* x-release-please-version */
 
 static void assert_encoded(const char *input, const char *expected) {
     char *encoded = url_encode(input);
