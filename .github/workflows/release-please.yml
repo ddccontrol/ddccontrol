@@ -60,7 +60,7 @@ jobs:
             docbook-xsl \
             xml-core
 
-      - name: Build source distribution
+      - name: Build source distributions
         run: |
           set -euo pipefail
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -70,14 +70,25 @@ jobs:
           make distcheck
           make dist-bzip2
           mkdir -p "$RUNNER_TEMP/release-artifacts"
-          mv ddccontrol-*.tar.bz2 "$RUNNER_TEMP/release-artifacts/"
-          rm -f ddccontrol-*.tar.gz
+          dist_archive="$(printf '%s\n' ddccontrol-*.tar.bz2 | head -n 1)"
+          dist_dir="${dist_archive%.tar.bz2}"
+          cp "$dist_archive" "$RUNNER_TEMP/release-artifacts/"
+          vendor_workdir="$(mktemp -d)"
+          tar -C "$vendor_workdir" -xf "$dist_archive"
+          (
+            cd "$vendor_workdir/$dist_dir"
+            cargo vendor --locked vendor
+          )
+          tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/release-artifacts/${dist_dir}-vendor.tar.gz" "$dist_dir"
+          rm -f ddccontrol-*.tar.bz2 ddccontrol-*.tar.gz
           ./scripts/format_code.sh
           find . -name "*.orig" -exec rm -v {} \;
           ./scripts/check_git_clean_after_build.sh
 
-      - name: Upload source distribution
+      - name: Upload source distributions
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.release-please.outputs.tag_name }}
-          files: ${{ runner.temp }}/release-artifacts/ddccontrol-*.tar.bz2
+          files: |
+            ${{ runner.temp }}/release-artifacts/ddccontrol-*.tar.bz2
+            ${{ runner.temp }}/release-artifacts/ddccontrol-*-vendor.tar.gz
