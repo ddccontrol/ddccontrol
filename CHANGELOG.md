@@ -3,6 +3,23 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.2.0](https://github.com/ddccontrol/ddccontrol/compare/3.1.2...3.2.0) (2026-06-29)
+
+
+### Features
+
+* harden Rust ABI bridge ([#302](https://github.com/ddccontrol/ddccontrol/issues/302)) ([27e16b5](https://github.com/ddccontrol/ddccontrol/commit/27e16b5a2521c3e7afdcc44665fc1f58fbbe8ba5))
+
+
+### Bug Fixes
+
+* handle real database compatibility cases ([#304](https://github.com/ddccontrol/ddccontrol/issues/304)) ([fe666ab](https://github.com/ddccontrol/ddccontrol/commit/fe666abcfa66e96811b80670557a1d12e70cf8da))
+
+
+### Build System
+
+* upload vendored release sources ([#305](https://github.com/ddccontrol/ddccontrol/issues/305)) ([4e181c6](https://github.com/ddccontrol/ddccontrol/commit/4e181c6fff1c58a1115d0ed7b1ec6a915de4618c))
+
 ## [3.1.2](https://github.com/ddccontrol/ddccontrol/compare/3.1.1...3.1.2) (2026-06-24)
 
 
