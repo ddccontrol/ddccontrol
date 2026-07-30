@@ -191,8 +191,8 @@ static int i2c_write(struct monitor* mon, unsigned int addr, unsigned char *buf,
 	}
 }
 
-/* read at most len bytes from i2c address addr, to buf */
-/* return -1 on failure */
+/* read len bytes from i2c address addr into buf */
+/* return len on success, -1 on failure */
 static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, unsigned char len)
 {
 	switch (mon->type) {
@@ -201,7 +201,7 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 	{
 		struct i2c_rdwr_ioctl_data msg_rdwr;
 		struct i2c_msg             i2cmsg;
-		int i;
+		int i, read_len;
 	
 		memset(&msg_rdwr, 0, sizeof(msg_rdwr));
 		memset(&i2cmsg, 0, sizeof(i2cmsg));
@@ -217,7 +217,9 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		i2cmsg.len   = len;
 		i2cmsg.buf   = buf;
 	
-		if ((i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr)) < 0)
+		i = ioctl(mon->fd, I2C_RDWR, &msg_rdwr);
+		read_len = ddcci_i2c_read_length(i, len);
+		if (read_len < 0)
 		{
 			if (!mon->probing || verbosity) {
 				perror("ioctl()");
@@ -227,14 +229,10 @@ static int i2c_read(struct monitor* mon, unsigned int addr, unsigned char *buf, 
 		}
 
 		if (verbosity > 1) {
-			dumphex(stderr, "Recv", buf, i);
+			dumphex(stderr, "Recv", buf, read_len);
 		}
 
-#ifdef __FreeBSD__
-		i = len; // FreeBSD ioctl() returns 0
-#endif
-
-		return i;
+		return read_len;
 	}
 #endif
 	default:
@@ -697,6 +695,8 @@ int ddcci_read_edid(struct monitor* mon, int addr)
 */
 static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int addr, int edid, int probing) 
 {
+	int caps_result;
+
 	memset(mon, 0, sizeof(struct monitor));
 	
 	mon->probing = probing;
@@ -720,7 +720,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		return -2;
 	}
 	
-	ddcci_caps(mon);
+	caps_result = ddcci_caps(mon);
 	mon->db = ddcci_create_db(mon->pnpid, &mon->caps, 1);
 	mon->fallback = 0; /* No fallback */
 	
@@ -756,7 +756,7 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 			return -1;
 		}
 	}
-	else {
+	else if (!ddcci_caps_prove_support(caps_result)) {
 		if (ddcci_command(mon, DDCCI_COMMAND_PRESENCE) < 0) {
 			return -1;
 		}

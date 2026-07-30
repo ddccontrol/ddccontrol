@@ -3,6 +3,7 @@
 */
 
 #include "../ddcci.h"
+#include "../internal.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -24,6 +25,18 @@ static void test_valid_caps(void) {
 	memset(&caps, 0, sizeof(caps));
 	assert(ddcci_parse_caps("(vcp(10 12))", &caps, 1) == 2);
 	free_caps_entries(&caps);
+}
+
+static void test_caps_result_proves_ddcci_support(void) {
+	assert(ddcci_caps_prove_support(0));
+	assert(ddcci_caps_prove_support(1));
+	assert(!ddcci_caps_prove_support(-1));
+}
+
+static void test_i2c_read_length_uses_requested_byte_count(void) {
+	assert(ddcci_i2c_read_length(1, 67) == 67);
+	assert(ddcci_i2c_read_length(0, 128) == 128);
+	assert(ddcci_i2c_read_length(-1, 67) == -1);
 }
 
 static void test_rejects_overlong_value_token(void) {
@@ -261,6 +274,8 @@ static void test_repeated_same_control_in_single_string(void) {
 
 int main(void) {
 	test_valid_caps();
+	test_caps_result_proves_ddcci_support();
+	test_i2c_read_length_uses_requested_byte_count();
 	test_rejects_overlong_value_token();
 	test_rejects_unterminated_token();
 	test_uppercase_lcd_type();

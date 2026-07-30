@@ -39,4 +39,19 @@ struct monitor_vtable {
 	int (*close)(struct monitor* mon);
 };
 
+/* A complete, parsed capabilities exchange is itself proof of DDC/CI support.
+ * The legacy presence command is only needed when that exchange fails. */
+static inline int ddcci_caps_prove_support(int caps_result)
+{
+	return caps_result >= 0;
+}
+
+/* I2C_RDWR reports completed messages on Linux and zero on FreeBSD, not the
+ * number of bytes transferred. A successful read completes the requested
+ * single-message buffer. */
+static inline int ddcci_i2c_read_length(int ioctl_result, unsigned char requested_len)
+{
+	return ioctl_result < 0 ? -1 : requested_len;
+}
+
 #endif //DDCCI_INTERNAL_H
