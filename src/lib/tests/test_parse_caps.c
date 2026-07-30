@@ -34,8 +34,13 @@ static void test_caps_result_proves_ddcci_support(void) {
 }
 
 static void test_i2c_read_length_uses_requested_byte_count(void) {
-	assert(ddcci_i2c_read_length(1, 67) == 67);
+#ifdef __FreeBSD__
 	assert(ddcci_i2c_read_length(0, 128) == 128);
+	assert(ddcci_i2c_read_length(1, 128) == -1);
+#else
+	assert(ddcci_i2c_read_length(1, 67) == 67);
+	assert(ddcci_i2c_read_length(0, 67) == -1);
+#endif
 	assert(ddcci_i2c_read_length(-1, 67) == -1);
 }
 

@@ -51,7 +51,11 @@ static inline int ddcci_caps_prove_support(int caps_result)
  * single-message buffer. */
 static inline int ddcci_i2c_read_length(int ioctl_result, unsigned char requested_len)
 {
-	return ioctl_result < 0 ? -1 : requested_len;
+#ifdef __FreeBSD__
+	return ioctl_result == 0 ? requested_len : -1;
+#else
+	return ioctl_result == 1 ? requested_len : -1;
+#endif
 }
 
 #endif //DDCCI_INTERNAL_H
