@@ -92,3 +92,26 @@ jobs:
           files: |
             ${{ runner.temp }}/release-artifacts/ddccontrol-*.tar.bz2
             ${{ runner.temp }}/release-artifacts/ddccontrol-*-vendor.tar.gz
+
+  notify-website:
+    needs: [release-please, release-artifacts]
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      WEBSITE_DISPATCH_TOKEN: ${{ secrets.WEBSITE_DISPATCH_TOKEN }}
+    steps:
+      - name: Trigger website rebuild
+        if: ${{ env.WEBSITE_DISPATCH_TOKEN != '' }}
+        env:
+          GH_TOKEN: ${{ env.WEBSITE_DISPATCH_TOKEN }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          gh api --method POST repos/ddccontrol/ddccontrol.github.io/dispatches \
+            --field event_type=ddccontrol-release \
+            --field "client_payload[tag]=$TAG_NAME"
+
+      - name: Report missing website token
+        if: ${{ env.WEBSITE_DISPATCH_TOKEN == '' }}
+        run: echo "WEBSITE_DISPATCH_TOKEN is not configured; the scheduled website build will pick up this release."
