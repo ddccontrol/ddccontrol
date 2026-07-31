@@ -39,7 +39,7 @@ impl fmt::Display for ProfileError {
 impl std::error::Error for ProfileError {}
 
 pub fn parse_bytes(input: &[u8]) -> Result<Profile, ProfileError> {
-    let decoded = decode_xml_bytes(input);
+    let decoded = decode_xml_bytes(input)?;
     parse(&normalize_xml_document(decoded.into_owned()))
 }
 
@@ -183,10 +183,16 @@ fn is_xml_character(character: char) -> bool {
     )
 }
 
-fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {
-    let encoding = xml_declared_encoding(bytes).unwrap_or(UTF_8);
-    let (decoded, _, _) = encoding.decode(bytes);
-    decoded
+fn decode_xml_bytes(bytes: &[u8]) -> Result<Cow<'_, str>, ProfileError> {
+    let encoding = xml_declared_encoding(bytes)?.unwrap_or(UTF_8);
+    let (decoded, actual_encoding, had_errors) = encoding.decode(bytes);
+    if had_errors {
+        return Err(ProfileError::new(format!(
+            "profile contains bytes that are invalid for {}",
+            actual_encoding.name()
+        )));
+    }
+    Ok(decoded)
 }
 
 fn normalize_xml_document(xml: String) -> String {
@@ -211,29 +217,79 @@ fn normalize_xml_document(xml: String) -> String {
     }
 }
 
-fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
-    let prefix = &bytes[..bytes.len().min(256)];
-    let declaration_start = prefix.windows(5).position(|window| window == b"<?xml")?;
-    let declaration = &prefix[declaration_start..];
+fn xml_declared_encoding(bytes: &[u8]) -> Result<Option<&'static Encoding>, ProfileError> {
+    let Some(declaration) = xml_declaration(bytes) else {
+        return Ok(None);
+    };
+    let Some(encoding_index) = xml_attribute(declaration, b"encoding") else {
+        return Ok(None);
+    };
+    let after_encoding = trim_ascii_start(&declaration[encoding_index + "encoding".len()..]);
+    let after_equals =
+        trim_ascii_start(after_encoding.strip_prefix(b"=").ok_or_else(|| {
+            ProfileError::new("XML encoding declaration is missing an equals sign")
+        })?);
+    let quote = after_equals
+        .first()
+        .copied()
+        .filter(|quote| *quote == b'\'' || *quote == b'\"')
+        .ok_or_else(|| ProfileError::new("XML encoding declaration is not quoted"))?;
+    let label_end = after_equals[1..]
+        .iter()
+        .position(|byte| *byte == quote)
+        .map(|index| index + 1)
+        .ok_or_else(|| ProfileError::new("XML encoding declaration has no closing quote"))?;
+    let label = &after_equals[1..label_end];
+    Encoding::for_label(label).map(Some).ok_or_else(|| {
+        ProfileError::new(format!(
+            "XML declares unsupported encoding {:?}",
+            String::from_utf8_lossy(label)
+        ))
+    })
+}
+
+fn xml_declaration(bytes: &[u8]) -> Option<&[u8]> {
+    let mut cursor = if bytes.starts_with(&[0xEF, 0xBB, 0xBF]) {
+        3
+    } else {
+        0
+    };
+    loop {
+        cursor += bytes[cursor..]
+            .iter()
+            .position(|byte| !byte.is_ascii_whitespace())
+            .unwrap_or(bytes.len() - cursor);
+        if !bytes[cursor..].starts_with(b"<!--") {
+            break;
+        }
+        let comment_end = bytes[cursor + 4..]
+            .windows(3)
+            .position(|window| window == b"-->")?;
+        cursor += 4 + comment_end + 3;
+    }
+
+    let declaration = bytes[cursor..].strip_prefix(b"<?xml")?;
     let declaration_end = declaration
         .windows(2)
         .position(|window| window == b"?>")
         .unwrap_or(declaration.len());
-    let declaration = &declaration[..declaration_end];
-    let encoding_index = declaration
-        .windows("encoding".len())
-        .position(|window| window == b"encoding")?;
-    let after_encoding = trim_ascii_start(&declaration[encoding_index + "encoding".len()..]);
-    let after_equals = trim_ascii_start(after_encoding.strip_prefix(b"=")?);
-    let quote = after_equals.first().copied()?;
-    if quote != b'\'' && quote != b'\"' {
-        return None;
-    }
-    let label_end = after_equals[1..]
-        .iter()
-        .position(|byte| *byte == quote)
-        .map(|index| index + 1)?;
-    Encoding::for_label(&after_equals[1..label_end])
+    Some(&declaration[..declaration_end])
+}
+
+fn xml_attribute(input: &[u8], name: &[u8]) -> Option<usize> {
+    input
+        .windows(name.len())
+        .enumerate()
+        .find_map(|(index, window)| {
+            if window != name {
+                return None;
+            }
+            let preceded_by_whitespace = index > 0 && input[index - 1].is_ascii_whitespace();
+            let following = input.get(index + name.len()).copied();
+            (preceded_by_whitespace
+                && following.is_some_and(|byte| byte == b'=' || byte.is_ascii_whitespace()))
+            .then_some(index)
+        })
 }
 
 fn trim_ascii_start(input: &[u8]) -> &[u8] {

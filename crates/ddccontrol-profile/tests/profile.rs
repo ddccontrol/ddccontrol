@@ -70,6 +70,20 @@ fn parses_declared_legacy_encoding() {
 }
 
 #[test]
+fn rejects_invalid_bytes_and_unsupported_declared_encodings() {
+    assert!(parse_bytes(
+        b"<?xml version=\"1.0\" encoding=\"UTF-8\"?><profile name=\"\xff\" pnpid=\"DEL1234\" version=\"1\"/>"
+    )
+    .is_err());
+
+    let padding = " ".repeat(300);
+    let xml = format!(
+        "<?xml version=\"1.0\"{padding}encoding=\"X-UNKNOWN\"?><profile name=\"Office\" pnpid=\"DEL1234\" version=\"1\"/>"
+    );
+    assert!(parse_bytes(xml.as_bytes()).is_err());
+}
+
+#[test]
 fn accepts_a_comment_before_the_xml_declaration() {
     let profile = parse_bytes(
         b"<!-- generated profile -->\n<?xml version=\"1.0\"?><profile name=\"Office\" pnpid=\"DEL1234\" version=\"1\"/>",
