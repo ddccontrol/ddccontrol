@@ -3,6 +3,7 @@
 */
 
 #include "../ddcci.h"
+#include "../conf.h"
 #include "../monitor_db_internal.h"
 #include "../rust_ffi.h"
 
@@ -22,6 +23,10 @@ ABI_ASSERT(offsetof(struct caps, vcp) == 0);
 ABI_ASSERT(offsetof(struct value_db, id) == 0);
 ABI_ASSERT(offsetof(struct monitor_db, name) == 0);
 ABI_ASSERT(offsetof(struct value_db_private, public_value) == 0);
+ABI_ASSERT(offsetof(struct profile, filename) == 0);
+ABI_ASSERT(sizeof(((struct profile *)0)->address) == 256);
+ABI_ASSERT(sizeof(((struct profile *)0)->value) == 256 * sizeof(unsigned short));
+ABI_ASSERT(offsetof(struct profile, next) > offsetof(struct profile, value));
 ABI_ASSERT(sizeof(unsigned int) == 4);
 ABI_ASSERT(offsetof(struct edid_info, serial_number) == 0);
 ABI_ASSERT(offsetof(struct edid_info, manufacture_week) == 4);

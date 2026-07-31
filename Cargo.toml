@@ -3,6 +3,7 @@ members = [
     "crates/ddccontrol-caps",
     "crates/ddccontrol-db",
     "crates/ddccontrol-edid",
+    "crates/ddccontrol-profile",
 ]
 resolver = "2"
 

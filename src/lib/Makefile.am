@@ -29,6 +29,9 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-edid/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-edid/src/lib.rs \
 	$(top_srcdir)/crates/ddccontrol-edid/tests/parser.rs \
+	$(top_srcdir)/crates/ddccontrol-profile/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-profile/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-profile/tests/profile.rs \
 	$(top_srcdir)/crates/ddccontrol-db/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
@@ -47,7 +50,7 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h rust_ffi.h \
 libddccontrol_la_LDFLAGS = -version-info 1:0:0
 libddccontrol_la_LIBADD = $(RUST_DB_LIB) $(LIBXML2_LIBS)
 
-check_PROGRAMS = test_issueurl test_parse_caps test_edid test_abi_layout
+check_PROGRAMS = test_issueurl test_parse_caps test_edid test_profile test_abi_layout
 TESTS = $(check_PROGRAMS)
 
 check-local:
@@ -66,5 +69,8 @@ test_parse_caps_LDADD = libddccontrol.la $(LIBXML2_LIBS)
 
 test_edid_SOURCES = tests/test_edid.c
 test_edid_LDADD = libddccontrol.la $(LIBXML2_LIBS)
+
+test_profile_SOURCES = tests/test_profile.c
+test_profile_LDADD = libddccontrol.la $(LIBXML2_LIBS)
 
 test_abi_layout_SOURCES = tests/test_abi_layout.c

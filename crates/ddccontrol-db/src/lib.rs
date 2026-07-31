@@ -127,6 +127,227 @@ macro_rules! field_offset {
     }};
 }
 
+mod user_profile {
+    use ddccontrol_profile::{Control, Profile, MAX_CONTROLS};
+    use libc::{c_char, c_int, c_uchar, c_ushort, c_void, free, malloc};
+    use std::ffi::CStr;
+    use std::fs;
+    use std::panic::{catch_unwind, AssertUnwindSafe};
+    use std::path::{Path, PathBuf};
+    use std::ptr;
+
+    #[repr(C)]
+    pub struct CProfile {
+        filename: *mut c_char,
+        name: *mut c_uchar,
+        pnpid: *mut c_uchar,
+        size: c_int,
+        address: [c_uchar; MAX_CONTROLS],
+        value: [c_ushort; MAX_CONTROLS],
+        next: *mut CProfile,
+    }
+
+    #[no_mangle]
+    /// Load a user profile and return C-owned storage allocated with `malloc`.
+    ///
+    /// # Safety
+    ///
+    /// `filename` must point to a readable NUL-terminated path. The returned
+    /// profile and its strings must be released by `ddcci_free_profile`.
+    pub unsafe extern "C" fn ddccontrol_profile_load(filename: *const c_char) -> *mut CProfile {
+        catch_unwind(AssertUnwindSafe(|| profile_load_inner(filename))).unwrap_or(ptr::null_mut())
+    }
+
+    unsafe fn profile_load_inner(filename: *const c_char) -> *mut CProfile {
+        if filename.is_null() {
+            return ptr::null_mut();
+        }
+
+        let filename = CStr::from_ptr(filename);
+        let path = pathbuf_from_c_path(filename);
+        let bytes = match fs::read(&path) {
+            Ok(bytes) => bytes,
+            Err(_) => return ptr::null_mut(),
+        };
+        let profile = match ddccontrol_profile::parse_bytes(&bytes) {
+            Ok(profile) => profile,
+            Err(_) => return ptr::null_mut(),
+        };
+
+        profile_to_c(filename.to_bytes(), &profile).unwrap_or(ptr::null_mut())
+    }
+
+    #[no_mangle]
+    /// Serialize a C user profile to its local XML file.
+    ///
+    /// # Safety
+    ///
+    /// `profile` must point to a valid `struct profile` whose strings are
+    /// NUL-terminated and whose `size` is between zero and 256.
+    pub unsafe extern "C" fn ddccontrol_profile_save(profile: *const CProfile) -> c_int {
+        catch_unwind(AssertUnwindSafe(|| profile_save_inner(profile))).unwrap_or(-1)
+    }
+
+    unsafe fn profile_save_inner(profile: *const CProfile) -> c_int {
+        if profile.is_null() || (*profile).filename.is_null() {
+            return -1;
+        }
+        let rust_profile = match profile_from_c(profile) {
+            Some(profile) => profile,
+            None => return -1,
+        };
+        let xml = match ddccontrol_profile::serialize(&rust_profile) {
+            Ok(xml) => xml,
+            Err(_) => return -1,
+        };
+        let path = pathbuf_from_c_path(CStr::from_ptr((*profile).filename));
+        match fs::write(&path, xml) {
+            Ok(()) => 0,
+            Err(_) => -1,
+        }
+    }
+
+    unsafe fn profile_to_c(filename: &[u8], profile: &Profile) -> Option<*mut CProfile> {
+        let filename = c_bytes(filename)?;
+        let name = match c_bytes(profile.name.as_bytes()) {
+            Some(name) => name,
+            None => {
+                free(filename as *mut c_void);
+                return None;
+            }
+        };
+        let pnpid = match c_bytes(profile.pnp_id.as_bytes()) {
+            Some(pnpid) => pnpid,
+            None => {
+                free(filename as *mut c_void);
+                free(name as *mut c_void);
+                return None;
+            }
+        };
+
+        let output = malloc(std::mem::size_of::<CProfile>()) as *mut CProfile;
+        if output.is_null() {
+            free(filename as *mut c_void);
+            free(name as *mut c_void);
+            free(pnpid as *mut c_void);
+            return None;
+        }
+
+        let mut address = [0; MAX_CONTROLS];
+        let mut value = [0; MAX_CONTROLS];
+        for (index, control) in profile.controls.iter().enumerate() {
+            address[index] = control.address;
+            value[index] = control.value;
+        }
+        ptr::write(
+            output,
+            CProfile {
+                filename: filename as *mut c_char,
+                name,
+                pnpid,
+                size: profile.controls.len() as c_int,
+                address,
+                value,
+                next: ptr::null_mut(),
+            },
+        );
+        Some(output)
+    }
+
+    unsafe fn profile_from_c(profile: *const CProfile) -> Option<Profile> {
+        if (*profile).name.is_null() || (*profile).pnpid.is_null() {
+            return None;
+        }
+        let size = usize::try_from((*profile).size).ok()?;
+        if size > MAX_CONTROLS {
+            return None;
+        }
+        let name = CStr::from_ptr((*profile).name as *const c_char)
+            .to_str()
+            .ok()?
+            .to_string();
+        let pnp_id = CStr::from_ptr((*profile).pnpid as *const c_char)
+            .to_str()
+            .ok()?
+            .to_string();
+        let controls = (0..size)
+            .map(|index| Control {
+                address: (*profile).address[index],
+                value: (*profile).value[index],
+            })
+            .collect();
+        Some(Profile {
+            name,
+            pnp_id,
+            controls,
+        })
+    }
+
+    unsafe fn c_bytes(bytes: &[u8]) -> Option<*mut c_uchar> {
+        if bytes.contains(&0) {
+            return None;
+        }
+        let output = malloc(bytes.len() + 1) as *mut c_uchar;
+        if output.is_null() {
+            return None;
+        }
+        ptr::copy_nonoverlapping(bytes.as_ptr(), output, bytes.len());
+        *output.add(bytes.len()) = 0;
+        Some(output)
+    }
+
+    fn pathbuf_from_c_path(path: &CStr) -> PathBuf {
+        #[cfg(unix)]
+        {
+            use std::os::unix::ffi::OsStrExt;
+            Path::new(std::ffi::OsStr::from_bytes(path.to_bytes())).to_path_buf()
+        }
+        #[cfg(not(unix))]
+        {
+            PathBuf::from(path.to_string_lossy().into_owned())
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use std::mem::{align_of, size_of};
+
+        fn align_up(value: usize, align: usize) -> usize {
+            (value + align - 1) & !(align - 1)
+        }
+
+        #[test]
+        fn profile_ffi_layout_matches_c_abi_contract() {
+            assert_eq!(size_of::<c_int>(), 4);
+            assert_eq!(size_of::<c_uchar>(), 1);
+            assert_eq!(size_of::<c_ushort>(), 2);
+            assert_eq!(field_offset!(CProfile, filename), 0);
+            assert_eq!(field_offset!(CProfile, name), size_of::<*mut c_char>());
+            assert_eq!(field_offset!(CProfile, pnpid), size_of::<*mut c_char>() * 2);
+            assert_eq!(field_offset!(CProfile, size), size_of::<*mut c_char>() * 3);
+            assert_eq!(
+                field_offset!(CProfile, address),
+                size_of::<*mut c_char>() * 3 + size_of::<c_int>()
+            );
+            assert_eq!(
+                field_offset!(CProfile, value),
+                align_up(
+                    field_offset!(CProfile, address) + MAX_CONTROLS,
+                    align_of::<c_ushort>()
+                )
+            );
+            assert_eq!(
+                field_offset!(CProfile, next),
+                align_up(
+                    field_offset!(CProfile, value) + MAX_CONTROLS * size_of::<c_ushort>(),
+                    align_of::<*mut CProfile>()
+                )
+            );
+        }
+    }
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn ddccontrol_caps_parse(
     caps_str: *const c_char,

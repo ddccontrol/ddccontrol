@@ -7,6 +7,7 @@
 #define DDCCONTROL_RUST_FFI_H
 
 #include "ddcci.h"
+#include "conf.h"
 
 #include <stddef.h>
 
@@ -21,5 +22,9 @@ struct ddccontrol_edid_result {
 /* All output storage is owned by C. Rust writes result only on success. */
 int ddccontrol_edid_parse(const unsigned char *buf, size_t len,
 	struct ddccontrol_edid_result *result);
+
+/* Rust allocates profile storage with C malloc; ddcci_free_profile releases it. */
+struct profile *ddccontrol_profile_load(const char *filename);
+int ddccontrol_profile_save(const struct profile *profile);
 
 #endif /* DDCCONTROL_RUST_FFI_H */
