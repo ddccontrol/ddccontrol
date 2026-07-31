@@ -216,6 +216,7 @@ impl<'a> Parser<'a> {
             self.skip_spaces();
 
             match self.peek() {
+                None if stop_at.is_some() => return Err(self.err(ErrorKind::UnbalancedParens)),
                 None => return Ok(()),
                 Some(byte) if Some(byte) == stop_at => {
                     self.pos += 1;
@@ -655,17 +656,15 @@ mod tests {
             ErrorKind::UnbalancedParens
         );
         assert_eq!(
+            Caps::parse("(type(lcd)vcp(10 12)")
+                .unwrap_err()
+                .kind(),
+            ErrorKind::UnbalancedParens
+        );
+        assert_eq!(
             Caps::parse(")(vcp(10))").unwrap_err().kind(),
             ErrorKind::UnexpectedCloseParen
         );
-    }
-
-    #[test]
-    fn accepts_missing_outer_database_group_close() {
-        let caps = Caps::parse("(type(lcd)vcp(10 12)").unwrap();
-
-        assert_eq!(caps.monitor_type(), MonitorType::Lcd);
-        assert_eq!(caps.vcp_codes().collect::<Vec<_>>(), vec![0x10, 0x12]);
     }
 
     #[test]
