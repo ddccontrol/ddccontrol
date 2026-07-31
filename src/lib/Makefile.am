@@ -31,6 +31,7 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-edid/tests/parser.rs \
 	$(top_srcdir)/crates/ddccontrol-profile/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-profile/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-profile/tests/profile.rs \
 	$(top_srcdir)/crates/ddccontrol-db/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
