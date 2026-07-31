@@ -16,3 +16,6 @@ The parser extracts:
 
 For compatibility, the parser validates the EDID header but not the base-block
 checksum. I2C access and user-visible diagnostics remain in the C library.
+
+See [PIAF.md](PIAF.md) for a comparison with the PIAF EDID library and an
+evaluation of possible future uses in ddccontrol.
