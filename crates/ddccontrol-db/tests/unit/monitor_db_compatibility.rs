@@ -1,6 +1,5 @@
-use crate::{ddccontrol_caps_parse, free_c_vcp_entries, CCaps, CVcpEntry};
-
 use super::*;
+use crate::{ddccontrol_caps_parse, free_c_vcp_entries, CCaps, CVcpEntry};
 use libc::{c_char, c_int, c_uchar, malloc};
 use std::ffi::{CStr, CString};
 use std::mem::size_of;
