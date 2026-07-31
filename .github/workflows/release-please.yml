@@ -3,6 +3,9 @@ name: Release Please
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +19,7 @@ concurrency:
 
 jobs:
   release-please:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -26,6 +30,30 @@ jobs:
         with:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
+
+  full-database-check:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'github-actions[bot]' &&
+      startsWith(github.head_ref, 'release-please--') &&
+      contains(github.event.pull_request.labels.*.name, 'autorelease: pending')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check out monitor database
+        uses: actions/checkout@v6
+        with:
+          repository: ddccontrol/ddccontrol-db
+          path: ddccontrol-db-checkout
+
+      - name: Test all monitor profiles
+        env:
+          DDCCONTROL_DB_TEST_DATADIR: ${{ github.workspace }}/ddccontrol-db-checkout/db
+          DDCCONTROL_DB_TEST_ALL: "1"
+        run: cargo test --workspace
 
   release-artifacts:
     needs: release-please
