@@ -26,6 +26,9 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-caps/fixtures/db_patch_add_remove.caps \
 	$(top_srcdir)/crates/ddccontrol-caps/fixtures/fallback_crt.caps \
 	$(top_srcdir)/crates/ddccontrol-caps/fixtures/nested_values.caps \
+	$(top_srcdir)/crates/ddccontrol-edid/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-edid/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-edid/tests/parser.rs \
 	$(top_srcdir)/crates/ddccontrol-db/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
@@ -37,7 +40,7 @@ $(RUST_DB_LIB): $(RUST_DB_DEPS)
 	}
 	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
 
-libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h \
+libddccontrol_la_SOURCES = ddcci.c ddcci.h monitor_db.h rust_ffi.h \
    i2c-dev.h conf.c conf.h internal.h \
    monitor_db_internal.h
 

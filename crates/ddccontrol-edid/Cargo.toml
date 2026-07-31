@@ -1,0 +1,10 @@
+[package]
+name = "ddccontrol-edid"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "EDID base-block parser for ddccontrol"
+
+[lib]
+crate-type = ["rlib"]
