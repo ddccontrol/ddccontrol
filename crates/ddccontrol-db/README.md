@@ -35,5 +35,7 @@ directory that contains `options.xml` and `monitor/` before running
 `cargo test`.
 
 By default the real database test loads the first 25 monitor profiles in sorted
-order. Set `DDCCONTROL_DB_TEST_PROFILES` to a comma-separated profile list to
-select specific profiles.
+order. Set `DDCCONTROL_DB_TEST_ALL=1` to load every monitor profile, or set
+`DDCCONTROL_DB_TEST_PROFILES` to a comma-separated profile list to select
+specific profiles. These two variables are mutually exclusive. The all-profiles
+mode fails on the first profile that cannot be parsed or loaded.

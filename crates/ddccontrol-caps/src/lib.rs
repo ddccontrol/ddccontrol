@@ -652,7 +652,13 @@ mod tests {
     #[test]
     fn rejects_unbalanced_parentheses() {
         assert_eq!(
-            Caps::parse("(vcp(10)").unwrap_err().kind(),
+            Caps::parse("(vcp(10").unwrap_err().kind(),
+            ErrorKind::UnbalancedParens
+        );
+        assert_eq!(
+            Caps::parse("(type(lcd)vcp(10 12)")
+                .unwrap_err()
+                .kind(),
             ErrorKind::UnbalancedParens
         );
         assert_eq!(

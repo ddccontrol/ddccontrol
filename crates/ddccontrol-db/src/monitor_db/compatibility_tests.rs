@@ -87,13 +87,10 @@ fn is_database_datadir(path: &Path) -> bool {
 }
 
 fn real_database_profiles(datadir: &Path) -> Vec<String> {
-    if let Ok(profiles) = env::var("DDCCONTROL_DB_TEST_PROFILES") {
-        return profiles
-            .split(',')
-            .map(str::trim)
-            .filter(|profile| !profile.is_empty())
-            .map(ToString::to_string)
-            .collect();
+    let load_all = load_all_profiles_requested();
+    let requested_profiles = env::var("DDCCONTROL_DB_TEST_PROFILES").ok();
+    if let Some(profiles) = select_requested_profiles(requested_profiles.as_deref(), load_all) {
+        return profiles;
     }
 
     let mut profiles: Vec<_> = fs::read_dir(datadir.join("monitor"))
@@ -106,8 +103,38 @@ fn real_database_profiles(datadir: &Path) -> Vec<String> {
         })
         .collect();
     profiles.sort();
-    profiles.truncate(25);
+    if !load_all {
+        profiles.truncate(25);
+    }
     profiles
+}
+
+fn select_requested_profiles(profiles: Option<&str>, load_all: bool) -> Option<Vec<String>> {
+    assert!(
+        !(load_all && profiles.is_some()),
+        "DDCCONTROL_DB_TEST_ALL=1 and DDCCONTROL_DB_TEST_PROFILES cannot be used together"
+    );
+
+    profiles.map(|profiles| {
+        profiles
+            .split(',')
+            .map(str::trim)
+            .filter(|profile| !profile.is_empty())
+            .map(ToString::to_string)
+            .collect()
+    })
+}
+
+fn load_all_profiles_requested() -> bool {
+    matches!(env::var("DDCCONTROL_DB_TEST_ALL").as_deref(), Ok("1"))
+}
+
+#[test]
+#[should_panic(
+    expected = "DDCCONTROL_DB_TEST_ALL=1 and DDCCONTROL_DB_TEST_PROFILES cannot be used together"
+)]
+fn rejects_combined_all_and_selected_profile_modes() {
+    select_requested_profiles(Some("DELA114"), true);
 }
 
 fn path_to_cstring(path: &Path) -> CString {

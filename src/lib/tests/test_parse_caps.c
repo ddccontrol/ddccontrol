@@ -232,7 +232,8 @@ static void test_rejects_unbalanced_parentheses(void) {
 	struct caps caps;
 	memset(&caps, 0, sizeof(caps));
 
-	assert(ddcci_parse_caps("(vcp(10)", &caps, 1) < 0);
+	assert(ddcci_parse_caps("(vcp(10", &caps, 1) < 0);
+	assert(ddcci_parse_caps("(type(lcd)vcp(10 12)", &caps, 1) < 0);
 	assert(ddcci_parse_caps(")(vcp(10))", &caps, 1) < 0);
 	assert(caps.vcp[0x10] == NULL);
 

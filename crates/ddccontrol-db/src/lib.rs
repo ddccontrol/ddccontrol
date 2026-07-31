@@ -810,7 +810,9 @@ mod monitor_db {
 
     fn read_xml_file(path: &Path) -> std::io::Result<String> {
         let bytes = fs::read(path)?;
-        Ok(decode_xml_bytes(&bytes).into_owned())
+        Ok(normalize_xml_document(
+            decode_xml_bytes(&bytes).into_owned(),
+        ))
     }
 
     fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {
@@ -819,14 +821,32 @@ mod monitor_db {
         decoded
     }
 
-    fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
-        let prefix_len = bytes.len().min(256);
-        let prefix = &bytes[..prefix_len];
-        let declaration_start = prefix.iter().position(|byte| !byte.is_ascii_whitespace())?;
-        let prefix = &prefix[declaration_start..];
-        if !prefix.starts_with(b"<?xml") {
-            return None;
+    fn normalize_xml_document(xml: String) -> String {
+        let mut cursor = 0;
+        loop {
+            cursor += xml[cursor..]
+                .find(|ch: char| !ch.is_whitespace())
+                .unwrap_or(xml.len() - cursor);
+            if !xml[cursor..].starts_with("<!--") {
+                break;
+            }
+            let Some(comment_end) = xml[cursor + 4..].find("-->") else {
+                return xml;
+            };
+            cursor += 4 + comment_end + 3;
         }
+
+        if cursor > 0 && xml[cursor..].starts_with("<?xml") {
+            xml[cursor..].to_string()
+        } else {
+            xml
+        }
+    }
+
+    fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
+        let declaration_start = xml_declaration_start(bytes)?;
+        let prefix = &bytes[declaration_start..];
+        let prefix = &prefix[..prefix.len().min(256)];
         let declaration_end = prefix
             .windows(2)
             .position(|window| window == b"?>")
@@ -847,6 +867,25 @@ mod monitor_db {
             .position(|byte| *byte == quote)
             .map(|index| index + 1)?;
         Encoding::for_label(&after_equals[1..label_end])
+    }
+
+    fn xml_declaration_start(bytes: &[u8]) -> Option<usize> {
+        let mut cursor = 0;
+        loop {
+            cursor += bytes[cursor..]
+                .iter()
+                .position(|byte| !byte.is_ascii_whitespace())?;
+            if bytes[cursor..].starts_with(b"<?xml") {
+                return Some(cursor);
+            }
+            if !bytes[cursor..].starts_with(b"<!--") {
+                return None;
+            }
+            let comment_end = bytes[cursor + 4..]
+                .windows(3)
+                .position(|window| window == b"-->")?;
+            cursor += 4 + comment_end + 3;
+        }
     }
 
     fn trim_ascii_bytes_start(input: &[u8]) -> &[u8] {
@@ -1474,6 +1513,27 @@ mod monitor_db {
             let decoded = decode_xml_bytes(xml);
 
             assert!(decoded.contains("Contr\u{00f4}le"));
+        }
+
+        #[test]
+        fn decode_xml_bytes_finds_encoding_after_leading_comment() {
+            let xml = b"<!-- source -->\n\
+                <?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\
+                <options name=\"Contr\xf4le\"/>";
+
+            let decoded = decode_xml_bytes(xml);
+
+            assert!(decoded.contains("Contr\u{00f4}le"));
+        }
+
+        #[test]
+        fn normalize_xml_document_allows_comments_before_declaration() {
+            let xml = "<!-- source -->\n<?xml version=\"1.0\"?><monitor/>".to_string();
+
+            let normalized = normalize_xml_document(xml);
+
+            assert!(normalized.starts_with("<?xml version=\"1.0\"?>"));
+            Document::parse(&normalized).unwrap();
         }
 
         #[test]
