@@ -1,5 +1,6 @@
 use ddccontrol_caps::{Caps, MonitorType, VcpEntry};
-use libc::{c_char, c_int, c_ushort, c_void, free, malloc};
+use ddccontrol_edid::Edid;
+use libc::{c_char, c_int, c_uchar, c_uint, c_ushort, c_void, free, malloc, size_t};
 use std::ffi::CStr;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
@@ -16,6 +17,105 @@ pub struct CCaps {
     vcp: [*mut CVcpEntry; 256],
     monitor_type: c_int,
     raw_caps: *mut c_char,
+}
+
+const EDID_BLOCK_LEN: usize = ddccontrol_edid::EDID_BLOCK_LEN;
+const EDID_TEXT_LEN: usize = 14;
+
+#[repr(C)]
+pub struct CEdidInfo {
+    serial_number: c_uint,
+    manufacture_week: c_int,
+    manufacture_year: c_int,
+    version: c_int,
+    revision: c_int,
+    max_width_cm: c_int,
+    max_height_cm: c_int,
+    monitor_name: [c_char; EDID_TEXT_LEN],
+    serial_ascii: [c_char; EDID_TEXT_LEN],
+}
+
+#[repr(C)]
+pub struct CEdidResult {
+    pnpid: [c_char; 8],
+    digital: c_uchar,
+    edid: [c_uchar; EDID_BLOCK_LEN],
+    edid_len: c_int,
+    info: CEdidInfo,
+}
+
+#[no_mangle]
+/// Parse EDID bytes into a C-compatible result without transferring ownership.
+///
+/// # Safety
+///
+/// `buf` must point to at least `min(len, 128)` readable bytes and `result` must
+/// point to writable storage for one `CEdidResult`. Both pointers must remain
+/// valid for the duration of the call.
+pub unsafe extern "C" fn ddccontrol_edid_parse(
+    buf: *const c_uchar,
+    len: size_t,
+    result: *mut CEdidResult,
+) -> c_int {
+    catch_unwind(AssertUnwindSafe(|| {
+        ddccontrol_edid_parse_inner(buf, len, result)
+    }))
+    .unwrap_or(-1)
+}
+
+unsafe fn ddccontrol_edid_parse_inner(
+    buf: *const c_uchar,
+    len: size_t,
+    result: *mut CEdidResult,
+) -> c_int {
+    if buf.is_null() || result.is_null() {
+        return -1;
+    }
+
+    let parse_len = len.min(EDID_BLOCK_LEN);
+    let parsed = match ddccontrol_edid::parse(slice::from_raw_parts(buf, parse_len)) {
+        Ok(parsed) => parsed,
+        Err(_) => return -1,
+    };
+    ptr::write(result, edid_to_c(&parsed));
+    0
+}
+
+fn edid_to_c(parsed: &Edid) -> CEdidResult {
+    let mut pnpid = [0; 8];
+    for (output, input) in pnpid.iter_mut().zip(parsed.pnp_id().bytes()) {
+        *output = input as c_char;
+    }
+
+    let mut edid = [0; EDID_BLOCK_LEN];
+    edid[..parsed.raw().len()].copy_from_slice(parsed.raw());
+    let info = parsed.info();
+
+    CEdidResult {
+        pnpid,
+        digital: if parsed.is_digital_input() { 0x80 } else { 0 },
+        edid,
+        edid_len: parsed.raw().len() as c_int,
+        info: CEdidInfo {
+            serial_number: info.serial_number,
+            manufacture_week: c_int::from(info.manufacture_week),
+            manufacture_year: c_int::from(info.manufacture_year),
+            version: c_int::from(info.version),
+            revision: c_int::from(info.revision),
+            max_width_cm: c_int::from(info.max_width_cm),
+            max_height_cm: c_int::from(info.max_height_cm),
+            monitor_name: text_to_c(&info.monitor_name),
+            serial_ascii: text_to_c(&info.serial_ascii),
+        },
+    }
+}
+
+fn text_to_c(text: &str) -> [c_char; EDID_TEXT_LEN] {
+    let mut output = [0; EDID_TEXT_LEN];
+    for (destination, source) in output.iter_mut().zip(text.bytes()) {
+        *destination = source as c_char;
+    }
+    output
 }
 
 #[cfg(test)]
@@ -191,6 +291,30 @@ mod abi_tests {
                 align_of::<*mut c_char>()
             )
         );
+    }
+
+    #[test]
+    fn edid_ffi_layout_matches_c_abi_contract() {
+        assert_eq!(size_of::<c_char>(), 1);
+        assert_eq!(size_of::<c_uchar>(), 1);
+        assert_eq!(size_of::<c_int>(), 4);
+        assert_eq!(size_of::<c_uint>(), 4);
+
+        assert_eq!(field_offset!(CEdidInfo, serial_number), 0);
+        assert_eq!(field_offset!(CEdidInfo, manufacture_week), 4);
+        assert_eq!(field_offset!(CEdidInfo, manufacture_year), 8);
+        assert_eq!(field_offset!(CEdidInfo, version), 12);
+        assert_eq!(field_offset!(CEdidInfo, revision), 16);
+        assert_eq!(field_offset!(CEdidInfo, max_width_cm), 20);
+        assert_eq!(field_offset!(CEdidInfo, max_height_cm), 24);
+        assert_eq!(field_offset!(CEdidInfo, monitor_name), 28);
+        assert_eq!(field_offset!(CEdidInfo, serial_ascii), 42);
+
+        assert_eq!(field_offset!(CEdidResult, pnpid), 0);
+        assert_eq!(field_offset!(CEdidResult, digital), 8);
+        assert_eq!(field_offset!(CEdidResult, edid), 9);
+        assert_eq!(field_offset!(CEdidResult, edid_len), 140);
+        assert_eq!(field_offset!(CEdidResult, info), 144);
     }
 }
 

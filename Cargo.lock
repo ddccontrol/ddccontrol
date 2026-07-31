@@ -17,10 +17,15 @@ name = "ddccontrol-db"
 version = "0.1.0"
 dependencies = [
  "ddccontrol-caps",
+ "ddccontrol-edid",
  "encoding_rs",
  "libc",
  "roxmltree",
 ]
+
+[[package]]
+name = "ddccontrol-edid"
+version = "0.1.0"
 
 [[package]]
 name = "encoding_rs"

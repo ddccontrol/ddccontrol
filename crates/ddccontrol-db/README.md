@@ -3,7 +3,9 @@
 `ddccontrol-db` parses the ddccontrol XML monitor database and exports the C ABI
 used by `libddccontrol`.
 
-CAPS string parsing lives in the sibling `ddccontrol-caps` crate.
+CAPS string parsing lives in the sibling `ddccontrol-caps` crate. EDID parsing
+lives in `ddccontrol-edid`; this crate includes both parsers in the existing
+Rust static library and exposes their C ABI entry points.
 
 ## C ABI Ownership
 
@@ -15,6 +17,8 @@ The C side must release that data with the matching ddccontrol free functions:
 
 - VCP entries created by `ddccontrol_caps_parse` are owned by the caller's
   `struct caps` and are released by the existing C caps cleanup paths.
+- `ddccontrol_edid_parse` writes into caller-owned fixed-size storage and does
+  not allocate or transfer ownership across the ABI.
 - Monitor databases returned by `ddcci_create_db` must be released with
   `ddcci_free_db`.
 
@@ -23,8 +27,8 @@ internal pointers to C. Do not release Rust-created database structs with
 anything other than the documented C cleanup function.
 
 The Rust mirror structs are `#[repr(C)]`. Keep the Rust layout tests and the C
-`test_abi_layout` test in sync with `src/lib/ddcci.h`, `src/lib/monitor_db.h`,
-and `src/lib/monitor_db_internal.h`.
+`test_abi_layout` test in sync with `src/lib/ddcci.h`, `src/lib/rust_ffi.h`,
+`src/lib/monitor_db.h`, and `src/lib/monitor_db_internal.h`.
 
 ## Compatibility Tests
 
