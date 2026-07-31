@@ -3,6 +3,30 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.3.0](https://github.com/ddccontrol/ddccontrol/compare/3.2.0...3.3.0) (2026-07-31)
+
+
+### Features
+
+* port EDID parser to Rust ([#316](https://github.com/ddccontrol/ddccontrol/issues/316)) ([adcfe19](https://github.com/ddccontrol/ddccontrol/commit/adcfe19c87d41b5b01e813e86475a1db27a74aa9))
+* port user profile XML to Rust ([#318](https://github.com/ddccontrol/ddccontrol/issues/318)) ([baea217](https://github.com/ddccontrol/ddccontrol/commit/baea217d73740d5921fdf21c3e0741c3d8e05a44))
+
+
+### Bug Fixes
+
+* support all-profile database smoke tests ([#314](https://github.com/ddccontrol/ddccontrol/issues/314)) ([aeec1ba](https://github.com/ddccontrol/ddccontrol/commit/aeec1baf11c67a4836e47928d68ba7a995d9e1f3))
+* trust successful DDC/CI capability reads ([#311](https://github.com/ddccontrol/ddccontrol/issues/311)) ([58d4aa3](https://github.com/ddccontrol/ddccontrol/commit/58d4aa39d3500f9d547f6cf31486039af14a333c))
+
+
+### Documentation
+
+* document PIAF EDID evaluation ([#317](https://github.com/ddccontrol/ddccontrol/issues/317)) ([1fd716b](https://github.com/ddccontrol/ddccontrol/commit/1fd716b6c63ac6e54d147ee88b56126f73af65ab))
+
+
+### Tests
+
+* move Rust tests into tests directories ([#319](https://github.com/ddccontrol/ddccontrol/issues/319)) ([23b8482](https://github.com/ddccontrol/ddccontrol/commit/23b8482d4bac259a50c1492f4232ad56d787694b))
+
 ## [3.2.0](https://github.com/ddccontrol/ddccontrol/compare/3.1.2...3.2.0) (2026-06-29)
 
 
