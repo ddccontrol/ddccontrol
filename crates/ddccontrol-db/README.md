@@ -12,6 +12,10 @@ Rust static library and exposes their C ABI entry points.
 This crate deliberately preserves the existing C ABI while moving the XML
 database parser to Rust.
 
+The static library also provides the C ABI bridge for local user-profile XML.
+Parsing and serialization live in the separate `ddccontrol-profile` crate;
+monitor reads, writes, retries, and profile-list management remain in C.
+
 Rust allocates returned C data with the process C allocator through `malloc`.
 The C side must release that data with the matching ddccontrol free functions:
 

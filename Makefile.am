@@ -17,6 +17,9 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-edid/README.md \
 	crates/ddccontrol-edid/src/lib.rs \
 	crates/ddccontrol-edid/tests/parser.rs \
+	crates/ddccontrol-profile/Cargo.toml \
+	crates/ddccontrol-profile/README.md \
+	crates/ddccontrol-profile/src/lib.rs \
 	crates/ddccontrol-db/Cargo.toml \
 	crates/ddccontrol-db/README.md \
 	crates/ddccontrol-db/fixtures/compat-db/options.xml \

@@ -42,6 +42,7 @@
 
 #include "conf.h"
 #include "internal.h"
+#include "rust_ffi.h"
 
 #define RETRYS 3 // number of read retrys
 
@@ -236,8 +237,13 @@ int ddcci_save_list(struct monitorlist* monlist) {
 struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* address, int size)
 {
 	int retry, i;
-	
+
+	if (!mon || (!address && size > 0) || size < 0 || size > 256)
+		return NULL;
+
 	struct profile* profile = malloc(sizeof(struct profile));
+	if (!profile)
+		return NULL;
 	memset(profile, 0, sizeof(struct profile));
 	
 	profile->size = size;
@@ -254,7 +260,11 @@ struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* a
 		DDCCI_RETURN_IF_RUN(!retry, 0, _("Cannot read control value\n"), {free(profile);})
 	}
 	
-	profile->pnpid = xmlCharStrdup ((const char*) mon->pnpid);
+	profile->pnpid = (xmlChar*)strdup((const char*)mon->pnpid);
+	if (!profile->pnpid) {
+		free(profile);
+		return NULL;
+	}
 	
 	char date[32];
 	int len, ret;
@@ -271,10 +281,18 @@ struct profile* ddcci_create_profile(struct monitor* mon, const unsigned char* a
 	len += strlen(home) + 32;
 	
 	profile->filename = malloc(len);
+	if (!profile->filename) {
+		ddcci_free_profile(profile);
+		return NULL;
+	}
 	ret = snprintf(profile->filename, len, "%s%s.ddccontrol/profiles/%s.xml", home, trailing ? "" : "/", date);
-	DDCCI_RETURN_IF_RUN(ret == len, 0, _("Cannot create filename (buffer too small)\n"), {ddcci_free_profile(profile);})
+	DDCCI_RETURN_IF_RUN(ret < 0 || ret >= len, 0, _("Cannot create filename (buffer too small)\n"), {ddcci_free_profile(profile);})
 	
-	profile->name = xmlCharStrdup(date);
+	profile->name = (xmlChar*)strdup(date);
+	if (!profile->name) {
+		ddcci_free_profile(profile);
+		return NULL;
+	}
 	
 	return profile;
 }
@@ -297,8 +315,15 @@ int ddcci_apply_profile(struct profile* profile, struct monitor* mon) {
 }
 
 void ddcci_set_profile_name(struct profile* profile, const char* name) {
-	/* FIXME: What happens if the profile name contains chars like '"<>'? */
-	profile->name = xmlCharStrdup(name);
+	xmlChar *replacement;
+
+	if (!profile || !name)
+		return;
+	replacement = (xmlChar*)strdup(name);
+	if (!replacement)
+		return;
+	free(profile->name);
+	profile->name = replacement;
 }
 
 /* Get all profiles available for a given monitor */
@@ -349,7 +374,10 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 		if (!stat(filename, &buf)) {
 			if (S_ISREG(buf.st_mode)) { /* Is a regular file ? */
 				profile = ddcci_load_profile(filename);
-				if (!xmlStrcmp(profile->pnpid, BAD_CAST mon->pnpid)) {
+				if (!profile) {
+					continue;
+				}
+				if (!strcmp((const char*)profile->pnpid, mon->pnpid)) {
 					*next = profile;
 					next = &profile->next;
 				}
@@ -376,139 +404,15 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 }
 
 struct profile* ddcci_load_profile(const char* filename) {
-	xmlNodePtr cur, root;
-	xmlDocPtr profile_doc;
-	
-	xmlChar *tmp;
-	char *endptr;
-	int itmp;
-	
-	struct profile* profile = malloc(sizeof(struct profile));
-	memset(profile, 0, sizeof(struct profile));
-	
-	profile_doc = xmlParseFile(filename);
-	if (profile_doc == NULL) {
-		fprintf(stderr, _("Document not parsed successfully.\n"));
-		free(profile);
-		return 0;
-	}
-	
-	root = xmlDocGetRootElement(profile_doc);
-	
-	if (root == NULL) {
-		fprintf(stderr,  _("empty profile file\n"));
-		xmlFreeDoc(profile_doc);
-		free(profile);
-		return 0;
-	}
-	
-	if (xmlStrcmp(root->name, BAD_CAST "profile")) {
-		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
-		xmlFreeDoc(profile_doc);
-		free(profile);
-		return 0;
-	}
-	
-	profile->pnpid = xmlGetProp(root,BAD_CAST "pnpid");
-	DDCCI_DB_RETURN_IF_RUN(profile->pnpid == NULL, 0, _("Can't find pnpid property."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	
-	profile->name = xmlGetProp(root,BAD_CAST "name");
-	DDCCI_DB_RETURN_IF_RUN(profile->name == NULL, 0, _("Can't find name property."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	
-	tmp = xmlGetProp(root,BAD_CAST "version");
-	DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	itmp = strtol ((const char*)tmp, &endptr, 0);
-	DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert version to int."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	DDCCI_DB_RETURN_IF_RUN(itmp != PROFILEVERSION, 0, _("Can't find version property."), root, {free(profile); xmlFreeDoc(profile_doc);});
-	if (itmp > PROFILEVERSION) {
-		fprintf(stderr,  _("profile version (%d) is not supported (should be %d).\n"), itmp, PROFILEVERSION);
-		xmlFreeDoc(profile_doc);
-		free(profile);
-		return 0;
-	}
-	xmlFree(tmp);
-	
-	cur = root->xmlChildrenNode;
-	while (1)
-	{
-		if (cur == NULL) {
-			break;
-		}
-		if (!(xmlStrcmp(cur->name, BAD_CAST "control"))) {
-			tmp = xmlGetProp (cur, BAD_CAST "address");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find address property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
-			profile->address[profile->size] = strtol ((const char*)tmp, &endptr, 0);
-			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert address to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
-			xmlFree(tmp);
-			
-			tmp = xmlGetProp(cur, BAD_CAST "value");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find value property."), cur, {free(profile); xmlFreeDoc(profile_doc);});
-			profile->value[profile->size] = strtol ((const char*)tmp, &endptr, 0);
-			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert value to int."), cur, {xmlFree(tmp); free(profile); xmlFreeDoc(profile_doc);});
-			xmlFree(tmp);
-			
-			profile->size++;
-		}
-		cur = cur->next;
-	}
-	
-	profile->filename = strdup(filename);
-	
-	xmlFreeDoc(profile_doc);
-	
-	return profile;
+	return ddccontrol_profile_load(filename);
 }
 
 /* Save profile and add it to the profiles list of the given monitor if necessary */
 int ddcci_save_profile(struct profile* profile, struct monitor* monitor) {
-	int rc;
-	xmlTextWriterPtr writer;
-	int i;
-
-	if (!ddcci_create_config_dir())
+	if (!profile || !monitor || !ddcci_create_config_dir())
 		return 0;
-
-	writer = xmlNewTextWriterFilename(profile->filename, 0);
-	DDCCI_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
-
-	xmlTextWriterSetIndent(writer, 1);
-
-	rc = xmlTextWriterStartDocument(writer, NULL, NULL, NULL);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartDocument\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterStartElement(writer, BAD_CAST "profile");
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement profile\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "name", profile->name);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute name\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "pnpid", profile->pnpid);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute pnpid\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "version", BAD_CAST "1");
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute version\n", {xmlFreeTextWriter(writer);})
-
-	/*rc = xmlTextWriterWriteComment(writer, BAD_CAST "My comment");
-	PROFILE_RETURN_IF(rc < 0, 0, "xmlTextWriterWriteComment\n")*/
-
-	for (i = 0; i < profile->size; i++) {
-		rc = xmlTextWriterStartElement(writer, BAD_CAST "control");
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement control\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "address", "%#x", profile->address[i]);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute address\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "value", "%#x", profile->value[i]);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute value\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterEndElement(writer);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterEndElement\n", {xmlFreeTextWriter(writer);})
-	}
-
-	rc = xmlTextWriterEndDocument(writer);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "testXmlwriterFilename\n", {xmlFreeTextWriter(writer);})
-
-	xmlFreeTextWriter(writer);
+	if (ddccontrol_profile_save(profile) < 0)
+		return 0;
 	
 	/* Update database */
 	struct profile** profileptr = &monitor->profiles;
@@ -553,11 +457,13 @@ void ddcci_delete_profile(struct profile* profile, struct monitor* monitor) {
 }
 
 void ddcci_free_profile(struct profile* profile) {
+	if (!profile)
+		return;
 	if (profile->next)
 		ddcci_free_profile(profile->next);
 	
 	free(profile->filename);
-	xmlFree(profile->pnpid);
-	xmlFree(profile->name);
+	free(profile->pnpid);
+	free(profile->name);
 	free(profile);
 }

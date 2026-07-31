@@ -34,6 +34,7 @@ target/
 /m4/
 /missing
 /po/*.gmo
+/po/ddccontrol.pot
 /po/.intltool-merge-cache
 /po/.intltool-merge-cache.lock
 /po/Makefile.in.in
@@ -74,6 +75,9 @@ target/
 /src/lib/test_edid
 /src/lib/test_edid.log
 /src/lib/test_edid.trs
+/src/lib/test_profile
+/src/lib/test_profile.log
+/src/lib/test_profile.trs
 /src/lib/test_abi_layout
 /src/lib/test_abi_layout.log
 /src/lib/test_abi_layout.trs
