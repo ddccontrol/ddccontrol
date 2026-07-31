@@ -102,9 +102,9 @@ pub fn serialize(profile: &Profile) -> Result<String, ProfileError> {
     }
 
     let mut output = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<profile name=\"");
-    push_escaped_attribute(&mut output, &profile.name);
+    push_escaped_attribute(&mut output, &profile.name)?;
     output.push_str("\" pnpid=\"");
-    push_escaped_attribute(&mut output, &profile.pnp_id);
+    push_escaped_attribute(&mut output, &profile.pnp_id)?;
     output.push_str("\" version=\"1\">\n");
     for control in &profile.controls {
         output.push_str(&format!(
@@ -153,7 +153,7 @@ fn parse_integer(input: &str) -> Result<i64, std::num::ParseIntError> {
     Ok(if negative { -value } else { value })
 }
 
-fn push_escaped_attribute(output: &mut String, input: &str) {
+fn push_escaped_attribute(output: &mut String, input: &str) -> Result<(), ProfileError> {
     for character in input.chars() {
         match character {
             '&' => output.push_str("&amp;"),
@@ -161,9 +161,26 @@ fn push_escaped_attribute(output: &mut String, input: &str) {
             '>' => output.push_str("&gt;"),
             '\"' => output.push_str("&quot;"),
             '\'' => output.push_str("&apos;"),
-            _ => output.push(character),
+            '\t' => output.push_str("&#x9;"),
+            '\n' => output.push_str("&#xA;"),
+            '\r' => output.push_str("&#xD;"),
+            character if is_xml_character(character) => output.push(character),
+            character => {
+                return Err(ProfileError::new(format!(
+                    "profile contains invalid XML character U+{:04X}",
+                    u32::from(character)
+                )))
+            }
         }
     }
+    Ok(())
+}
+
+fn is_xml_character(character: char) -> bool {
+    matches!(
+        u32::from(character),
+        0x20..=0xD7FF | 0xE000..=0xFFFD | 0x10000..=0x10FFFF
+    )
 }
 
 fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {

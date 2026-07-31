@@ -404,15 +404,24 @@ int ddcci_get_all_profiles(struct monitor* mon) {
 }
 
 struct profile* ddcci_load_profile(const char* filename) {
-	return ddccontrol_profile_load(filename);
+	struct profile* profile;
+
+	if (!filename)
+		return NULL;
+	profile = ddccontrol_profile_load(filename);
+	if (!profile)
+		fprintf(stderr, _("Document not parsed successfully.\n"));
+	return profile;
 }
 
 /* Save profile and add it to the profiles list of the given monitor if necessary */
 int ddcci_save_profile(struct profile* profile, struct monitor* monitor) {
 	if (!profile || !monitor || !ddcci_create_config_dir())
 		return 0;
-	if (ddccontrol_profile_save(profile) < 0)
+	if (ddccontrol_profile_save(profile) < 0) {
+		fprintf(stderr, _("Cannot create the xml writer\n"));
 		return 0;
+	}
 	
 	/* Update database */
 	struct profile** profileptr = &monitor->profiles;

@@ -58,14 +58,15 @@ static void test_load_and_save_profile(void)
 	free(profile->filename);
 	profile->filename = strdup(output_path);
 	assert(profile->filename != NULL);
-	ddcci_set_profile_name(profile, "Work & \"Play\"");
+	ddcci_set_profile_name(profile, "Work & \"Play\"\nSecond\tcolumn\rreturn");
 	memset(&monitor, 0, sizeof(monitor));
 	assert(ddcci_save_profile(profile, &monitor) == 1);
 	assert(monitor.profiles == profile);
 
 	round_trip = ddcci_load_profile(output_path);
 	assert(round_trip != NULL);
-	assert(strcmp((const char*)round_trip->name, "Work & \"Play\"") == 0);
+	assert(strcmp((const char*)round_trip->name,
+		"Work & \"Play\"\nSecond\tcolumn\rreturn") == 0);
 	assert(strcmp((const char*)round_trip->pnpid, "DEL1234") == 0);
 	assert(round_trip->size == 2);
 	assert(round_trip->address[0] == 0x10);

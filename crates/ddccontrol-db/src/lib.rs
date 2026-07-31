@@ -167,17 +167,11 @@ mod user_profile {
         let path = pathbuf_from_c_path(filename);
         let bytes = match fs::read(&path) {
             Ok(bytes) => bytes,
-            Err(error) => {
-                eprintln!("Could not read profile {}: {error}", path.display());
-                return ptr::null_mut();
-            }
+            Err(_) => return ptr::null_mut(),
         };
         let profile = match ddccontrol_profile::parse_bytes(&bytes) {
             Ok(profile) => profile,
-            Err(error) => {
-                eprintln!("Could not parse profile {}: {error}", path.display());
-                return ptr::null_mut();
-            }
+            Err(_) => return ptr::null_mut(),
         };
 
         profile_to_c(filename.to_bytes(), &profile).unwrap_or(ptr::null_mut())
@@ -204,18 +198,12 @@ mod user_profile {
         };
         let xml = match ddccontrol_profile::serialize(&rust_profile) {
             Ok(xml) => xml,
-            Err(error) => {
-                eprintln!("Could not serialize profile: {error}");
-                return -1;
-            }
+            Err(_) => return -1,
         };
         let path = pathbuf_from_c_path(CStr::from_ptr((*profile).filename));
         match fs::write(&path, xml) {
             Ok(()) => 0,
-            Err(error) => {
-                eprintln!("Could not write profile {}: {error}", path.display());
-                -1
-            }
+            Err(_) => -1,
         }
     }
 

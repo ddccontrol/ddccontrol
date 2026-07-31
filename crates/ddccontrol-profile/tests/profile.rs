@@ -33,7 +33,7 @@ fn parses_version_one_profile_and_strtol_number_syntax() {
 #[test]
 fn serialize_round_trip_escapes_attributes() {
     let profile = Profile {
-        name: "Work & \"Play\" <HDR>".to_string(),
+        name: "Work & \"Play\" <HDR>\nSecond\tcolumn\rreturn".to_string(),
         pnp_id: "DEL'1234".to_string(),
         controls: vec![Control {
             address: 0x10,
@@ -44,7 +44,19 @@ fn serialize_round_trip_escapes_attributes() {
     let xml = serialize(&profile).unwrap();
     assert!(xml.contains("Work &amp; &quot;Play&quot; &lt;HDR&gt;"));
     assert!(xml.contains("DEL&apos;1234"));
+    assert!(xml.contains("&#xA;Second&#x9;column&#xD;return"));
     assert_eq!(parse(&xml).unwrap(), profile);
+}
+
+#[test]
+fn rejects_characters_that_are_invalid_in_xml() {
+    let profile = Profile {
+        name: "Invalid \u{1} name".to_string(),
+        pnp_id: "DEL1234".to_string(),
+        controls: vec![],
+    };
+
+    assert!(serialize(&profile).is_err());
 }
 
 #[test]
