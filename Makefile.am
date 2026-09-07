@@ -12,6 +12,7 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-caps/fixtures/fallback_crt.caps \
 	crates/ddccontrol-caps/fixtures/nested_values.caps \
 	crates/ddccontrol-caps/src/lib.rs \
+	crates/ddccontrol-caps/tests/parser.rs \
 	crates/ddccontrol-edid/Cargo.toml \
 	crates/ddccontrol-edid/PIAF.md \
 	crates/ddccontrol-edid/README.md \
@@ -26,7 +27,10 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/fixtures/compat-db/options.xml \
 	crates/ddccontrol-db/fixtures/compat-db/monitor/compat-common.xml \
 	crates/ddccontrol-db/fixtures/compat-db/monitor/compat-monitor.xml \
-	crates/ddccontrol-db/src/monitor_db/compatibility_tests.rs \
+	crates/ddccontrol-db/tests/unit/ffi_layout.rs \
+	crates/ddccontrol-db/tests/unit/monitor_db.rs \
+	crates/ddccontrol-db/tests/unit/monitor_db_compatibility.rs \
+	crates/ddccontrol-db/tests/unit/profile_ffi_layout.rs \
 	crates/ddccontrol-db/src/lib.rs
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'

@@ -38,7 +38,9 @@ The Rust mirror structs are `#[repr(C)]`. Keep the Rust layout tests and the C
 
 The normal test suite includes a golden monitor database fixture under
 `fixtures/compat-db`. To smoke-test a real `ddccontrol-db` checkout as well,
-set `DDCCONTROL_DB_TEST_DATADIR` to either the checkout root or the `db`
+first generate its `db/options.xml` from `db/options.xml.in` with
+`make -C /path/to/ddccontrol-db db/options.xml`. Then set
+`DDCCONTROL_DB_TEST_DATADIR` to either the checkout root or the `db`
 directory that contains `options.xml` and `monitor/` before running
 `cargo test`.
 

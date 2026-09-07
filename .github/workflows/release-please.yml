@@ -49,6 +49,9 @@ jobs:
           repository: ddccontrol/ddccontrol-db
           path: ddccontrol-db-checkout
 
+      - name: Generate monitor database options
+        run: make -C ddccontrol-db-checkout db/options.xml
+
       - name: Test all monitor profiles
         env:
           DDCCONTROL_DB_TEST_DATADIR: ${{ github.workspace }}/ddccontrol-db-checkout/db
