@@ -1,0 +1,72 @@
+name: Build Debian packages
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+      packaging-ref:
+        type: string
+        required: true
+      source-artifact:
+        type: string
+        default: release-sources
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ${{ matrix.target.runner }}
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - {arch: amd64, platform: linux/amd64, runner: ubuntu-24.04}
+          - {arch: arm64, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {arch: armhf, platform: linux/arm/v7, runner: ubuntu-24.04-arm, qemu: arm}
+          - {arch: ppc64el, platform: linux/ppc64le, runner: ubuntu-24.04, qemu: ppc64le}
+          - {arch: riscv64, platform: linux/riscv64, runner: ubuntu-24.04, qemu: riscv64}
+          - {arch: s390x, platform: linux/s390x, runner: ubuntu-24.04, qemu: s390x}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          repository: ddccontrol/debian-ddccontrol
+          ref: ${{ inputs.packaging-ref }}
+          path: packaging
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.source-artifact }}
+          path: ${{ runner.temp }}/sources
+      - name: Enable target architecture emulation
+        if: matrix.target.qemu != ''
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.target.qemu }}
+      - name: Build Debian packages
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          TARGET_PLATFORM: ${{ matrix.target.platform }}
+        run: |
+          set -euo pipefail
+          echo "Build host: $(uname -m); Debian target: $TARGET_PLATFORM"
+          mkdir -p "$RUNNER_TEMP/packages"
+          docker run --rm --platform "$TARGET_PLATFORM" \
+            -v "$GITHUB_WORKSPACE:/automation:ro" \
+            -v "$RUNNER_TEMP/sources:/sources:ro" \
+            -v "$RUNNER_TEMP/packages:/output" \
+            debian:trixie \
+            bash /automation/scripts/release/build-debian.sh \
+              "/sources/ddccontrol-$RELEASE_VERSION.tar.bz2" \
+              /automation/packaging "$RELEASE_VERSION" /output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-debian-${{ matrix.target.arch }}
+          path: ${{ runner.temp }}/packages/
+          if-no-files-found: error

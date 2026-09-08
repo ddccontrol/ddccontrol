@@ -35,6 +35,11 @@ DDCcontrol tools, `ddccontrol` and `gddccontrol` can be installed from official 
 
 You might need to restart your system after installing `i2c-tools`.
 
+### Upstream release repositories
+
+For the signed Debian and Fedora repositories built from upstream releases, see
+[package repository installation and release setup](doc/releasing-packages.md).
+
 ### Installation from sources
 
 Install build dependencies:
