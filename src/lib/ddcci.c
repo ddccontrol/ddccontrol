@@ -457,6 +457,40 @@ static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned cha
 	return ddcci_read(mon, buf, len);
 }
 
+/* Mask binary payloads before passing the NUL-terminated text to Rust. The
+ * received byte count, not strlen(), bounds payloads that may contain NULs. */
+static int ddcci_normalize_caps(char *raw_caps, size_t length)
+{
+	size_t pos = 0;
+
+	while (pos < length && raw_caps[pos] != '\0') {
+		char *number, *endptr;
+		long binary_len;
+		size_t payload, remaining;
+
+		if (length - pos < 4 || memcmp(raw_caps + pos, "bin(", 4) != 0) {
+			pos++;
+			continue;
+		}
+
+		number = raw_caps + pos + 4;
+		errno = 0;
+		binary_len = strtol(number, &endptr, 0);
+		if (errno == ERANGE || endptr == number || binary_len < 0 || *endptr != '(')
+			return -1;
+
+		payload = (size_t)(endptr - raw_caps) + 1;
+		remaining = length - payload;
+		if ((unsigned long)binary_len > remaining)
+			return -1;
+		pos = payload + (size_t)binary_len;
+
+		memset(raw_caps + payload, '#', (size_t)binary_len);
+		/* Leave delimiter/whitespace validation to the existing CAPS parser. */
+	}
+	return 0;
+}
+
 int ddcci_caps(struct monitor* mon)
 {
 	if (mon->__vtable) {
@@ -464,26 +498,33 @@ int ddcci_caps(struct monitor* mon)
 		return mon->caps.raw_caps ? (int)strlen(mon->caps.raw_caps) : -1;
 	}
 
-	mon->caps.raw_caps = (char*)malloc(16);
-	int bufferpos = 0;
+	/* The terminating empty reply must still be addressable by a 16-bit offset. */
+	const size_t max_caps_length = 0xffff;
+	size_t bufferpos = 0;
+	char *raw_caps, *resized;
 	unsigned char buf[64];	/* 64 bytes chunk (was 35, but 173P+ send 43 bytes chunks) */
-	int offset = 0;
-	int len, i;
+	int len;
 	int retries = 3;
-	
-	do {
-		mon->caps.raw_caps[bufferpos] = 0;
-		if (retries == 0) {
-			return -1;
-		}
-		
-		len = ddcci_raw_caps(mon, offset, buf, sizeof(buf));
+
+	free(mon->caps.raw_caps);
+	mon->caps.raw_caps = NULL;
+	raw_caps = malloc(1);
+	if (!raw_caps)
+		return -1;
+	raw_caps[0] = '\0';
+
+	for (;;) {
+		if (retries == 0)
+			goto fail;
+
+		len = ddcci_raw_caps(mon, (unsigned int)bufferpos, buf, sizeof(buf));
 		if (len < 0) {
 			retries--;
 			continue;
 		}
 		
-		if (len < 3 || buf[0] != DDCCI_REPLY_CAPS || (buf[1] * 256 + buf[2]) != offset) 
+		if (len < 3 || len > (int)sizeof(buf) || buf[0] != DDCCI_REPLY_CAPS ||
+		    (size_t)(buf[1] * 256 + buf[2]) != bufferpos)
 		{
 			if (!mon->probing || verbosity) {
 				fprintf(stderr, _("Invalid sequence in caps.\n"));
@@ -492,58 +533,35 @@ int ddcci_caps(struct monitor* mon)
 			continue;
 		}
 
-		mon->caps.raw_caps = (char*)realloc(mon->caps.raw_caps, bufferpos + len - 2);
-		for (i = 3; i < len; i++) {
-			mon->caps.raw_caps[bufferpos++] = buf[i];
-		}
-		
-		offset += len - 3;
-		
+		if (len == 3)
+			break;
+		if ((size_t)(len - 3) > max_caps_length - bufferpos)
+			goto fail;
+
+		resized = realloc(raw_caps, bufferpos + (size_t)(len - 3) + 1);
+		if (!resized)
+			goto fail;
+		raw_caps = resized;
+		memcpy(raw_caps + bufferpos, buf + 3, (size_t)(len - 3));
+		bufferpos += (size_t)(len - 3);
+		raw_caps[bufferpos] = '\0';
 		retries = 3;
-	} while (len != 3);
-
-#if 0
-	/* Test CAPS with binary data */
-	mon->caps.raw_caps = realloc(mon->caps.raw_caps, 2048);
-	strcpy(mon->caps.raw_caps, "( prot(monitor) type(crt) edid bin(128(");
-	bufferpos = strlen(mon->caps.raw_caps);
-	for (i = 0; i < 128; i++) {
-		mon->caps.raw_caps[bufferpos++] = i;
-	}
-	strcpy(&mon->caps.raw_caps[bufferpos], ")) vdif bin(128(");
-	bufferpos += strlen(")) vdif bin(128(");	
-	for (i = 0; i < 128; i++) {
-		mon->caps.raw_caps[bufferpos++] = i;
-	}
-	strcpy(&mon->caps.raw_caps[bufferpos], ")) vcp (10 12 16 18 1A 50 92)))");
-	bufferpos += strlen(")) vcp (10 12 16 18 1A 50 92)))");
-	/* End */
-#endif
-	
-	mon->caps.raw_caps[bufferpos] = 0;
-
-	char* last_substr = mon->caps.raw_caps;
-	char* endptr;
-	while ((last_substr = strstr(last_substr, "bin("))) {
-		last_substr += 4;
-		len = strtol(last_substr, &endptr, 0);
-		if (*endptr != '(') {
-			printf("Invalid bin in CAPS.\n");
-			continue;
-		}
-		for (i = 0; i < len; i++) {
-			*(++endptr) = '#';
-		}
-		last_substr += len;
-	}
-	
-	if (ddcci_parse_caps(mon->caps.raw_caps, &mon->caps, 1) < 0) {
-		free(mon->caps.raw_caps);
-		mon->caps.raw_caps = NULL;
-		return -1;
 	}
 
-	return bufferpos;
+	if (ddcci_normalize_caps(raw_caps, bufferpos) < 0) {
+		if (!mon->probing || verbosity)
+			fprintf(stderr, _("Invalid binary data in caps.\n"));
+		goto fail;
+	}
+	if (ddcci_parse_caps(raw_caps, &mon->caps, 1) < 0)
+		goto fail;
+
+	mon->caps.raw_caps = raw_caps;
+	return (int)bufferpos;
+
+fail:
+	free(raw_caps);
+	return -1;
 }
 
 /* save current settings */
