@@ -1,14 +1,5 @@
 use super::*;
-use std::ffi::CString;
-use std::mem::{align_of, size_of};
-
-macro_rules! field_offset {
-    ($ty:ty, $field:tt) => {{
-        let value = std::mem::MaybeUninit::<$ty>::uninit();
-        let base = value.as_ptr();
-        unsafe { std::ptr::addr_of!((*base).$field) as usize - base as usize }
-    }};
-}
+use std::mem::{align_of, offset_of, size_of};
 
 #[test]
 fn monitor_list_layout_matches_c_fields_and_padding() {
@@ -16,23 +7,20 @@ fn monitor_list_layout_matches_c_fields_and_padding() {
     let align = align_of::<*mut c_char>();
     let align_up = |size: usize| (size + align - 1) & !(align - 1);
     assert_eq!(size_of::<c_uchar>(), 1);
-    assert_eq!(field_offset!(CMonitorList, filename), 0);
-    assert_eq!(field_offset!(CMonitorList, supported), pointer_size);
+    assert_eq!(offset_of!(CMonitorList, filename), 0);
+    assert_eq!(offset_of!(CMonitorList, supported), pointer_size);
+    assert_eq!(offset_of!(CMonitorList, name), align_up(pointer_size + 1));
     assert_eq!(
-        field_offset!(CMonitorList, name),
-        align_up(pointer_size + 1)
+        offset_of!(CMonitorList, digital),
+        offset_of!(CMonitorList, name) + pointer_size
     );
     assert_eq!(
-        field_offset!(CMonitorList, digital),
-        field_offset!(CMonitorList, name) + pointer_size
-    );
-    assert_eq!(
-        field_offset!(CMonitorList, next),
-        align_up(field_offset!(CMonitorList, digital) + 1)
+        offset_of!(CMonitorList, next),
+        align_up(offset_of!(CMonitorList, digital) + 1)
     );
     assert_eq!(
         size_of::<CMonitorList>(),
-        field_offset!(CMonitorList, next) + pointer_size
+        offset_of!(CMonitorList, next) + pointer_size
     );
 }
 
@@ -88,31 +76,29 @@ fn allocation_failure_and_unwinding_clean_up_partial_lists() {
 
 #[test]
 fn null_ffi_inputs_fail_without_changing_output() {
-    let filename = CString::new("missing").unwrap();
-    let version = CString::new("3.3.0").unwrap();
     unsafe {
         let sentinel = ptr::NonNull::<CMonitorList>::dangling().as_ptr();
         let mut output = sentinel;
         assert_eq!(
-            ddccontrol_monitorlist_load(ptr::null(), version.as_ptr(), &mut output),
+            ddccontrol_monitorlist_load(ptr::null(), c"3.3.0".as_ptr(), &mut output),
             -1
         );
         assert_eq!(output, sentinel);
         assert_eq!(
-            ddccontrol_monitorlist_load(filename.as_ptr(), ptr::null(), &mut output),
+            ddccontrol_monitorlist_load(c"missing".as_ptr(), ptr::null(), &mut output),
             -1
         );
         assert_eq!(output, sentinel);
         assert_eq!(
-            ddccontrol_monitorlist_load(filename.as_ptr(), version.as_ptr(), ptr::null_mut()),
+            ddccontrol_monitorlist_load(c"missing".as_ptr(), c"3.3.0".as_ptr(), ptr::null_mut()),
             -1
         );
         assert_eq!(
-            ddccontrol_monitorlist_save(ptr::null(), version.as_ptr(), ptr::null()),
+            ddccontrol_monitorlist_save(ptr::null(), c"3.3.0".as_ptr(), ptr::null()),
             -1
         );
         assert_eq!(
-            ddccontrol_monitorlist_save(filename.as_ptr(), ptr::null(), ptr::null()),
+            ddccontrol_monitorlist_save(c"missing".as_ptr(), ptr::null(), ptr::null()),
             -1
         );
     }

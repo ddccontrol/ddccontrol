@@ -72,6 +72,7 @@ jobs:
               cd /tmp/ddccontrol
               git config --global --add safe.directory /tmp/ddccontrol
               git clean -fdX
+              ./.github/ci/install-rust.sh
               ./autogen.sh
               ./configure --enable-doc CFLAGS="$CFLAGS"
               make -j$(nproc)

@@ -21,6 +21,9 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-24.04
+    env:
+      CARGO: /usr/bin/cargo-1.77
+      RUSTC: /usr/bin/rustc-1.77
     outputs:
       version: ${{ steps.source.outputs.version }}
       debian_ref: ${{ steps.source.outputs.debian_ref }}
@@ -30,7 +33,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            astyle autoconf dh-autoreconf intltool libgtk-3-dev libxml2-dev cargo python3-yaml
+            astyle autoconf dh-autoreconf intltool libgtk-3-dev libxml2-dev cargo-1.77 rustc-1.77 python3-yaml
       - name: Prepare source and packaging revision for PR builds
         id: source
         run: |

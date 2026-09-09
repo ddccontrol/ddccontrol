@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         # Minimum from workspace.package.rust-version, Debian 13, and stable.
-        toolchain: ["1.70.0", "1.85.0", stable]
+        toolchain: ["1.77.0", "1.85.0", stable]
     steps:
       - uses: actions/checkout@v6
 
@@ -98,6 +98,7 @@ jobs:
               cd /tmp/ddccontrol
               git config --global --add safe.directory /tmp/ddccontrol
               git clean -fdX
+              ./.github/ci/install-rust.sh
               ./autogen.sh
               ./configure --enable-doc CFLAGS="$CFLAGS"
               make -j$(nproc)

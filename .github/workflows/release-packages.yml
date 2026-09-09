@@ -77,6 +77,9 @@ jobs:
     needs: resolve
     if: needs.resolve.outputs.has_bundle != 'true'
     runs-on: ubuntu-24.04
+    env:
+      CARGO: /usr/bin/cargo-1.77
+      RUSTC: /usr/bin/rustc-1.77
     permissions:
       contents: write
     steps:
@@ -89,8 +92,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            astyle autoconf build-essential cargo clang dh-autoreconf intltool \
-            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc xsltproc \
+            astyle autoconf build-essential cargo-1.77 clang dh-autoreconf intltool \
+            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc-1.77 xsltproc \
             tidy docbook-xml docbook-xsl xml-core
 
       - name: Build and check source distributions
@@ -108,7 +111,7 @@ jobs:
           cp "$dist_dir.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
           vendor_workdir="$(mktemp -d)"
           tar -C "$vendor_workdir" -xf "$dist_dir.tar.bz2"
-          (cd "$vendor_workdir/$dist_dir" && cargo vendor --locked vendor)
+          (cd "$vendor_workdir/$dist_dir" && "$CARGO" vendor --locked vendor)
           tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/source-artifacts/$dist_dir-vendor.tar.gz" "$dist_dir"
           rm -f ddccontrol-*.tar.bz2 ddccontrol-*.tar.gz
           ./scripts/format_code.sh
