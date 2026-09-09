@@ -11,6 +11,43 @@ permissions:
   packages: read
 
 jobs:
+  rust:
+    name: rust (${{ matrix.toolchain }})
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        # Minimum from workspace.package.rust-version, Debian 13, and stable.
+        toolchain: ["1.70.0", "1.85.0", stable]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install "${{ matrix.toolchain }}" --profile minimal
+
+      - name: Install formatting and lint tools
+        if: matrix.toolchain == 'stable'
+        run: rustup component add --toolchain stable rustfmt clippy
+
+      - name: Check Rust formatting
+        if: matrix.toolchain == 'stable'
+        run: cargo +stable fmt --all -- --check
+
+      - name: Check Rust lints
+        if: matrix.toolchain == 'stable'
+        run: cargo +stable clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+      - name: Test Rust without gettext
+        run: cargo +${{ matrix.toolchain }} test --workspace --no-default-features --locked
+
+      - name: Test Rust with all features
+        run: cargo +${{ matrix.toolchain }} test --workspace --all-features --locked
+
+      - name: Build release static library
+        run: cargo +${{ matrix.toolchain }} build --release -p ddccontrol-db --all-features --locked
+
+      - name: Check build cleanliness
+        run: ./scripts/check_git_clean_after_build.sh
+
   build:
     name: build (${{ matrix.target.arch }}, ${{ matrix.compiler }})
     runs-on: ${{ matrix.target.runner }}

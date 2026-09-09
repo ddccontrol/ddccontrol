@@ -42,6 +42,21 @@ For the signed Debian and Fedora repositories built from upstream releases, see
 
 ### Installation from sources
 
+Building requires Rust and Cargo 1.70 or newer. The workspace declares this
+minimum in `Cargo.toml`, and CI tests Rust 1.70.0, 1.85.0, and stable. Rust 1.70
+supports the existing [`Option::is_some_and`](https://doc.rust-lang.org/std/option/enum.Option.html#method.is_some_and)
+use and keeps compatibility with the Rust 1.75 toolchain in the Ubuntu 24.04
+build images. The Rust 1.85 toolchain
+shipped in [Debian 13 (trixie)](https://packages.debian.org/trixie/rustc) meets
+the minimum, including on `ppc64el`, `riscv64`, and `s390x`. Debian 12 (bookworm)'s
+standard [Rust 1.63 package](https://packages.debian.org/bookworm/rustc) is too old;
+building there requires a newer toolchain. This is a source-build requirement,
+not a change to the installed application's runtime requirements.
+
+Keep Cargo.lock in format 3. Dependency updates must pass the minimum-version
+CI job; raising the minimum is an explicit compatibility change. The existing
+Rust dependencies and C ABI layouts are unchanged.
+
 Install build dependencies:
 
 * on Ubuntu: `sudo apt install intltool i2c-tools libxml2-dev libgtk3.0-dev liblzma-dev`
@@ -63,6 +78,21 @@ sudo make install
 ```
 
 Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
+
+### Rust development checks
+
+Run these checks before submitting Rust changes (CI uses stable for formatting
+and Clippy):
+
+```shell
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+cargo test --workspace --all-features --locked
+```
+
+Also run `make check` after building to exercise the C ABI and daemon consumers.
+See [the Rust migration status and plan](rust-porting.txt) for subsystem status,
+compatibility coverage, and remaining work.
 
 ## Contributing to the Monitor Database
 
