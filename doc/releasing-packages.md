@@ -107,6 +107,13 @@ rebuilds Pages without replacing package files. A failure before the bundle was
 saved rebuilds the packages. Rebuilding an older release cannot remove newer
 versions because the repository is assembled from all bundles.
 
+Existing source archives are downloaded and reused byte for byte, with size and
+available SHA-256 digests checked before building packages. The source build is
+skipped when both archives are already present. Missing archives and package
+bundles are uploaded directly as release assets; publication does not edit
+release metadata or replace existing assets. After merging a workflow fix,
+start a new run on `master`; re-running an old run uses its original workflow.
+
 ## Install from the repositories
 
 Enable the repository matching the OS release. Debian trixie binaries are not
@@ -157,6 +164,7 @@ environment with the required tools installed:
 
 ```sh
 shellcheck scripts/release/*.sh
+node --test scripts/release/test-release-assets.cjs
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-bundles.py
 sudo scripts/release/test-repositories.sh
 ```

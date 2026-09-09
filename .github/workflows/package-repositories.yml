@@ -51,7 +51,7 @@ jobs:
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-sources
           path: ${{ runner.temp }}/source-artifacts/
@@ -76,6 +76,7 @@ jobs:
       - name: Check scripts and bundle extraction
         run: |
           shellcheck scripts/release/*.sh
+          node --test scripts/release/test-release-assets.cjs
           PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-bundles.py
       - name: Test signed repositories with APT and DNF
         run: sudo scripts/release/test-repositories.sh

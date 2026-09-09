@@ -77,19 +77,44 @@ jobs:
     needs: resolve
     if: needs.resolve.outputs.has_bundle != 'true'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     env:
       CARGO: /usr/bin/cargo-1.77
       RUSTC: /usr/bin/rustc-1.77
       RUSTDOC: /usr/bin/rustdoc-1.77
-    permissions:
-      contents: write
+      RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
+      RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Check out release automation
+        uses: actions/checkout@v6
+        with:
+          path: automation
+          persist-credentials: false
+      - name: Reuse published source distributions
+        id: sources
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const syncAssets = require('./automation/scripts/release/release-assets.cjs');
+            const base = `ddccontrol-${process.env.RELEASE_VERSION}`;
+            const complete = await syncAssets({
+              github, context, tag: process.env.RELEASE_TAG,
+              directory: `${process.env.RUNNER_TEMP}/source-artifacts`,
+              names: [`${base}.tar.bz2`, `${base}-vendor.tar.gz`],
+              downloadOnly: true,
+            });
+            core.setOutput('complete', complete);
+      - name: Check out release source
+        if: steps.sources.outputs.complete != 'true'
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.resolve.outputs.commit }}
+          path: source
           persist-credentials: false
 
       - name: Install build dependencies
+        if: steps.sources.outputs.complete != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
@@ -98,8 +123,8 @@ jobs:
             tidy docbook-xml docbook-xsl xml-core
 
       - name: Build and check source distributions
-        env:
-          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+        if: steps.sources.outputs.complete != 'true'
+        working-directory: source
         run: |
           set -euo pipefail
           ./autogen.sh
@@ -109,28 +134,37 @@ jobs:
           make dist-bzip2
           mkdir -p "$RUNNER_TEMP/source-artifacts"
           dist_dir="ddccontrol-$RELEASE_VERSION"
-          cp "$dist_dir.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
-          vendor_workdir="$(mktemp -d)"
-          tar -C "$vendor_workdir" -xf "$dist_dir.tar.bz2"
-          (cd "$vendor_workdir/$dist_dir" && "$CARGO" vendor --locked vendor)
-          tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/source-artifacts/$dist_dir-vendor.tar.gz" "$dist_dir"
+          if [[ ! -f "$RUNNER_TEMP/source-artifacts/$dist_dir.tar.bz2" ]]; then
+            cp "$dist_dir.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
+          fi
+          if [[ ! -f "$RUNNER_TEMP/source-artifacts/$dist_dir-vendor.tar.gz" ]]; then
+            vendor_workdir="$(mktemp -d)"
+            tar -C "$vendor_workdir" -xf "$RUNNER_TEMP/source-artifacts/$dist_dir.tar.bz2"
+            (cd "$vendor_workdir/$dist_dir" && "$CARGO" vendor --locked vendor)
+            tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/source-artifacts/$dist_dir-vendor.tar.gz" "$dist_dir"
+          fi
           rm -f ddccontrol-*.tar.bz2 ddccontrol-*.tar.gz
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload missing source distributions
+        if: steps.sources.outputs.complete != 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const syncAssets = require('./automation/scripts/release/release-assets.cjs');
+            const base = `ddccontrol-${process.env.RELEASE_VERSION}`;
+            await syncAssets({
+              github, context, tag: process.env.RELEASE_TAG,
+              directory: `${process.env.RUNNER_TEMP}/source-artifacts`,
+              names: [`${base}.tar.bz2`, `${base}-vendor.tar.gz`],
+            });
+      - uses: actions/upload-artifact@v7
         with:
           name: release-sources
           path: ${{ runner.temp }}/source-artifacts/
           if-no-files-found: error
-
-      - name: Upload source distributions
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.resolve.outputs.tag }}
-          files: ${{ runner.temp }}/source-artifacts/*
-          fail_on_unmatched_files: true
 
   debian:
     needs: [resolve, source]
@@ -160,7 +194,7 @@ jobs:
           path: packaging
           token: ${{ secrets.PACKAGING_READ_TOKEN || github.token }}
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-sources
           path: ${{ runner.temp }}/sources
@@ -180,7 +214,7 @@ jobs:
             bash /automation/scripts/release/build-rpm.sh \
               "/sources/ddccontrol-$RELEASE_VERSION-vendor.tar.gz" \
               /automation/packaging "$RELEASE_VERSION" /output
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-fedora-${{ matrix.target.arch }}
           path: ${{ runner.temp }}/packages/
@@ -208,7 +242,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends apt-utils createrepo-c rpm gnupg
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: needs.resolve.outputs.has_bundle != 'true'
         with:
           pattern: packages-*
@@ -238,11 +272,18 @@ jobs:
             debian rpm srpm provenance
       - name: Preserve the signed package bundle on the release
         if: needs.resolve.outputs.has_bundle != 'true'
-        uses: softprops/action-gh-release@v2
+        uses: actions/github-script@v8
+        env:
+          RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
         with:
-          tag_name: ${{ needs.resolve.outputs.tag }}
-          files: ${{ runner.temp }}/ddccontrol-${{ needs.resolve.outputs.version }}-packages.tar.gz
-          fail_on_unmatched_files: true
+          script: |
+            const syncAssets = require('./scripts/release/release-assets.cjs');
+            await syncAssets({
+              github, context, tag: process.env.RELEASE_TAG,
+              directory: process.env.RUNNER_TEMP,
+              names: [`ddccontrol-${process.env.RELEASE_VERSION}-packages.tar.gz`],
+            });
       - name: Download package bundles from all stable releases
         uses: actions/github-script@v8
         env:
@@ -253,7 +294,7 @@ jobs:
             await download({github, context});
       - name: Configure Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Generate and sign repository indexes
         env:
           PACKAGE_SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY }}
@@ -264,9 +305,10 @@ jobs:
           set -euo pipefail
           python3 scripts/release/extract-bundles.py "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP"/bundles/*.tar.gz
           scripts/release/create-repositories.sh "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP/site" "$PAGES_URL"
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ runner.temp }}/site
+          include-hidden-files: true
       - name: Deploy package repositories
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
