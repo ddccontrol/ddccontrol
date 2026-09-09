@@ -27,4 +27,16 @@ int ddccontrol_edid_parse(const unsigned char *buf, size_t len,
 struct profile *ddccontrol_profile_load(const char *filename);
 int ddccontrol_profile_save(const struct profile *profile);
 
+/* Cache paths and versions must be NUL-terminated. Both functions return 0
+ * on success and -1 on failure, including a caught Rust panic.
+ * Load writes output only on success (NULL for an empty cache); release the
+ * malloc-allocated nodes and strings with ddcci_free_list.
+ * Save borrows a valid acyclic list (NULL for empty) whose filename/name strings
+ * are non-NULL, NUL-terminated UTF-8. Inputs remain caller-owned throughout.
+ * Invalid list contents are rejected before opening the output file. */
+int ddccontrol_monitorlist_load(const char *filename, const char *version,
+	struct monitorlist **output);
+int ddccontrol_monitorlist_save(const char *filename, const char *version,
+	const struct monitorlist *list);
+
 #endif /* DDCCONTROL_RUST_FFI_H */

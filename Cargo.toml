@@ -3,12 +3,13 @@ members = [
     "crates/ddccontrol-caps",
     "crates/ddccontrol-db",
     "crates/ddccontrol-edid",
+    "crates/ddccontrol-monitorlist",
     "crates/ddccontrol-profile",
 ]
 resolver = "2"
 
 [workspace.package]
 edition = "2021"
-rust-version = "1.70"
+rust-version = "1.77"
 license = "GPL-2.0-or-later"
 repository = "https://github.com/ddccontrol/ddccontrol"

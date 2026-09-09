@@ -16,6 +16,14 @@ The static library also provides the C ABI bridge for local user-profile XML.
 Parsing and serialization live in the separate `ddccontrol-profile` crate;
 monitor reads, writes, retries, and profile-list management remain in C.
 
+Cached monitor-list XML uses the separate `ddccontrol-monitorlist` parser and
+serializer. Its bridge in `src/monitor_list.rs` keeps partial C allocations in
+a Rust cleanup guard and catches unwinding panics at both entry points. Load
+returns 0 on success and writes the output pointer only then (NULL for an empty
+cache); on failure it returns -1 and leaves the output unchanged. Save borrows
+an acyclic C list and validates it before opening the file, returning 0 or -1.
+Paths preserve Unix filename bytes. HOME and config-directory policy remain in C.
+
 Rust allocates returned C data with the process C allocator through `malloc`.
 The C side must release that data with the matching ddccontrol free functions:
 
@@ -25,6 +33,8 @@ The C side must release that data with the matching ddccontrol free functions:
   not allocate or transfer ownership across the ABI.
 - Monitor databases returned by `ddcci_create_db` must be released with
   `ddcci_free_db`.
+- Cached monitor lists returned by `ddccontrol_monitorlist_load` use C `malloc`
+  for every node and string and must be released with `ddcci_free_list`.
 
 All four monitor-database entry points catch unwinding Rust panics. Initialization
 returns `0` and creation returns null on failure; the void cleanup functions

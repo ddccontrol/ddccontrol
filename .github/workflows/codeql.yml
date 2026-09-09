@@ -31,6 +31,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Select Rust toolchain
+        run: ./.github/ci/install-rust.sh
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
@@ -43,7 +46,7 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           ./autogen.sh
           ./configure
-          make -j$(nproc)
+          make -j"$(nproc)"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
