@@ -1,0 +1,268 @@
+name: Release packages
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+    secrets:
+      PACKAGE_SIGNING_KEY:
+        required: true
+      PACKAGE_SIGNING_PASSPHRASE:
+        required: false
+      PACKAGING_READ_TOKEN:
+        required: false
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published stable release tag to build, or republish if already built
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# Serialize complete publications, including manual retries and Release Please.
+# Every deployment includes all previously published package bundles.
+concurrency:
+  group: release-package-repositories
+  cancel-in-progress: false
+
+env:
+  DEBIAN_PACKAGING_REF: 660ec1e2f63cf63763f0fc8591d9507c77fc990c
+  FEDORA_PACKAGING_REF: c0426155bdb6fc34c3e3a99b50932b425fff5b8d
+
+jobs:
+  resolve:
+    if: github.event_name != 'release' || !github.event.release.prerelease
+    runs-on: ubuntu-24.04
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      debian_ref: ${{ env.DEBIAN_PACKAGING_REF }}
+      version: ${{ steps.release.outputs.version }}
+      commit: ${{ steps.release.outputs.commit }}
+      has_bundle: ${{ steps.release.outputs.has_bundle }}
+    steps:
+      - name: Resolve a published stable release
+        id: release
+        uses: actions/github-script@v8
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+        with:
+          script: |
+            const tag = process.env.RELEASE_TAG;
+            if (!/^v?\d+\.\d+\.\d+$/.test(tag)) {
+              throw new Error('Expected a stable release tag such as 3.3.0');
+            }
+            const {data: release} = await github.rest.repos.getReleaseByTag({...context.repo, tag});
+            if (release.draft || release.prerelease) throw new Error('Release must be published and stable');
+            const {data: commit} = await github.rest.repos.getCommit({...context.repo, ref: tag});
+            const assets = await github.paginate(github.rest.repos.listReleaseAssets, {
+              ...context.repo, release_id: release.id, per_page: 100,
+            });
+            const version = tag.replace(/^v/, '');
+            const [major, minor] = version.split('.').map(Number);
+            if (major < 3 || (major === 3 && minor < 3)) {
+              throw new Error('These package recipes require DDCcontrol 3.3.0 or later');
+            }
+            core.setOutput('tag', tag);
+            core.setOutput('version', version);
+            core.setOutput('commit', commit.sha);
+            core.setOutput('has_bundle', assets.some(a => a.name === `ddccontrol-${version}-packages.tar.gz`));
+
+  source:
+    needs: resolve
+    if: needs.resolve.outputs.has_bundle != 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            astyle autoconf build-essential cargo clang dh-autoreconf intltool \
+            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc xsltproc \
+            tidy docbook-xml docbook-xsl xml-core
+
+      - name: Build and check source distributions
+        env:
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+        run: |
+          set -euo pipefail
+          ./autogen.sh
+          ./configure
+          make -j"$(nproc)"
+          make distcheck
+          make dist-bzip2
+          mkdir -p "$RUNNER_TEMP/source-artifacts"
+          dist_dir="ddccontrol-$RELEASE_VERSION"
+          cp "$dist_dir.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
+          vendor_workdir="$(mktemp -d)"
+          tar -C "$vendor_workdir" -xf "$dist_dir.tar.bz2"
+          (cd "$vendor_workdir/$dist_dir" && cargo vendor --locked vendor)
+          tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/source-artifacts/$dist_dir-vendor.tar.gz" "$dist_dir"
+          rm -f ddccontrol-*.tar.bz2 ddccontrol-*.tar.gz
+          ./scripts/format_code.sh
+          find . -name '*.orig' -delete
+          ./scripts/check_git_clean_after_build.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-sources
+          path: ${{ runner.temp }}/source-artifacts/
+          if-no-files-found: error
+
+      - name: Upload source distributions
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.resolve.outputs.tag }}
+          files: ${{ runner.temp }}/source-artifacts/*
+          fail_on_unmatched_files: true
+
+  debian:
+    needs: [resolve, source]
+    uses: ./.github/workflows/build-debian-packages.yml
+    with:
+      version: ${{ needs.resolve.outputs.version }}
+      packaging-ref: ${{ needs.resolve.outputs.debian_ref }}
+
+  rpm:
+    needs: [resolve, source]
+    runs-on: ${{ matrix.target.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - {arch: x86_64, platform: linux/amd64, runner: ubuntu-24.04}
+          - {arch: aarch64, platform: linux/arm64, runner: ubuntu-24.04-arm}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          repository: ddccontrol/fedora-ddccontrol
+          ref: ${{ env.FEDORA_PACKAGING_REF }}
+          path: packaging
+          token: ${{ secrets.PACKAGING_READ_TOKEN || github.token }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-sources
+          path: ${{ runner.temp }}/sources
+      - name: Build RPM packages
+        env:
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+          TARGET_PLATFORM: ${{ matrix.target.platform }}
+        run: |
+          set -euo pipefail
+          echo "Build host: $(uname -m); Fedora target: $TARGET_PLATFORM"
+          mkdir -p "$RUNNER_TEMP/packages"
+          docker run --rm --platform "$TARGET_PLATFORM" \
+            -v "$GITHUB_WORKSPACE:/automation:ro" \
+            -v "$RUNNER_TEMP/sources:/sources:ro" \
+            -v "$RUNNER_TEMP/packages:/output" \
+            fedora:44 \
+            bash /automation/scripts/release/build-rpm.sh \
+              "/sources/ddccontrol-$RELEASE_VERSION-vendor.tar.gz" \
+              /automation/packaging "$RELEASE_VERSION" /output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-fedora-${{ matrix.target.arch }}
+          path: ${{ runner.temp }}/packages/
+          if-no-files-found: error
+
+  publish:
+    needs: [resolve, source, debian, rpm]
+    if: >-
+      !cancelled() && needs.resolve.result == 'success' &&
+      (needs.resolve.outputs.has_bundle == 'true' ||
+       (needs.source.result == 'success' && needs.debian.result == 'success' && needs.rpm.result == 'success'))
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends apt-utils createrepo-c rpm gnupg
+      - uses: actions/download-artifact@v4
+        if: needs.resolve.outputs.has_bundle != 'true'
+        with:
+          pattern: packages-*
+          path: ${{ runner.temp }}/new-packages
+          merge-multiple: true
+      - name: Sign packages and save provenance
+        if: needs.resolve.outputs.has_bundle != 'true'
+        env:
+          PACKAGE_SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY }}
+          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.PACKAGE_SIGNING_PASSPHRASE }}
+          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.PACKAGE_SIGNING_FINGERPRINT }}
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.resolve.outputs.commit }}
+        run: |
+          set -euo pipefail
+          source scripts/release/sign-packages.sh
+          while IFS= read -r -d '' package; do
+            sign_rpm "$package"
+          done < <(find "$RUNNER_TEMP/new-packages" -name '*.rpm' -print0)
+          mkdir -p "$RUNNER_TEMP/new-packages/provenance"
+          jq -n --arg upstream "$RELEASE_COMMIT" \
+            --arg debian "$DEBIAN_PACKAGING_REF" --arg fedora "$FEDORA_PACKAGING_REF" \
+            --arg signer "$PACKAGE_SIGNING_FINGERPRINT" \
+            '{upstream: $upstream, debian: $debian, fedora: $fedora, signer: $signer}' \
+            > "$RUNNER_TEMP/new-packages/provenance/$RELEASE_VERSION.json"
+          tar -C "$RUNNER_TEMP/new-packages" -czf "$RUNNER_TEMP/ddccontrol-$RELEASE_VERSION-packages.tar.gz" \
+            debian rpm srpm provenance
+      - name: Preserve the signed package bundle on the release
+        if: needs.resolve.outputs.has_bundle != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.resolve.outputs.tag }}
+          files: ${{ runner.temp }}/ddccontrol-${{ needs.resolve.outputs.version }}-packages.tar.gz
+          fail_on_unmatched_files: true
+      - name: Download package bundles from all stable releases
+        uses: actions/github-script@v8
+        env:
+          BUNDLE_DIRECTORY: ${{ runner.temp }}/bundles
+        with:
+          script: |
+            const download = require('./scripts/release/download-bundles.cjs');
+            await download({github, context});
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Generate and sign repository indexes
+        env:
+          PACKAGE_SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY }}
+          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.PACKAGE_SIGNING_PASSPHRASE }}
+          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.PACKAGE_SIGNING_FINGERPRINT }}
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/extract-bundles.py "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP"/bundles/*.tar.gz
+          scripts/release/create-repositories.sh "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP/site" "$PAGES_URL"
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/site
+      - name: Deploy package repositories
+        id: deployment
+        uses: actions/deploy-pages@v4

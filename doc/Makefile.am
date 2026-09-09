@@ -3,7 +3,7 @@ TIDY_FLAGS = -q -raw -im --output-xhtml yes --doctype transitional --drop-empty-
 
 .NOTPARALLEL:
 
-EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl
+EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl releasing-packages.md
 
 if BUILD_DOC
 html_DATA = html/*

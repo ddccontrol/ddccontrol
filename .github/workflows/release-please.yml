@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: release-please-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   release-please:
@@ -61,68 +61,14 @@ jobs:
   release-artifacts:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
-    runs-on: ubuntu-24.04
+    uses: ./.github/workflows/release-packages.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
+    secrets: inherit
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.release-please.outputs.tag_name }}
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            astyle \
-            autoconf \
-            build-essential \
-            cargo \
-            clang \
-            dh-autoreconf \
-            intltool \
-            libgtk-3-dev \
-            libpci-dev \
-            libxml2-dev \
-            pkg-config \
-            rustc \
-            xsltproc \
-            tidy \
-            docbook-xml \
-            docbook-xsl \
-            xml-core
-
-      - name: Build source distributions
-        run: |
-          set -euo pipefail
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          ./autogen.sh
-          ./configure
-          make -j"$(nproc)"
-          make distcheck
-          make dist-bzip2
-          mkdir -p "$RUNNER_TEMP/release-artifacts"
-          dist_archive="$(printf '%s\n' ddccontrol-*.tar.bz2 | head -n 1)"
-          dist_dir="${dist_archive%.tar.bz2}"
-          cp "$dist_archive" "$RUNNER_TEMP/release-artifacts/"
-          vendor_workdir="$(mktemp -d)"
-          tar -C "$vendor_workdir" -xf "$dist_archive"
-          (
-            cd "$vendor_workdir/$dist_dir"
-            cargo vendor --locked vendor
-          )
-          tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/release-artifacts/${dist_dir}-vendor.tar.gz" "$dist_dir"
-          rm -f ddccontrol-*.tar.bz2 ddccontrol-*.tar.gz
-          ./scripts/format_code.sh
-          find . -name "*.orig" -exec rm -v {} \;
-          ./scripts/check_git_clean_after_build.sh
-
-      - name: Upload source distributions
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.release-please.outputs.tag_name }}
-          files: |
-            ${{ runner.temp }}/release-artifacts/ddccontrol-*.tar.bz2
-            ${{ runner.temp }}/release-artifacts/ddccontrol-*-vendor.tar.gz
+      pages: write
+      id-token: write
 
   notify-website:
     needs: [release-please, release-artifacts]

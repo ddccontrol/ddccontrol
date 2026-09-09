@@ -1,0 +1,77 @@
+name: Package repository checks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/*packages*.yml'
+      - '.github/workflows/release-please.yml'
+      - '.github/workflows/package-repositories.yml'
+      - 'scripts/release/**'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/*packages*.yml'
+      - '.github/workflows/release-please.yml'
+      - '.github/workflows/package-repositories.yml'
+      - 'scripts/release/**'
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.source.outputs.version }}
+      debian_ref: ${{ steps.source.outputs.debian_ref }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install source distribution tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            astyle autoconf dh-autoreconf intltool libgtk-3-dev libxml2-dev cargo python3-yaml
+      - name: Prepare source and packaging revision for PR builds
+        id: source
+        run: |
+          set -euo pipefail
+          ./autogen.sh
+          ./configure
+          make dist-bzip2
+          version=$(sed -n 's/^AC_INIT(\[DDC\/CI control tool\],\[\([^]]*\)\].*/\1/p' configure.ac)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          debian_ref=$(python3 -c 'import yaml; print(yaml.safe_load(open(".github/workflows/release-packages.yml"))["env"]["DEBIAN_PACKAGING_REF"])')
+          echo "debian_ref=$debian_ref" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/source-artifacts"
+          mv "ddccontrol-$version.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
+          ./scripts/format_code.sh
+          find . -name '*.orig' -delete
+          ./scripts/check_git_clean_after_build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-sources
+          path: ${{ runner.temp }}/source-artifacts/
+          if-no-files-found: error
+
+  debian:
+    needs: source
+    uses: ./.github/workflows/build-debian-packages.yml
+    with:
+      version: ${{ needs.source.outputs.version }}
+      packaging-ref: ${{ needs.source.outputs.debian_ref }}
+
+  repositories:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            apt-utils dpkg-dev rpm createrepo-c gnupg dnf shellcheck
+      - name: Check scripts and bundle extraction
+        run: |
+          shellcheck scripts/release/*.sh
+          PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-bundles.py
+      - name: Test signed repositories with APT and DNF
+        run: sudo scripts/release/test-repositories.sh
