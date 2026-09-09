@@ -1,0 +1,432 @@
+Rust porting status and plan for ddccontrol
+===========================================
+
+Status date: 2026-09-09
+Baseline: ddccontrol 3.3.0 plus changes through 3a11658 (#321 and #322)
+This update also describes the Rust quality/MSRV changes accompanying it.
+The hardening and quality changes are after the 3.3.0 release.
+
+Purpose and scope
+-----------------
+
+This document records what has actually been ported, how the Rust and C parts
+interact, what the current tests prove, and the recommended order for further
+work. Status is stated by subsystem rather than as a percentage: line-count
+percentages would be misleading because parser code, generated D-Bus code,
+hardware I/O, and GTK code have very different risk and complexity.
+
+Executive summary
+-----------------
+
+ddccontrol is now a working hybrid C/Rust program, not merely a C program with
+an experimental parser. The current branch has four Rust crates:
+
+- `ddccontrol-caps` parses the subset of DDC/CI capability strings used by
+  ddccontrol.
+- `ddccontrol-db` parses the XML monitor database and provides the static C ABI
+  bridge used by `libddccontrol`.
+- `ddccontrol-edid` parses the EDID base-block fields used by the existing C
+  API.
+- `ddccontrol-profile` parses and serializes local user-profile XML.
+
+All four parser domains are integrated and included in 3.3.0. The user-profile
+port was merged in #318 (baea217), and #319 moved Rust tests into test
+directories. After that release, #321 hardened C CAPS collection, added panic
+barriers to the monitor-database exports, and protected the daemon's D-Bus
+reply when monitor opening succeeds without CAPS.
+
+The incremental strategy remains the correct one. The parser/model layers are
+good Rust candidates and have already benefited from bounds checking, explicit
+types, and testable behavior. A wholesale rewrite of the hardware and UI stack
+would still carry unnecessary compatibility risk.
+
+Two conclusions from older porting plans are now obsolete:
+
+- EDID parsing is no longer a future task; it was ported in commit `adcfe19`.
+- ddccontrol already uses the kernel userspace I2C interface (`/dev/i2c-*`) as
+  its only hardware backend. AMD ADL and the legacy direct-PCI backends were
+  removed for 3.0.0. A future Rust I2C implementation would replace an
+  existing userspace-I2C C backend, not change the backend policy.
+
+Current program architecture
+----------------------------
+
+The runtime structure is:
+
+    ddccontrol CLI (C) -----------+
+                                  |
+    gddccontrol GTK3 GUI (C) -----+--> D-Bus client or direct C library
+                                  |                |
+    D-Bus service (C/GDBus) ------+                v
+                                            libddccontrol (C)
+                                              |           |
+                                      /dev/i2c-* I/O      Rust static library
+                                           (C)          parsers + C ABI bridge
+
+The main components are:
+
+- `src/lib/ddcci.c`: `/dev/i2c-*` access, DDC/CI frame encoding and decoding,
+  timing, control reads/writes, capability retrieval, EDID retrieval, monitor
+  open/close, fallbacks, and probing.
+- `src/lib/conf.c`: cached monitor-list XML and profile lifecycle. Profile
+  XML load/save has moved to Rust while monitor
+  reads, writes, retry logic, directory enumeration, and linked-list ownership
+  remain in C.
+- `src/daemon`: privileged system D-Bus service and client adapter. The public
+  D-Bus contract is defined in `ddccontrol.DDCControl.xml`.
+- `src/ddccontrol`: CLI parsing, selector logic, output, direct/D-Bus choice,
+  and control operations.
+- `src/gddccontrol`: GTK3 monitor UI, control widgets, user-profile UI, EDID
+  display, and fullscreen test patterns.
+- `crates`: safe, hardware-independent parsers plus the unsafe C ABI bridge.
+
+Subsystem status
+----------------
+
+1. DDC/CI capability parsing: ported for current consumers
+
+   `ddccontrol-caps` handles monitor type, VCP feature codes, optional 16-bit
+   value lists, compact and spaced VCP syntax, nested unknown sections, and
+   database-style add/remove patches. It deliberately does not build a full
+   MCCS model for `prot`, `cmds`, `model`, `mccs_ver`, EDID/VDIF payloads, or
+   localized names. This is sufficient for the current database filtering and
+   fallback decisions, but it is not a general ACCESS.bus grammar.
+
+   The hardware-side collection and preprocessing of the raw capability
+   string still lives in C. In particular, `ddcci_caps()` assembles chunks and
+   masks `bin(...)` payloads before invoking Rust. Allocations, the 16-bit
+   offset limit, and binary lengths are now checked against received bytes.
+
+2. Monitor database: ported and integrated
+
+   `ddccontrol-db` loads database version 3 `options.xml` and monitor profiles,
+   resolves includes with a recursion limit, applies capability add/remove
+   patches, preserves fault-tolerant behavior, translates labels through
+   gettext, supports declared non-UTF-8 XML encodings, filters controls through
+   CAPS, and preserves 16-bit values through an ABI-compatible private C
+   layout.
+
+   A process-global `Mutex<Option<DbContext>>` preserves the legacy init/create/
+   release API. The parsed Rust model is converted to C linked lists because
+   the CLI, daemon, and GUI still consume the old public structures.
+
+3. EDID parsing: ported and integrated
+
+   `ddccontrol-edid` validates the EDID header and extracts the PNP ID, product
+   code, digital/analog flag, serial number, manufacture date, version,
+   physical size, monitor name, and ASCII serial. Product and serial fields use
+   explicit little-endian decoding, so the implementation does not depend on
+   host endianness.
+
+   Compatibility behavior is intentional: the parser accepts the historical
+   23-byte minimum, stores at most the 128-byte base block, parses descriptors
+   only from a complete base block, does not enforce the checksum, and does not
+   decode extension blocks. `crates/ddccontrol-edid/PIAF.md` documents when a
+   richer optional parser such as PIAF would become worthwhile.
+
+4. Local user profiles: ported, integrated, and released in 3.3.0
+
+   The `ddccontrol-profile` crate parses and serializes profile format 1,
+   supports decimal/hexadecimal/octal values compatible with the old parser,
+   decodes declared legacy XML encodings, escapes XML attributes, retains
+   16-bit VCP values, and rejects more than the 256 controls representable by
+   `struct profile`.
+
+   `ddccontrol-db` supplies `ddccontrol_profile_load()` and
+   `ddccontrol_profile_save()` as panic-protected C ABI functions. `conf.c`
+   delegates XML load/save to them while retaining monitor I/O, application,
+   deletion, directory enumeration, list management, and public API return
+   conventions. Rust allocates the C-visible profile and strings with `malloc`;
+   `ddcci_free_profile()` releases them with `free`.
+
+   Source-distribution entries, C integration and ABI tests, and ownership
+   documentation are included with the implementation.
+
+5. Hardware/protocol core: still C
+
+   `/dev/i2c-*` ioctl calls, Linux/FreeBSD return-value differences, DDC/CI
+   checksums, response validation, mandatory delays, retries, capability chunk
+   collection, control operations, EDID reads, monitor lifecycle, and probing
+   remain in `ddcci.c`. The production CAPS exchange now has hardware-free
+   tests using simulated I2C replies and allocation failures. Other protocol
+   paths still have limited integration coverage.
+
+6. D-Bus, CLI, and GUI: still C
+
+   The daemon and client use GDBus C bindings. The CLI is about 1,000 lines of
+   C and supports both daemon and direct-library operation. The GTK3 GUI is the
+   largest remaining application component. None should be treated as a
+   parser-only mechanical port; each would be an API and product migration.
+   Four daemon regression cases exercise the real OpenMonitor handler and
+   generated D-Bus serializer, including successful and cached opens after
+   failed CAPS retrieval.
+
+C ABI and memory-safety assessment
+----------------------------------
+
+What is already strong:
+
+- Every shared Rust mirror uses `#[repr(C)]`.
+- The bridge uses `libc` C ABI types and raw pointers, not Rust-native strings,
+  vectors, booleans, or enums across the boundary.
+- C compile-time assertions and Rust layout tests cover CAPS, EDID, monitor
+  database, the private 16-bit value representation, and the profile
+  layout.
+- Rust-created C trees and strings use the process C allocator. The same C
+  ownership/free functions release them.
+- All Rust C ABI entry points contain unwinding panics and preserve the C
+  failure conventions. Null arguments are checked where applicable. The
+  monitor-database mutex recovers poison safely because fully built contexts
+  are published atomically and never mutated in place.
+- No architecture-specific Rust code is present. EDID byte order is explicit,
+  and the database/CAPS/profile numeric representations are portable across
+  `amd64`, `arm64`, `armhf`, `ppc64el`, `riscv64`, and big-endian `s390x`.
+
+Remaining boundary risks:
+
+- The ABI definitions are duplicated manually between C headers and Rust.
+  Layout tests reduce risk but do not make incompatible edits impossible.
+- `ddccontrol-db` has two responsibilities: monitor-database implementation and
+  the aggregate `staticlib`/C ABI bridge for all Rust domains. A small dedicated
+  bridge crate would make dependencies, unsafe code, and ownership auditing
+  clearer.
+- The database context is global and error reporting is mostly integer/null
+  returns plus `stderr`. This matches the legacy API but limits concurrency and
+  structured diagnostics.
+- C callers must still provide internally valid pointer graphs. For example,
+  CAPS conversion necessarily trusts non-null `vcp_entry` pointers and their
+  declared value lengths.
+
+CAPS hardening and remaining protocol work
+-----------------------------------------
+
+The previously identified CAPS safety gaps were addressed in #321:
+
+- Raw CAPS assembly checks `malloc`/`realloc`, retains the old pointer until
+  reallocation succeeds, and frees temporary storage on failure.
+- `bin(...)` normalization rejects invalid, negative, overflowing, and
+  out-of-range lengths before writing. Received byte counts bound binary
+  payloads, including those containing embedded NULs.
+- Only a validated terminal reply completes collection. Offsets are bounded
+  to the protocol's 16-bit range.
+- A successful legacy presence fallback can leave CAPS absent. The daemon
+  converts that absence to an empty D-Bus string without changing ownership.
+
+Frame parsing, retries, and monitor lifecycle are still coupled to ioctl
+calls. The simulated CAPS tests provide a starting point for separating them.
+
+The best next protocol step is therefore not an immediate ioctl rewrite. First
+extract pure functions for frame construction/validation, VCP reply decoding,
+capability chunk assembly, and binary-payload normalization. Test and fuzz
+those functions with recorded data, then replace the transport behind the
+existing C API.
+
+Build and packaging status
+--------------------------
+
+- Rust and Cargo 1.70 or newer are required. Cargo is mandatory at configure
+  time; all four crates inherit `rust-version = "1.70"` from the workspace.
+- Autotools builds `ddccontrol-db` as a release `staticlib` and links it into
+  `libddccontrol`.
+- `DDCONTROL_DATADIR` embeds the installed monitor-database path at Rust build
+  time; the C API can still override it during initialization.
+- The Cargo `gettext` feature follows the autotools NLS setting.
+- Release automation runs `make distcheck`, produces the normal source archive,
+  and also produces a Cargo-vendored archive.
+- #322 adds upstream Debian/Fedora package builds and signed release
+  repositories. Debian builds use trixie, an external packaging checkout, and
+  Debian-packaged Rust dependencies resolved offline. The package builder
+  regenerates Cargo.lock only in its temporary build tree. See
+  `doc/releasing-packages.md` for the packaging and publication contract.
+- The normal CI matrix builds with GCC and Clang on `amd64`, `arm64`, and
+  `armhf`. A separate push/manual workflow builds under QEMU for `ppc64el`,
+  `riscv64`, and `s390x`. Both now use root-level `make check`, including the
+  library and daemon suites.
+- Dedicated Rust CI jobs test 1.70.0, 1.85.0, and stable, with and without gettext,
+  and build the release static library with all features. The stable job runs
+  `cargo fmt --all -- --check` and
+  `cargo clippy --workspace --all-targets --all-features --locked -- -D warnings`.
+  Lint fixes retain behavior and document the CAPS pointer/ownership contract;
+  no blanket lint suppressions are used.
+
+Minimum Rust version and Debian policy:
+
+- Rust/Cargo 1.70 is the supported source-build minimum. The existing
+  `Option::is_some_and` use requires Rust 1.70; locked dependencies declare
+  lower requirements. The minimum also preserves compatibility with Rust 1.75
+  in the Ubuntu 24.04 CI/release environment.
+- Debian 13 (trixie)'s Rust/Cargo 1.85 meets the minimum and is tested as a
+  separate CI toolchain. Debian provides it for all release architectures,
+  including `ppc64el`, `riscv64`, and big-endian `s390x`.
+- Debian 12 (bookworm)'s standard Rust 1.63 is too old for existing code and
+  dependencies: for example, `Option::is_some_and` needs 1.70 and the locked
+  `libc` version declares 1.65. Building on bookworm requires a newer toolchain.
+- Cargo.lock stays in format 3. Dependency updates must pass the 1.70.0 CI job;
+  raising the MSRV or changing lockfile policy requires an explicit review.
+- No Rust dependencies, architecture restrictions, or C ABI layouts change in
+  the quality/MSRV update. Debian dependency/vendoring policy still applies.
+
+Debian references (checked 2026-09-09):
+https://packages.debian.org/trixie/rustc
+https://packages.debian.org/trixie/cargo
+https://packages.debian.org/bookworm/rustc
+
+The package-repository checks introduced in #322 build Debian binary packages
+on `amd64`, `arm64`, `armhf`, `ppc64el`, `riscv64`, and `s390x` using the same
+reusable workflow as releases. `dh_makeshlibs`, `dh_shlibdeps`, and resulting
+CLI/GUI library dependencies are checked. This is separate from the ordinary
+source-build matrix. Keep package architecture as `any`; do not infer support
+for other Debian releases from a passing trixie build.
+
+Build-system gaps:
+
+- Dependency policy and security auditing are not CI gates. CodeQL currently
+  analyzes C/C++ only.
+- The main architecture CI runs on pull requests, but the `ppc64el`, `riscv64`,
+  and `s390x` workflow runs only on pushes to `master` or manually.
+- Full real-database loading is a release-PR gate, not a normal PR gate. Normal
+  configured smoke tests load 25 profiles; unconfigured tests use only the
+  small checked-in fixture.
+
+Test and verification status
+----------------------------
+
+The workspace contains 55 Rust tests:
+
+- 17 CAPS parser tests;
+- 24 bridge/database tests, including ABI, panic, poison, and compatibility tests;
+- 6 EDID parser tests; and
+- 8 user-profile parser/serializer tests.
+
+There are seven C test executables: six in the library and one in the daemon:
+
+- CAPS and small DDC/I2C helper behavior;
+- full CAPS exchanges with simulated I2C and allocation failures;
+- EDID C API compatibility;
+- URL and monitor-database behavior;
+- user-profile C API load/save and size limits;
+- cross-language ABI layout compilation; and
+- daemon OpenMonitor serialization (four cases, including cached opens).
+
+Verification:
+
+- The quality update is checked with Rust 1.70.0, 1.85.0, and stable, including
+  tests with and without gettext and release compilation. Formatting and
+  strict Clippy run on stable.
+- The quality update also passed `make check` and a fresh `make distcheck`
+  with Rust 1.70.0, and loaded all 462 local database profiles on stable.
+- #321 passed all 55 Rust tests, all seven C test executables, and full loading
+  of the 462 profiles in the local database checkout.
+- #321 passed ASan/UBSan with leak detection for CAPS exchanges and daemon
+  serialization. The daemon regression reproduced a fatal GLib critical before
+  the fix and passed afterward.
+- #321 passed `make distcheck`, the build-cleanliness check, all six normal
+  architecture/compiler CI builds, and CodeQL.
+
+Outstanding verification observations:
+
+- There is no automated hardware test for real EDID reads, capability chunking,
+  timing/retry behavior, VCP reads/writes, probing, or daemon concurrency.
+- EDID tests are synthetic and do not yet use a broad corpus from monitors,
+  docks, KVMs, and malformed devices.
+- Full database smoke testing proves that profiles load; it does not provide a
+  semantic golden snapshot for every profile.
+- Parser fuzzing is absent even though CAPS, EDID, monitor XML, and profile XML
+  are externally controlled inputs.
+
+Recommended migration order
+---------------------------
+
+Completed milestones
+
+- CAPS, database, EDID, and user-profile parsers are integrated and released.
+- CAPS allocation/binary-length checks and database panic barriers are merged.
+- This update establishes the MSRV and Rust formatting/Clippy CI checks.
+
+Phase 1: simplify and strengthen the remaining C ABI boundary
+
+1. Separate the C ABI/staticlib adapter from the domain-level database crate,
+   or at minimum isolate all unsafe conversion and allocation code in one
+   clearly reviewed module.
+2. Keep Rust/C ownership and pointer preconditions synchronized, and preserve
+   panic containment and poisoned-context recovery during further ports.
+3. Extend allocation-failure and valid-buffer boundary tests where practical;
+   panic barriers do not make arbitrary invalid C pointers safe.
+
+Phase 2: strengthen compatibility evidence
+
+1. Run the complete monitor database on normal parser/ABI changes, or at least
+   on a scheduled gate in addition to release PRs.
+2. Expand the existing golden database fixture and compatibility tests with
+   real-profile snapshots and translated labels, preserving coverage for
+   includes, CAPS patches, fault tolerance, encodings, and 16-bit values.
+3. Create real-world CAPS and EDID corpora and differential/golden tests.
+4. Fuzz all four Rust input parsers and the C ABI adapters. Ensure failures do
+   not leak, partially replace caller state, or panic across FFI.
+
+Phase 3: finish hardware-independent configuration work
+
+Port cached monitor-list XML from `conf.c` if doing so removes meaningful
+libxml2/manual-allocation complexity. Keep directory enumeration, HOME/config
+policy, and public C ownership separate from the data parser. Small helpers
+such as URL encoding are low risk but also low value; do not port them solely
+to increase a Rust percentage.
+
+Phase 4: isolate and port the DDC/CI protocol codec
+
+1. Define project-owned Rust types for requests, replies, capability chunks,
+   VCP values, and protocol errors.
+2. Port frame encoding, XOR validation, length validation, VCP reply parsing,
+   and capability normalization as pure functions.
+3. Replay captured successful, malformed, short, corrupt, and vendor-quirk
+   frames without hardware.
+4. Preserve explicit wire byte order and exercise the code on `s390x`.
+
+Phase 5: replace I2C transport and probing only after codec validation
+
+Keep `/dev/i2c-*` as the primary and only Linux backend. A Rust transport must
+preserve ioctl semantics, FreeBSD behavior if it remains supported, mandatory
+delays, retries, probing order, fallback profile selection, file-descriptor
+ownership, and clear permission errors. Introduce it behind the current C API
+first so the existing daemon, CLI, and GUI provide compatibility coverage.
+
+Phase 6: decide the application architecture before porting frontends
+
+- A Rust daemon is attractive if the project wants centralized device
+  ownership, serialization/rate limiting, caching, and structured errors.
+  Preserve the installed D-Bus XML contract while migrating implementations.
+- A Rust CLI is reasonable after a stable Rust service/core API exists. Keep
+  direct mode only if it remains a supported product requirement.
+- The GTK3 GUI should be last. Moving to Rust/GTK4 is a UI rewrite and should
+  be justified by an explicit UX/maintenance plan, not by the core port alone.
+
+Release gate for each porting phase
+-----------------------------------
+
+A parser or bridge port should not be considered complete until all applicable
+items pass:
+
+- `cargo test --workspace --all-features --locked` on the MSRV and stable;
+- C ABI and C consumer tests through `make check`;
+- full current `ddccontrol-db` profile loading;
+- Rust formatting and the agreed Clippy policy;
+- normal source archive and vendored archive builds;
+- `make distcheck` from the generated source tree;
+- `amd64`, `arm64`, `armhf`, `ppc64el`, `riscv64`, and `s390x` CI;
+- allocator/ownership documentation and no panic crossing C ABI; and
+- targeted real-hardware testing whenever I2C, timing, probing, or monitor
+  lifecycle code changes.
+
+Conclusion
+----------
+
+The Rust port has advanced beyond the original plan: CAPS, monitor database,
+EDID parsing, and user-profile XML are integrated and released.
+The project should continue the incremental port, but measure progress by
+retired unsafe parsing and proven compatibility rather than by Rust line count.
+
+The next priorities are broader full-database CI coverage, real input corpora,
+parser fuzzing, and a more clearly separated FFI adapter. Cached monitor-list
+XML is the next small parser candidate. Isolate the DDC/CI codec from ioctl
+transport before porting transport, daemon, CLI, and GUI, preserving the
+compatibility gates above.

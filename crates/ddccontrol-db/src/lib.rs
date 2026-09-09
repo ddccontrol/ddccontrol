@@ -305,18 +305,28 @@ mod user_profile {
     }
 }
 
+/// Apply a CAPS string, returning -1 on a parse/allocation error or Rust panic.
+///
+/// # Safety
+///
+/// Non-null `caps_str` must point to a readable, NUL-terminated string that does
+/// not overlap `caps` or its entries. Non-null `caps` must point to an initialized,
+/// exclusively writable `CCaps`. Each non-null VCP entry and values buffer must
+/// be a distinct, valid C allocation that can be released with `free`; a non-null
+/// values buffer with positive `values_len` must hold that many `c_ushort`s.
+/// Entries may be freed and replaced during the call. The caller owns the
+/// resulting entries and must release them with the C CAPS cleanup functions.
+/// `raw_caps` is neither read nor freed by this function.
 #[no_mangle]
 pub unsafe extern "C" fn ddccontrol_caps_parse(
     caps_str: *const c_char,
     caps: *mut CCaps,
     add: c_int,
 ) -> c_int {
-    match catch_unwind(AssertUnwindSafe(|| {
+    catch_unwind(AssertUnwindSafe(|| {
         ddccontrol_caps_parse_inner(caps_str, caps, add)
-    })) {
-        Ok(result) => result,
-        Err(_) => -1,
-    }
+    }))
+    .unwrap_or(-1)
 }
 
 unsafe fn ddccontrol_caps_parse_inner(
@@ -407,7 +417,7 @@ unsafe fn replace_c_caps(caps: *mut CCaps, rust_caps: &Caps) -> bool {
                 if values.is_empty() {
                     (*c_entry).values = ptr::null_mut();
                 } else {
-                    let values_size = values.len() * std::mem::size_of::<c_ushort>();
+                    let values_size = std::mem::size_of_val(values);
                     let c_values = malloc(values_size) as *mut c_ushort;
                     if c_values.is_null() {
                         free(c_entry as *mut c_void);
@@ -1657,7 +1667,7 @@ mod monitor_db {
     fn translate(input: &str) -> Vec<u8> {
         #[cfg(test)]
         {
-            return input.as_bytes().to_vec();
+            input.as_bytes().to_vec()
         }
 
         #[cfg(all(not(test), not(feature = "gettext")))]
