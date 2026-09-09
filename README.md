@@ -64,6 +64,10 @@ sudo make install
 
 Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
 
+The DDC/CI protocol can be tested and fuzzed without a monitor. See
+[the protocol crate](crates/ddccontrol-protocol/README.md) for its API,
+compatibility behavior, and test commands.
+
 ## Contributing to the Monitor Database
 
 Follow the instructions on https://github.com/ddccontrol/ddccontrol-db/blob/master/doc/how-to-add-a-monitor.md for inclusion. 

@@ -19,6 +19,7 @@ dependencies = [
  "ddccontrol-caps",
  "ddccontrol-edid",
  "ddccontrol-profile",
+ "ddccontrol-protocol",
  "encoding_rs",
  "libc",
  "roxmltree",
@@ -35,6 +36,10 @@ dependencies = [
  "encoding_rs",
  "roxmltree",
 ]
+
+[[package]]
+name = "ddccontrol-protocol"
+version = "0.1.0"
 
 [[package]]
 name = "encoding_rs"

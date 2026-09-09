@@ -16,6 +16,7 @@ gettext = []
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 ddccontrol-edid = { path = "../ddccontrol-edid" }
 ddccontrol-profile = { path = "../ddccontrol-profile" }
+ddccontrol-protocol = { path = "../ddccontrol-protocol" }
 encoding_rs = "0.8"
 libc = "0.2"
 roxmltree = "0.20"
