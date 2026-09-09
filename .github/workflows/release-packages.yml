@@ -93,6 +93,7 @@ jobs:
     env:
       CARGO: /usr/bin/cargo-1.77
       RUSTC: /usr/bin/rustc-1.77
+      RUSTDOC: /usr/bin/rustdoc-1.77
       RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
       RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
     steps:
