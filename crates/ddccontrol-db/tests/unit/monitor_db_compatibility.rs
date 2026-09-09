@@ -8,6 +8,86 @@ use std::{env, fs, ptr};
 
 static TEST_DB_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
+thread_local! {
+    static PANIC_IN_DB_CALL: std::cell::Cell<bool> = std::cell::Cell::default();
+}
+
+pub(super) fn panic_if_requested() {
+    PANIC_IN_DB_CALL.with(|requested| {
+        if requested.replace(false) {
+            panic!("injected database operation panic");
+        }
+    });
+}
+
+#[test]
+fn exported_database_functions_contain_panics() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let datadir = path_to_cstring(&fixture_datadir());
+    let name = CString::new("compat-monitor").unwrap();
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+
+    unsafe {
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        assert_eq!(ddcci_init_db(datadir.as_ptr() as *mut c_char), 0);
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        assert!(ddcci_create_db(name.as_ptr(), &mut caps.0, 0).is_null());
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        ddcci_release_db();
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        ddcci_free_db(ptr::null_mut());
+    }
+
+    // The process survived all four extern "C" calls and remains usable.
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_some());
+}
+
+#[test]
+fn database_recovers_after_mutex_poisoning() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let monitor = OwnedMonitor::create("compat-monitor", &mut caps, false).unwrap();
+
+    let result = std::panic::catch_unwind(|| {
+        let _guard = db_context();
+        panic!("injected panic while holding the database mutex");
+    });
+    assert!(result.is_err());
+    assert!(DB_CONTEXT.is_poisoned());
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_some());
+
+    unsafe { ddcci_release_db() };
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_none());
+    // Releasing the global context must not invalidate existing C-owned trees.
+    assert!(monitor.snapshot().contains("Compatibility Fixture Monitor"));
+    drop(monitor);
+
+    let datadir = path_to_cstring(&fixture_datadir());
+    assert_eq!(unsafe { ddcci_init_db(datadir.as_ptr() as *mut c_char) }, 1);
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_some());
+}
+
+#[test]
+fn failed_database_reinitialization_clears_old_context() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let missing = path_to_cstring(&fixture_datadir().join("missing-database"));
+    assert_eq!(unsafe { ddcci_init_db(missing.as_ptr() as *mut c_char) }, 0);
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_none());
+}
+
+#[test]
+fn database_entry_points_accept_null_arguments() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let name = CString::new("compat-monitor").unwrap();
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    unsafe {
+        assert!(ddcci_create_db(ptr::null(), &mut caps.0, 0).is_null());
+        assert!(ddcci_create_db(name.as_ptr(), ptr::null_mut(), 0).is_null());
+        ddcci_free_db(ptr::null_mut());
+    }
+}
+
 #[test]
 fn compatibility_fixture_matches_golden_database_tree() {
     let _context = DbTestContext::init(&fixture_datadir());

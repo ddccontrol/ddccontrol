@@ -60,6 +60,10 @@ target/
 
 # built binaries
 /src/daemon/ddccontrol_service
+/src/daemon/test_open_monitor
+/src/daemon/test_open_monitor.log
+/src/daemon/test_open_monitor.trs
+/src/daemon/test-suite.log
 /src/ddccontrol/ddccontrol
 /src/ddcpci/ddcpci
 /src/gddccontrol/gddccontrol
@@ -72,6 +76,9 @@ target/
 /src/lib/test_parse_caps
 /src/lib/test_parse_caps.log
 /src/lib/test_parse_caps.trs
+/src/lib/test_caps_exchange
+/src/lib/test_caps_exchange.log
+/src/lib/test_caps_exchange.trs
 /src/lib/test_edid
 /src/lib/test_edid.log
 /src/lib/test_edid.trs

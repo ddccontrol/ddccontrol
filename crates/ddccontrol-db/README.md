@@ -26,6 +26,13 @@ The C side must release that data with the matching ddccontrol free functions:
 - Monitor databases returned by `ddcci_create_db` must be released with
   `ddcci_free_db`.
 
+All four monitor-database entry points catch unwinding Rust panics. Initialization
+returns `0` and creation returns null on failure; the void cleanup functions
+contain panics as well. This does not make invalid C pointers safe. A poisoned
+database mutex is recovered because contexts are fully built before publication
+and are never mutated in place under the lock. Existing monitor trees remain
+caller-owned across database release or reinitialization.
+
 Do not allocate these structs with Rust-owned containers and expose their
 internal pointers to C. Do not release Rust-created database structs with
 anything other than the documented C cleanup function.

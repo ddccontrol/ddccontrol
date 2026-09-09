@@ -452,9 +452,10 @@ mod monitor_db {
     use std::borrow::Cow;
     use std::ffi::{CStr, CString};
     use std::fs;
+    use std::panic::{catch_unwind, AssertUnwindSafe};
     use std::path::{Path, PathBuf};
     use std::ptr;
-    use std::sync::Mutex;
+    use std::sync::{Mutex, MutexGuard};
 
     const DBVERSION: i64 = 3;
     #[cfg(all(not(test), feature = "gettext"))]
@@ -627,18 +628,44 @@ mod monitor_db {
         line: u32,
     }
 
+    fn db_ffi<T>(failure: T, operation: impl FnOnce() -> T) -> T {
+        catch_unwind(AssertUnwindSafe(|| {
+            #[cfg(test)]
+            compatibility_tests::panic_if_requested();
+            operation()
+        }))
+        .unwrap_or(failure)
+    }
+
+    fn db_context() -> MutexGuard<'static, Option<DbContext>> {
+        // Contexts are fully built before publication and never mutated in place.
+        // A panic while holding the lock cannot leave a partially built context.
+        DB_CONTEXT
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
+
+    /// Initialize the database, returning 0 on failure, including a Rust panic.
+    ///
+    /// # Safety
+    /// `usedatadir` must be null or point to a readable, NUL-terminated C path
+    /// for the duration of this call. The path is copied, not retained or freed.
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_init_db(usedatadir: *mut c_char) -> c_int {
+        db_ffi(0, || init_db_inner(usedatadir))
+    }
+
+    unsafe fn init_db_inner(usedatadir: *mut c_char) -> c_int {
+        *db_context() = None;
         let datadir = if usedatadir.is_null() {
             PathBuf::from(DEFAULT_DATADIR)
         } else {
             pathbuf_from_c_path(usedatadir)
         };
 
-        *DB_CONTEXT.lock().unwrap() = None;
         match load_options(&datadir) {
             Ok(options) => {
-                *DB_CONTEXT.lock().unwrap() = Some(DbContext { datadir, options });
+                *db_context() = Some(DbContext { datadir, options });
                 1
             }
             Err(err) => {
@@ -662,13 +689,35 @@ mod monitor_db {
         }
     }
 
+    /// Release the global database context without unwinding into C.
+    /// Previously returned monitor trees remain owned by their callers.
+    ///
+    /// # Safety
+    /// This function has no pointer preconditions.
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_release_db() {
-        *DB_CONTEXT.lock().unwrap() = None;
+        db_ffi((), || *db_context() = None);
     }
 
+    /// Create a C-owned monitor tree, returning null on error or a Rust panic.
+    ///
+    /// # Safety
+    /// Non-null `pnpname` must point to a readable, NUL-terminated C string.
+    /// Non-null `caps` and its entries must be valid and exclusively writable
+    /// for this call; their allocations must use the C allocator. Release a
+    /// returned tree exactly once with `ddcci_free_db`.
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_create_db(
+        pnpname: *const c_char,
+        caps: *mut CCaps,
+        faulttolerance: c_int,
+    ) -> *mut CMonitorDb {
+        db_ffi(ptr::null_mut(), || {
+            create_db_inner(pnpname, caps, faulttolerance)
+        })
+    }
+
+    unsafe fn create_db_inner(
         pnpname: *const c_char,
         caps: *mut CCaps,
         faulttolerance: c_int,
@@ -678,7 +727,7 @@ mod monitor_db {
         }
 
         let pnpname = CStr::from_ptr(pnpname).to_string_lossy().into_owned();
-        let context = match DB_CONTEXT.lock().unwrap().clone() {
+        let context = match db_context().clone() {
             Some(context) => context,
             None => {
                 eprintln!("Database must be inited before reading a monitor file.");
@@ -727,9 +776,14 @@ mod monitor_db {
         }
     }
 
+    /// Free a C-owned monitor tree without unwinding into C.
+    ///
+    /// # Safety
+    /// `monitor` must be null or an exclusively owned, intact tree returned by
+    /// `ddcci_create_db` that has not already been freed.
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_free_db(monitor: *mut CMonitorDb) {
-        free_monitor(monitor);
+        db_ffi((), || free_monitor(monitor));
     }
 
     fn load_options(datadir: &Path) -> Result<OptionsDb, String> {
