@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.3.1](https://github.com/ddccontrol/ddccontrol/compare/3.3.0...3.3.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* **ci:** upload release assets without editing release metadata ([#327](https://github.com/ddccontrol/ddccontrol/issues/327)) ([ff14dd3](https://github.com/ddccontrol/ddccontrol/commit/ff14dd31198931aa63ba35564b98edeeff95cd80))
+* harden CAPS collection and Rust database FFI ([#321](https://github.com/ddccontrol/ddccontrol/issues/321)) ([bec744f](https://github.com/ddccontrol/ddccontrol/commit/bec744f9795e82caf3a4e0d84b0be0f72f7d109a))
+
 ## [3.3.0](https://github.com/ddccontrol/ddccontrol/compare/3.2.0...3.3.0) (2026-07-31)
 
 
