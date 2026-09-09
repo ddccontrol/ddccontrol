@@ -6,6 +6,8 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 use std::slice;
 
+mod monitor_list;
+
 #[repr(C)]
 pub struct CVcpEntry {
     values_len: c_int,
