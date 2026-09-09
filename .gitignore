@@ -60,6 +60,10 @@ target/
 
 # built binaries
 /src/daemon/ddccontrol_service
+/src/daemon/test_open_monitor
+/src/daemon/test_open_monitor.log
+/src/daemon/test_open_monitor.trs
+/src/daemon/test-suite.log
 /src/ddccontrol/ddccontrol
 /src/ddcpci/ddcpci
 /src/gddccontrol/gddccontrol

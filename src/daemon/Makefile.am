@@ -14,6 +14,11 @@ ddccontrol_service_SOURCES = service.c
 ddccontrol_service_LDFLAGS = $(LIBXML2_LIBS) $(LIBINTL)
 ddccontrol_service_LDADD   = libdbusinterface.la ../lib/libddccontrol.la
 
+check_PROGRAMS = test_open_monitor
+TESTS = $(check_PROGRAMS)
+test_open_monitor_SOURCES = tests/test_open_monitor.c
+test_open_monitor_LDADD = ../lib/libddccontrol.la $(LIBXML2_LIBS) $(LIBINTL)
+
 # D-Bus client library
 lib_LTLIBRARIES = libddccontrol_dbus_client.la
 

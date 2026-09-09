@@ -301,11 +301,12 @@ static gboolean handle_open_monitor(DDCControl *skeleton, GDBusMethodInvocation 
 		return TRUE;
 	}
 
+	/* Presence fallback may succeed even when no capabilities were retrieved. */
 	ddccontrol_complete_open_monitor(
 	    skeleton,
 	    invocation,
 	    mon->pnpid,
-	    mon->caps.raw_caps
+	    mon->caps.raw_caps ? mon->caps.raw_caps : ""
 	);
 	return TRUE;
 }
