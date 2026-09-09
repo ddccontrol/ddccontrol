@@ -22,6 +22,13 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-profile/README.md \
 	crates/ddccontrol-profile/src/lib.rs \
 	crates/ddccontrol-profile/tests/profile.rs \
+	crates/ddccontrol-protocol/Cargo.toml \
+	crates/ddccontrol-protocol/README.md \
+	crates/ddccontrol-protocol/src/lib.rs \
+	crates/ddccontrol-protocol/tests/protocol.rs \
+	crates/ddccontrol-protocol/fuzz/Cargo.toml \
+	crates/ddccontrol-protocol/fuzz/.gitignore \
+	crates/ddccontrol-protocol/fuzz/fuzz_targets/protocol.rs \
 	crates/ddccontrol-db/Cargo.toml \
 	crates/ddccontrol-db/README.md \
 	crates/ddccontrol-db/fixtures/compat-db/options.xml \
@@ -31,7 +38,8 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/tests/unit/monitor_db.rs \
 	crates/ddccontrol-db/tests/unit/monitor_db_compatibility.rs \
 	crates/ddccontrol-db/tests/unit/profile_ffi_layout.rs \
-	crates/ddccontrol-db/src/lib.rs
+	crates/ddccontrol-db/src/lib.rs \
+	crates/ddccontrol-db/src/protocol.rs
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
