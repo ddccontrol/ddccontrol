@@ -7,7 +7,7 @@ on:
   push:
     branches: [master]
     paths:
-      - ".github/ci/Dockerfile"
+      - ".github/ci/**"
       - ".github/workflows/ci-image.yml"
 
 permissions:
