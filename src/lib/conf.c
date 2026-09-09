@@ -36,9 +36,6 @@
 #include <dirent.h>
 
 #include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/encoding.h>
-#include <libxml/xmlwriter.h>
 
 #include "conf.h"
 #include "internal.h"
@@ -81,154 +78,32 @@ static char* get_monitorlist_filename() {
 
 /* Load a saved monitorlist */
 struct monitorlist* ddcci_load_list() {
-	xmlNodePtr cur, root;
-	xmlDocPtr list_doc;
-	
-	char* filename;
-	xmlChar *tmp;
-	char *endptr;
-	
+	char* filename = get_monitorlist_filename();
 	struct monitorlist* list = NULL;
-	struct monitorlist* current = NULL;
-	struct monitorlist** last = &list;
-	
-	filename = get_monitorlist_filename();
+	int rc;
+
 	if (!filename)
-		return 0;
-	
-	list_doc = xmlParseFile(filename);
+		return NULL;
+	rc = ddccontrol_monitorlist_load(filename, PACKAGE_VERSION, &list);
 	free(filename);
-	if (list_doc == NULL) {
-		fprintf(stderr, _("Document not parsed successfully.\n"));
-		return 0;
-	}
-	
-	root = xmlDocGetRootElement(list_doc);
-	
-	if (root == NULL) {
-		fprintf(stderr,  _("empty profile file\n"));
-		xmlFreeDoc(list_doc);
-		return 0;
-	}
-	
-	if (xmlStrcmp(root->name, BAD_CAST "monitorlist")) {
-		fprintf(stderr,  _("profile of the wrong type, root node %s != profile"), root->name);
-		xmlFreeDoc(list_doc);
-		return 0;
-	}
-	
-	tmp = xmlGetProp(root, BAD_CAST "ddccontrolversion");
-	DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find ddccontrolversion property."), root, {xmlFreeDoc(list_doc);});
-	if (strcmp((const char*)tmp, PACKAGE_VERSION)) {
-		fprintf(stderr,  _("ddccontrol has been upgraded since monitorlist was saved (%s vs %s).\n"), tmp, PACKAGE_VERSION);
-		xmlFreeDoc(list_doc);
-		xmlFree(tmp);
-		return 0;
-	}
-	xmlFree(tmp);
-	
-	cur = root->xmlChildrenNode;
-	while (1)
-	{
-		if (cur == NULL) {
-			break;
-		}
-		if (!(xmlStrcmp(cur->name, BAD_CAST "monitor"))) {
-			current = malloc(sizeof(struct monitorlist));
-			
-			tmp = xmlGetProp(cur, BAD_CAST "filename");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find filename property."), cur,
-					{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->filename = strdup((const char*)tmp);
-			xmlFree(tmp);
-			
-			tmp = xmlGetProp(cur, BAD_CAST "supported");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find supported property."), cur,
-				{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->supported = strtol((const char*)tmp, &endptr, 0);
-			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert supported property to int."), cur, 
-					{xmlFree(tmp); ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			xmlFree(tmp);
-			
-			tmp = xmlGetProp(cur, BAD_CAST "name");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find name property."), cur,
-					{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->name = strdup((const char*)tmp);
-			xmlFree(tmp);
-			
-			tmp = xmlGetProp(cur, BAD_CAST "digital");
-			DDCCI_DB_RETURN_IF_RUN(tmp == NULL, 0, _("Can't find digital property."), cur,
-				{ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			current->digital = strtol((const char*)tmp, &endptr, 0);
-			DDCCI_DB_RETURN_IF_RUN(*endptr != 0, 0, _("Can't convert digital property to int."), cur, 
-					{xmlFree(tmp); ddcci_free_list(list);	free(current); xmlFreeDoc(list_doc);});
-			xmlFree(tmp);
-			
-			current->next = NULL;
-			*last = current;
-			last = &current->next;
-		}
-		cur = cur->next;
-	}
-	
-	xmlFreeDoc(list_doc);
-	
+	if (rc < 0)
+		fprintf(stderr, _("Cannot load cached monitor list.\n"));
 	return list;
 }
 
 /* Save the monitorlist */
 int ddcci_save_list(struct monitorlist* monlist) {
-	char* filename;
-	struct monitorlist* current;
+	char* filename = get_monitorlist_filename();
 	int rc;
-	xmlTextWriterPtr writer;
-	
-	filename = get_monitorlist_filename();
+
 	if (!filename)
 		return 0;
-	
-	writer = xmlNewTextWriterFilename(filename, 0);
-	DDCCI_RETURN_IF_RUN(writer == NULL, 0, _("Cannot create the xml writer\n"), {xmlFreeTextWriter(writer);})
-
+	rc = ddccontrol_monitorlist_save(filename, PACKAGE_VERSION, monlist);
 	free(filename);
-
-	xmlTextWriterSetIndent(writer, 1);
-
-	rc = xmlTextWriterStartDocument(writer, NULL, NULL, NULL);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartDocument\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterStartElement(writer, BAD_CAST "monitorlist");
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement monitorlist\n", {xmlFreeTextWriter(writer);})
-
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "ddccontrolversion", BAD_CAST PACKAGE_VERSION);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteAttribute ddccontrolversion\n", {xmlFreeTextWriter(writer);})
-	
-	for (current = monlist; current != NULL; current = current->next)
-	{
-		rc = xmlTextWriterStartElement(writer, BAD_CAST "monitor");
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterStartElement monitor\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "filename", "%s", current->filename);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute filename\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "supported", "%d", current->supported);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute supported\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "name", "%s", current->name);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute name\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterWriteFormatAttribute(writer, BAD_CAST "digital", "%d", current->digital);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterWriteFormatAttribute digital\n", {xmlFreeTextWriter(writer);})
-
-		rc = xmlTextWriterEndElement(writer);
-		DDCCI_RETURN_IF_RUN(rc < 0, 0, "xmlTextWriterEndElement\n", {xmlFreeTextWriter(writer);})
+	if (rc < 0) {
+		fprintf(stderr, _("Cannot save cached monitor list.\n"));
+		return 0;
 	}
-
-	rc = xmlTextWriterEndDocument(writer);
-	DDCCI_RETURN_IF_RUN(rc < 0, 0, "testXmlwriterFilename\n", {xmlFreeTextWriter(writer);})
-
-	xmlFreeTextWriter(writer);
-	
 	return 1;
 }
 

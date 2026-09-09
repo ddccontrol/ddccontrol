@@ -23,6 +23,10 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-profile/README.md \
 	crates/ddccontrol-profile/src/lib.rs \
 	crates/ddccontrol-profile/tests/profile.rs \
+	crates/ddccontrol-monitorlist/Cargo.toml \
+	crates/ddccontrol-monitorlist/README.md \
+	crates/ddccontrol-monitorlist/src/lib.rs \
+	crates/ddccontrol-monitorlist/tests/monitorlist.rs \
 	crates/ddccontrol-protocol/Cargo.toml \
 	crates/ddccontrol-protocol/README.md \
 	crates/ddccontrol-protocol/src/lib.rs \
@@ -39,6 +43,8 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/tests/unit/monitor_db.rs \
 	crates/ddccontrol-db/tests/unit/monitor_db_compatibility.rs \
 	crates/ddccontrol-db/tests/unit/profile_ffi_layout.rs \
+	crates/ddccontrol-db/tests/unit/monitor_list.rs \
+	crates/ddccontrol-db/src/monitor_list.rs \
 	crates/ddccontrol-db/src/lib.rs \
 	crates/ddccontrol-db/src/protocol.rs
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update

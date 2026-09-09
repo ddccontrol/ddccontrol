@@ -126,7 +126,7 @@ typedef struct monitorlist MonitorList;
 
 /* Probe and enumerate connected monitors. */
 struct monitorlist* ddcci_probe();
-/* Free the list returned by ddcci_probe. */
+/* Free the list returned by ddcci_probe or ddcci_load_list. */
 void ddcci_free_list(struct monitorlist* list);
 
 /* Open a monitor device. */
