@@ -24,6 +24,7 @@ jobs:
     env:
       CARGO: /usr/bin/cargo-1.77
       RUSTC: /usr/bin/rustc-1.77
+      RUSTDOC: /usr/bin/rustdoc-1.77
     outputs:
       version: ${{ steps.source.outputs.version }}
       debian_ref: ${{ steps.source.outputs.debian_ref }}

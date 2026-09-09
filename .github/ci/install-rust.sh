@@ -12,5 +12,7 @@ fi
 
 ln -sf /usr/bin/cargo-1.77 /usr/local/bin/cargo
 ln -sf /usr/bin/rustc-1.77 /usr/local/bin/rustc
+ln -sf /usr/bin/rustdoc-1.77 /usr/local/bin/rustdoc
 cargo --version
 rustc --version
+rustdoc --version
