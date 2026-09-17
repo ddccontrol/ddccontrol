@@ -7,11 +7,11 @@ on:
         required: true
         type: string
     secrets:
-      PACKAGE_SIGNING_KEY:
+      DDCCONTROL_PACKAGE_SIGNING_KEY:
         required: true
-      PACKAGE_SIGNING_PASSPHRASE:
+      DDCCONTROL_PACKAGE_SIGNING_PASSPHRASE:
         required: false
-      PACKAGING_READ_TOKEN:
+      FEDORA_DDCCONTROL_READ_TOKEN:
         required: false
   release:
     types: [published]
@@ -189,7 +189,7 @@ jobs:
           repository: ddccontrol/fedora-ddccontrol
           ref: ${{ env.FEDORA_PACKAGING_REF }}
           path: packaging
-          token: ${{ secrets.PACKAGING_READ_TOKEN || github.token }}
+          token: ${{ secrets.FEDORA_DDCCONTROL_READ_TOKEN || github.token }}
           persist-credentials: false
       - uses: actions/download-artifact@v8
         with:
@@ -248,9 +248,9 @@ jobs:
       - name: Sign packages and save provenance
         if: needs.resolve.outputs.has_bundle != 'true'
         env:
-          PACKAGE_SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY }}
-          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.PACKAGE_SIGNING_PASSPHRASE }}
-          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.PACKAGE_SIGNING_FINGERPRINT }}
+          PACKAGE_SIGNING_KEY: ${{ secrets.DDCCONTROL_PACKAGE_SIGNING_KEY }}
+          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.DDCCONTROL_PACKAGE_SIGNING_PASSPHRASE }}
+          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.DDCCONTROL_PACKAGE_SIGNING_FINGERPRINT }}
           RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
           RELEASE_COMMIT: ${{ needs.resolve.outputs.commit }}
         run: |
@@ -294,9 +294,9 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Generate and sign repository indexes
         env:
-          PACKAGE_SIGNING_KEY: ${{ secrets.PACKAGE_SIGNING_KEY }}
-          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.PACKAGE_SIGNING_PASSPHRASE }}
-          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.PACKAGE_SIGNING_FINGERPRINT }}
+          PACKAGE_SIGNING_KEY: ${{ secrets.DDCCONTROL_PACKAGE_SIGNING_KEY }}
+          PACKAGE_SIGNING_PASSPHRASE: ${{ secrets.DDCCONTROL_PACKAGE_SIGNING_PASSPHRASE }}
+          PACKAGE_SIGNING_FINGERPRINT: ${{ vars.DDCCONTROL_PACKAGE_SIGNING_FINGERPRINT }}
           PAGES_URL: ${{ steps.pages.outputs.base_url }}
         run: |
           set -euo pipefail

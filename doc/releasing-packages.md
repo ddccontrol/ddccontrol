@@ -16,17 +16,27 @@ build source. Allow the `github-pages` environment to deploy from `master` and
 release tags. This uses this repository's project site, independently of the
 organization website in `ddccontrol/ddccontrol.github.io`.
 
-Configure these repository Actions settings before publishing a release:
+In **ddccontrol → Settings → Secrets and variables → Actions**, configure these
+organization settings before publishing a release. For each secret and variable,
+choose **Selected repositories** and grant access to **ddccontrol/ddccontrol**,
+where the release workflow runs. The default **Private repositories** visibility
+does not include this public repository.
 
 | Setting | Type | Value |
 | --- | --- | --- |
-| `PACKAGE_SIGNING_KEY` | Secret | ASCII-armored OpenPGP private signing key |
-| `PACKAGE_SIGNING_PASSPHRASE` | Secret | Key passphrase; omit for an unencrypted key |
-| `PACKAGE_SIGNING_FINGERPRINT` | Variable | Full 40-character signing-key fingerprint |
-| `PACKAGING_READ_TOKEN` | Secret | Token with Contents: read on `ddccontrol/fedora-ddccontrol`, if that repo is private |
+| `DDCCONTROL_PACKAGE_SIGNING_KEY` | Secret | ASCII-armored OpenPGP private signing key |
+| `DDCCONTROL_PACKAGE_SIGNING_PASSPHRASE` | Secret | Key passphrase; omit for an unencrypted key |
+| `DDCCONTROL_PACKAGE_SIGNING_FINGERPRINT` | Variable | Full 40-character signing-key fingerprint |
+| `FEDORA_DDCCONTROL_READ_TOKEN` | Secret | Fine-grained personal access token with Contents: read on `ddccontrol/fedora-ddccontrol`, if that repo is private |
+
+For the read token, select `ddccontrol` as the resource owner and limit repository
+access to `fedora-ddccontrol`. Its Contents permission needs only read access.
+The token's repository access and the organization secret's repository access
+serve different purposes: the token reads the Fedora packaging repository,
+while the secret is available to the workflow in `ddccontrol/ddccontrol`.
 
 The built-in `GITHUB_TOKEN` cannot read a different private repository. The
-Fedora checkout falls back to it when `PACKAGING_READ_TOKEN` is absent, which
+Fedora checkout falls back to it when `FEDORA_DDCCONTROL_READ_TOKEN` is absent, which
 also works if the packaging repository is made public. Credentials are not
 persisted in the packaging checkouts or passed to build containers.
 
