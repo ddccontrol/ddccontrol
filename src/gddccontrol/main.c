@@ -434,7 +434,13 @@ int main( int argc, char *argv[] )
 {
 	GError *option_error = NULL;
 	GOptionContext *option_context = NULL;
+	gchar *datadir = NULL;
+	gchar *monitor_file = NULL;
 	const GOptionEntry option_entries[] = {
+		{ "monitor-file", 0, 0, G_OPTION_ARG_FILENAME, &monitor_file,
+		  N_("Use a local PNPID.xml monitor definition (requires DDCCONTROL_NO_DAEMON=1)"), N_("FILE") },
+		{ "db-path", 'b', 0, G_OPTION_ARG_FILENAME, &datadir,
+		  N_("Use an alternative ddccontrol-db directory"), N_("DIR") },
 		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
 		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
 		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
@@ -462,19 +468,45 @@ int main( int argc, char *argv[] )
 		fprintf(stderr, "%s\n", option_error->message);
 		g_error_free(option_error);
 		g_option_context_free(option_context);
+		g_free(monitor_file);
+		g_free(datadir);
 		return 1;
 	}
 
 	g_option_context_free(option_context);
 
-	gtk_init(&argc, &argv);
-
 	ddcci_verbosity(verbosity);
+
+	/* Validate local definitions before opening a display or accessing hardware. */
+	if (monitor_file) {
+		const char *no_daemon = getenv("DDCCONTROL_NO_DAEMON");
+		if (!no_daemon || strcmp(no_daemon, "1") != 0) {
+			fprintf(stderr, _("--monitor-file requires DDCCONTROL_NO_DAEMON=1.\n"));
+			g_free(monitor_file);
+			g_free(datadir);
+			return 1;
+		}
+		if (!ddcci_init(datadir)) {
+			fprintf(stderr, _("Unable to initialize ddcci library.\n"));
+			g_free(monitor_file);
+			g_free(datadir);
+			return 1;
+		}
+		if (!ddcci_set_monitor_file(monitor_file, NULL)) {
+			ddcci_release();
+			g_free(monitor_file);
+			g_free(datadir);
+			return 1;
+		}
+	}
+
+	gtk_init(&argc, &argv);
 
 	if (can_use_dbus_daemon()) {
 		ddccontrol_proxy = ddcci_dbus_open_proxy();
 		if(ddccontrol_proxy == NULL) {
 			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));
+			g_free(datadir);
 			return 1;
 		}
 	} else {
@@ -488,7 +520,7 @@ int main( int argc, char *argv[] )
 	show_pattern();
 	gtk_main();*/
 	
-	if (!ddcci_init(NULL)) {
+	if (!monitor_file && !ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));
 		GtkWidget* dialog = gtk_message_dialog_new(
 				GTK_WINDOW(main_app_window),
@@ -498,8 +530,10 @@ int main( int argc, char *argv[] )
 				_("Unable to initialize ddcci library, see console for more details.\n"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
+		g_free(datadir);
 		return 1;
 	}
+	g_free(datadir);
 	
 	gtk_window_set_default_icon_name ("gddccontrol");
 
@@ -557,7 +591,7 @@ int main( int argc, char *argv[] )
 	gtk_widget_set_margin_end(choice_hbox, 5);
 	crow++;
 	gtk_widget_show(choice_hbox);
-	
+
 	GtkWidget* hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_widget_show (hsep);
 	gtk_grid_attach(GTK_GRID(grid), hsep, 0, crow, 1, 1);
@@ -711,6 +745,7 @@ int main( int argc, char *argv[] )
 	ddcci_free_list(monlist);
 	
 	ddcci_release();
+	g_free(monitor_file);
 	
 	return 0;
 }

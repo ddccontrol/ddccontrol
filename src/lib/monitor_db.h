@@ -135,6 +135,17 @@ void ddcci_free_db(struct monitor_db* mon_db);
  * directory or a NUL-terminated path, copied during the call. Returns 1 on
  * success, 0 on failure (including a caught Rust panic). */
 int ddcci_init_db(char* usedatadir);
+/* Validate and snapshot one monitor XML file for this process only, after
+ * ddcci_init_db() and before monitor discovery. The basename must be its PNP ID
+ * (for example DEL1234.xml); includes and options use the initialized database.
+ * filename is copied. pnpid is NULL or points to eight writable bytes, receiving
+ * the NUL-terminated ID only on success. Returns 1 on success, 0 on failure
+ * without replacing a previous override. Initialization/release clears it. */
+int ddcci_set_monitor_file(const char* filename, char* pnpid);
+/* Return 1 only for the exact PNP ID currently overridden; 0 for NULL or no
+ * matching override. pnpid must otherwise be a readable NUL-terminated string.
+ * Callers must not fall back to a generic profile if this override fails. */
+int ddcci_monitor_file_matches(const char* pnpid);
 /* Release monitor database subsystem resources. Caller-owned monitor trees
  * remain valid. None of these entry points unwind a Rust panic into C. */
 void ddcci_release_db();

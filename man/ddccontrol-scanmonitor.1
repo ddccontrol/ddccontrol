@@ -1,0 +1,112 @@
+.TH DDCCONTROL-SCANMONITOR 1 "September 22, 2026"
+.SH NAME
+ddccontrol-scanmonitor \- generate a monitor database XML file
+.SH SYNOPSIS
+.B ddccontrol-scanmonitor
+.RI [ dev:/dev/i2c-N ]
+.RB [ \-\-output
+.IR FILE ]
+.RB [ \-\-db-path
+.IR DIR ]
+.br
+.B ddccontrol-scanmonitor
+.B \-\-list
+.SH DESCRIPTION
+.B ddccontrol-scanmonitor
+creates an editable XML file for the ddccontrol monitor database from a connected
+DDC/CI monitor. With no device argument, it selects the only detected monitor
+automatically or asks which monitor to scan when several are available.
+For unattended use with several monitors, specify a device explicitly.
+.PP
+The scanner uses the installed DDCcontrol system D-Bus service and does not need
+to run as root. It reads EDID, capabilities and supported controls without changing
+control values. The service performs its normal monitor initialization.
+.PP
+The generated XML enables known controls whose values could be read.
+Uncertain controls are left commented out for manual testing.
+Control and value definitions come from the database's
+.BR options.xml .
+Some monitor quirks, special initialization and unadvertised controls still need
+manual edits.
+.PP
+By default the output is named after the monitor's PnP ID, for example
+.BR DEL1234.xml ,
+in the current directory. Existing files are never overwritten.
+.SH OPTIONS
+.TP
+.B dev:/dev/i2c-N
+Scan this device instead of choosing from detected monitors.
+.TP
+.B \-\-list
+List detected DDC/CI monitors and their device paths, then exit without writing XML.
+.TP
+.BR \-o ", " \-\-output " FILE"
+Write XML to this file. The file must not already exist.
+.TP
+.BR \-b ", " \-\-db-path " DIR"
+Read control definitions from
+.IR DIR/options.xml .
+By default, use the database location configured at build time, usually
+.I /usr/share/ddccontrol-db
+or
+.IR /usr/local/share/ddccontrol-db .
+This option does not change which database the running service loads.
+.TP
+.BR \-h ", " \-\-help
+Show usage information.
+.TP
+.BR \-V ", " \-\-version
+Show the program version.
+.SH EXAMPLES
+Create an XML file interactively:
+.PP
+.nf
+ddccontrol-scanmonitor
+.fi
+.PP
+Choose a monitor and output path explicitly:
+.PP
+.nf
+ddccontrol-scanmonitor dev:/dev/i2c-4 \-\-output ./DEL1234.xml
+.fi
+.PP
+Try the generated file directly (replace the filename with your monitor's ID):
+.PP
+.nf
+DDCCONTROL_NO_DAEMON=1 gddccontrol \-\-monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 ddccontrol \-\-monitor-file ./DEL1234.xml
+.fi
+.PP
+Keep the filename PNPID.xml and relaunch the application after editing it.
+No system database changes or service restart are needed for this preview.
+Loading a local file requires
+.B DDCCONTROL_NO_DAEMON=1
+and permission to access the I2C device directly. If needed, prefix the command
+with \fBsudo env\fP.
+.PP
+Install a tested result into a typical package database and reload the service:
+.PP
+.nf
+sudo cp \-i DEL1234.xml /usr/share/ddccontrol-db/monitor/DEL1234.xml
+sudo systemctl restart ddccontrol.service
+.fi
+.PP
+Use the database path printed by the scanner for your installation.
+Test the enabled controls with
+.BR gddccontrol (1)
+or
+.BR ddccontrol (1),
+edit the XML as needed, and relaunch with
+.B \-\-monitor-file
+after each change.
+Submit the tested file in a pull request to the ddccontrol-db repository.
+.SH EXIT STATUS
+Zero indicates success. A nonzero exit status indicates invalid arguments,
+discovery or communication failure, an invalid database, or an output error.
+.SH SEE ALSO
+.BR ddccontrol (1),
+.BR gddccontrol (1)
+.PP
+Monitor database contribution guide:
+.br
+https://github.com/ddccontrol/ddccontrol-db/blob/master/doc/how-to-add-a-monitor.md

@@ -6,6 +6,8 @@ members = [
     "crates/ddccontrol-monitorlist",
     "crates/ddccontrol-profile",
     "crates/ddccontrol-protocol",
+    "crates/ddccontrol-scanmonitor",
+    "crates/ddccontrol-xml",
 ]
 resolver = "2"
 

@@ -8,12 +8,13 @@ repository.workspace = true
 description = "Rust monitor database XML parser and C ABI bridge for ddccontrol"
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["rlib", "staticlib"]
 
 [features]
 gettext = []
 
 [dependencies]
+ddccontrol-xml = { path = "../ddccontrol-xml" }
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 ddccontrol-edid = { path = "../ddccontrol-edid" }
 ddccontrol-monitorlist = { path = "../ddccontrol-monitorlist" }

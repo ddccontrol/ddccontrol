@@ -108,53 +108,26 @@ fn required_attribute<'a>(
 }
 
 fn parse_byte(input: &str) -> Result<u8, MonitorListError> {
-    // Match strtol's base-zero syntax, but reject empty and out-of-range values
-    // instead of silently truncating them into the C unsigned-char fields.
-    let value = input.trim_start_matches(|character: char| character.is_ascii_whitespace());
-    let value = value.strip_prefix('+').unwrap_or(value);
-    let (radix, digits) = if let Some(digits) = value
-        .strip_prefix("0x")
-        .or_else(|| value.strip_prefix("0X"))
+    // Cache flags are unsigned, including their textual representation.
+    let invalid = || MonitorListError::new(format!("invalid monitor flag {input:?}"));
+    if input
+        .trim_start_matches(|character: char| character.is_ascii_whitespace())
+        .starts_with('-')
     {
-        (16, digits)
-    } else if value.len() > 1 && value.starts_with('0') {
-        (8, &value[1..])
-    } else {
-        (10, value)
-    };
-    // from_str_radix accepts a leading '+', which must not be accepted twice.
-    if digits.is_empty() || !digits.chars().all(|character| character.is_digit(radix)) {
-        return Err(MonitorListError::new(format!(
-            "invalid monitor flag {input:?}"
-        )));
+        return Err(invalid());
     }
-    u8::from_str_radix(digits, radix)
+    let value = ddccontrol_xml::parse_integer(input).map_err(|_| invalid())?;
+    u8::try_from(value)
         .map_err(|_| MonitorListError::new(format!("monitor flag {input:?} is outside 0..=255")))
 }
 
 fn push_attribute(output: &mut String, input: &str) -> Result<(), MonitorListError> {
-    for character in input.chars() {
-        match character {
-            '&' => output.push_str("&amp;"),
-            '<' => output.push_str("&lt;"),
-            '>' => output.push_str("&gt;"),
-            '"' => output.push_str("&quot;"),
-            '\'' => output.push_str("&apos;"),
-            '\t' => output.push_str("&#x9;"),
-            '\n' => output.push_str("&#xA;"),
-            '\r' => output.push_str("&#xD;"),
-            '\u{20}'..='\u{D7FF}' | '\u{E000}'..='\u{FFFD}' | '\u{10000}'..='\u{10FFFF}' => {
-                output.push(character)
-            }
-            _ => {
-                return Err(MonitorListError::new(format!(
-                    "invalid XML character U+{:04X}",
-                    u32::from(character)
-                )))
-            }
-        }
-    }
-    Ok(())
+    ddccontrol_xml::push_attribute(output, input).map_err(|character| {
+        MonitorListError::new(format!(
+            "invalid XML character U+{:04X}",
+            u32::from(character)
+        ))
+    })
 }
 
 fn declared_encoding(input: &[u8]) -> Result<Option<&'static Encoding>, MonitorListError> {

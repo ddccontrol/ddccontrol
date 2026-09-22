@@ -1,7 +1,10 @@
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -I$(top_srcdir)/src/lib -I$(top_srcdir)/src -DLOCALEDIR=\"$(localedir)\"
 
-EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png
+EXTRA_DIST = gddccontrol.desktop.in gddccontrol.png gddccontrol-bluecurve.png $(TESTS)
+
+TESTS = tests/test_monitor_file.sh
+TESTS_ENVIRONMENT = abs_top_srcdir='$(abs_top_srcdir)' abs_top_builddir='$(abs_top_builddir)'
 
 bin_PROGRAMS = gddccontrol
 gddccontrol_SOURCES = main.c stack.c gui.h gprofile.c fspatterns.c

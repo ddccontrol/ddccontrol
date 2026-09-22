@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH DDCCONTROL 1 "May 28, 2026"
+.TH DDCCONTROL 1 "September 22, 2026"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -37,6 +37,8 @@ ddccontrol \- A utility to control monitor parameters via software
 .RB [ -cdfsvS ]
 .RB [ -b
 .IR datadir ]
+.RB [ --monitor-file
+.IR PNPID.xml ]
 .RB [ -r
 .IR ctrl
 .RB [ -w
@@ -45,6 +47,11 @@ ddccontrol \- A utility to control monitor parameters via software
 .IR value
 .RB | -t
 .IR value1,value2 ]]
+.br
+.B DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file
+.I PNPID.xml
+.RI [ selector ]
+.RI [ options ]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B ddccontrol
@@ -100,6 +107,47 @@ verbosity (specify more to increase)
 .TP
 .B \-b
 ddccontrol-db directory (if other than /usr/share/ddccontrol-db)
+.TP
+.BI \-\-monitor-file " PNPID.xml"
+Use a local monitor definition for the matching PnP ID during this run.
+Requires \fBDDCCONTROL_NO_DAEMON=1\fP and permission to access
+\fB/dev/i2c-*\fP directly.
+The file must be named after its PnP ID, for example \fBDEL1234.xml\fP;
+relative and absolute paths are accepted.
+When no device or selector is given, select all connected, DDC/CI-supported
+monitors with that PnP ID. To select one of several identical monitors, provide
+an indexed selector such as \fBDEL1234/0\fP.
+An explicitly selected monitor must match the file's PnP ID.
+This option cannot be combined with \fB\-p\fP.
+.IP
+The installed database (or the directory selected with \fB\-b\fP) still supplies
+\fBoptions.xml\fP and any included monitor definitions.
+The local file is read for this run only; relaunch after editing it.
+No database files are installed or changed, and no service restart is needed.
+.TP
+.BI \-l " profile.xml"
+Load saved control values from a settings profile. This is distinct from a
+monitor definition loaded with \fB\-\-monitor-file\fP.
+.SH EXAMPLES
+Test a generated monitor definition without installing it or restarting the daemon:
+.PP
+.nf
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
+.fi
+.PP
+Read brightness using the local definition:
+.PP
+.nf
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml -r 0x10
+.fi
+.PP
+Test the definition on a specific matching monitor:
+.PP
+.nf
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml dev:/dev/i2c-4
+.fi
+.PP
+If needed for I2C permissions, prefix the command with \fBsudo env\fP.
 .SH ENVIRONMENT
 .TP
 .B DDCCONTROL_NO_DAEMON

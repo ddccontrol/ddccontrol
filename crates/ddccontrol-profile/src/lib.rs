@@ -1,5 +1,6 @@
 // Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 
+use ddccontrol_xml::parse_integer;
 use encoding_rs::{Encoding, UTF_8};
 use roxmltree::Document;
 use std::borrow::Cow;
@@ -132,55 +133,13 @@ fn parse_bounded_integer(input: &str, maximum: u64) -> Result<u64, String> {
     Ok(value as u64)
 }
 
-fn parse_integer(input: &str) -> Result<i64, std::num::ParseIntError> {
-    let input = input.trim_start_matches(|character: char| character.is_ascii_whitespace());
-    let (negative, rest) = if let Some(rest) = input.strip_prefix('-') {
-        (true, rest)
-    } else if let Some(rest) = input.strip_prefix('+') {
-        (false, rest)
-    } else {
-        (false, input)
-    };
-    let (radix, digits) =
-        if let Some(rest) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
-            (16, rest)
-        } else if rest.len() > 1 && rest.starts_with('0') {
-            (8, &rest[1..])
-        } else {
-            (10, rest)
-        };
-    let value = i64::from_str_radix(digits, radix)?;
-    Ok(if negative { -value } else { value })
-}
-
 fn push_escaped_attribute(output: &mut String, input: &str) -> Result<(), ProfileError> {
-    for character in input.chars() {
-        match character {
-            '&' => output.push_str("&amp;"),
-            '<' => output.push_str("&lt;"),
-            '>' => output.push_str("&gt;"),
-            '\"' => output.push_str("&quot;"),
-            '\'' => output.push_str("&apos;"),
-            '\t' => output.push_str("&#x9;"),
-            '\n' => output.push_str("&#xA;"),
-            '\r' => output.push_str("&#xD;"),
-            character if is_xml_character(character) => output.push(character),
-            character => {
-                return Err(ProfileError::new(format!(
-                    "profile contains invalid XML character U+{:04X}",
-                    u32::from(character)
-                )))
-            }
-        }
-    }
-    Ok(())
-}
-
-fn is_xml_character(character: char) -> bool {
-    matches!(
-        u32::from(character),
-        0x20..=0xD7FF | 0xE000..=0xFFFD | 0x10000..=0x10FFFF
-    )
+    ddccontrol_xml::push_attribute(output, input).map_err(|character| {
+        ProfileError::new(format!(
+            "profile contains invalid XML character U+{:04X}",
+            u32::from(character)
+        ))
+    })
 }
 
 fn decode_xml_bytes(bytes: &[u8]) -> Result<Cow<'_, str>, ProfileError> {
