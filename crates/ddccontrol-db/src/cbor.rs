@@ -11,6 +11,7 @@ const MAX_ITEMS: usize = 4_000_000;
 const MAX_CONTAINER: usize = 1_000_000;
 const MAX_DEPTH: usize = 64;
 const MAX_PROFILES: usize = 65_536;
+const MAX_INCLUDE_DEPTH: usize = 256;
 
 #[derive(Clone, Debug)]
 pub(crate) struct Node {
@@ -499,14 +500,7 @@ pub(crate) fn decode(bytes: &[u8]) -> Result<Database, String> {
     }
     // Reference validity is checked before any caller may build a tree. A
     // damaged reference graph blocks only the profiles that depend on it.
-    let mut unavailable = Vec::new();
-    let mut cache = BTreeMap::new();
-    for id in profiles.keys() {
-        if reference_height(id, &profiles, &mut BTreeSet::new(), &mut cache).is_none() {
-            unavailable.push(id.clone());
-        }
-    }
-    for id in unavailable {
+    for id in invalid_reference_profiles(&profiles) {
         eprintln!("CBOR profile {id} unavailable: missing/cyclic/excessive include");
         profiles.get_mut(&id).unwrap().required = true;
     }
@@ -518,33 +512,59 @@ pub(crate) fn decode(bytes: &[u8]) -> Result<Database, String> {
     })
 }
 
-fn reference_height(
-    id: &str,
-    profiles: &BTreeMap<String, Node>,
-    active: &mut BTreeSet<String>,
-    cache: &mut BTreeMap<String, Option<usize>>,
-) -> Option<usize> {
-    if let Some(height) = cache.get(id) {
-        return *height;
-    }
-    if active.len() >= 256 || !active.insert(id.to_string()) {
-        return None;
-    }
-    let height = profiles.get(id).and_then(|profile| {
-        let mut maximum = 0;
-        for child in profile
+fn invalid_reference_profiles(profiles: &BTreeMap<String, Node>) -> Vec<String> {
+    let indices: BTreeMap<_, _> = profiles
+        .keys()
+        .enumerate()
+        .map(|(index, id)| (id.as_str(), index))
+        .collect();
+    let mut pending = vec![0usize; profiles.len()];
+    let mut parents = vec![Vec::new(); profiles.len()];
+    for (index, profile) in profiles.values().enumerate() {
+        for include in profile
             .children
             .iter()
             .filter(|child| child.tag == "include")
         {
-            let target = child.attr("file")?;
-            maximum = maximum.max(reference_height(target, profiles, active, cache)?);
+            pending[index] += 1;
+            if let Some(target) = include.attr("file").and_then(|id| indices.get(id)) {
+                parents[*target].push(index);
+            }
+            // A missing target (or file attribute) stays pending forever.
         }
-        (maximum < 256).then_some(maximum + 1)
-    });
-    active.remove(id);
-    cache.insert(id.to_string(), height);
-    height
+    }
+
+    // Resolve leaves first. A profile's height is independent of the path
+    // used to reach it, so an excessive ancestor cannot invalidate its suffix.
+    // This also avoids recursive calls on graphs up to MAX_PROFILES records.
+    let mut ready: Vec<_> = pending
+        .iter()
+        .enumerate()
+        .filter_map(|(index, &count)| (count == 0).then_some(index))
+        .collect();
+    let mut heights = vec![1usize; profiles.len()];
+    let mut valid = vec![false; profiles.len()];
+    while let Some(index) = ready.pop() {
+        if heights[index] > MAX_INCLUDE_DEPTH {
+            continue;
+        }
+        valid[index] = true;
+        for &parent in &parents[index] {
+            heights[parent] = heights[parent].max(heights[index] + 1);
+            pending[parent] -= 1;
+            if pending[parent] == 0 {
+                ready.push(parent);
+            }
+        }
+    }
+    // Cycles, unresolved targets and excessive paths cannot finish; neither
+    // can their dependants. Duplicate includes have one pending edge each.
+    profiles
+        .keys()
+        .enumerate()
+        .filter(|(index, _)| !valid[*index])
+        .map(|(_, id)| id.clone())
+        .collect()
 }
 
 #[cfg(test)]
@@ -634,6 +654,158 @@ mod tests {
         let mut bytes = Vec::new();
         ciborium::into_writer(&value, &mut bytes).unwrap();
         bytes
+    }
+
+    fn graph_database(edges: &BTreeMap<String, Vec<String>>) -> Database {
+        let mut root = value(REFERENCE).unwrap();
+        let options_hash = field(&root, 8)
+            .unwrap()
+            .as_map()
+            .unwrap()
+            .iter()
+            .find(|(key, _)| key.as_text() == Some("options.xml"))
+            .unwrap()
+            .1
+            .clone();
+        let mut manifest = vec![(Value::Text("options.xml".into()), options_hash)];
+        let mut profiles = Vec::new();
+        for (id, targets) in edges {
+            let children = if targets.is_empty() {
+                vec![Value::Map(vec![
+                    (0.into(), 8.into()),
+                    (1.into(), Value::Map(vec![])),
+                    (2.into(), Value::Array(vec![])),
+                ])]
+            } else {
+                targets
+                    .iter()
+                    .map(|target| {
+                        Value::Map(vec![
+                            (0.into(), 7.into()),
+                            (
+                                1.into(),
+                                Value::Map(vec![(9.into(), target.clone().into())]),
+                            ),
+                            (2.into(), Value::Array(vec![])),
+                        ])
+                    })
+                    .collect()
+            };
+            profiles.push((
+                id.clone().into(),
+                Value::Map(vec![
+                    (0.into(), 5.into()),
+                    (
+                        1.into(),
+                        Value::Map(vec![
+                            (0.into(), id.clone().into()),
+                            (5.into(), "standard".into()),
+                        ]),
+                    ),
+                    (2.into(), Value::Array(children)),
+                ]),
+            ));
+            let body = if targets.is_empty() {
+                "<controls/>".to_string()
+            } else {
+                targets
+                    .iter()
+                    .map(|target| format!("<include file=\"{target}\"/>"))
+                    .collect()
+            };
+            let xml = format!("<monitor name=\"{id}\" init=\"standard\">{body}</monitor>");
+            manifest.push((
+                format!("monitor/{id}.xml").into(),
+                Value::Bytes(Sha256::digest(xml.as_bytes()).to_vec()),
+            ));
+        }
+        let manifest = Value::Map(manifest);
+        let snapshot = Sha256::digest(encode(manifest.clone())).to_vec();
+        for (id, replacement) in [
+            (6, Value::Map(profiles)),
+            (8, manifest),
+            (9, Value::Bytes(snapshot)),
+        ] {
+            root.as_map_mut()
+                .unwrap()
+                .iter_mut()
+                .find(|(key, _)| uint(key) == Ok(id))
+                .unwrap()
+                .1 = replacement;
+        }
+        decode(&encode(root)).unwrap()
+    }
+
+    #[test]
+    fn include_depth_rejection_preserves_valid_suffixes_in_both_id_orders() {
+        for count in [256, 257] {
+            for reversed in [false, true] {
+                let ids: Vec<_> = (0..count)
+                    .map(|index| {
+                        format!("P{:03}", if reversed { count - 1 - index } else { index })
+                    })
+                    .collect();
+                let edges = ids
+                    .iter()
+                    .enumerate()
+                    .map(|(index, id)| {
+                        (
+                            id.clone(),
+                            ids.get(index + 1).cloned().into_iter().collect(),
+                        )
+                    })
+                    .collect();
+                let database = graph_database(&edges);
+                for (index, id) in ids.iter().enumerate() {
+                    assert_eq!(
+                        database.profiles[id].required,
+                        count - index > 256,
+                        "{id}, count={count}, reversed={reversed}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_includes_reject_only_their_dependants() {
+        let edges = [
+            ("cycle_a", vec!["cycle_b"]),
+            ("cycle_b", vec!["cycle_a"]),
+            ("cycle_parent", vec!["cycle_a", "leaf"]),
+            ("missing", vec!["absent"]),
+            ("missing_parent", vec!["missing"]),
+            ("self_cycle", vec!["self_cycle"]),
+            ("good", vec!["leaf"]),
+            ("duplicate", vec!["leaf", "leaf"]),
+            ("leaf", vec![]),
+        ]
+        .into_iter()
+        .map(|(id, targets)| {
+            (
+                id.to_string(),
+                targets.into_iter().map(str::to_string).collect(),
+            )
+        })
+        .collect();
+        let database = graph_database(&edges);
+        let rejected: Vec<_> = database
+            .profiles
+            .iter()
+            .filter(|(_, node)| node.required)
+            .map(|(id, _)| id.as_str())
+            .collect();
+        assert_eq!(
+            rejected,
+            [
+                "cycle_a",
+                "cycle_b",
+                "cycle_parent",
+                "missing",
+                "missing_parent",
+                "self_cycle"
+            ]
+        );
     }
 
     #[test]
