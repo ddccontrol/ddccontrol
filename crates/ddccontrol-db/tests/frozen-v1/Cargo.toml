@@ -1,0 +1,25 @@
+[package]
+name = "ddccontrol-db-frozen-v1"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+publish = false
+
+[workspace]
+
+[lib]
+crate-type = ["staticlib"]
+
+[features]
+gettext = []
+
+[dependencies]
+ciborium = "0.2.2"
+sha2 = "0.10"
+ddccontrol-caps = { path = "caps" }
+ddccontrol-edid = { path = "../../../ddccontrol-edid" }
+ddccontrol-profile = { path = "../../../ddccontrol-profile" }
+ddccontrol-protocol = { path = "../../../ddccontrol-protocol" }
+encoding_rs = "0.8"
+libc = "0.2"
+roxmltree = "0.20"

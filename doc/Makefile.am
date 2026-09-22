@@ -9,6 +9,7 @@ EXTRA_DIST += cbor/format.md \
  cbor/coverage.md \
  cbor/sources.md \
  cbor/decisions.md \
+ cbor/testing.md \
  cbor/schema-check/Cargo.toml \
  cbor/schema-check/Cargo.lock \
  cbor/schema-check/src/main.rs \
