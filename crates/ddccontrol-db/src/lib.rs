@@ -546,6 +546,27 @@ mod monitor_db {
     struct DbContext {
         datadir: PathBuf,
         options: OptionsDb,
+        monitor_file: Option<MonitorFile>,
+    }
+
+    #[derive(Clone)]
+    struct MonitorFile {
+        pnpid: String,
+        xml: String,
+    }
+
+    #[derive(Clone, Copy)]
+    struct LoadMode {
+        faulttolerance: bool,
+        validate_all: bool,
+    }
+
+    struct ValidationCaps(CCaps);
+
+    impl Drop for ValidationCaps {
+        fn drop(&mut self) {
+            unsafe { super::free_c_vcp_entries(&mut self.0) };
+        }
     }
 
     #[derive(Clone, Default)]
@@ -678,7 +699,11 @@ mod monitor_db {
 
         match load_options(&datadir) {
             Ok(options) => {
-                *db_context() = Some(DbContext { datadir, options });
+                *db_context() = Some(DbContext {
+                    datadir,
+                    options,
+                    monitor_file: None,
+                });
                 1
             }
             Err(err) => {
@@ -700,6 +725,121 @@ mod monitor_db {
         {
             PathBuf::from(CStr::from_ptr(path).to_string_lossy().into_owned())
         }
+    }
+
+    /// Validate and snapshot a monitor definition for this process only.
+    /// Returns 1 on success, 0 on failure without changing the previous override.
+    ///
+    /// # Safety
+    /// `filename` must be a readable, NUL-terminated path. `pnpid` may be null
+    /// or point to at least eight writable bytes; it is written only on success.
+    /// No caller-owned allocation is retained or freed.
+    #[no_mangle]
+    pub unsafe extern "C" fn ddcci_set_monitor_file(
+        filename: *const c_char,
+        pnpid: *mut c_char,
+    ) -> c_int {
+        db_ffi(0, || match set_monitor_file_inner(filename) {
+            Ok(id) => {
+                if !pnpid.is_null() {
+                    ptr::copy_nonoverlapping(id.as_ptr().cast::<c_char>(), pnpid, 7);
+                    *pnpid.add(7) = 0;
+                }
+                1
+            }
+            Err(message) => {
+                eprintln!("{message}");
+                0
+            }
+        })
+    }
+
+    unsafe fn set_monitor_file_inner(filename: *const c_char) -> Result<String, String> {
+        if filename.is_null() {
+            return Err("A monitor file path is required.".to_string());
+        }
+        let path = pathbuf_from_c_path(filename);
+        let pnpid = path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .and_then(|name| name.strip_suffix(".xml"))
+            .filter(|id| {
+                id.len() == 7
+                    && id.as_bytes()[..3].iter().all(u8::is_ascii_uppercase)
+                    && id.as_bytes()[3..]
+                        .iter()
+                        .all(|byte| byte.is_ascii_digit() || (b'A'..=b'F').contains(byte))
+            })
+            .ok_or_else(|| {
+                format!(
+                    "Invalid monitor filename {}: expected a PNP ID such as DEL1234.xml.",
+                    path.display()
+                )
+            })?
+            .to_string();
+        // Keep initialization and publication serialized, while changing only
+        // a private clone until the entire monitor and its includes validate.
+        let mut guard = db_context();
+        let mut context = guard.clone().ok_or_else(|| {
+            "Database must be initialized before loading a monitor file.".to_string()
+        })?;
+        let xml = read_xml_file(&path)
+            .map_err(|err| format!("Cannot access {}: {err}", path.display()))?;
+        context.monitor_file = Some(MonitorFile {
+            pnpid: pnpid.clone(),
+            xml,
+        });
+        let mut caps = ValidationCaps(CCaps {
+            vcp: [ptr::null_mut(); 256],
+            monitor_type: 0,
+            raw_caps: ptr::null_mut(),
+        });
+        let mut build = MonitorBuild {
+            groups: groups_from_options(&context.options),
+            ..MonitorBuild::default()
+        };
+        create_db_protected(
+            &context,
+            &mut build,
+            &pnpid,
+            &mut caps.0,
+            0,
+            &mut [false; 256],
+            LoadMode {
+                faulttolerance: false,
+                validate_all: true,
+            },
+        )
+        .map_err(|err| format!("Invalid monitor file {}: {}", path.display(), err.message))?;
+        if build.init == INIT_TYPE_UNKNOWN {
+            return Err(format!(
+                "Invalid monitor file {}: init mode not set.",
+                path.display()
+            ));
+        }
+        *guard = Some(context);
+        Ok(pnpid)
+    }
+
+    /// Return 1 when the current process has an override for exactly `pnpid`.
+    ///
+    /// # Safety
+    /// `pnpid` must be null or point to a readable, NUL-terminated C string.
+    #[no_mangle]
+    pub unsafe extern "C" fn ddcci_monitor_file_matches(pnpid: *const c_char) -> c_int {
+        db_ffi(0, || {
+            if pnpid.is_null() {
+                return 0;
+            }
+            let guard = db_context();
+            let monitor_file = guard
+                .as_ref()
+                .and_then(|context| context.monitor_file.as_ref());
+            c_int::from(
+                monitor_file
+                    .is_some_and(|file| file.pnpid.as_bytes() == CStr::from_ptr(pnpid).to_bytes()),
+            )
+        })
     }
 
     /// Release the global database context without unwinding into C.
@@ -747,6 +887,11 @@ mod monitor_db {
                 return ptr::null_mut();
             }
         };
+        let faulttolerance = faulttolerance != 0
+            && !context
+                .monitor_file
+                .as_ref()
+                .is_some_and(|file| file.pnpid == pnpname);
 
         let mut build = MonitorBuild {
             init: INIT_TYPE_UNKNOWN,
@@ -762,18 +907,21 @@ mod monitor_db {
             caps,
             0,
             &mut defined,
-            faulttolerance != 0,
+            LoadMode {
+                faulttolerance,
+                validate_all: false,
+            },
         );
 
         if let Err(err) = result {
-            if !err.missing_profile || faulttolerance == 0 {
+            if !err.missing_profile || !faulttolerance {
                 eprintln!("{}", err.message);
             }
             return ptr::null_mut();
         }
 
         if build.init == INIT_TYPE_UNKNOWN {
-            if faulttolerance != 0 {
+            if faulttolerance {
                 eprintln!("Warning: init mode not set, using standard.");
                 build.init = INIT_TYPE_STANDARD;
             } else {
@@ -900,7 +1048,7 @@ mod monitor_db {
         caps: *mut CCaps,
         recursionlevel: usize,
         defined: &mut [bool; 256],
-        faulttolerance: bool,
+        mode: LoadMode,
     ) -> Result<(), DbError> {
         if !is_valid_monitor_profile_name(pnpname) {
             return Err(DbError::new(format!(
@@ -917,20 +1065,27 @@ mod monitor_db {
             .datadir
             .join("monitor")
             .join(format!("{pnpname}.xml"));
-        let xml = match read_xml_file(&path) {
-            Ok(xml) => xml,
-            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
-                return Err(DbError::missing(format!(
-                    "Cannot access {}: {err}",
-                    path.display()
-                )));
-            }
-            Err(err) => {
-                return Err(DbError::new(format!(
-                    "Cannot access {}: {err}",
-                    path.display()
-                )));
-            }
+        let monitor_file = context
+            .monitor_file
+            .as_ref()
+            .filter(|file| recursionlevel == 0 && file.pnpid == pnpname);
+        let xml = match monitor_file {
+            Some(file) => Cow::Borrowed(file.xml.as_str()),
+            None => match read_xml_file(&path) {
+                Ok(xml) => Cow::Owned(xml),
+                Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
+                    return Err(DbError::missing(format!(
+                        "Cannot access {}: {err}",
+                        path.display()
+                    )));
+                }
+                Err(err) => {
+                    return Err(DbError::new(format!(
+                        "Cannot access {}: {err}",
+                        path.display()
+                    )));
+                }
+            },
         };
         let doc = Document::parse(&xml)
             .map_err(|_| DbError::new("Document not parsed successfully.".to_string()))?;
@@ -951,18 +1106,21 @@ mod monitor_db {
             );
         }
 
-        if build.init == INIT_TYPE_UNKNOWN {
+        if build.init == INIT_TYPE_UNKNOWN || mode.validate_all {
             if let Some(init) = root.attribute("init") {
-                build.init = match init {
+                let init = match init {
                     "standard" => INIT_TYPE_STANDARD,
                     "samsung" => INIT_TYPE_SAMSUNG,
                     _ => return Err(DbError::new(node_error(root, "Invalid type."))),
                 };
+                if build.init == INIT_TYPE_UNKNOWN {
+                    build.init = init;
+                }
             }
         }
 
         if root.attribute("caps").is_some() {
-            if faulttolerance {
+            if mode.faulttolerance {
                 eprintln!("Warning: caps property is deprecated.");
             } else {
                 return Err(DbError::new(
@@ -971,7 +1129,7 @@ mod monitor_db {
             }
         }
         if root.attribute("include").is_some() {
-            if faulttolerance {
+            if mode.faulttolerance {
                 eprintln!("Warning: include property is deprecated.");
             } else {
                 return Err(DbError::new(
@@ -1012,7 +1170,7 @@ mod monitor_db {
                         caps,
                         recursionlevel + 1,
                         defined,
-                        faulttolerance,
+                        mode,
                     )?;
                 }
                 "controls" => {
@@ -1031,8 +1189,11 @@ mod monitor_db {
                         &monitor_controls,
                         caps,
                         defined,
-                        faulttolerance,
+                        mode,
                     )?;
+                }
+                _ if mode.validate_all => {
+                    return Err(DbError::new(node_error(child, "Unknown monitor element.")));
                 }
                 _ => {}
             }
@@ -1053,7 +1214,7 @@ mod monitor_db {
         monitor_controls: &ParsedMonitorControls,
         caps: *mut CCaps,
         defined: &mut [bool; 256],
-        faulttolerance: bool,
+        mode: LoadMode,
     ) -> Result<(), DbError> {
         let mut matched = vec![false; monitor_controls.elements.len()];
 
@@ -1070,17 +1231,19 @@ mod monitor_db {
 
                     matched[monitor_control.child_index] = true;
                     let address = monitor_control_address(monitor_control)? as usize;
-                    unsafe {
-                        if (*caps).vcp[address].is_null() {
+                    if !mode.validate_all {
+                        unsafe {
+                            if (*caps).vcp[address].is_null() {
+                                continue;
+                            }
+                        }
+                        if defined[address] {
                             continue;
                         }
                     }
-                    if defined[address] {
-                        continue;
-                    }
 
                     let mut values =
-                        get_value_list(option_control, monitor_control, faulttolerance)?;
+                        get_value_list(option_control, monitor_control, mode.faulttolerance)?;
                     if option_control.control_type == CONTROL_TYPE_COMMAND && values.is_empty() {
                         values.push(DbValue {
                             id: "default".to_string(),
@@ -1114,7 +1277,7 @@ mod monitor_db {
                     control.id.as_deref().unwrap_or("(null)"),
                     control.line
                 );
-                if !faulttolerance {
+                if !mode.faulttolerance {
                     return Err(DbError::new(
                         "Unmatched control in monitor XML.".to_string(),
                     ));

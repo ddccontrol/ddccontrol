@@ -31,6 +31,10 @@ fn exported_database_functions_contain_panics() {
         PANIC_IN_DB_CALL.with(|requested| requested.set(true));
         assert_eq!(ddcci_init_db(datadir.as_ptr() as *mut c_char), 0);
         PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        assert_eq!(ddcci_set_monitor_file(ptr::null(), ptr::null_mut()), 0);
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
+        assert_eq!(ddcci_monitor_file_matches(name.as_ptr()), 0);
+        PANIC_IN_DB_CALL.with(|requested| requested.set(true));
         assert!(ddcci_create_db(name.as_ptr(), &mut caps.0, 0).is_null());
         PANIC_IN_DB_CALL.with(|requested| requested.set(true));
         ddcci_release_db();
@@ -38,7 +42,7 @@ fn exported_database_functions_contain_panics() {
         ddcci_free_db(ptr::null_mut());
     }
 
-    // The process survived all four extern "C" calls and remains usable.
+    // The process survived all extern "C" calls and remains usable.
     assert!(OwnedMonitor::create("compat-monitor", &mut caps, false).is_some());
 }
 
@@ -403,4 +407,268 @@ fn c_xml_string(ptr: *mut c_uchar) -> String {
             .to_string_lossy()
             .into_owned()
     }
+}
+
+struct TemporaryDatabase(PathBuf);
+
+impl TemporaryDatabase {
+    fn new() -> Self {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let index = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let directory = env::temp_dir().join(format!(
+            "ddccontrol-monitor-file-{}-{index}",
+            std::process::id()
+        ));
+        fs::create_dir_all(directory.join("monitor")).unwrap();
+        // distcheck makes source fixtures read-only. Copy their contents into
+        // newly created writable files because these tests edit the temporary DB.
+        for filename in ["options.xml", "monitor/compat-common.xml"] {
+            fs::write(
+                directory.join(filename),
+                fs::read(fixture_datadir().join(filename)).unwrap(),
+            )
+            .unwrap();
+        }
+        Self(directory)
+    }
+
+    fn write(&self, filename: &str, xml: &str) -> PathBuf {
+        let path = self.0.join(filename);
+        fs::write(&path, xml).unwrap();
+        path
+    }
+}
+
+impl Drop for TemporaryDatabase {
+    fn drop(&mut self) {
+        fs::remove_dir_all(&self.0).unwrap();
+    }
+}
+
+const LOCAL_MONITOR: &str = r#"<monitor name="Local monitor" init="standard">
+    <controls><control id="brightness" address="0x10" delay="80"/></controls>
+    </monitor>"#;
+
+fn set_monitor_file(path: &Path) -> c_int {
+    let path = path_to_cstring(path);
+    unsafe { ddcci_set_monitor_file(path.as_ptr(), ptr::null_mut()) }
+}
+
+fn monitor_file_matches(pnpid: &str) -> bool {
+    let pnpid = CString::new(pnpid).unwrap();
+    unsafe { ddcci_monitor_file_matches(pnpid.as_ptr()) == 1 }
+}
+
+#[test]
+fn local_monitor_file_overrides_only_matching_root_and_snapshots_xml() {
+    let database = TemporaryDatabase::new();
+    let installed = LOCAL_MONITOR.replace("Local monitor", "Installed monitor");
+    database.write("monitor/DEL1234.xml", &installed);
+    database.write("monitor/ACR1234.xml", &installed);
+    database.write("monitor/VESA.xml", &installed);
+    let path = database.write("DEL1234.xml", LOCAL_MONITOR);
+    let _context = DbTestContext::init(&database.0);
+    let old_context = db_context().clone().unwrap();
+    let c_path = path_to_cstring(&path);
+    let mut pnpid: [c_char; 8] = [42; 8];
+    assert_eq!(
+        unsafe { ddcci_set_monitor_file(c_path.as_ptr(), pnpid.as_mut_ptr()) },
+        1
+    );
+    assert_eq!(
+        unsafe { CStr::from_ptr(pnpid.as_ptr()) }.to_bytes(),
+        b"DEL1234"
+    );
+    assert!(old_context.monitor_file.is_none());
+    assert!(monitor_file_matches("DEL1234"));
+    assert!(!monitor_file_matches("ACR1234"));
+    assert!(!monitor_file_matches("VESA"));
+    assert_eq!(unsafe { ddcci_monitor_file_matches(ptr::null()) }, 0);
+    fs::remove_file(path).unwrap();
+
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let monitor = OwnedMonitor::create("DEL1234", &mut caps, true).unwrap();
+    assert_eq!(
+        monitor.snapshot(),
+        "\
+monitor name=Local monitor init=1
+group name=Image
+  subgroup name=Picture pattern=image
+    control id=brightness name=Brightness address=0x10 delay=80 type=0 refresh=1
+"
+    );
+    for id in ["ACR1234", "VESA"] {
+        assert!(OwnedMonitor::create(id, &mut caps, true)
+            .unwrap()
+            .snapshot()
+            .contains("Installed monitor"));
+    }
+
+    // Includes resolve in the regular database even when their ID is overridden.
+    database.write(
+        "monitor/ACR1234.xml",
+        r#"<monitor name="Other monitor" init="samsung"><include file="DEL1234"/></monitor>"#,
+    );
+    assert!(OwnedMonitor::create("ACR1234", &mut caps, true)
+        .unwrap()
+        .snapshot()
+        .contains("Other monitor init=2"));
+    assert_eq!(set_monitor_file(&database.write("DEL1234.xml", r#"<monitor name="Including itself" init="standard"><include file="DEL1234"/></monitor>"#)), 1);
+    assert!(OwnedMonitor::create("DEL1234", &mut caps, true)
+        .unwrap()
+        .snapshot()
+        .contains("brightness"));
+}
+
+#[test]
+fn local_monitor_file_resolves_database_includes_and_applies_caps_patches() {
+    let database = TemporaryDatabase::new();
+    let path = database.write("DEL1234.xml", r#"<monitor name="Caps override" init="standard">
+        <caps add="(vcp(60 C8))" remove="(vcp(10))"/>
+        <controls><control id="color_preset" address="0xc8"><value id="srgb" value="0x1234"/></control></controls>
+        <include file="compat-common"/>
+        </monitor>"#);
+    let _context = DbTestContext::init(&database.0);
+    assert_eq!(set_monitor_file(&path), 1);
+    let mut caps = OwnedCaps::from_str("(vcp(10))");
+    let monitor = OwnedMonitor::create("DEL1234", &mut caps, true).unwrap();
+    let snapshot = monitor.snapshot();
+    assert!(!snapshot.contains("brightness"));
+    assert!(snapshot.contains("control id=input"));
+    assert!(snapshot.contains("value16=0x1234"));
+    assert!(caps.0.vcp[0x10].is_null());
+    assert!(!caps.0.vcp[0x60].is_null());
+    assert!(!caps.0.vcp[0xc8].is_null());
+
+    // A changed include cannot be silently accepted in fault-tolerant mode.
+    database.write("monitor/compat-common.xml", r#"<monitor name="Broken"><controls><control id="missing" address="0x10"/></controls></monitor>"#);
+    assert!(OwnedMonitor::create("DEL1234", &mut caps, true).is_none());
+}
+
+#[test]
+fn invalid_local_monitor_files_fail_atomically_before_hardware_discovery() {
+    let database = TemporaryDatabase::new();
+    let path = database.write("DEL1234.xml", LOCAL_MONITOR);
+    let _context = DbTestContext::init(&database.0);
+    assert_eq!(set_monitor_file(&path), 1);
+    let invalid = [
+        "<monitor>",
+        r#"<options/>"#,
+        r#"<monitor init="standard"><controls/></monitor>"#,
+        r#"<monitor name="Missing init"><controls/></monitor>"#,
+        r#"<monitor name="Invalid init" init="invalid"><controls/></monitor>"#,
+        r#"<monitor name="Missing controls" init="standard"/>"#,
+        r#"<monitor name="Deprecated" init="standard" caps="(vcp(10))"><controls/></monitor>"#,
+        r#"<monitor name="Deprecated" init="standard" include="compat-common"><controls/></monitor>"#,
+        r#"<monitor name="Unknown" init="standard"><mystery/><controls/></monitor>"#,
+        r#"<monitor name="Duplicate controls" init="standard"><controls/><controls/></monitor>"#,
+        r#"<monitor name="Missing include" init="standard"><include file="missing"/></monitor>"#,
+        r#"<monitor name="Invalid include" init="standard"><include file="../DEL1234"/></monitor>"#,
+        r#"<monitor name="Malformed include" init="standard"><include/></monitor>"#,
+        r#"<monitor name="Malformed caps" init="standard"><caps add="(vcp(zz))"/><controls/></monitor>"#,
+        r#"<monitor name="Empty caps" init="standard"><caps/><controls/></monitor>"#,
+        r#"<monitor name="Unknown control" init="standard"><controls><control id="missing" address="0x10"/></controls></monitor>"#,
+        r#"<monitor name="Unknown value" init="standard"><controls><control id="input" address="0x60"><value id="missing" value="1"/></control></controls></monitor>"#,
+        r#"<monitor name="Invalid value" init="standard"><controls><control id="input" address="0x60"><value id="hdmi1" value="65536"/></control></controls></monitor>"#,
+        r#"<monitor name="Missing address" init="standard"><controls><control id="brightness"/></controls></monitor>"#,
+        r#"<monitor name="Invalid address" init="standard"><controls><control id="brightness" address="256"/></controls></monitor>"#,
+        r#"<monitor name="Invalid delay" init="standard"><controls><control id="brightness" address="0x10" delay="bad"/></controls></monitor>"#,
+        r#"<monitor name="Removed caps" init="standard"><caps remove="(vcp(60))"/><controls><control id="input" address="0x60"><value id="missing" value="1"/></control></controls></monitor>"#,
+        r#"<monitor name="Shadowed values" init="standard"><include file="compat-common"/><controls><control id="input" address="0x60"><value id="missing" value="1"/></control></controls></monitor>"#,
+    ];
+    let c_path = path_to_cstring(&path);
+    for xml in invalid {
+        fs::write(&path, xml).unwrap();
+        let mut pnpid: [c_char; 8] = [42; 8];
+        assert_eq!(
+            unsafe { ddcci_set_monitor_file(c_path.as_ptr(), pnpid.as_mut_ptr()) },
+            0,
+            "accepted {xml}"
+        );
+        assert_eq!(pnpid, [42; 8]);
+        assert!(monitor_file_matches("DEL1234"));
+        let mut caps = OwnedCaps::with_all_vcp_codes();
+        assert!(OwnedMonitor::create("DEL1234", &mut caps, true)
+            .unwrap()
+            .snapshot()
+            .contains("Local monitor"));
+    }
+    for filename in [
+        "DEL1234",
+        "DEL123.xml",
+        "DEL12345.xml",
+        "del1234.xml",
+        "DEL12G4.xml",
+        "D1L1234.xml",
+        "VESA.xml",
+    ] {
+        assert_eq!(
+            set_monitor_file(&database.write(filename, LOCAL_MONITOR)),
+            0
+        );
+    }
+    assert_eq!(set_monitor_file(&database.0.join("ABC1234.xml")), 0);
+    assert_eq!(
+        unsafe { ddcci_set_monitor_file(ptr::null(), ptr::null_mut()) },
+        0
+    );
+    assert!(monitor_file_matches("DEL1234"));
+}
+
+#[test]
+fn local_monitor_file_validates_includes_even_if_overridden_and_resets_with_database() {
+    let database = TemporaryDatabase::new();
+    let path = database.write("DEL1234.xml", r#"<monitor name="Local monitor" init="standard"><include file="compat-common"/></monitor>"#);
+    let _context = DbTestContext::init(&database.0);
+    database.write(
+        "monitor/compat-common.xml",
+        r#"<monitor name="Bad included init" init="invalid"><controls/></monitor>"#,
+    );
+    assert_eq!(set_monitor_file(&path), 0);
+    database.write(
+        "monitor/compat-common.xml",
+        r#"<monitor name="Cycle"><include file="compat-common"/></monitor>"#,
+    );
+    assert_eq!(set_monitor_file(&path), 0);
+    database.write("DEL1234.xml", LOCAL_MONITOR);
+    assert_eq!(set_monitor_file(&path), 1);
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let monitor = OwnedMonitor::create("DEL1234", &mut caps, false).unwrap();
+    unsafe { ddcci_release_db() };
+    assert!(!monitor_file_matches("DEL1234"));
+    assert_eq!(set_monitor_file(&path), 0);
+    assert!(monitor.snapshot().contains("Local monitor"));
+    let c_datadir = path_to_cstring(&database.0);
+    assert_eq!(
+        unsafe { ddcci_init_db(c_datadir.as_ptr() as *mut c_char) },
+        1
+    );
+    assert!(!monitor_file_matches("DEL1234"));
+    assert_eq!(set_monitor_file(&path), 1);
+    assert_eq!(
+        unsafe { ddcci_init_db(c_datadir.as_ptr() as *mut c_char) },
+        1
+    );
+    assert!(!monitor_file_matches("DEL1234"));
+    assert!(OwnedMonitor::create("DEL1234", &mut caps, true).is_none());
+}
+
+#[cfg(unix)]
+#[test]
+fn local_monitor_file_preserves_non_utf8_directory_names() {
+    use std::ffi::OsStr;
+    use std::os::unix::ffi::OsStrExt;
+    let database = TemporaryDatabase::new();
+    let directory = database.0.join(OsStr::from_bytes(b"non-utf8-\xff"));
+    fs::create_dir(&directory).unwrap();
+    let path = directory.join("DEL1234.xml");
+    fs::write(&path, LOCAL_MONITOR).unwrap();
+    let _context = DbTestContext::init(&database.0);
+    assert_eq!(set_monitor_file(&path), 1);
+    assert!(monitor_file_matches("DEL1234"));
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    assert!(OwnedMonitor::create("DEL1234", &mut caps, true)
+        .unwrap()
+        .snapshot()
+        .contains("Local monitor"));
 }

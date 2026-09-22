@@ -31,6 +31,7 @@
 #include "issueurl.h"
 
 #include <errno.h>
+#include <getopt.h>
 #include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -93,7 +94,7 @@ static void usage(char *name)
 {
 	fprintf(stderr, _(
 	            "Usage:\n"
-	            "%s [-b datadir] [-v] [-c] [-d] [-f] [-s] [-S] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
+	            "%s [-b datadir] [--monitor-file PNPID.xml] [-v] [-c] [-d] [-f] [-s] [-S] [-r ctrl [-w value|-W value|-t value1,value2]] [-l (profile path)] [-p | dev]\n"
 	            "\tdev: device, e.g. dev:/dev/i2c-0, or monitor selector (selector[/zero-based-index])\n"
 	            "\t-p : probe I2C devices to find monitor buses\n"
 	            "\t-c : query capability\n"
@@ -108,10 +109,13 @@ static void usage(char *name)
 	            "\t-v : verbosity (specify more to increase)\n"
 	            "\t-b : ddccontrol-db directory (if other than %s)\n"
 	            "\t-l : load values from XML profile file\n"
-	        ), name, DATADIR);
+	            "\t--monitor-file : use a local monitor definition named PNPID.xml; select matching monitors when dev is omitted\n"
+	            "\t                (requires the installed database; cannot be combined with -p)\n"
+	            "\nExample: DDCCONTROL_NO_DAEMON=1 %s --monitor-file ./DEL1234.xml\n"
+	        ), name, DATADIR, name);
 }
 
-static void check_integrity(char *datadir, char *pnpname)
+static void check_integrity(char *datadir, char *pnpname, const char *monitor_file)
 {
 	struct monitor_db *mon_db;
 
@@ -122,6 +126,19 @@ static void check_integrity(char *datadir, char *pnpname)
 	}
 
 	printf(_("[ OK ]\n"));
+	if (monitor_file) {
+		char monitor_file_pnpid[8];
+		if (!ddcci_set_monitor_file(monitor_file, monitor_file_pnpid)) {
+			ddcci_release_db();
+			exit(1);
+		}
+		if (strcmp(pnpname, monitor_file_pnpid) != 0) {
+			fprintf(stderr, _("Monitor file '%s' is for %s, but -i specifies %s.\n"),
+			        monitor_file, monitor_file_pnpid, pnpname);
+			ddcci_release_db();
+			exit(1);
+		}
+	}
 
 	/* Create caps with all controls. */
 	char buffer[sizeof("(vcp(") + (3 * 256) + sizeof("))")];
@@ -257,6 +274,16 @@ static int monitor_matches_selector(const char *selector, const struct monitorli
 	return 0;
 }
 
+static int monitor_matches_file(const struct monitor *mon, const char *monitor_file, const char *pnpid)
+{
+	if (monitor_file && strcmp(mon->pnpid, pnpid) != 0) {
+		fprintf(stderr, _("Monitor file '%s' is for %s, but the selected monitor is %s.\n"),
+		        monitor_file, pnpid, mon->pnpid);
+		return 0;
+	}
+	return 1;
+}
+
 int main(int argc, char **argv)
 {
 	int i, retry, ret;
@@ -276,6 +303,13 @@ int main(int argc, char **argv)
 	char *datadir = NULL;
 	char *pnpname = NULL; /* pnpname for -i parameter */
 	char *selected_monitor_name = NULL;
+	const char *monitor_file = NULL;
+	char monitor_file_pnpid[8] = {0};
+	enum { OPT_MONITOR_FILE = 256 };
+	static const struct option long_options[] = {
+		{ "monitor-file", required_argument, NULL, OPT_MONITOR_FILE },
+		{ NULL, 0, NULL, 0 }
+	};
 
 	/* -l (load profile) parameter */
 	struct profile *profilefile = NULL;
@@ -317,7 +351,7 @@ int main(int argc, char **argv)
 	                  "This program comes with ABSOLUTELY NO WARRANTY.\n"
 	                  "You may redistribute copies of this program under the terms of the GNU General Public License.\n\n"), VERSION);
 
-	while ((i = getopt(argc, argv, "hdr:w:W:t:csfvpb:i:l:S")) >= 0) {
+	while ((i = getopt_long(argc, argv, "hdr:w:W:t:csfvpb:i:l:S", long_options, NULL)) >= 0) {
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
@@ -325,6 +359,13 @@ int main(int argc, char **argv)
 			break;
 		case 'b':
 			datadir = optarg;
+			break;
+		case OPT_MONITOR_FILE:
+			if (monitor_file) {
+				fprintf(stderr, _("Specify --monitor-file only once.\n"));
+				exit(1);
+			}
+			monitor_file = optarg;
 			break;
 		case 'r':
 			if ((ctrl = strtol(optarg, NULL, 0)) < 0 || (ctrl > 255)) {
@@ -430,15 +471,25 @@ int main(int argc, char **argv)
 		case 'i': /* Undocumented developer parameter: check integrity of a specific EDID id */
 			pnpname = optarg;
 			break;
+		default:
+			usage(argv[0]);
+			exit(1);
 		}
 	}
 
 	ddcci_verbosity(verbosity);
+	if (monitor_file && probe) {
+		fprintf(stderr, _("You cannot combine --monitor-file with -p. Omit -p to select monitors matching the file.\n"));
+		exit(1);
+	}
 	if (pnpname) {
-		check_integrity(datadir, pnpname);
+		check_integrity(datadir, pnpname, monitor_file);
 	}
 
-	if ((optind == argc) && (!probe)) { /* Nor device, nor probe option specified. */
+	if (argc - optind > 1) {
+		usage(argv[0]);
+		exit(1);
+	} else if ((optind == argc) && (!probe) && (!monitor_file)) { /* No target specified. */
 		usage(argv[0]);
 		exit(1);
 	} else if ((optind != argc) && (probe)) { /* Device and probe option specified. */
@@ -457,6 +508,12 @@ int main(int argc, char **argv)
 			printf(_("Unable to initialize ddcci db library.\n"));
 			exit(1);
 		}
+	}
+	if (monitor_file && !ddcci_set_monitor_file(monitor_file, monitor_file_pnpid)) {
+		ddcci_release();
+		exit(1);
+	}
+	if (can_use_dbus_daemon()) {
 		proxy = ddcci_dbus_open_proxy();
 		if (proxy == NULL) {
 			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));
@@ -518,7 +575,7 @@ int main(int argc, char **argv)
 
 		ddcci_free_list(monlist);
 	} else {
-		const char *requested_target = argv[optind];
+		const char *requested_target = optind < argc ? argv[optind] : monitor_file_pnpid;
 		int use_selector = strncmp(requested_target, "dev:", 4) != 0;
 
 		if (strncmp(requested_target, "pci:", 4) == 0 || strncmp(requested_target, "adl:", 4) == 0) {
@@ -567,6 +624,15 @@ int main(int argc, char **argv)
 					}
 					if (open_ret >= 0 && monitor_matches_selector(selector, current, candidate)) {
 						if (!has_index || (selected_index == matched_count)) {
+							if (!monitor_matches_file(candidate, monitor_file, monitor_file_pnpid)) {
+								int candidate_needs_free = (candidate->__vtable == NULL);
+								ddcci_close(candidate);
+								if (candidate_needs_free) free(candidate);
+								ddcci_free_list(monlist);
+								free(selector);
+								ddcci_release();
+								exit(1);
+							}
 							if (selected_count == selected_alloc) {
 								int new_alloc = selected_alloc ? selected_alloc * 2 : 4;
 								char **new_fns = realloc(selected_fns, sizeof(char *) * (size_t)new_alloc);
@@ -712,6 +778,13 @@ int main(int argc, char **argv)
 			            "If this is a laptop internal display, please note many eDP/LVDS panels do not support DDC/CI.\n"
 			        ), fn, ret);
 		} else {
+			if (!monitor_matches_file(mon, monitor_file, monitor_file_pnpid)) {
+				int mon_needs_free = (mon->__vtable == NULL);
+				ddcci_close(mon);
+				if (mon_needs_free) free(mon);
+				ddcci_release();
+				exit(1);
+			}
 			fprintf(stdout, _("\nEDID readings:\n"));
 			fprintf(stdout, _("\tPlug and Play ID: %s [%s]\n"),
 			        mon->pnpid, mon->db ? mon->db->name : NULL);
@@ -949,6 +1022,10 @@ int main(int argc, char **argv)
 			if (mon_needs_free) free(mon);
 		} else if (!can_use_dbus_daemon()) {
 			free(mon);
+		}
+		if (ret < 0 && monitor_file) {
+			ddcci_release();
+			exit(1);
 		}
 	}
 

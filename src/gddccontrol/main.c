@@ -86,6 +86,34 @@ DDCControl *ddccontrol_proxy;
 int hide_unsupported_monitor_warning = 0;
 
 static int verbosity = 0;
+static gchar *monitor_file = NULL;
+static char monitor_file_pnpid[8];
+static GtkWidget *monitor_file_label = NULL;
+
+static void update_monitor_file_label(const struct monitor *selected_monitor)
+{
+	if (monitor_file_label == NULL)
+		return;
+
+	gchar *filename = g_filename_display_name(monitor_file);
+	gchar *message;
+
+	if (selected_monitor && selected_monitor->db &&
+	    ddcci_monitor_file_matches(selected_monitor->pnpid)) {
+		message = g_strdup_printf(_("Using local monitor file for %s:\n%s"),
+		                          monitor_file_pnpid, filename);
+	} else if (selected_monitor &&
+	           !ddcci_monitor_file_matches(selected_monitor->pnpid)) {
+		message = g_strdup_printf(_("Local monitor file for %s is not active for the selected monitor (%s):\n%s"),
+		                          monitor_file_pnpid, selected_monitor->pnpid, filename);
+	} else {
+		message = g_strdup_printf(_("Local monitor file for %s:\n%s\nSelect a matching monitor to test this definition."),
+		                          monitor_file_pnpid, filename);
+	}
+	gtk_label_set_text(GTK_LABEL(monitor_file_label), message);
+	g_free(message);
+	g_free(filename);
+}
 
 static gboolean parse_verbosity_option(const gchar *option_name, const gchar *value, gpointer data, GError **error)
 {
@@ -167,6 +195,7 @@ static void combo_change(GtkWidget *widget, gpointer data)
 			{
 				snprintf(buffer, 256, "%s: %s", current->filename, current->name);
 				create_monitor_manager(current);
+				update_monitor_file_label(monitor_manager ? mon : NULL);
 				if (monitor_manager) {
 					gtk_widget_set_sensitive(refresh_controls_button, TRUE);
 				}
@@ -387,6 +416,7 @@ static void probe_monitors(GtkWidget *widget, gpointer data) {
 	gtk_list_store_clear(GTK_LIST_STORE(gtk_combo_box_get_model(GTK_COMBO_BOX(combo_box))));
 	
 	set_message(_("Probing for available monitors..."));
+	update_monitor_file_label(NULL);
 	// TODO: rescan on button, initial get only
 	ddcci_free_list(monlist);
 	monlist = NULL;
@@ -434,7 +464,12 @@ int main( int argc, char *argv[] )
 {
 	GError *option_error = NULL;
 	GOptionContext *option_context = NULL;
+	gchar *datadir = NULL;
 	const GOptionEntry option_entries[] = {
+		{ "monitor-file", 0, 0, G_OPTION_ARG_FILENAME, &monitor_file,
+		  N_("Use a local PNPID.xml monitor definition for the matching monitor"), N_("FILE") },
+		{ "db-path", 'b', 0, G_OPTION_ARG_FILENAME, &datadir,
+		  N_("Use an alternative ddccontrol-db directory"), N_("DIR") },
 		{ "hide-unsupported-warning", 0, 0, G_OPTION_ARG_NONE, &hide_unsupported_monitor_warning,
 		  N_("Hide unsupported monitor warning when using fallback profiles"), NULL },
 		{ "verbose", 'v', G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, parse_verbosity_option,
@@ -462,19 +497,41 @@ int main( int argc, char *argv[] )
 		fprintf(stderr, "%s\n", option_error->message);
 		g_error_free(option_error);
 		g_option_context_free(option_context);
+		g_free(monitor_file);
+		g_free(datadir);
 		return 1;
 	}
 
 	g_option_context_free(option_context);
 
-	gtk_init(&argc, &argv);
-
 	ddcci_verbosity(verbosity);
+
+	/* Validate local definitions before opening a display or contacting the daemon. */
+	if (monitor_file) {
+		if (!ddcci_init(datadir)) {
+			fprintf(stderr, _("Unable to initialize ddcci library.\n"));
+			g_free(monitor_file);
+			g_free(datadir);
+			return 1;
+		}
+		if (!ddcci_set_monitor_file(monitor_file, monitor_file_pnpid)) {
+			ddcci_release();
+			g_free(monitor_file);
+			g_free(datadir);
+			return 1;
+		}
+	}
+
+	gtk_init(&argc, &argv);
 
 	if (can_use_dbus_daemon()) {
 		ddccontrol_proxy = ddcci_dbus_open_proxy();
 		if(ddccontrol_proxy == NULL) {
 			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));
+			if (monitor_file)
+				ddcci_release();
+			g_free(monitor_file);
+			g_free(datadir);
 			return 1;
 		}
 	} else {
@@ -488,7 +545,7 @@ int main( int argc, char *argv[] )
 	show_pattern();
 	gtk_main();*/
 	
-	if (!ddcci_init(NULL)) {
+	if (!monitor_file && !ddcci_init(datadir)) {
 		printf(_("Unable to initialize ddcci library.\n"));
 		GtkWidget* dialog = gtk_message_dialog_new(
 				GTK_WINDOW(main_app_window),
@@ -498,8 +555,10 @@ int main( int argc, char *argv[] )
 				_("Unable to initialize ddcci library, see console for more details.\n"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
+		g_free(datadir);
 		return 1;
 	}
+	g_free(datadir);
 	
 	gtk_window_set_default_icon_name ("gddccontrol");
 
@@ -557,6 +616,19 @@ int main( int argc, char *argv[] )
 	gtk_widget_set_margin_end(choice_hbox, 5);
 	crow++;
 	gtk_widget_show(choice_hbox);
+
+	if (monitor_file) {
+		monitor_file_label = gtk_label_new(NULL);
+		gtk_label_set_line_wrap(GTK_LABEL(monitor_file_label), TRUE);
+		gtk_label_set_max_width_chars(GTK_LABEL(monitor_file_label), 70);
+		gtk_label_set_selectable(GTK_LABEL(monitor_file_label), TRUE);
+		gtk_widget_set_halign(monitor_file_label, GTK_ALIGN_START);
+		gtk_widget_set_margin_start(monitor_file_label, 5);
+		gtk_widget_set_margin_end(monitor_file_label, 5);
+		gtk_grid_attach(GTK_GRID(grid), monitor_file_label, 0, crow++, 1, 1);
+		update_monitor_file_label(NULL);
+		gtk_widget_show(monitor_file_label);
+	}
 	
 	GtkWidget* hsep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_widget_show (hsep);
@@ -711,6 +783,7 @@ int main( int argc, char *argv[] )
 	ddcci_free_list(monlist);
 	
 	ddcci_release();
+	g_free(monitor_file);
 	
 	return 0;
 }

@@ -289,14 +289,16 @@ fn run(args: Args) -> Result<(), String> {
         scan.pnp_id
     );
     println!("Review the XML comments and test the enabled controls.");
+    println!("Preview with gddccontrol --monitor-file FILE or ddccontrol --monitor-file FILE.");
+    println!("Keep the filename {}.xml; relaunch after editing. No service restart is needed for preview.", scan.pnp_id);
     println!(
-        "To try the profile, copy it to {}.",
+        "For permanent installation, copy it to {}.",
         db_path
             .join("monitor")
             .join(format!("{}.xml", scan.pnp_id))
             .display()
     );
-    println!("Restart ddccontrol.service after installing or editing the profile.");
+    println!("Restart ddccontrol.service after changing the installed database.");
     if custom_database {
         println!("--db-path selects the XML definitions only; install the file in the running service's database to test it.");
     }

@@ -160,6 +160,11 @@ int ddcci_dbus_open(DDCControl *proxy, struct monitor **_mon, const char *filena
 	// DUPLICATED CODE START
 	mon->db = ddcci_create_db(mon->pnpid, &mon->caps, 1);
 	mon->fallback = 0; /* No fallback */
+	if (!mon->db && ddcci_monitor_file_matches(mon->pnpid)) {
+		dbus_monitor_close(mon);
+		*_mon = NULL;
+		return -1;
+	}
 
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */

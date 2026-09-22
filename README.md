@@ -134,8 +134,35 @@ ddccontrol-scanmonitor --list
 ddccontrol-scanmonitor dev:/dev/i2c-4 --output ./DEL1234.xml
 ```
 
-To try your file, copy it into the database's `monitor` directory and restart the
-service so it reloads the database. Use the path printed by the scanner; a typical
+Open the generated definition directly to try it:
+
+```shell
+gddccontrol --monitor-file ./DEL1234.xml
+ddccontrol --monitor-file ./DEL1234.xml
+```
+
+Keep the filename `<PNPID>.xml`, for example `DEL1234.xml`, so the definition
+applies only to that monitor model. The CLI selects matching monitors when no
+device is supplied; in the GUI, select the matching screen from the monitor list.
+The file is read for this process only. Relaunch the application after editing
+it; copying it into the system database or restarting the service is not needed.
+The installed database still supplies `options.xml` and included definitions.
+
+To test with direct device access, including changes to `init` and write delays,
+use the existing environment variable:
+
+```shell
+DDCCONTROL_NO_DAEMON=1 gddccontrol --monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
+```
+
+Direct access requires permission to use `/dev/i2c-*`. If necessary, run with
+`sudo env DDCCONTROL_NO_DAEMON=1 ...`. With the default D-Bus backend, the local
+file controls the application's available controls, while the service uses its
+installed definition for monitor initialization and write delays.
+
+To install a tested definition permanently, copy it into the database's `monitor`
+directory and restart the service. Use the path printed by the scanner; a typical
 package installation uses:
 
 ```shell
@@ -148,9 +175,7 @@ Use `--db-path /path/to/ddccontrol-db` to generate XML against a different
 database, such as a checkout of `ddccontrol-db`. This option selects the control
 definitions for generation; the service continues to use its installed database.
 
-Test the enabled controls using `gddccontrol` or `ddccontrol`, edit the generated
-XML as needed, then copy it back and restart the service after each change. Submit
-the tested XML file in a pull request to
+Submit the tested XML file in a pull request to
 [ddccontrol-db](https://github.com/ddccontrol/ddccontrol-db), following the
 [monitor contribution guide](https://github.com/ddccontrol/ddccontrol-db/blob/master/doc/how-to-add-a-monitor.md).
 See `ddccontrol-scanmonitor --help` or `man ddccontrol-scanmonitor` for all options.

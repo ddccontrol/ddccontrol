@@ -288,6 +288,8 @@ short get_control_max(struct control_db *control) {
 void refresh_all_controls(GtkWidget *widget, gpointer data)
 {
 	/* Maybe we could lock a Mutex here, but I don't think it is really necessary... */
+	if (all_controls == NULL)
+		return;
 	
 	gtk_widget_set_sensitive(refresh_controls_button, FALSE);
 	
@@ -877,9 +879,17 @@ static GtkWidget* createTreeAndPages(GtkWidget *stack)
 				count++;
 		}
 		
-		gchar* tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), (current*100)/count);
-		set_message(tmp);
-		g_free(tmp);
+		gchar* tmp;
+		if (count == 0) {
+			gtk_label_set_text(GTK_LABEL(valuelabel), _(
+				"No controls are available for this monitor.\n"
+				"Check the enabled controls in its XML definition and restart gddccontrol."));
+			gtk_label_set_line_wrap(GTK_LABEL(valuelabel), TRUE);
+		} else {
+			tmp = g_strdup_printf(_("Getting controls values (%d%%)..."), 0);
+			set_message(tmp);
+			g_free(tmp);
+		}
 		
 		for (group = mon->db->group_list; group != NULL; group = group->next)
 		{

@@ -633,6 +633,11 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 	caps_result = ddcci_caps(mon);
 	mon->db = ddcci_create_db(mon->pnpid, &mon->caps, 1);
 	mon->fallback = 0; /* No fallback */
+	if (!mon->db && ddcci_monitor_file_matches(mon->pnpid)) {
+		/* An explicitly selected definition must never become a generic one. */
+		mon->fallback = -1;
+		return -1;
+	}
 	
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
@@ -713,7 +718,7 @@ int ddcci_close(struct monitor* mon)
 	}
 	else
 	{ /* Alternate way of init mode detecting for unsupported monitors */
-		if (strncmp(mon->pnpid, "SAM", 3) == 0) {
+		if (mon->fallback >= 0 && strncmp(mon->pnpid, "SAM", 3) == 0) {
 			if ((ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_DISABLE, 0)) < 0) {
 				return -1;
 			}

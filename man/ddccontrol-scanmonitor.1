@@ -70,7 +70,20 @@ Choose a monitor and output path explicitly:
 ddccontrol-scanmonitor dev:/dev/i2c-4 \-\-output ./DEL1234.xml
 .fi
 .PP
-Install the result into a typical package database and reload the service:
+Try the generated file directly (replace the filename with your monitor's ID):
+.PP
+.nf
+gddccontrol \-\-monitor-file ./DEL1234.xml
+ddccontrol \-\-monitor-file ./DEL1234.xml
+.fi
+.PP
+Keep the filename PNPID.xml and relaunch the application after editing it.
+No system database changes or service restart are needed for this preview.
+To test monitor initialization and write delays as well, set
+.B DDCCONTROL_NO_DAEMON=1
+and ensure you have permission to access the I2C device.
+.PP
+Install a tested result into a typical package database and reload the service:
 .PP
 .nf
 sudo cp \-i DEL1234.xml /usr/share/ddccontrol-db/monitor/DEL1234.xml
@@ -82,7 +95,9 @@ Test the enabled controls with
 .BR gddccontrol (1)
 or
 .BR ddccontrol (1),
-edit the XML as needed, and copy it back and restart the service after each change.
+edit the XML as needed, and relaunch with
+.B \-\-monitor-file
+after each change.
 Submit the tested file in a pull request to the ddccontrol-db repository.
 .SH EXIT STATUS
 Zero indicates success. A nonzero exit status indicates invalid arguments,

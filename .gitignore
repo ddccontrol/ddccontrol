@@ -65,8 +65,14 @@ target/
 /src/daemon/test_open_monitor.trs
 /src/daemon/test-suite.log
 /src/ddccontrol/ddccontrol
+/src/ddccontrol/test-suite.log
+/src/ddccontrol/tests/*.log
+/src/ddccontrol/tests/*.trs
 /src/ddcpci/ddcpci
 /src/gddccontrol/gddccontrol
+/src/gddccontrol/test-suite.log
+/src/gddccontrol/tests/*.log
+/src/gddccontrol/tests/*.trs
 
 /src/lib/ddccontrol.pc
 /src/lib/test-suite.log

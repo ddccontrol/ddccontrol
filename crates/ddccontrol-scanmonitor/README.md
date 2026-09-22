@@ -26,10 +26,22 @@ commented for investigation. The scan reads controls and does not send
 `SetControl` requests; the daemon performs its usual monitor initialization.
 Successful reads do not prove that writing a control will work correctly.
 
-Review the XML comments and monitor name, then copy the file into your installed
-database's `monitor/` directory (the program prints the destination). Restart
-`ddccontrol.service` after installing or editing it. Test the controls with
-ddccontrol or gddccontrol, and enable additional entries as you verify them.
+Review the XML comments and monitor name, then test it directly:
+
+```sh
+gddccontrol --monitor-file ./DEL1234.xml
+ddccontrol --monitor-file ./DEL1234.xml
+```
+
+Use the actual `<PNPID>.xml` filename; it determines which monitor gets the
+definition. Relaunch the application after edits. Set `DDCCONTROL_NO_DAEMON=1`
+to use direct device access with sufficient `/dev/i2c-*` permissions. This also
+tests the file's monitor initialization and write delays; in daemon mode, those
+still use the service's installed definition.
+
+Enable additional entries as you verify them. For permanent use, copy the file
+into the installed database's `monitor/` directory (the scanner prints the
+destination), then restart `ddccontrol.service`.
 Some Samsung monitors require `init="samsung"`; the generated definition uses
 `init="standard"` and should be adjusted if the monitor needs that initialization.
 Submit the tested XML under `db/monitor/` in a pull request to
@@ -44,7 +56,7 @@ cargo build --release -p ddccontrol-scanmonitor --locked
 cargo test -p ddccontrol-scanmonitor --locked
 ```
 
-Rust 1.70+ and GLib/GIO development libraries are required (`libglib2.0-dev` on
+Rust 1.77+ and GLib/GIO development libraries are required (`libglib2.0-dev` on
 Debian/Ubuntu). The crate reuses the workspace's EDID and capabilities parsers
 and XML dependency; it introduces no new Cargo dependencies. GIO uses the
 existing `ddccontrol.DDCControl` system D-Bus API. Its C ABI declarations use
