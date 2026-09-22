@@ -4,6 +4,7 @@ members = [
     "crates/ddccontrol-db",
     "crates/ddccontrol-edid",
     "crates/ddccontrol-profile",
+    "crates/ddccontrol-protocol",
 ]
 resolver = "2"
 

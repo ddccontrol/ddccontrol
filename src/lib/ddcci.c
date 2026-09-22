@@ -40,6 +40,7 @@
 #include <sys/stat.h>
 
 #include "ddcci.h"
+#include "ddcci_protocol.h"
 #include "internal.h"
 #include "rust_ffi.h"
 
@@ -52,12 +53,10 @@ extern int ddccontrol_caps_parse(const char *caps_str, struct caps *caps, int ad
 #define DEFAULT_EDID_ADDR	0x50	/* edid sits at 0x50 */
 
 #define DDCCI_COMMAND_READ	0x01	/* read ctrl value */
-#define DDCCI_REPLY_READ	0x02	/* read ctrl value reply */
 #define DDCCI_COMMAND_WRITE	0x03	/* write ctrl value */
 
 #define DDCCI_COMMAND_SAVE	0x0c	/* save current settings */
 
-#define DDCCI_REPLY_CAPS	0xe3	/* get monitor caps reply */
 #define DDCCI_COMMAND_CAPS	0xf3	/* get monitor caps */
 #define DDCCI_COMMAND_PRESENCE	0xf7	/* ACCESS.bus presence check */
 
@@ -70,15 +69,9 @@ extern int ddccontrol_caps_parse(const char *caps_str, struct caps *caps, int ad
 #define DDCCI_CTRL_DISABLE	0x0000
 
 /* ddc/ci iface tunables */
-#define MAX_BYTES		127	/* max message length */
 #define DELAY   		45000	/* uS to wait after write */
 
 #define CONTROL_WRITE_DELAY   80000	/* uS to wait after writing to a control (default) */
-
-/* magic numbers */
-#define MAGIC_1	0x51	/* first byte to send, host address */
-#define MAGIC_2	0x80	/* second byte to send, ored with length */
-#define MAGIC_XOR 0x50	/* initial xor for received frame */
 
 /* verbosity level (0 - normal, 1 - encoded data, 2 - ddc/ci frames) */
 static int verbosity = 0;
@@ -270,89 +263,62 @@ static void ddcci_delay(struct monitor* mon, int iswrite)
 
 /* write len bytes (stored in buf) to ddc/ci at address addr */
 /* return 0 on success, -1 on failure */
-static int ddcci_write(struct monitor* mon, unsigned char *buf, unsigned char len)
+static int ddcci_write(struct monitor* mon, const unsigned char *buf, size_t len)
 {
-	int i = 0;
-	unsigned char _buf[MAX_BYTES + 3];
-	unsigned xor = ((unsigned char)mon->addr << 1);	/* initial xor value */
-
-	/* put first magic */
-	xor ^= (_buf[i++] = MAGIC_1);
-	
-	/* second magic includes message size */
-	xor ^= (_buf[i++] = MAGIC_2 | len);
-	
-	while (len--) /* bytes to send */
-		xor ^= (_buf[i++] = *buf++);
-		
-	/* finally put checksum */
-	_buf[i++] = xor;
+	unsigned char frame[DDCCI_MAX_FRAME_LEN];
+	int frame_len = ddccontrol_ddcci_build_frame(mon->addr, buf, len,
+		frame, sizeof(frame));
+	if (frame_len < 0)
+		return -1;
 
 	/* wait for previous command to complete */
 	ddcci_delay(mon, 1);
 
-	return i2c_write(mon, mon->addr, _buf, i);
+	return i2c_write(mon, mon->addr, frame, (unsigned char)frame_len);
 }
 
 /* read ddc/ci formatted frame from ddc/ci at address addr, to buf */
-static int ddcci_read(struct monitor* mon, unsigned char *buf, unsigned char len)
+static int ddcci_read(struct monitor* mon, unsigned char *buf, size_t len)
 {
-	unsigned char _buf[MAX_BYTES];
-	unsigned char xor = MAGIC_XOR;
-	int i, _len;
+	unsigned char frame[DDCCI_MAX_FRAME_LEN];
+	int read_len, payload_len, missing_length_flag;
+	int frame_len = ddccontrol_ddcci_frame_length(len);
+	if (frame_len < 0 || !buf)
+		return -1;
 
 	/* wait for previous command to complete */
 	ddcci_delay(mon, 0);
 
-	if (i2c_read(mon, mon->addr, _buf, len + 3) <= 0) /* busy ??? */
-	{
+	read_len = i2c_read(mon, mon->addr, frame, (unsigned char)frame_len);
+	if (read_len <= 0)
 		return -1;
-	}
-	
-	/* validate answer */
-	if (_buf[0] != mon->addr * 2) { /* busy ??? */
+	payload_len = ddccontrol_ddcci_parse_frame(mon->addr, frame, (size_t)read_len,
+		buf, len, &missing_length_flag);
+	if (payload_len < 0) {
 		if (!mon->probing || verbosity) {
-			fprintf(stderr, _("Invalid response, first byte is 0x%02x, should be 0x%02x\n"),
-				_buf[0], mon->addr * 2);
-			dumphex(stderr, NULL, _buf, len + 3);
+			switch (payload_len) {
+			case DDCCI_PROTOCOL_ADDRESS:
+				fprintf(stderr, _("Invalid response, first byte is 0x%02x, should be 0x%02x\n"),
+					frame[0], mon->addr * 2);
+				break;
+			case DDCCI_PROTOCOL_LENGTH:
+				fprintf(stderr, _("Invalid response, truncated frame or invalid length.\n"));
+				break;
+			case DDCCI_PROTOCOL_CHECKSUM:
+				fprintf(stderr, _("Invalid response, corrupted data.\n"));
+				break;
+			default:
+				fprintf(stderr, _("Invalid DDC/CI response.\n"));
+				break;
+			}
+			dumphex(stderr, NULL, frame, read_len);
 		}
 		return -1;
 	}
 
-	if ((_buf[1] & MAGIC_2) == 0) {
-		/* Fujitsu Siemens P19-2 and NEC LCD 1970NX send wrong magic when reading caps. */
-		if (!mon->probing || verbosity) {
-			fprintf(stderr, _("Non-fatal error: Invalid response, magic is 0x%02x\n"), _buf[1]);
-		}
-	}
-
-	_len = _buf[1] & ~MAGIC_2;
-	if (_len > len || _len > (int)sizeof(_buf)) {
-		if (!mon->probing || verbosity) {
-			fprintf(stderr, _("Invalid response, length is %d, should be %d at most\n"),
-				_len, len);
-		}
-		return -1;
-	}
-
-	/* get the xor value */
-	for (i = 0; i < _len + 3; i++) {
-		xor ^= _buf[i];
-	}
-	
-	if (xor != 0) {
-		if (!mon->probing || verbosity) {
-			fprintf(stderr, _("Invalid response, corrupted data - xor is 0x%02x, length 0x%02x\n"), xor, _len);
-			dumphex(stderr, NULL, _buf, len + 3);
-		}
-		
-		return -1;
-	}
-
-	/* copy payload data */
-	memcpy(buf, _buf + 2, _len);
-		
-	return _len;
+	if (missing_length_flag && (!mon->probing || verbosity))
+		fprintf(stderr, _("Non-fatal error: Invalid response, magic is 0x%02x\n"), frame[1]);
+	return payload_len;
 }
 
 /* write value to register ctrl of ddc/ci at address addr */
@@ -385,7 +351,7 @@ int ddcci_writectrl(struct monitor* mon, unsigned char ctrl, unsigned short valu
 
 /* read register ctrl raw data of ddc/ci at address addr */
 static int ddcci_raw_readctrl(struct monitor* mon, 
-	unsigned char ctrl, unsigned char *buf, unsigned char len)
+	unsigned char ctrl, unsigned char *buf, size_t len)
 {
 	unsigned char _buf[2];
 
@@ -411,21 +377,9 @@ int ddcci_readctrl(struct monitor* mon, unsigned char ctrl,
 
 	int len = ddcci_raw_readctrl(mon, ctrl, buf, sizeof(buf));
 	
-	if (len == sizeof(buf) && buf[0] == DDCCI_REPLY_READ &&	buf[2] == ctrl) 
-	{	
-		if (value) {
-			*value = buf[6] * 256 + buf[7];
-		}
-		
-		if (maximum) {
-			*maximum = buf[4] * 256 + buf[5];
-		}
-		
-		return !buf[1];
-		
-	}
-	
-	return -1;
+	if (len < 0)
+		return -1;
+	return ddccontrol_ddcci_parse_vcp(buf, (size_t)len, ctrl, value, maximum);
 }
 
 /* See documentation Appendix D.
@@ -441,7 +395,7 @@ int ddcci_parse_caps(const char* caps_str, struct caps* caps, int add)
 }
 
 /* read capabilities raw data of ddc/ci at address addr starting at offset to buf */
-static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf, unsigned char len)
+static int ddcci_raw_caps(struct monitor* mon, unsigned int offset, unsigned char *buf, size_t len)
 {
 	unsigned char _buf[3];
 
@@ -503,7 +457,7 @@ int ddcci_caps(struct monitor* mon)
 	size_t bufferpos = 0;
 	char *raw_caps, *resized;
 	unsigned char buf[64];	/* 64 bytes chunk (was 35, but 173P+ send 43 bytes chunks) */
-	int len;
+	int len, fragment_len;
 	int retries = 3;
 
 	free(mon->caps.raw_caps);
@@ -523,9 +477,9 @@ int ddcci_caps(struct monitor* mon)
 			continue;
 		}
 		
-		if (len < 3 || len > (int)sizeof(buf) || buf[0] != DDCCI_REPLY_CAPS ||
-		    (size_t)(buf[1] * 256 + buf[2]) != bufferpos)
-		{
+		fragment_len = ddccontrol_ddcci_parse_caps_reply(buf, (size_t)len,
+			(unsigned int)bufferpos);
+		if (fragment_len < 0) {
 			if (!mon->probing || verbosity) {
 				fprintf(stderr, _("Invalid sequence in caps.\n"));
 			}
@@ -533,17 +487,17 @@ int ddcci_caps(struct monitor* mon)
 			continue;
 		}
 
-		if (len == 3)
+		if (fragment_len == 0)
 			break;
-		if ((size_t)(len - 3) > max_caps_length - bufferpos)
+		if ((size_t)fragment_len > max_caps_length - bufferpos)
 			goto fail;
 
-		resized = realloc(raw_caps, bufferpos + (size_t)(len - 3) + 1);
+		resized = realloc(raw_caps, bufferpos + (size_t)fragment_len + 1);
 		if (!resized)
 			goto fail;
 		raw_caps = resized;
-		memcpy(raw_caps + bufferpos, buf + 3, (size_t)(len - 3));
-		bufferpos += (size_t)(len - 3);
+		memcpy(raw_caps + bufferpos, buf + 3, (size_t)fragment_len);
+		bufferpos += (size_t)fragment_len;
 		raw_caps[bufferpos] = '\0';
 		retries = 3;
 	}

@@ -88,6 +88,9 @@ target/
 /src/lib/test_abi_layout
 /src/lib/test_abi_layout.log
 /src/lib/test_abi_layout.trs
+/src/lib/test_ddcci_protocol
+/src/lib/test_ddcci_protocol.log
+/src/lib/test_ddcci_protocol.trs
 /src/stamp-h1
 Makefile
 Makefile.in

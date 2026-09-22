@@ -79,6 +79,10 @@ sudo make install
 
 Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
 
+The DDC/CI protocol can be tested and fuzzed without a monitor. See
+[the protocol crate](crates/ddccontrol-protocol/README.md) for its API,
+compatibility behavior, and test commands.
+
 ### Rust development checks
 
 Run these checks before submitting Rust changes (CI uses stable for formatting
