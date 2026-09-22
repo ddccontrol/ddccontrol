@@ -19,6 +19,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* Check immediately after a failed profile load on the same thread.
+ * A required feature failure must never fall through to generic profiles. */
+int ddcci_db_requirements_failed(void);
+
 struct value_db_private {
 	struct value_db public_value;
 	uint16_t value16;

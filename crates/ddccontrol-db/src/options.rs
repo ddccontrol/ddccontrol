@@ -43,6 +43,8 @@ pub struct OptionSubgroup {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct OptionControl {
+    /// Required CBOR semantics prevent this control from being used.
+    pub(crate) unavailable: bool,
     pub id: String,
     pub name: String,
     pub control_type: ControlType,
@@ -168,6 +170,7 @@ pub fn parse(xml: &str) -> Result<OptionsDb, String> {
                     _ => return Err(node_error(control, "Invalid type.")),
                 };
                 let mut option_control = OptionControl {
+                    unavailable: false,
                     id: required_attr(control, "id")?.to_string(),
                     name: required_attr(control, "name")?.to_string(),
                     control_type,

@@ -526,6 +526,13 @@ group name=Image
         "monitor/ACR1234.xml",
         r#"<monitor name="Other monitor" init="samsung"><include file="DEL1234"/></monitor>"#,
     );
+    // The current load session keeps the original database snapshot.
+    assert!(OwnedMonitor::create("ACR1234", &mut caps, true)
+        .unwrap()
+        .snapshot()
+        .contains("Installed monitor"));
+    assert_eq!(reinitialize(&database.0), 1);
+    assert_eq!(set_monitor_file(&database.write("DEL1234.xml", LOCAL_MONITOR)), 1);
     assert!(OwnedMonitor::create("ACR1234", &mut caps, true)
         .unwrap()
         .snapshot()
@@ -557,9 +564,13 @@ fn local_monitor_file_resolves_database_includes_and_applies_caps_patches() {
     assert!(!caps.0.vcp[0x60].is_null());
     assert!(!caps.0.vcp[0xc8].is_null());
 
-    // A changed include cannot be silently accepted in fault-tolerant mode.
+    // Includes stay pinned until a new session; the new invalid definition
+    // cannot be accepted when the local override is revalidated.
     database.write("monitor/compat-common.xml", r#"<monitor name="Broken"><controls><control id="missing" address="0x10"/></controls></monitor>"#);
-    assert!(OwnedMonitor::create("DEL1234", &mut caps, true).is_none());
+    assert_eq!(OwnedMonitor::create("DEL1234", &mut caps, true).unwrap().snapshot(), snapshot);
+    assert_eq!(reinitialize(&database.0), 1);
+    assert_eq!(set_monitor_file(&path), 0);
+    assert!(!monitor_file_matches("DEL1234"));
 }
 
 #[test]
@@ -641,11 +652,13 @@ fn local_monitor_file_validates_includes_even_if_overridden_and_resets_with_data
         "monitor/compat-common.xml",
         r#"<monitor name="Bad included init" init="invalid"><controls/></monitor>"#,
     );
+    assert_eq!(reinitialize(&database.0), 1);
     assert_eq!(set_monitor_file(&path), 0);
     database.write(
         "monitor/compat-common.xml",
         r#"<monitor name="Cycle"><include file="compat-common"/></monitor>"#,
     );
+    assert_eq!(reinitialize(&database.0), 1);
     assert_eq!(set_monitor_file(&path), 0);
     database.write("DEL1234.xml", LOCAL_MONITOR);
     assert_eq!(set_monitor_file(&path), 1);
@@ -688,4 +701,154 @@ fn local_monitor_file_preserves_non_utf8_directory_names() {
         .unwrap()
         .snapshot()
         .contains("Local monitor"));
+}
+
+#[test]
+fn required_profile_feature_blocks_generic_fallback_and_preserves_caps() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap())
+            .profiles
+            .get_mut("compat-monitor")
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .required = true;
+    }
+    let mut caps = OwnedCaps::from_str("(type(LCD)vcp(10 60))");
+    let original = unsafe { crate::caps_from_c(&mut caps.0) };
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, true).is_none());
+    assert_eq!(ddcci_db_requirements_failed(), 1);
+    assert_eq!(unsafe { crate::caps_from_c(&mut caps.0) }, original);
+    assert!(OwnedMonitor::create("compat-common", &mut caps, true).is_some());
+    assert_eq!(ddcci_db_requirements_failed(), 0);
+}
+
+#[test]
+fn required_included_profile_blocks_the_including_profile() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap())
+            .profiles
+            .get_mut("compat-common")
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .required = true;
+    }
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let original = unsafe { crate::caps_from_c(&mut caps.0) };
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, true).is_none());
+    assert_eq!(ddcci_db_requirements_failed(), 1);
+    assert_eq!(unsafe { crate::caps_from_c(&mut caps.0) }, original);
+}
+
+#[test]
+fn required_control_feature_is_isolated_and_cannot_be_revived_by_include() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        let root = Arc::make_mut(context.as_mut().unwrap())
+            .profiles
+            .get_mut("compat-monitor")
+            .unwrap()
+            .as_mut()
+            .unwrap();
+        let mut control = parse_xml(r#"<control id="brightness" address="0x10"/>"#).unwrap();
+        control.required = true;
+        let controls_index = root
+            .children
+            .iter()
+            .position(|node| node.tag == "controls")
+            .unwrap();
+        let mut controls = root.children.remove(controls_index);
+        controls.children.push(control);
+        root.children.insert(0, controls);
+    }
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let monitor = OwnedMonitor::create("compat-monitor", &mut caps, true).unwrap();
+    assert!(!monitor.snapshot().contains("control id=brightness"));
+    assert!(monitor.snapshot().contains("control id=input"));
+    assert_eq!(ddcci_db_requirements_failed(), 0);
+}
+
+#[test]
+fn failed_profile_does_not_publish_partial_caps_or_monitor_tree() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap()).profiles.insert("broken".to_string(),
+            parse_xml(r#"<monitor name="Broken" init="standard"><caps add="(vcp(FF))"/><include file="missing"/></monitor>"#));
+    }
+    let mut caps = OwnedCaps::from_str("(type(LCD)vcp(10))");
+    let original = unsafe { crate::caps_from_c(&mut caps.0) };
+    assert!(OwnedMonitor::create("broken", &mut caps, true).is_none());
+    assert_eq!(unsafe { crate::caps_from_c(&mut caps.0) }, original);
+    assert_eq!(ddcci_db_requirements_failed(), 0);
+}
+
+#[test]
+fn include_cycles_fail_without_publishing_caps() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap()).profiles.insert("cycle".to_string(),
+            parse_xml(r#"<monitor name="Cycle" init="standard"><caps add="(vcp(FF))"/><include file="cycle"/></monitor>"#));
+    }
+    let mut caps = OwnedCaps::from_str("(vcp(10))");
+    let original = unsafe { crate::caps_from_c(&mut caps.0) };
+    assert!(OwnedMonitor::create("cycle", &mut caps, true).is_none());
+    assert_eq!(unsafe { crate::caps_from_c(&mut caps.0) }, original);
+}
+
+#[test]
+fn simultaneous_monitor_trees_outlive_released_database_session() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let monitors: Vec<_> = (0..4)
+        .map(|_| {
+            std::thread::spawn(|| {
+                let mut caps = OwnedCaps::with_all_vcp_codes();
+                let monitor = OwnedMonitor::create("compat-monitor", &mut caps, true).unwrap();
+                // Transfer the allocation address; each thread relinquishes ownership.
+                let address = monitor.0 as usize;
+                std::mem::forget(monitor);
+                address
+            })
+        })
+        .collect::<Vec<_>>()
+        .into_iter()
+        .map(|thread| OwnedMonitor(thread.join().unwrap() as *mut CMonitorDb))
+        .collect();
+    let retained_session = db_context().clone().unwrap();
+    unsafe { ddcci_release_db() };
+    assert_eq!(Arc::strong_count(&retained_session), 1);
+    drop(retained_session);
+    for monitor in &monitors {
+        assert!(monitor.snapshot().contains("Compatibility Fixture Monitor"));
+    }
+    let datadir = path_to_cstring(&fixture_datadir());
+    assert_eq!(unsafe { ddcci_init_db(datadir.as_ptr() as *mut c_char) }, 1);
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    assert!(OwnedMonitor::create("compat-monitor", &mut caps, true).is_some());
+}
+
+include!("cbor_integration.rs");
+
+#[test]
+fn samsung_init_missing_and_zero_delays_and_command_defaults_remain_distinct() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap()).profiles.insert("samsung-synthetic".to_string(),
+            parse_xml(r#"<monitor name="Synthetic only" init="samsung"><controls><control id="brightness" address="0x10" delay="0"/><control id="factory_reset" address="0x04"/></controls><include file="compat-common"/></monitor>"#));
+    }
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let monitor = OwnedMonitor::create("samsung-synthetic", &mut caps, false).unwrap();
+    let snapshot = monitor.snapshot();
+    assert!(snapshot.contains("monitor name=Synthetic only init=2"));
+    assert!(snapshot.contains("address=0x10 delay=0"));
+    assert!(snapshot.contains("address=0x04 delay=-1"));
+    assert!(snapshot.contains("value id=default name=Factory Reset value=0x01 value16=0x0001"));
 }
