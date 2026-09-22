@@ -6,6 +6,10 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 use std::slice;
 
+// Compile the wire decoder in tests until the reader integration enables it.
+#[cfg(test)]
+#[allow(dead_code)]
+mod cbor;
 mod monitor_list;
 pub mod options;
 mod protocol;
