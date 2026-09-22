@@ -107,6 +107,28 @@ fn discovers_scans_and_writes_a_valid_profile_without_setting_controls() {
 }
 
 #[test]
+fn options_use_the_database_encoding_and_version_rules() {
+    let Some(fixture) = Fixture::new() else {
+        return;
+    };
+    let options = format!(
+        "<!-- database source -->\n<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n{}",
+        OPTIONS
+            .replace("dbversion=\"3\"", "dbversion=\"0x3\"")
+            .replace("Brightness", "Luminosité")
+    );
+    fs::write(
+        fixture.0.join("options.xml"),
+        options.chars().map(|c| c as u8).collect::<Vec<_>>(),
+    )
+    .unwrap();
+    success(&fixture.run("normal", &[]));
+    let xml = fixture.xml("DEL1234.xml");
+    assert!(xml.contains("Luminosité"));
+    roxmltree::Document::parse(&xml).unwrap();
+}
+
+#[test]
 fn list_filters_unsupported_displays_and_does_not_write_a_profile() {
     let Some(fixture) = Fixture::new() else {
         return;

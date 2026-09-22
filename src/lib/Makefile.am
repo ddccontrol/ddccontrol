@@ -39,7 +39,11 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-db/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-db/src/monitor_list.rs \
 	$(top_srcdir)/crates/ddccontrol-db/src/protocol.rs \
-	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
+	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-db/src/options.rs \
+	$(top_srcdir)/crates/ddccontrol-db/src/xml.rs \
+	$(top_srcdir)/crates/ddccontrol-xml/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-xml/src/lib.rs
 
 $(RUST_DB_LIB): $(RUST_DB_DEPS)
 	@$(CARGO) --version >/dev/null 2>&1 || { \

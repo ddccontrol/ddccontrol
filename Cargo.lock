@@ -21,6 +21,7 @@ dependencies = [
  "ddccontrol-monitorlist",
  "ddccontrol-profile",
  "ddccontrol-protocol",
+ "ddccontrol-xml",
  "encoding_rs",
  "libc",
  "roxmltree",
@@ -34,6 +35,7 @@ version = "0.1.0"
 name = "ddccontrol-monitorlist"
 version = "0.1.0"
 dependencies = [
+ "ddccontrol-xml",
  "encoding_rs",
  "roxmltree",
 ]
@@ -42,6 +44,7 @@ dependencies = [
 name = "ddccontrol-profile"
 version = "0.1.0"
 dependencies = [
+ "ddccontrol-xml",
  "encoding_rs",
  "roxmltree",
 ]
@@ -55,9 +58,15 @@ name = "ddccontrol-scanmonitor"
 version = "0.1.0"
 dependencies = [
  "ddccontrol-caps",
+ "ddccontrol-db",
  "ddccontrol-edid",
+ "ddccontrol-xml",
  "roxmltree",
 ]
+
+[[package]]
+name = "ddccontrol-xml"
+version = "0.1.0"
 
 [[package]]
 name = "encoding_rs"

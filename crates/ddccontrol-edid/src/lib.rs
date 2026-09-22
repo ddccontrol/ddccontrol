@@ -158,3 +158,11 @@ fn parse_descriptor_text(input: &[u8]) -> String {
 
     String::from_utf8(text).expect("descriptor normalization only emits ASCII")
 }
+
+/// Validate a seven-character PnP ID; hexadecimal product digits may use either case.
+pub fn is_valid_pnp_id(id: &str) -> bool {
+    let bytes = id.as_bytes();
+    bytes.len() == 7
+        && bytes[..3].iter().all(u8::is_ascii_uppercase)
+        && bytes[3..].iter().all(u8::is_ascii_hexdigit)
+}

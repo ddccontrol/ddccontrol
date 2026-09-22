@@ -111,3 +111,18 @@ fn limits_the_stored_base_block_to_128_bytes() {
     assert_eq!(parsed.raw().len(), EDID_BLOCK_LEN);
     assert_eq!(parsed.raw(), &input[..EDID_BLOCK_LEN]);
 }
+
+#[test]
+fn pnp_id_cannot_escape_output_directory() {
+    assert!(ddccontrol_edid::is_valid_pnp_id("DEL40A0"));
+    for id in [
+        "../file",
+        "DE/40A0",
+        "DEL40GG",
+        "DELA000.xml",
+        "",
+        "éELA000",
+    ] {
+        assert!(!ddccontrol_edid::is_valid_pnp_id(id));
+    }
+}

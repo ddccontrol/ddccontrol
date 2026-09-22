@@ -3,6 +3,14 @@
 `ddccontrol-db` parses the ddccontrol XML monitor database and exports the C ABI
 used by `libddccontrol`.
 
+The `options` module also exposes a normal Rust API, used by both the C database
+bridge and `ddccontrol-scanmonitor`. `options::load` reads `options.xml` using the
+database's encoding rules; `options::parse` accepts decoded XML. Both return the
+same typed vocabulary, including optional scanner address/value hints. These
+hints do not change the addresses or values loaded from monitor definitions.
+The crate produces both an `rlib` for Rust callers and the existing C static
+library; the C ABI and allocation rules are unchanged.
+
 CAPS string parsing lives in the sibling `ddccontrol-caps` crate. EDID parsing
 lives in `ddccontrol-edid`; this crate includes both parsers in the existing
 Rust static library and exposes their C ABI entry points.

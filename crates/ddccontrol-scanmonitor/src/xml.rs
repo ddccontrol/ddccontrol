@@ -3,16 +3,11 @@
 //! An address or enum value missing from options.xml is deliberately not guessed:
 //! capabilities report numeric support, not manufacturer-specific meanings.
 
+use crate::backend::Reading;
 use ddccontrol_caps::{Caps, MonitorType};
-use roxmltree::{Document, Node};
+use ddccontrol_db::options::{ControlType, OptionControl, OptionsDb};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write;
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct Reading {
-    pub current: u16,
-    pub maximum: u16,
-}
 
 #[derive(Debug)]
 pub struct Scan {
@@ -22,24 +17,35 @@ pub struct Scan {
     pub readings: BTreeMap<u8, Reading>,
 }
 
-#[derive(Debug, Eq, PartialEq)]
-struct OptionControl {
-    id: String,
-    name: String,
-    kind: String,
-    values: Vec<(String, Option<u16>)>,
+pub type Options<'a> = BTreeMap<u8, Vec<&'a OptionControl>>;
+
+/// Index the shared vocabulary by its optional address hints for scanning.
+pub fn index_options(database: &OptionsDb) -> Result<Options<'_>, String> {
+    let mut result = Options::new();
+    for control in database.controls() {
+        let Some(address) = control.address()? else {
+            continue;
+        };
+        let candidates = result.entry(address).or_default();
+        // Enum labels/refresh settings do not make identical mappings ambiguous.
+        if !candidates.iter().any(|candidate| {
+            candidate.id == control.id
+                && candidate.name == control.name
+                && candidate.control_type == control.control_type
+                && candidate
+                    .values
+                    .iter()
+                    .map(|v| (&v.id, v.value()))
+                    .eq(control.values.iter().map(|v| (&v.id, v.value())))
+        }) {
+            candidates.push(control);
+        }
+    }
+    Ok(result)
 }
 
-type Options = BTreeMap<u8, Vec<OptionControl>>;
-
-/// Addresses worth querying when the monitor does not advertise capabilities.
-pub fn candidate_codes(options_xml: &str) -> Result<Vec<u8>, String> {
-    Ok(parse_options(options_xml)?.into_keys().collect())
-}
-
-/// Generate a UTF-8 XML profile accepted by ddccontrol's monitor database.
-pub fn generate(scan: &Scan, options_xml: &str) -> Result<String, String> {
-    let options = parse_options(options_xml)?;
+/// Generate a UTF-8 XML profile using the already parsed database vocabulary.
+pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
     let codes: BTreeSet<u8> = scan
         .caps
         .vcp_codes()
@@ -123,15 +129,15 @@ pub fn generate(scan: &Scan, options_xml: &str) -> Result<String, String> {
             if code >= 0xe0 {
                 reasons.push("manufacturer-specific address; verify this mapping on the monitor");
             }
-            if candidate.kind == "command" {
+            if candidate.control_type == ControlType::Command {
                 reasons.push("commands require manual verification before enabling");
             }
-            if candidate.kind == "value"
+            if candidate.control_type == ControlType::Value
                 && reading.is_some_and(|read| read.maximum == 0 || read.current > read.maximum)
             {
                 reasons.push("the reported range does not establish an adjustable scalar");
             }
-            if candidate.kind == "list" {
+            if candidate.control_type == ControlType::List {
                 if values.is_empty() {
                     reasons.push("no confirmed enum mappings; add verified value IDs and numbers");
                 } else if ambiguous_values(&values) {
@@ -155,99 +161,13 @@ pub fn generate(scan: &Scan, options_xml: &str) -> Result<String, String> {
                 );
                 comment(&mut xml, "\t\t", &format!("\n{}\t\t", control));
             }
-            if candidate.kind == "list" {
+            if candidate.control_type == ControlType::List {
                 enum_notes(&mut xml, candidate, advertised, &values);
             }
         }
     }
     xml.push_str("\t</controls>\n</monitor>\n");
-    Ok(xml)
-}
-
-fn parse_options(xml: &str) -> Result<Options, String> {
-    let doc = Document::parse(xml).map_err(|error| format!("Invalid options.xml: {error}"))?;
-    let root = doc.root_element();
-    if !root.has_tag_name("options") || root.attribute("dbversion") != Some("3") {
-        return Err("options.xml must contain <options dbversion=\"3\">".to_string());
-    }
-    if root.attribute("date").is_none() {
-        return Err("options.xml is missing its date attribute".to_string());
-    }
-    let mut result = Options::new();
-    for group in root.children().filter(|node| node.has_tag_name("group")) {
-        required(group, "name")?;
-        for subgroup in group
-            .children()
-            .filter(|node| node.has_tag_name("subgroup"))
-        {
-            required(subgroup, "name")?;
-            for control in subgroup
-                .children()
-                .filter(|node| node.has_tag_name("control"))
-            {
-                let id = required(control, "id")?.to_string();
-                let name = required(control, "name")?.to_string();
-                let kind = required(control, "type")?.to_string();
-                if !matches!(kind.as_str(), "value" | "list" | "command") {
-                    return Err(format!("Invalid control type in options.xml: {kind}"));
-                }
-                if !matches!(control.attribute("refresh"), None | Some("none" | "all")) {
-                    return Err(format!("Invalid refresh type in options.xml for {id}"));
-                }
-                let mut values = Vec::new();
-                for value in control.children().filter(|node| node.has_tag_name("value")) {
-                    values.push((
-                        required(value, "id")?.to_string(),
-                        value.attribute("value").and_then(parse_number),
-                    ));
-                }
-                let Some(address) = control.attribute("address") else {
-                    continue;
-                };
-                let address = parse_number(address)
-                    .and_then(|number| u8::try_from(number).ok())
-                    .ok_or_else(|| format!("Invalid address in options.xml for {id}: {address}"))?;
-                let entry = OptionControl {
-                    id,
-                    name,
-                    kind,
-                    values,
-                };
-                let candidates = result.entry(address).or_default();
-                if !candidates.contains(&entry) {
-                    candidates.push(entry);
-                }
-            }
-        }
-    }
-    Ok(result)
-}
-
-fn required<'a>(node: Node<'a, '_>, name: &str) -> Result<&'a str, String> {
-    node.attribute(name).ok_or_else(|| {
-        format!(
-            "Missing {name} on {} in options.xml",
-            node.tag_name().name()
-        )
-    })
-}
-
-// Match the database's strtol-style decimal, hexadecimal and octal notation.
-fn parse_number(value: &str) -> Option<u16> {
-    let value = value
-        .trim_start()
-        .strip_prefix('+')
-        .unwrap_or(value.trim_start());
-    if let Some(hex) = value
-        .strip_prefix("0x")
-        .or_else(|| value.strip_prefix("0X"))
-    {
-        u16::from_str_radix(hex, 16).ok()
-    } else if value.starts_with('0') && value.len() > 1 {
-        u16::from_str_radix(value, 8).ok()
-    } else {
-        value.parse().ok()
-    }
+    xml
 }
 
 fn matching_values<'a>(
@@ -257,10 +177,11 @@ fn matching_values<'a>(
     control
         .values
         .iter()
-        .filter_map(|(id, value)| {
+        .filter_map(|value| {
             value
-                .filter(|value| advertised.is_some_and(|values| values.contains(value)))
-                .map(|value| (id.as_str(), value))
+                .value()
+                .filter(|number| advertised.is_some_and(|values| values.contains(number)))
+                .map(|number| (value.id.as_str(), number))
         })
         .collect()
 }
@@ -297,7 +218,11 @@ fn enum_notes(
         }
     }
     if mapped.is_empty() && !control.values.is_empty() {
-        let ids: Vec<_> = control.values.iter().map(|(id, _)| id.as_str()).collect();
+        let ids: Vec<_> = control
+            .values
+            .iter()
+            .map(|value| value.id.as_str())
+            .collect();
         comment(
             xml,
             "\t\t",
@@ -371,32 +296,19 @@ fn hex_values(values: &[u16]) -> String {
 }
 
 fn xml_char(character: char) -> char {
-    match character {
-        '\t'
-        | '\n'
-        | '\r'
-        | '\u{20}'..='\u{d7ff}'
-        | '\u{e000}'..='\u{fffd}'
-        | '\u{10000}'..='\u{10ffff}' => character,
-        _ => '\u{fffd}',
+    if ddccontrol_xml::is_xml_character(character) {
+        character
+    } else {
+        '\u{fffd}'
     }
 }
 
 fn attribute(value: &str) -> String {
+    // Monitor-provided text may contain invalid characters; keep the scanner's
+    // replacement policy while sharing escaping with profiles and cached lists.
+    let cleaned: String = value.chars().map(xml_char).collect();
     let mut output = String::new();
-    for character in value.chars().map(xml_char) {
-        match character {
-            '&' => output.push_str("&amp;"),
-            '<' => output.push_str("&lt;"),
-            '>' => output.push_str("&gt;"),
-            '"' => output.push_str("&quot;"),
-            '\'' => output.push_str("&apos;"),
-            '\t' => output.push_str("&#9;"),
-            '\n' => output.push_str("&#10;"),
-            '\r' => output.push_str("&#13;"),
-            character => output.push(character),
-        }
-    }
+    ddccontrol_xml::push_attribute(&mut output, &cleaned).expect("text was sanitized");
     output
 }
 
@@ -416,6 +328,18 @@ fn comment(output: &mut String, indent: &str, text: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ddccontrol_xml::parse_integer;
+    use roxmltree::Document;
+
+    fn generate(scan: &Scan, xml: &str) -> Result<String, String> {
+        let database = ddccontrol_db::options::parse(xml)?;
+        Ok(super::generate(scan, &index_options(&database)?))
+    }
+
+    fn candidate_codes(xml: &str) -> Result<Vec<u8>, String> {
+        let database = ddccontrol_db::options::parse(xml)?;
+        Ok(index_options(&database)?.into_keys().collect())
+    }
 
     const OPTIONS: &str = include_str!("../fixtures/options.xml");
 
@@ -447,7 +371,7 @@ mod tests {
             .map(|node| {
                 (
                     node.attribute("id").unwrap().to_string(),
-                    parse_number(node.attribute("address").unwrap()).unwrap() as u8,
+                    parse_integer(node.attribute("address").unwrap()).unwrap() as u8,
                 )
             })
             .collect()
@@ -601,11 +525,11 @@ mod tests {
                     node.has_tag_name("control") && node.attribute("id") == control.attribute("id")
                 })
                 .unwrap();
-            assert!(parse_number(control.attribute("address").unwrap()).unwrap() <= 255);
+            assert!(parse_integer(control.attribute("address").unwrap()).unwrap() <= 255);
             for value in control.children().filter(|node| node.has_tag_name("value")) {
                 assert!(option.children().any(|node| node.has_tag_name("value")
                     && node.attribute("id") == value.attribute("id")));
-                assert!(parse_number(value.attribute("value").unwrap()).is_some());
+                assert!(parse_integer(value.attribute("value").unwrap()).is_ok());
             }
         }
     }
@@ -633,12 +557,14 @@ mod tests {
     }
 
     #[test]
-    fn numeric_attributes_follow_database_notation() {
-        assert_eq!(parse_number("010"), Some(8));
-        assert_eq!(parse_number("+0x10"), Some(16));
-        assert_eq!(parse_number(" 65535"), Some(65535));
-        for invalid in ["09", "1 ", "-1", "65536", "bad"] {
-            assert_eq!(parse_number(invalid), None);
-        }
+    fn equivalent_hints_do_not_create_ambiguous_candidates() {
+        let options = OPTIONS.replace(
+            "</subgroup>",
+            r#"
+            <control id="brightness" name="Brightness" type="value" refresh="all" address="020"/>
+            </subgroup>"#,
+        );
+        let xml = generate(&scan("(vcp(10))", &[0x10]), &options).unwrap();
+        assert_eq!(active_controls(&xml), [("brightness".to_string(), 0x10)]);
     }
 }

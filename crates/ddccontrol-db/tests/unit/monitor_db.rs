@@ -123,11 +123,13 @@ fn unmatched_monitor_values_are_not_parsed() {
     let option_control = OptionControl {
         id: "input".to_string(),
         name: "Input".to_string(),
-        control_type: CONTROL_TYPE_LIST,
-        refresh: REFRESH_TYPE_NONE,
+        control_type: ControlType::List,
+        refresh: Refresh::None,
+        raw_address: None,
         values: vec![OptionValue {
             id: "hdmi".to_string(),
             name: Some("HDMI".to_string()),
+            raw_value: None,
         }],
     };
     let monitor_control = MonitorControl {
@@ -198,11 +200,13 @@ fn monitor_values_without_id_use_unmatched_validation() {
     let option_control = OptionControl {
         id: "input".to_string(),
         name: "Input".to_string(),
-        control_type: CONTROL_TYPE_LIST,
-        refresh: REFRESH_TYPE_NONE,
+        control_type: ControlType::List,
+        refresh: Refresh::None,
+        raw_address: None,
         values: vec![OptionValue {
             id: "hdmi".to_string(),
             name: Some("HDMI".to_string()),
+            raw_value: None,
         }],
     };
     let monitor_control = MonitorControl {
@@ -260,11 +264,13 @@ fn unknown_monitor_value_children_use_unmatched_validation() {
     let option_control = OptionControl {
         id: "input".to_string(),
         name: "Input".to_string(),
-        control_type: CONTROL_TYPE_LIST,
-        refresh: REFRESH_TYPE_NONE,
+        control_type: ControlType::List,
+        refresh: Refresh::None,
+        raw_address: None,
         values: vec![OptionValue {
             id: "hdmi".to_string(),
             name: Some("HDMI".to_string()),
+            raw_value: None,
         }],
     };
     let monitor_control = MonitorControl {

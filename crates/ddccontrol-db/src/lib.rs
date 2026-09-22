@@ -7,7 +7,9 @@ use std::ptr;
 use std::slice;
 
 mod monitor_list;
+pub mod options;
 mod protocol;
+mod xml;
 
 #[repr(C)]
 pub struct CVcpEntry {
@@ -459,18 +461,22 @@ mod abi_tests {
 
 mod monitor_db {
     use super::{ddccontrol_caps_parse, free, malloc, CCaps};
-    use encoding_rs::{Encoding, UTF_8};
+    use crate::options::{load as load_options, ControlType, OptionControl, OptionsDb};
+    #[cfg(test)]
+    use crate::options::{OptionValue, Refresh};
+    #[cfg(test)]
+    use crate::xml::{decode_xml_bytes, normalize_xml_document};
+    use crate::xml::{element_children, line, node_error, read_xml_file, required_attr};
+    use ddccontrol_xml::parse_integer as parse_int;
     use libc::{c_char, c_int, c_uchar, c_ushort, c_void};
     use roxmltree::{Document, Node};
     use std::borrow::Cow;
     use std::ffi::{CStr, CString};
-    use std::fs;
     use std::panic::{catch_unwind, AssertUnwindSafe};
-    use std::path::{Path, PathBuf};
+    use std::path::PathBuf;
     use std::ptr;
     use std::sync::{Mutex, MutexGuard};
 
-    const DBVERSION: i64 = 3;
     #[cfg(all(not(test), feature = "gettext"))]
     const DBPACKAGE: &[u8] = b"ddccontrol-db\0";
     const DEFAULT_DATADIR: &str = match option_env!("DDCONTROL_DATADIR") {
@@ -478,11 +484,6 @@ mod monitor_db {
         None => "/usr/local/share/ddccontrol-db",
     };
 
-    const CONTROL_TYPE_VALUE: c_int = 0;
-    const CONTROL_TYPE_COMMAND: c_int = 1;
-    const CONTROL_TYPE_LIST: c_int = 2;
-    const REFRESH_TYPE_NONE: c_int = 0;
-    const REFRESH_TYPE_ALL: c_int = 1;
     const INIT_TYPE_UNKNOWN: c_int = 0;
     const INIT_TYPE_STANDARD: c_int = 1;
     const INIT_TYPE_SAMSUNG: c_int = 2;
@@ -567,39 +568,6 @@ mod monitor_db {
         fn drop(&mut self) {
             unsafe { super::free_c_vcp_entries(&mut self.0) };
         }
-    }
-
-    #[derive(Clone, Default)]
-    struct OptionsDb {
-        groups: Vec<OptionGroup>,
-    }
-
-    #[derive(Clone)]
-    struct OptionGroup {
-        name: String,
-        subgroups: Vec<OptionSubgroup>,
-    }
-
-    #[derive(Clone)]
-    struct OptionSubgroup {
-        name: String,
-        pattern: Option<String>,
-        controls: Vec<OptionControl>,
-    }
-
-    #[derive(Clone)]
-    struct OptionControl {
-        id: String,
-        name: String,
-        control_type: c_int,
-        refresh: c_int,
-        values: Vec<OptionValue>,
-    }
-
-    #[derive(Clone)]
-    struct OptionValue {
-        id: String,
-        name: Option<String>,
     }
 
     #[derive(Default)]
@@ -764,11 +732,8 @@ mod monitor_db {
             .and_then(|name| name.to_str())
             .and_then(|name| name.strip_suffix(".xml"))
             .filter(|id| {
-                id.len() == 7
-                    && id.as_bytes()[..3].iter().all(u8::is_ascii_uppercase)
-                    && id.as_bytes()[3..]
-                        .iter()
-                        .all(|byte| byte.is_ascii_digit() || (b'A'..=b'F').contains(byte))
+                ddccontrol_edid::is_valid_pnp_id(id)
+                    && !id.bytes().any(|byte| byte.is_ascii_lowercase())
             })
             .ok_or_else(|| {
                 format!(
@@ -945,100 +910,6 @@ mod monitor_db {
     #[no_mangle]
     pub unsafe extern "C" fn ddcci_free_db(monitor: *mut CMonitorDb) {
         db_ffi((), || free_monitor(monitor));
-    }
-
-    fn load_options(datadir: &Path) -> Result<OptionsDb, String> {
-        let path = datadir.join("options.xml");
-        let xml = read_xml_file(&path)
-            .map_err(|err| format!("I/O error while reading options.xml: {err}."))?;
-        let doc =
-            Document::parse(&xml).map_err(|_| "Document not parsed successfully.".to_string())?;
-        let root = doc.root_element();
-        if root.tag_name().name() != "options" {
-            return Err(format!(
-                "options.xml of the wrong type, root node {} != options",
-                root.tag_name().name()
-            ));
-        }
-
-        let version = root.attribute("dbversion").ok_or_else(|| {
-            "options.xml dbversion attribute missing, please update your database.".to_string()
-        })?;
-        let _date = root.attribute("date").ok_or_else(|| {
-            "options.xml date attribute missing, please update your database.".to_string()
-        })?;
-        let version =
-            parse_int(version).map_err(|_| "Can't convert version to int.".to_string())?;
-        if version > DBVERSION {
-            return Err(format!(
-                "options.xml dbversion ({version}) is greater than the supported version ({DBVERSION}).\nPlease update ddccontrol program."
-            ));
-        }
-        if version < DBVERSION {
-            return Err(format!(
-                "options.xml dbversion ({version}) is less than the supported version ({DBVERSION}).\nPlease update ddccontrol database."
-            ));
-        }
-
-        let mut options = OptionsDb::default();
-        for group in element_children(root).filter(|node| node.tag_name().name() == "group") {
-            let name = required_attr(group, "name")?.to_string();
-            let mut option_group = OptionGroup {
-                name,
-                subgroups: Vec::new(),
-            };
-            for subgroup in
-                element_children(group).filter(|node| node.tag_name().name() == "subgroup")
-            {
-                let name = required_attr(subgroup, "name")?.to_string();
-                let pattern = subgroup.attribute("pattern").map(ToString::to_string);
-                let mut option_subgroup = OptionSubgroup {
-                    name,
-                    pattern,
-                    controls: Vec::new(),
-                };
-                for control in
-                    element_children(subgroup).filter(|node| node.tag_name().name() == "control")
-                {
-                    let refresh = match control.attribute("refresh") {
-                        Some("none") | None => REFRESH_TYPE_NONE,
-                        Some("all") => REFRESH_TYPE_ALL,
-                        Some(_) => {
-                            return Err(node_error(
-                                control,
-                                "Invalid refresh type (!= none, != all).",
-                            ))
-                        }
-                    };
-                    let control_type = match required_attr(control, "type")? {
-                        "value" => CONTROL_TYPE_VALUE,
-                        "command" => CONTROL_TYPE_COMMAND,
-                        "list" => CONTROL_TYPE_LIST,
-                        _ => return Err(node_error(control, "Invalid type.")),
-                    };
-                    let mut option_control = OptionControl {
-                        id: required_attr(control, "id")?.to_string(),
-                        name: required_attr(control, "name")?.to_string(),
-                        control_type,
-                        refresh,
-                        values: Vec::new(),
-                    };
-                    for value in
-                        element_children(control).filter(|node| node.tag_name().name() == "value")
-                    {
-                        option_control.values.push(OptionValue {
-                            id: required_attr(value, "id")?.to_string(),
-                            name: value.attribute("name").map(ToString::to_string),
-                        });
-                    }
-                    option_subgroup.controls.push(option_control);
-                }
-                option_group.subgroups.push(option_subgroup);
-            }
-            options.groups.push(option_group);
-        }
-
-        Ok(options)
     }
 
     fn create_db_protected(
@@ -1244,7 +1115,7 @@ mod monitor_db {
 
                     let mut values =
                         get_value_list(option_control, monitor_control, mode.faulttolerance)?;
-                    if option_control.control_type == CONTROL_TYPE_COMMAND && values.is_empty() {
+                    if option_control.control_type == ControlType::Command && values.is_empty() {
                         values.push(DbValue {
                             id: "default".to_string(),
                             name: translate(&option_control.name),
@@ -1257,8 +1128,8 @@ mod monitor_db {
                         name: translate(&option_control.name),
                         address: address as u8,
                         delay: monitor_control_delay(monitor_control)?,
-                        control_type: option_control.control_type,
-                        refresh: option_control.refresh,
+                        control_type: option_control.control_type as c_int,
+                        refresh: option_control.refresh as c_int,
                         values,
                     };
                     build.groups[group_index].subgroups[subgroup_index]
@@ -1286,94 +1157,6 @@ mod monitor_db {
         }
 
         Ok(())
-    }
-
-    fn read_xml_file(path: &Path) -> std::io::Result<String> {
-        let bytes = fs::read(path)?;
-        Ok(normalize_xml_document(
-            decode_xml_bytes(&bytes).into_owned(),
-        ))
-    }
-
-    fn decode_xml_bytes(bytes: &[u8]) -> Cow<'_, str> {
-        let encoding = xml_declared_encoding(bytes).unwrap_or(UTF_8);
-        let (decoded, _, _) = encoding.decode(bytes);
-        decoded
-    }
-
-    fn normalize_xml_document(xml: String) -> String {
-        let mut cursor = 0;
-        loop {
-            cursor += xml[cursor..]
-                .find(|ch: char| !ch.is_whitespace())
-                .unwrap_or(xml.len() - cursor);
-            if !xml[cursor..].starts_with("<!--") {
-                break;
-            }
-            let Some(comment_end) = xml[cursor + 4..].find("-->") else {
-                return xml;
-            };
-            cursor += 4 + comment_end + 3;
-        }
-
-        if cursor > 0 && xml[cursor..].starts_with("<?xml") {
-            xml[cursor..].to_string()
-        } else {
-            xml
-        }
-    }
-
-    fn xml_declared_encoding(bytes: &[u8]) -> Option<&'static Encoding> {
-        let declaration_start = xml_declaration_start(bytes)?;
-        let prefix = &bytes[declaration_start..];
-        let prefix = &prefix[..prefix.len().min(256)];
-        let declaration_end = prefix
-            .windows(2)
-            .position(|window| window == b"?>")
-            .unwrap_or(prefix.len());
-        let declaration = &prefix[..declaration_end];
-        let encoding_index = declaration
-            .windows("encoding".len())
-            .position(|window| window == b"encoding")?;
-        let after_encoding = &declaration[encoding_index + "encoding".len()..];
-        let after_encoding = trim_ascii_bytes_start(after_encoding);
-        let after_equals = trim_ascii_bytes_start(after_encoding.strip_prefix(b"=")?);
-        let quote = after_equals.first().copied()?;
-        if quote != b'\'' && quote != b'"' {
-            return None;
-        }
-        let label_end = after_equals[1..]
-            .iter()
-            .position(|byte| *byte == quote)
-            .map(|index| index + 1)?;
-        Encoding::for_label(&after_equals[1..label_end])
-    }
-
-    fn xml_declaration_start(bytes: &[u8]) -> Option<usize> {
-        let mut cursor = 0;
-        loop {
-            cursor += bytes[cursor..]
-                .iter()
-                .position(|byte| !byte.is_ascii_whitespace())?;
-            if bytes[cursor..].starts_with(b"<?xml") {
-                return Some(cursor);
-            }
-            if !bytes[cursor..].starts_with(b"<!--") {
-                return None;
-            }
-            let comment_end = bytes[cursor + 4..]
-                .windows(3)
-                .position(|window| window == b"-->")?;
-            cursor += 4 + comment_end + 3;
-        }
-    }
-
-    fn trim_ascii_bytes_start(input: &[u8]) -> &[u8] {
-        let start = input
-            .iter()
-            .position(|byte| !byte.is_ascii_whitespace())
-            .unwrap_or(input.len());
-        &input[start..]
     }
 
     fn monitor_control_address(monitor_control: &MonitorControl) -> Result<u8, DbError> {
@@ -1430,7 +1213,7 @@ mod monitor_db {
                         "Value is outside the supported 0-65535 range.".to_string(),
                     ));
                 }
-                let name = if option_control.control_type == CONTROL_TYPE_COMMAND {
+                let name = if option_control.control_type == ControlType::Command {
                     option_value
                         .name
                         .as_ref()
@@ -1855,44 +1638,6 @@ mod monitor_db {
                 }
             }
         }
-    }
-
-    fn required_attr<'a, 'd>(node: Node<'a, 'd>, name: &str) -> Result<&'a str, String> {
-        node.attribute(name)
-            .ok_or_else(|| node_error(node, &format!("Can't find {name} property.")))
-    }
-
-    fn element_children<'a, 'd>(node: Node<'a, 'd>) -> impl Iterator<Item = Node<'a, 'd>> {
-        node.children().filter(|child| child.is_element())
-    }
-
-    fn node_error(node: Node<'_, '_>, message: &str) -> String {
-        format!("Error: {message} @line {}", line(node))
-    }
-
-    fn line(node: Node<'_, '_>) -> u32 {
-        node.document().text_pos_at(node.range().start).row
-    }
-
-    fn parse_int(input: &str) -> Result<i64, std::num::ParseIntError> {
-        let input = trim_ascii_start(input);
-        let (negative, rest) = if let Some(rest) = input.strip_prefix('-') {
-            (true, rest)
-        } else if let Some(rest) = input.strip_prefix('+') {
-            (false, rest)
-        } else {
-            (false, input)
-        };
-        let (radix, digits) =
-            if let Some(rest) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
-                (16, rest)
-            } else if rest.len() > 1 && rest.starts_with('0') {
-                (8, &rest[1..])
-            } else {
-                (10, rest)
-            };
-        let value = i64::from_str_radix(digits, radix)?;
-        Ok(if negative { -value } else { value })
     }
 
     fn parse_int_decimal(input: &str) -> Result<i64, std::num::ParseIntError> {

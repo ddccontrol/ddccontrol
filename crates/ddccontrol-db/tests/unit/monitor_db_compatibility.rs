@@ -449,6 +449,23 @@ const LOCAL_MONITOR: &str = r#"<monitor name="Local monitor" init="standard">
     <controls><control id="brightness" address="0x10" delay="80"/></controls>
     </monitor>"#;
 
+#[test]
+fn scanner_hints_do_not_override_or_invalidate_installed_monitor_mappings() {
+    let database = TemporaryDatabase::new();
+    database.write("monitor/DEL1234.xml", LOCAL_MONITOR);
+    let snapshot = || {
+        let _context = DbTestContext::init(&database.0);
+        let mut caps = OwnedCaps::with_all_vcp_codes();
+        OwnedMonitor::create("DEL1234", &mut caps, false).unwrap().snapshot()
+    };
+    let expected = snapshot();
+    let options = fs::read_to_string(database.0.join("options.xml")).unwrap()
+        .replace("type=", "address=\"invalid scanner hint\" type=")
+        .replace("<value id=", "<value value=\"invalid scanner hint\" id=");
+    database.write("options.xml", &options);
+    assert_eq!(snapshot(), expected);
+}
+
 fn set_monitor_file(path: &Path) -> c_int {
     let path = path_to_cstring(path);
     unsafe { ddcci_set_monitor_file(path.as_ptr(), ptr::null_mut()) }

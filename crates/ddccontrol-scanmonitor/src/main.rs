@@ -152,13 +152,6 @@ fn choose_device(backend: &Backend) -> Result<String, String> {
     }
 }
 
-fn valid_pnp_id(id: &str) -> bool {
-    let bytes = id.as_bytes();
-    bytes.len() == 7
-        && bytes[..3].iter().all(u8::is_ascii_uppercase)
-        && bytes[3..].iter().all(u8::is_ascii_hexdigit)
-}
-
 fn write_new(path: &Path, contents: &str) -> Result<(), String> {
     let mut file = OpenOptions::new()
         .write(true)
@@ -204,10 +197,9 @@ fn run(args: Args) -> Result<(), String> {
     }
     let custom_database = args.db_path.is_some();
     let db_path = database_path(args.db_path)?;
-    let options_path = db_path.join("options.xml");
-    let options = fs::read_to_string(&options_path)
-        .map_err(|e| format!("cannot read {}: {e}", options_path.display()))?;
-    let candidates = xml::candidate_codes(&options)?;
+    let database = ddccontrol_db::options::load(&db_path)?;
+    let options = xml::index_options(&database)?;
+    let candidates: Vec<u8> = options.keys().copied().collect();
     let backend = Backend::connect()?;
     let device = match args.device {
         Some(device) => device,
@@ -215,9 +207,6 @@ fn run(args: Args) -> Result<(), String> {
     };
     eprintln!("Reading monitor identification and capabilities from {device}...");
     let opened = backend.open(&device)?;
-    if !valid_pnp_id(&opened.pnp_id) {
-        return Err("monitor returned an invalid PNP ID; cannot name a database profile".into());
-    }
     let output = args
         .output
         .unwrap_or_else(|| PathBuf::from(format!("{}.xml", opened.pnp_id)));
@@ -252,13 +241,7 @@ fn run(args: Args) -> Result<(), String> {
         );
         match backend.read(&device, code) {
             Ok(Some(reading)) => {
-                readings.insert(
-                    code,
-                    xml::Reading {
-                        current: reading.current,
-                        maximum: reading.maximum,
-                    },
-                );
+                readings.insert(code, reading);
             }
             Ok(None) => {}
             Err(error) => eprintln!("\nControl 0x{code:02x}: {error}"),
@@ -280,7 +263,7 @@ fn run(args: Args) -> Result<(), String> {
         caps,
         readings,
     };
-    let document = xml::generate(&scan, &options)?;
+    let document = xml::generate(&scan, &options);
     write_new(&output, &document)?;
     println!(
         "Created {} for {} ({}).",
@@ -361,21 +344,6 @@ mod tests {
         assert_eq!(select_monitor(&monitors, "1\n").unwrap(), 0);
         for choice in ["0", "2", "-1", "", "x"] {
             assert!(select_monitor(&monitors, choice).is_err());
-        }
-    }
-
-    #[test]
-    fn pnp_id_cannot_escape_output_directory() {
-        assert!(valid_pnp_id("DEL40A0"));
-        for id in [
-            "../file",
-            "DE/40A0",
-            "DEL40GG",
-            "DELA000.xml",
-            "",
-            "éELA000",
-        ] {
-            assert!(!valid_pnp_id(id));
         }
     }
 }

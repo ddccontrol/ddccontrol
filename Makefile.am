@@ -46,6 +46,11 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/tests/unit/monitor_list.rs \
 	crates/ddccontrol-db/src/monitor_list.rs \
 	crates/ddccontrol-db/src/lib.rs \
+	crates/ddccontrol-db/src/options.rs \
+	crates/ddccontrol-db/src/xml.rs \
+	crates/ddccontrol-xml/Cargo.toml \
+	crates/ddccontrol-xml/README.md \
+	crates/ddccontrol-xml/src/lib.rs \
 	crates/ddccontrol-db/src/protocol.rs \
 	crates/ddccontrol-scanmonitor/Cargo.toml \
 	crates/ddccontrol-scanmonitor/README.md \
@@ -60,18 +65,13 @@ DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
 RUST_SCANMONITOR = $(top_builddir)/target/release/ddccontrol-scanmonitor
+# Include transitive Rust sources so edits to shared crates rebuild the scanner.
 RUST_SCANMONITOR_DEPS = \
 	$(top_builddir)/config.status \
 	$(top_srcdir)/Cargo.toml \
 	$(top_srcdir)/Cargo.lock \
-	$(top_srcdir)/crates/ddccontrol-caps/Cargo.toml \
-	$(top_srcdir)/crates/ddccontrol-caps/src/lib.rs \
-	$(top_srcdir)/crates/ddccontrol-edid/Cargo.toml \
-	$(top_srcdir)/crates/ddccontrol-edid/src/lib.rs \
-	$(top_srcdir)/crates/ddccontrol-scanmonitor/Cargo.toml \
-	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/main.rs \
-	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/backend.rs \
-	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/xml.rs
+	$(wildcard $(top_srcdir)/crates/*/Cargo.toml) \
+	$(wildcard $(top_srcdir)/crates/*/src/*.rs)
 
 all-local: $(RUST_SCANMONITOR)
 

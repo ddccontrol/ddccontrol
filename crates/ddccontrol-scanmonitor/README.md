@@ -1,5 +1,9 @@
 # ddccontrol-scanmonitor
 
+The scanner reuses `ddccontrol-db::options` for database reading and validation,
+`ddccontrol-edid` for identification, and the shared XML text helpers. Its XML
+module only indexes the vocabulary and generates the editable monitor definition.
+
 Create an editable monitor definition for `ddccontrol-db`:
 
 ```sh

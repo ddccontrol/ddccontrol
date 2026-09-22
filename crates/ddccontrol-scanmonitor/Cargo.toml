@@ -8,6 +8,10 @@ repository.workspace = true
 description = "Scan a monitor and generate an editable ddccontrol-db XML definition"
 
 [dependencies]
+ddccontrol-db = { path = "../ddccontrol-db" }
+ddccontrol-xml = { path = "../ddccontrol-xml" }
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 ddccontrol-edid = { path = "../ddccontrol-edid" }
+
+[dev-dependencies]
 roxmltree = "0.20"

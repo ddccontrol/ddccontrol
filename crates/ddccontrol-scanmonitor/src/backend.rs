@@ -7,6 +7,7 @@
 //! with the matching GLib function. In particular, no native-endian decoding of
 //! serialized D-Bus messages or Rust layout assumptions are needed here.
 
+use ddccontrol_edid::is_valid_pnp_id;
 use std::ffi::{c_char, c_int, c_uchar, c_uint, c_ushort, c_void, CStr, CString};
 use std::ptr::{self, NonNull};
 
@@ -168,22 +169,15 @@ fn decode_open(reply: &Variant) -> Result<(String, String), String> {
     let mut capabilities = reply.child(1).string_value();
     // Match the existing C client's compatibility handling for older services
     // which returned these two strings in the opposite order.
-    if pnp_id.starts_with('(') && valid_pnp_id(&capabilities) {
+    if pnp_id.starts_with('(') && is_valid_pnp_id(&capabilities) {
         std::mem::swap(&mut pnp_id, &mut capabilities);
     }
-    if !valid_pnp_id(&pnp_id) {
+    if !is_valid_pnp_id(&pnp_id) {
         return Err(format!(
             "The D-Bus service returned an invalid monitor Plug and Play ID: {pnp_id:?}"
         ));
     }
     Ok((pnp_id, capabilities))
-}
-
-fn valid_pnp_id(id: &str) -> bool {
-    let bytes = id.as_bytes();
-    bytes.len() == 7
-        && bytes[..3].iter().all(u8::is_ascii_uppercase)
-        && bytes[3..].iter().all(u8::is_ascii_hexdigit)
 }
 
 fn capability_model(capabilities: &str) -> Option<String> {
