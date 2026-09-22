@@ -2,8 +2,8 @@
 # Source this file only in the signing job; build jobs never receive the key.
 set -euo pipefail
 
-: "${PACKAGE_SIGNING_KEY:?Set the PACKAGE_SIGNING_KEY Actions secret}"
-: "${PACKAGE_SIGNING_FINGERPRINT:?Set the PACKAGE_SIGNING_FINGERPRINT Actions variable}"
+: "${PACKAGE_SIGNING_KEY:?Set PACKAGE_SIGNING_KEY to the private signing key}"
+: "${PACKAGE_SIGNING_FINGERPRINT:?Set PACKAGE_SIGNING_FINGERPRINT to the full signing-key fingerprint}"
 [[ $PACKAGE_SIGNING_FINGERPRINT =~ ^[A-Fa-f0-9]{40}$ ]]
 export GNUPGHOME
 GNUPGHOME=$(mktemp -d)

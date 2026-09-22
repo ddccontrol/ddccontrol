@@ -1,0 +1,91 @@
+name: Validate release packages
+
+on:
+  workflow_call:
+    inputs:
+      source-ref:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+    secrets:
+      FEDORA_DDCCONTROL_READ_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.source.outputs.version }}
+      debian_ref: ${{ steps.source.outputs.debian_ref }}
+      fedora_ref: ${{ steps.source.outputs.fedora_ref }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.source-ref }}
+          persist-credentials: false
+      - name: Install source distribution tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            astyle autoconf build-essential cargo clang dh-autoreconf intltool \
+            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc xsltproc \
+            tidy docbook-xml docbook-xsl xml-core python3-yaml
+      - name: Build and check release candidate distributions
+        id: source
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+          SOURCE_COMMIT: ${{ inputs.source-ref }}
+        run: |
+          set -euo pipefail
+          ./autogen.sh
+          ./configure
+          make -j"$(nproc)"
+          make distcheck
+          make dist-bzip2
+          version=$(sed -n 's/^AC_INIT(\[DDC\/CI control tool\],\[\([^]]*\)\].*/\1/p' configure.ac)
+          test "$version" = "$EXPECTED_VERSION"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          debian_ref=$(python3 -c 'import yaml; print(yaml.safe_load(open(".github/workflows/release-packages.yml"))["env"]["DEBIAN_PACKAGING_REF"])')
+          echo "debian_ref=$debian_ref" >> "$GITHUB_OUTPUT"
+          fedora_ref=$(python3 -c 'import yaml; print(yaml.safe_load(open(".github/workflows/release-packages.yml"))["env"]["FEDORA_PACKAGING_REF"])')
+          echo "fedora_ref=$fedora_ref" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/source-artifacts"
+          mv "ddccontrol-$version.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
+          vendor_workdir=$(mktemp -d)
+          tar -C "$vendor_workdir" -xf "$RUNNER_TEMP/source-artifacts/ddccontrol-$version.tar.bz2"
+          (cd "$vendor_workdir/ddccontrol-$version" && cargo vendor --locked vendor)
+          tar -C "$vendor_workdir" -czf "$RUNNER_TEMP/source-artifacts/ddccontrol-$version-vendor.tar.gz" "ddccontrol-$version"
+          jq -n --arg commit "$SOURCE_COMMIT" --arg version "$version" \
+            --arg debian "$debian_ref" --arg fedora "$fedora_ref" \
+            '{commit: $commit, version: $version, debian: $debian, fedora: $fedora}' > "$RUNNER_TEMP/source-artifacts/validation.json"
+          ./scripts/format_code.sh
+          find . -name '*.orig' -delete
+          ./scripts/check_git_clean_after_build.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-sources
+          path: ${{ runner.temp }}/source-artifacts/
+          if-no-files-found: error
+
+  debian:
+    needs: source
+    uses: ./.github/workflows/build-debian-packages.yml
+    with:
+      version: ${{ needs.source.outputs.version }}
+      packaging-ref: ${{ needs.source.outputs.debian_ref }}
+      automation-ref: ${{ inputs.source-ref }}
+
+  rpm:
+    needs: source
+    uses: ./.github/workflows/build-rpm-packages.yml
+    with:
+      version: ${{ needs.source.outputs.version }}
+      packaging-ref: ${{ needs.source.outputs.fedora_ref }}
+      automation-ref: ${{ inputs.source-ref }}
+    secrets:
+      FEDORA_DDCCONTROL_READ_TOKEN: ${{ secrets.FEDORA_DDCCONTROL_READ_TOKEN }}
