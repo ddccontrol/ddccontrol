@@ -60,6 +60,7 @@ jobs:
           echo "fedora_ref=$fedora_ref" >> "$GITHUB_OUTPUT"
           mkdir -p "$RUNNER_TEMP/source-artifacts"
           mv "ddccontrol-$version.tar.bz2" "$RUNNER_TEMP/source-artifacts/"
+          rm -f "ddccontrol-$version.tar.gz"
           vendor_workdir=$(mktemp -d)
           tar -C "$vendor_workdir" -xf "$RUNNER_TEMP/source-artifacts/ddccontrol-$version.tar.bz2"
           (cd "$vendor_workdir/ddccontrol-$version" && "$CARGO" vendor --locked vendor)

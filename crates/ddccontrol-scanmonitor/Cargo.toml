@@ -12,6 +12,8 @@ ddccontrol-db = { path = "../ddccontrol-db" }
 ddccontrol-xml = { path = "../ddccontrol-xml" }
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 ddccontrol-edid = { path = "../ddccontrol-edid" }
+ddccontrol-protocol = { path = "../ddccontrol-protocol" }
+libc = "0.2"
 
 [dev-dependencies]
 roxmltree = "0.20"

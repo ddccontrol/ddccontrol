@@ -11,7 +11,7 @@ use std::io::{self, IsTerminal, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use backend::{Backend, Monitor};
+use backend::Monitor;
 use ddccontrol_caps::Caps;
 
 const HELP: &str = "ddccontrol-scanmonitor - create a monitor database XML file
@@ -28,7 +28,8 @@ Options:
   -h, --help          Show this help
   -V, --version       Show version
 
-Requires the ddccontrol system D-Bus service and ddccontrol-db.
+Requires read/write access to the I2C devices and ddccontrol-db.
+Always accesses monitors directly; no daemon or D-Bus connection is used.
 Reads capabilities and control values; does not set control values.
 Review the XML comments, test your controls, then submit the XML to
 https://github.com/ddccontrol/ddccontrol-db.
@@ -125,11 +126,14 @@ fn select_monitor(monitors: &[Monitor], choice: &str) -> Result<usize, String> {
         .ok_or_else(|| format!("enter a monitor number from 1 to {}", monitors.len()))
 }
 
-fn choose_device(backend: &Backend) -> Result<String, String> {
+fn choose_device() -> Result<String, String> {
     eprintln!("Looking for monitors...");
-    let monitors = backend.list()?;
+    let monitors = backend::list()?;
     match monitors.as_slice() {
-        [] => Err("no DDC/CI monitors found; enable DDC/CI in the monitor menu and check the connection and i2c-dev module".into()),
+        [] => Err(
+            "no monitors found; check I2C permissions, the connection and the i2c-dev module"
+                .into(),
+        ),
         [monitor] => Ok(monitor.device.clone()),
         _ => {
             print_monitors(&monitors, &mut io::stderr()).map_err(|e| e.to_string())?;
@@ -140,7 +144,11 @@ fn choose_device(backend: &Backend) -> Result<String, String> {
                 eprint!("Monitor number: ");
                 io::stderr().flush().map_err(|e| e.to_string())?;
                 let mut choice = String::new();
-                if io::stdin().read_line(&mut choice).map_err(|e| e.to_string())? == 0 {
+                if io::stdin()
+                    .read_line(&mut choice)
+                    .map_err(|e| e.to_string())?
+                    == 0
+                {
                     return Err("no monitor selected".into());
                 }
                 match select_monitor(&monitors, &choice) {
@@ -189,9 +197,9 @@ fn run(args: Args) -> Result<(), String> {
         return Ok(());
     }
     if args.list {
-        let monitors = Backend::connect()?.list()?;
+        let monitors = backend::list()?;
         if monitors.is_empty() {
-            return Err("no DDC/CI monitors found".into());
+            return Err("no monitors found".into());
         }
         return print_monitors(&monitors, &mut io::stdout()).map_err(|e| e.to_string());
     }
@@ -199,13 +207,12 @@ fn run(args: Args) -> Result<(), String> {
     let db_path = database_path(args.db_path)?;
     let database = ddccontrol_db::options::load(&db_path)?;
     let options = xml::index_options(&database)?;
-    let backend = Backend::connect()?;
     let device = match args.device {
         Some(device) => device,
-        None => choose_device(&backend)?,
+        None => choose_device()?,
     };
     eprintln!("Reading monitor identification and capabilities from {device}...");
-    let opened = backend.open(&device)?;
+    let mut opened = backend::open(&device)?;
     let output = args
         .output
         .unwrap_or_else(|| PathBuf::from(format!("{}.xml", opened.pnp_id)));
@@ -238,7 +245,7 @@ fn run(args: Args) -> Result<(), String> {
             index + 1,
             codes.len()
         );
-        match backend.read(&device, code) {
+        match opened.read(code) {
             Ok(Some(reading)) => {
                 readings.insert(code, reading);
             }
@@ -343,5 +350,23 @@ mod tests {
         for choice in ["0", "2", "-1", "", "x"] {
             assert!(select_monitor(&monitors, choice).is_err());
         }
+    }
+
+    #[test]
+    fn generated_file_is_created_once_and_never_overwritten() {
+        let path = env::temp_dir().join(format!(
+            "ddccontrol-scanmonitor-output-{}-{}.xml",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        write_new(&path, "original profile").unwrap();
+        let error = write_new(&path, "replacement").unwrap_err();
+        let contents = fs::read_to_string(&path).unwrap();
+        fs::remove_file(path).unwrap();
+        assert!(error.contains("already exists"));
+        assert_eq!(contents, "original profile");
     }
 }

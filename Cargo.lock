@@ -60,7 +60,9 @@ dependencies = [
  "ddccontrol-caps",
  "ddccontrol-db",
  "ddccontrol-edid",
+ "ddccontrol-protocol",
  "ddccontrol-xml",
+ "libc",
  "roxmltree",
 ]
 

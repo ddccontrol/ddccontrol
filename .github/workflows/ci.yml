@@ -24,9 +24,6 @@ jobs:
       - name: Install Rust toolchain
         run: rustup toolchain install "${{ matrix.toolchain }}" --profile minimal
 
-      - name: Install Rust build and D-Bus test dependencies
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-dev python3-gi dbus-daemon
-
       - name: Install formatting and lint tools
         if: matrix.toolchain == 'stable'
         run: rustup component add --toolchain stable rustfmt clippy
