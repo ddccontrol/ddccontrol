@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<options dbversion="3" date="20260922">
+	<group name="Test">
+		<subgroup name="Controls">
+			<control id="brightness" name="Brightness" type="value" address="0x10"/>
+			<control id="contrast" name="Contrast" type="value" address="0x12"/>
+			<control id="input" name="Input" type="list" address="0x60">
+				<value id="hdmi" name="HDMI" value="0x11"/>
+				<value id="dp" name="DisplayPort" value="0x0f"/>
+				<value id="dvi" name="DVI" value="3"/>
+			</control>
+			<control id="preset" name="Preset" type="list" address="0x14">
+				<value id="warm" name="Warm"/>
+			</control>
+			<control id="hue" name="Hue" type="value" address="0x1c"/>
+			<control id="focus" name="Focus" type="value" address="0x1c"/>
+			<control id="reset" name="Reset" type="command" address="0x04"/>
+			<control id="vendor" name="Vendor" type="value" address="0xe1"/>
+		</subgroup>
+	</group>
+</options>

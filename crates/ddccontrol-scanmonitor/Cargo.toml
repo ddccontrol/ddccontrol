@@ -1,0 +1,13 @@
+[package]
+name = "ddccontrol-scanmonitor"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Scan a monitor and generate an editable ddccontrol-db XML definition"
+
+[dependencies]
+ddccontrol-caps = { path = "../ddccontrol-caps" }
+ddccontrol-edid = { path = "../ddccontrol-edid" }
+roxmltree = "0.20"

@@ -46,9 +46,47 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/tests/unit/monitor_list.rs \
 	crates/ddccontrol-db/src/monitor_list.rs \
 	crates/ddccontrol-db/src/lib.rs \
-	crates/ddccontrol-db/src/protocol.rs
+	crates/ddccontrol-db/src/protocol.rs \
+	crates/ddccontrol-scanmonitor/Cargo.toml \
+	crates/ddccontrol-scanmonitor/README.md \
+	crates/ddccontrol-scanmonitor/src/main.rs \
+	crates/ddccontrol-scanmonitor/src/backend.rs \
+	crates/ddccontrol-scanmonitor/src/xml.rs \
+	crates/ddccontrol-scanmonitor/tests/cli.rs \
+	crates/ddccontrol-scanmonitor/tests/dbus.rs \
+	crates/ddccontrol-scanmonitor/tests/dbus_service.py \
+	crates/ddccontrol-scanmonitor/fixtures/options.xml
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
+
+RUST_SCANMONITOR = $(top_builddir)/target/release/ddccontrol-scanmonitor
+RUST_SCANMONITOR_DEPS = \
+	$(top_builddir)/config.status \
+	$(top_srcdir)/Cargo.toml \
+	$(top_srcdir)/Cargo.lock \
+	$(top_srcdir)/crates/ddccontrol-caps/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-caps/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-edid/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-edid/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-scanmonitor/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/main.rs \
+	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/backend.rs \
+	$(top_srcdir)/crates/ddccontrol-scanmonitor/src/xml.rs
+
+all-local: $(RUST_SCANMONITOR)
+
+$(RUST_SCANMONITOR): $(RUST_SCANMONITOR_DEPS)
+	cd "$(top_srcdir)" && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR="$(abs_top_builddir)/target" $(CARGO) build --release --locked -p ddccontrol-scanmonitor
+
+install-exec-local: $(RUST_SCANMONITOR)
+	$(MKDIR_P) "$(DESTDIR)$(bindir)"
+	$(INSTALL_PROGRAM) "$(RUST_SCANMONITOR)" "$(DESTDIR)$(bindir)/ddccontrol-scanmonitor$(EXEEXT)"
+
+uninstall-local:
+	rm -f "$(DESTDIR)$(bindir)/ddccontrol-scanmonitor$(EXEEXT)"
+
+clean-local:
+	rm -f "$(RUST_SCANMONITOR)"
 
 distclean-local:
 	rm -f po/.intltool-merge-cache.lock

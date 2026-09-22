@@ -17,6 +17,8 @@ cp "$archive" "$work/SOURCES/ddccontrol-$version-vendor.tar.gz"
 sed -i -E \
     -e "s/^(Version:)[[:space:]]+.*/\1          $version/" \
     -e 's/^(Release:)[[:space:]]+.*/\1          1%{?dist}/' \
+    -e '/^%\{_bindir\}\/ddccontrol$/a %{_bindir}/ddccontrol-scanmonitor' \
+    -e '/^%\{_mandir\}\/man1\/ddccontrol\.1\*$/a %{_mandir}/man1/ddccontrol-scanmonitor.1*' \
     "$work/SPECS/ddccontrol.spec"
 dnf builddep -y "$work/SPECS/ddccontrol.spec"
 rpmbuild -ba --define "_topdir $work" "$work/SPECS/ddccontrol.spec"

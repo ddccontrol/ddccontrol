@@ -37,7 +37,16 @@
  Depends: ${shlibs:Depends},
 --- a/debian/ddccontrol.install
 +++ b/debian/ddccontrol.install
-@@ -8,3 +8,4 @@
+@@ -1,6 +1,8 @@
+ usr/bin/ddccontrol
++usr/bin/ddccontrol-scanmonitor
+ usr/share/locale/*
+ usr/share/man/man1/ddccontrol.1
++usr/share/man/man1/ddccontrol-scanmonitor.1
+ 
+ usr/share/dbus-1/interfaces/*.xml
+ usr/share/dbus-1/system-services/*.service
+@@ -8,3 +10,4 @@
  usr/share/dbus-1/system.d/*.conf
  
  usr/share/doc/ddccontrol/*.html usr/share/doc/ddccontrol/html/

@@ -927,8 +927,11 @@ int main(int argc, char **argv)
 				}
 				printf(_(
 				           "Unsupported monitor detected.\n\n"
-				           "Please update ddccontrol-db, or, if you are already using the latest\n"
-				           "version, please open this pre-filled GitHub issue:\n"));
+				           "Please update ddccontrol-db. If your monitor is still missing, run:\n\n"
+				           "  ddccontrol-scanmonitor\n\n"
+				           "This creates a monitor XML file. Follow its comments to test the\n"
+				           "controls, then submit the XML in a pull request to ddccontrol-db.\n\n"
+				           "If you need help, open this pre-filled GitHub issue:\n"));
 				printf("%s\n", issue_url ? issue_url : "https://github.com/ddccontrol/ddccontrol-db/issues/new?template=unsupported-monitor.yml");
 				printf(_(
 				           "Then attach the resulting report file of the following command:\n"));
