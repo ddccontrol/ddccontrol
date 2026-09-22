@@ -101,7 +101,7 @@ impl Backend {
             &[Variant::string(device)?, Variant::uint32(u32::from(code))],
             10_000,
         )?;
-        decode_reading(&reply).map_err(|error| format!("Control 0x{code:02x}: {error}"))
+        decode_reading(&reply)
     }
 
     fn call(

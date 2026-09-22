@@ -628,9 +628,8 @@ int main(int argc, char **argv)
 					if (open_ret >= 0 && monitor_matches_selector(selector, current, candidate)) {
 						if (!has_index || (selected_index == matched_count)) {
 							if (!monitor_matches_file(candidate, monitor_file, monitor_file_pnpid)) {
-								int candidate_needs_free = (candidate->__vtable == NULL);
 								ddcci_close(candidate);
-								if (candidate_needs_free) free(candidate);
+								free(candidate);
 								ddcci_free_list(monlist);
 								free(selector);
 								ddcci_release();
@@ -782,9 +781,8 @@ int main(int argc, char **argv)
 			        ), fn, ret);
 		} else {
 			if (!monitor_matches_file(mon, monitor_file, monitor_file_pnpid)) {
-				int mon_needs_free = (mon->__vtable == NULL);
 				ddcci_close(mon);
-				if (mon_needs_free) free(mon);
+				free(mon);
 				ddcci_release();
 				exit(1);
 			}

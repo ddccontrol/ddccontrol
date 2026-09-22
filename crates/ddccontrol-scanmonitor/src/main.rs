@@ -199,7 +199,6 @@ fn run(args: Args) -> Result<(), String> {
     let db_path = database_path(args.db_path)?;
     let database = ddccontrol_db::options::load(&db_path)?;
     let options = xml::index_options(&database)?;
-    let candidates: Vec<u8> = options.keys().copied().collect();
     let backend = Backend::connect()?;
     let device = match args.device {
         Some(device) => device,
@@ -225,7 +224,7 @@ fn run(args: Args) -> Result<(), String> {
     };
     let codes: BTreeSet<u8> = caps
         .vcp_codes()
-        .chain(candidates)
+        .chain(options.keys().copied())
         .filter(|code| *code < 0xe0)
         .collect();
     let mut readings = BTreeMap::new();
@@ -258,7 +257,6 @@ fn run(args: Args) -> Result<(), String> {
         pnp_id: opened.pnp_id,
         name: opened
             .name
-            .filter(|name| !name.trim().is_empty())
             .unwrap_or_else(|| "Unknown monitor (edit this name)".into()),
         caps,
         readings,
