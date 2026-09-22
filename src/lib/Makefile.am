@@ -32,9 +32,12 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-profile/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-profile/src/lib.rs \
 	$(top_srcdir)/crates/ddccontrol-profile/tests/profile.rs \
+	$(top_srcdir)/crates/ddccontrol-monitorlist/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-monitorlist/src/lib.rs \
 	$(top_srcdir)/crates/ddccontrol-protocol/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-protocol/src/lib.rs \
 	$(top_srcdir)/crates/ddccontrol-db/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-db/src/monitor_list.rs \
 	$(top_srcdir)/crates/ddccontrol-db/src/protocol.rs \
 	$(top_srcdir)/crates/ddccontrol-db/src/lib.rs
 
@@ -53,7 +56,7 @@ libddccontrol_la_SOURCES = ddcci.c ddcci.h ddcci_protocol.h monitor_db.h rust_ff
 libddccontrol_la_LDFLAGS = -version-info 1:0:0
 libddccontrol_la_LIBADD = $(RUST_DB_LIB) $(LIBXML2_LIBS)
 
-check_PROGRAMS = test_issueurl test_parse_caps test_caps_exchange test_edid test_profile test_abi_layout test_ddcci_protocol
+check_PROGRAMS = test_issueurl test_parse_caps test_caps_exchange test_edid test_profile test_monitorlist test_abi_layout test_ddcci_protocol
 TESTS = $(check_PROGRAMS)
 
 check-local:
@@ -83,3 +86,6 @@ test_profile_SOURCES = tests/test_profile.c
 test_profile_LDADD = libddccontrol.la $(LIBXML2_LIBS)
 
 test_abi_layout_SOURCES = tests/test_abi_layout.c
+
+test_monitorlist_SOURCES = tests/test_monitorlist.c
+test_monitorlist_LDADD = libddccontrol.la $(LIBXML2_LIBS)

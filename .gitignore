@@ -82,6 +82,9 @@ target/
 /src/lib/test_edid
 /src/lib/test_edid.log
 /src/lib/test_edid.trs
+/src/lib/test_monitorlist
+/src/lib/test_monitorlist.log
+/src/lib/test_monitorlist.trs
 /src/lib/test_profile
 /src/lib/test_profile.log
 /src/lib/test_profile.trs

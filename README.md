@@ -42,11 +42,13 @@ For the signed Debian and Fedora repositories built from upstream releases, see
 
 ### Installation from sources
 
-Building requires Rust and Cargo 1.70 or newer. The workspace declares this
-minimum in `Cargo.toml`, and CI tests Rust 1.70.0, 1.85.0, and stable. Rust 1.70
-supports the existing [`Option::is_some_and`](https://doc.rust-lang.org/std/option/enum.Option.html#method.is_some_and)
-use and keeps compatibility with the Rust 1.75 toolchain in the Ubuntu 24.04
-build images. The Rust 1.85 toolchain
+Building requires Rust and Cargo 1.77 or newer. The workspace declares this
+minimum in `Cargo.toml`, and CI tests Rust 1.77.0, 1.85.0, and stable. Rust 1.77
+provides [`offset_of!` and C-string literals](https://blog.rust-lang.org/2024/03/21/Rust-1.77.0/)
+for the Rust/C ABI tests. Ubuntu 24.04's default Rust 1.75 is too old; install
+`cargo-1.77` and `rustc-1.77`, then set `CARGO=cargo-1.77`, `RUSTC=rustc-1.77`,
+and `RUSTDOC=rustdoc-1.77` when configuring and building. The CI containers
+select these versioned tools automatically. The Rust 1.85 toolchain
 shipped in [Debian 13 (trixie)](https://packages.debian.org/trixie/rustc) meets
 the minimum, including on `ppc64el`, `riscv64`, and `s390x`. Debian 12 (bookworm)'s
 standard [Rust 1.63 package](https://packages.debian.org/bookworm/rustc) is too old;

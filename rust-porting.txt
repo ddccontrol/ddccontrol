@@ -224,8 +224,8 @@ existing C API.
 Build and packaging status
 --------------------------
 
-- Rust and Cargo 1.70 or newer are required. Cargo is mandatory at configure
-  time; all four crates inherit `rust-version = "1.70"` from the workspace.
+- Rust and Cargo 1.77 or newer are required. Cargo is mandatory at configure
+  time; all five crates inherit `rust-version = "1.77"` from the workspace.
 - Autotools builds `ddccontrol-db` as a release `staticlib` and links it into
   `libddccontrol`.
 - `DDCONTROL_DATADIR` embeds the installed monitor-database path at Rust build
@@ -242,7 +242,7 @@ Build and packaging status
   `armhf`. A separate push/manual workflow builds under QEMU for `ppc64el`,
   `riscv64`, and `s390x`. Both now use root-level `make check`, including the
   library and daemon suites.
-- Dedicated Rust CI jobs test 1.70.0, 1.85.0, and stable, with and without gettext,
+- Dedicated Rust CI jobs test 1.77.0, 1.85.0, and stable, with and without gettext,
   and build the release static library with all features. The stable job runs
   `cargo fmt --all -- --check` and
   `cargo clippy --workspace --all-targets --all-features --locked -- -D warnings`.
@@ -251,17 +251,19 @@ Build and packaging status
 
 Minimum Rust version and Debian policy:
 
-- Rust/Cargo 1.70 is the supported source-build minimum. The existing
-  `Option::is_some_and` use requires Rust 1.70; locked dependencies declare
-  lower requirements. The minimum also preserves compatibility with Rust 1.75
-  in the Ubuntu 24.04 CI/release environment.
+- Rust/Cargo 1.77 is the supported source-build minimum. Monitor-list ABI tests
+  use `std::mem::offset_of!` and C-string literals, both stable since Rust 1.77.
+  The Ubuntu 24.04 CI/release environment selects the versioned `cargo-1.77`
+  and `rustc-1.77` packages because its default Rust 1.75 is too old. Cached CI
+  containers install these packages at build time when necessary. Ubuntu
+  provides them for all six architectures tested by our build workflows.
 - Debian 13 (trixie)'s Rust/Cargo 1.85 meets the minimum and is tested as a
   separate CI toolchain. Debian provides it for all release architectures,
   including `ppc64el`, `riscv64`, and big-endian `s390x`.
 - Debian 12 (bookworm)'s standard Rust 1.63 is too old for existing code and
   dependencies: for example, `Option::is_some_and` needs 1.70 and the locked
   `libc` version declares 1.65. Building on bookworm requires a newer toolchain.
-- Cargo.lock stays in format 3. Dependency updates must pass the 1.70.0 CI job;
+- Cargo.lock stays in format 3. Dependency updates must pass the 1.77.0 CI job;
   raising the MSRV or changing lockfile policy requires an explicit review.
 - No Rust dependencies, architecture restrictions, or C ABI layouts change in
   the quality/MSRV update. Debian dependency/vendoring policy still applies.
@@ -310,7 +312,7 @@ There are seven C test executables: six in the library and one in the daemon:
 
 Verification:
 
-- The quality update is checked with Rust 1.70.0, 1.85.0, and stable, including
+- The #324 quality update was checked with Rust 1.70.0, 1.85.0, and stable, including
   tests with and without gettext and release compilation. Formatting and
   strict Clippy run on stable.
 - The quality update also passed `make check` and a fresh `make distcheck`
