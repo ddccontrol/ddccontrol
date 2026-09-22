@@ -72,7 +72,21 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-db/fixtures/cbor/newer-v1.json \
 	crates/ddccontrol-db/fixtures/cbor/newer-v1.tree \
 	crates/ddccontrol-db/fixtures/cbor/descriptions-v1.cbor \
-	crates/ddccontrol-db/fixtures/cbor/descriptions-v1.json
+	crates/ddccontrol-db/fixtures/cbor/descriptions-v1.json \
+	crates/ddccontrol-db/tests/frozen-v1/.gitignore \
+	crates/ddccontrol-db/tests/frozen-v1/Cargo.toml \
+	crates/ddccontrol-db/tests/frozen-v1/Cargo.lock \
+	crates/ddccontrol-db/tests/frozen-v1/README.md \
+	crates/ddccontrol-db/tests/frozen-v1/SHA256SUMS \
+	crates/ddccontrol-db/tests/frozen-v1/driver.c \
+	crates/ddccontrol-db/tests/frozen-v1/src/lib.rs \
+	crates/ddccontrol-db/tests/frozen-v1/src/cbor.rs \
+	crates/ddccontrol-db/tests/frozen-v1/src/protocol.rs \
+	crates/ddccontrol-db/tests/frozen-v1/caps/Cargo.toml \
+	crates/ddccontrol-db/tests/frozen-v1/caps/src/lib.rs \
+	scripts/check_cbor_frozen.sh \
+	scripts/check_cbor_gettext.sh
+
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
