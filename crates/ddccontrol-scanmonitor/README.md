@@ -29,15 +29,15 @@ Successful reads do not prove that writing a control will work correctly.
 Review the XML comments and monitor name, then test it directly:
 
 ```sh
-gddccontrol --monitor-file ./DEL1234.xml
-ddccontrol --monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 gddccontrol --monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
 ```
 
 Use the actual `<PNPID>.xml` filename; it determines which monitor gets the
-definition. Relaunch the application after edits. Set `DDCCONTROL_NO_DAEMON=1`
-to use direct device access with sufficient `/dev/i2c-*` permissions. This also
-tests the file's monitor initialization and write delays; in daemon mode, those
-still use the service's installed definition.
+definition. Relaunch the application after edits. `--monitor-file` requires
+`DDCCONTROL_NO_DAEMON=1` and permission to access `/dev/i2c-*` directly; if needed,
+use `sudo env DDCCONTROL_NO_DAEMON=1 ...`. No database installation or service
+restart is needed to test the file.
 
 Enable additional entries as you verify them. For permanent use, copy the file
 into the installed database's `monitor/` directory (the scanner prints the

@@ -289,7 +289,10 @@ fn run(args: Args) -> Result<(), String> {
         scan.pnp_id
     );
     println!("Review the XML comments and test the enabled controls.");
-    println!("Preview with gddccontrol --monitor-file FILE or ddccontrol --monitor-file FILE.");
+    println!("Preview with DDCCONTROL_NO_DAEMON=1 gddccontrol --monitor-file FILE");
+    println!(
+        "or DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file FILE (requires I2C permissions)."
+    );
     println!("Keep the filename {}.xml; relaunch after editing. No service restart is needed for preview.", scan.pnp_id);
     println!(
         "For permanent installation, copy it to {}.",
@@ -300,7 +303,7 @@ fn run(args: Args) -> Result<(), String> {
     );
     println!("Restart ddccontrol.service after changing the installed database.");
     if custom_database {
-        println!("--db-path selects the XML definitions only; install the file in the running service's database to test it.");
+        println!("--db-path selects the XML definitions only; use the same database with the preview application's -b option.");
     }
     println!("Once tested, submit the XML to https://github.com/ddccontrol/ddccontrol-db.");
     Ok(())

@@ -110,7 +110,7 @@ static void usage(char *name)
 	            "\t-b : ddccontrol-db directory (if other than %s)\n"
 	            "\t-l : load values from XML profile file\n"
 	            "\t--monitor-file : use a local monitor definition named PNPID.xml; select matching monitors when dev is omitted\n"
-	            "\t                (requires the installed database; cannot be combined with -p)\n"
+	            "\t                (requires DDCCONTROL_NO_DAEMON=1 and the installed database; cannot be combined with -p)\n"
 	            "\nExample: DDCCONTROL_NO_DAEMON=1 %s --monitor-file ./DEL1234.xml\n"
 	        ), name, DATADIR, name);
 }
@@ -478,6 +478,11 @@ int main(int argc, char **argv)
 	}
 
 	ddcci_verbosity(verbosity);
+	const char *no_daemon = getenv("DDCCONTROL_NO_DAEMON");
+	if (monitor_file && (!no_daemon || strcmp(no_daemon, "1") != 0)) {
+		fprintf(stderr, _("--monitor-file requires DDCCONTROL_NO_DAEMON=1.\n"));
+		exit(1);
+	}
 	if (monitor_file && probe) {
 		fprintf(stderr, _("You cannot combine --monitor-file with -p. Omit -p to select monitors matching the file.\n"));
 		exit(1);
@@ -502,18 +507,16 @@ int main(int argc, char **argv)
 			printf(_("Unable to initialize ddcci library.\n"));
 			exit(1);
 		}
+		if (monitor_file && !ddcci_set_monitor_file(monitor_file, monitor_file_pnpid)) {
+			ddcci_release();
+			exit(1);
+		}
 	} else {
 		// TODO: DB datadir should be same, as datadir of daemon, needs some integration
 		if (!ddcci_init_db(datadir)) {
 			printf(_("Unable to initialize ddcci db library.\n"));
 			exit(1);
 		}
-	}
-	if (monitor_file && !ddcci_set_monitor_file(monitor_file, monitor_file_pnpid)) {
-		ddcci_release();
-		exit(1);
-	}
-	if (can_use_dbus_daemon()) {
 		proxy = ddcci_dbus_open_proxy();
 		if (proxy == NULL) {
 			printf(_("Failed to open D-Bus proxy, try with DDCCONTROL_NO_DAEMON=1.\n"));

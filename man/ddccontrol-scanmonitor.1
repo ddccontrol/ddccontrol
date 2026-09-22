@@ -73,15 +73,16 @@ ddccontrol-scanmonitor dev:/dev/i2c-4 \-\-output ./DEL1234.xml
 Try the generated file directly (replace the filename with your monitor's ID):
 .PP
 .nf
-gddccontrol \-\-monitor-file ./DEL1234.xml
-ddccontrol \-\-monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 gddccontrol \-\-monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 ddccontrol \-\-monitor-file ./DEL1234.xml
 .fi
 .PP
 Keep the filename PNPID.xml and relaunch the application after editing it.
 No system database changes or service restart are needed for this preview.
-To test monitor initialization and write delays as well, set
+Loading a local file requires
 .B DDCCONTROL_NO_DAEMON=1
-and ensure you have permission to access the I2C device.
+and permission to access the I2C device directly. If needed, prefix the command
+with \fBsudo env\fP.
 .PP
 Install a tested result into a typical package database and reload the service:
 .PP

@@ -137,8 +137,8 @@ ddccontrol-scanmonitor dev:/dev/i2c-4 --output ./DEL1234.xml
 Open the generated definition directly to try it:
 
 ```shell
-gddccontrol --monitor-file ./DEL1234.xml
-ddccontrol --monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 gddccontrol --monitor-file ./DEL1234.xml
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
 ```
 
 Keep the filename `<PNPID>.xml`, for example `DEL1234.xml`, so the definition
@@ -148,18 +148,9 @@ The file is read for this process only. Relaunch the application after editing
 it; copying it into the system database or restarting the service is not needed.
 The installed database still supplies `options.xml` and included definitions.
 
-To test with direct device access, including changes to `init` and write delays,
-use the existing environment variable:
-
-```shell
-DDCCONTROL_NO_DAEMON=1 gddccontrol --monitor-file ./DEL1234.xml
-DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
-```
-
-Direct access requires permission to use `/dev/i2c-*`. If necessary, run with
-`sudo env DDCCONTROL_NO_DAEMON=1 ...`. With the default D-Bus backend, the local
-file controls the application's available controls, while the service uses its
-installed definition for monitor initialization and write delays.
+`--monitor-file` requires `DDCCONTROL_NO_DAEMON=1` and permission to access
+`/dev/i2c-*` directly. If necessary, run with
+`sudo env DDCCONTROL_NO_DAEMON=1 ...`.
 
 To install a tested definition permanently, copy it into the database's `monitor`
 directory and restart the service. Use the path printed by the scanner; a typical

@@ -48,7 +48,7 @@ ddccontrol \- A utility to control monitor parameters via software
 .RB | -t
 .IR value1,value2 ]]
 .br
-.B ddccontrol --monitor-file
+.B DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file
 .I PNPID.xml
 .RI [ selector ]
 .RI [ options ]
@@ -110,6 +110,8 @@ ddccontrol-db directory (if other than /usr/share/ddccontrol-db)
 .TP
 .BI \-\-monitor-file " PNPID.xml"
 Use a local monitor definition for the matching PnP ID during this run.
+Requires \fBDDCCONTROL_NO_DAEMON=1\fP and permission to access
+\fB/dev/i2c-*\fP directly.
 The file must be named after its PnP ID, for example \fBDEL1234.xml\fP;
 relative and absolute paths are accepted.
 When no device or selector is given, select all connected, DDC/CI-supported
@@ -120,11 +122,8 @@ This option cannot be combined with \fB\-p\fP.
 .IP
 The installed database (or the directory selected with \fB\-b\fP) still supplies
 \fBoptions.xml\fP and any included monitor definitions.
-The local file is not installed or sent to the daemon, and no daemon restart
-is needed. With the daemon, the local definition supplies control names and
-values in this client; the daemon still uses its own database for hardware
-initialization and write delays. Set \fBDDCCONTROL_NO_DAEMON=1\fP to also test
-the local definition's initialization and write delays directly.
+The local file is read for this run only; relaunch after editing it.
+No database files are installed or changed, and no service restart is needed.
 .TP
 .BI \-l " profile.xml"
 Load saved control values from a settings profile. This is distinct from a
@@ -136,10 +135,10 @@ Test a generated monitor definition without installing it or restarting the daem
 DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml
 .fi
 .PP
-Read brightness using the local definition and the daemon transport:
+Read brightness using the local definition:
 .PP
 .nf
-ddccontrol --monitor-file ./DEL1234.xml -r 0x10
+DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml -r 0x10
 .fi
 .PP
 Test the definition on a specific matching monitor:
@@ -147,6 +146,8 @@ Test the definition on a specific matching monitor:
 .nf
 DDCCONTROL_NO_DAEMON=1 ddccontrol --monitor-file ./DEL1234.xml dev:/dev/i2c-4
 .fi
+.PP
+If needed for I2C permissions, prefix the command with \fBsudo env\fP.
 .SH ENVIRONMENT
 .TP
 .B DDCCONTROL_NO_DAEMON
