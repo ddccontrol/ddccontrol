@@ -58,8 +58,6 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-scanmonitor/src/backend.rs \
 	crates/ddccontrol-scanmonitor/src/xml.rs \
 	crates/ddccontrol-scanmonitor/tests/cli.rs \
-	crates/ddccontrol-scanmonitor/tests/dbus.rs \
-	crates/ddccontrol-scanmonitor/tests/dbus_service.py \
 	crates/ddccontrol-scanmonitor/fixtures/options.xml
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'

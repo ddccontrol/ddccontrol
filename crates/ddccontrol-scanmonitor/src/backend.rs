@@ -1,20 +1,20 @@
 // Copyright(c) 2004-2026 DDCcontrol authors and contributors (see AUTHORS and CONTRIBUTORS)
 
-//! Read monitor information through ddccontrol's existing system D-Bus service.
-//!
-//! Only opaque GLib pointers and C ABI scalar types cross this boundary. GLib
-//! owns every allocation it returns; the wrappers below release those objects
-//! with the matching GLib function. In particular, no native-endian decoding of
-//! serialized D-Bus messages or Rust layout assumptions are needed here.
+//! Direct Linux I2C access. The existing protocol and EDID crates own all wire
+//! decoding; this module supplies device discovery, timing and read retries.
+//! Only EDID offsets, Get Capabilities and Get VCP requests are written.
 
-use ddccontrol_edid::is_valid_pnp_id;
-use std::ffi::{c_char, c_int, c_uchar, c_uint, c_ushort, c_void, CStr, CString};
-use std::ptr::{self, NonNull};
+use ddccontrol_edid::{self as edid, Edid};
+use ddccontrol_protocol as protocol;
+use std::fs::{self, File, OpenOptions};
+use std::io;
+use std::time::{Duration, Instant};
 
-const SERVICE: &[u8] = b"ddccontrol.DDCControl\0";
-const OBJECT_PATH: &[u8] = b"/ddccontrol/DDCControl\0";
-const SERVICE_HELP: &str =
-    "Install ddccontrol and make sure its system D-Bus service (ddccontrol.service) is available.";
+const DDC_ADDRESS: u16 = 0x37;
+const EDID_ADDRESS: u16 = 0x50;
+const DELAY: Duration = Duration::from_millis(45);
+const PERMISSION_HELP: &str =
+    "Grant read/write access to /dev/i2c-* or run ddccontrol-scanmonitor with sudo.";
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Monitor {
@@ -22,11 +22,11 @@ pub struct Monitor {
     pub name: String,
 }
 
-#[derive(Debug, Eq, PartialEq)]
 pub struct OpenedMonitor {
     pub pnp_id: String,
     pub capabilities: String,
     pub name: Option<String>,
+    transport: Device,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -35,149 +35,279 @@ pub struct Reading {
     pub maximum: u16,
 }
 
-pub struct Backend {
-    proxy: NonNull<c_void>,
+impl OpenedMonitor {
+    pub fn read(&mut self, code: u8) -> Result<Option<Reading>, String> {
+        read_control(&mut self.transport, code)
+    }
 }
 
-impl Backend {
-    pub fn connect() -> Result<Self, String> {
-        let mut error = ptr::null_mut();
-        // SAFETY: String arguments are static, NUL-terminated UTF-8. Optional
-        // interface metadata and cancellation are null. GIO returns an owned
-        // proxy, released by Backend::drop, or an owned GError.
-        let proxy = unsafe {
-            g_dbus_proxy_new_for_bus_sync(
-                1, // G_BUS_TYPE_SYSTEM
-                3, // DO_NOT_LOAD_PROPERTIES | DO_NOT_CONNECT_SIGNALS
-                ptr::null_mut(),
-                SERVICE.as_ptr().cast(),
-                OBJECT_PATH.as_ptr().cast(),
-                SERVICE.as_ptr().cast(),
-                ptr::null_mut(),
-                &mut error,
-            )
-        };
-        let proxy = NonNull::new(proxy).ok_or_else(|| {
-            format!(
-                "Cannot connect to the system D-Bus: {}. {SERVICE_HELP}",
-                take_error(error)
-            )
-        })?;
-        Ok(Self { proxy })
-    }
-
-    /// Discover monitors that the daemon identified as supporting DDC/CI.
-    pub fn list(&self) -> Result<Vec<Monitor>, String> {
-        let reply = self
-            .call("RescanMonitors", &[], 120_000)
-            .map_err(|error| format!("Cannot discover monitors: {error}. {SERVICE_HELP}"))?;
-        decode_monitors(&reply)
-    }
-
-    pub fn open(&self, device: &str) -> Result<OpenedMonitor, String> {
-        let reply = self.call("OpenMonitor", &[Variant::string(device)?], 60_000)?;
-        let (pnp_id, capabilities) = decode_open(&reply)?;
-
-        // Older ddccontrol daemons do not expose GetEdid. Opening and scanning
-        // remain useful in that case; the caller can use the discovered name.
-        let name = self
-            .call("GetEdid", &[Variant::string(device)?], 10_000)
-            .ok()
-            .and_then(|reply| decode_edid_name(&reply).ok().flatten())
-            .or_else(|| capability_model(&capabilities));
-
-        Ok(OpenedMonitor {
-            pnp_id,
-            capabilities,
-            name,
+/// List EDID-identifiable monitors without reading their controls or changing
+/// settings. Internal panels may expose EDID without supporting DDC/CI.
+pub fn list() -> Result<Vec<Monitor>, String> {
+    require_linux()?;
+    let mut devices = fs::read_dir("/dev")
+        .map_err(|error| format!("Cannot list /dev: {error}"))?
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let name = entry.file_name();
+            let number = device_number(name.to_str()?)?;
+            Some((number, entry.path()))
         })
+        .collect::<Vec<_>>();
+    devices.sort_by_key(|(number, _)| *number);
+    if devices.is_empty() {
+        return Err(
+            "No /dev/i2c-* devices found; load the i2c-dev kernel module (sudo modprobe i2c-dev)."
+                .into(),
+        );
     }
 
-    /// GetControl performs the existing daemon's hardware retries. A successful
-    /// unsupported-control reply is distinct from a transport or monitor error.
-    pub fn read(&self, device: &str, code: u8) -> Result<Option<Reading>, String> {
-        let reply = self.call(
-            "GetControl",
-            &[Variant::string(device)?, Variant::uint32(u32::from(code))],
-            10_000,
-        )?;
-        decode_reading(&reply)
-    }
-
-    fn call(
-        &self,
-        method: &str,
-        arguments: &[Variant],
-        timeout_ms: c_int,
-    ) -> Result<Variant, String> {
-        let method_name = CString::new(method).map_err(|_| "Invalid D-Bus method name")?;
-        let parameters = Variant::tuple(arguments);
-        let mut error = ptr::null_mut();
-        // SAFETY: The proxy and parameters remain alive throughout this call.
-        // Parameters hold a non-floating reference, so GIO does not consume our
-        // reference. The reply (or GError on failure) transfers ownership to us.
-        let reply = unsafe {
-            g_dbus_proxy_call_sync(
-                self.proxy.as_ptr(),
-                method_name.as_ptr(),
-                parameters.0.as_ptr(),
-                0, // G_DBUS_CALL_FLAGS_NONE
-                timeout_ms,
-                ptr::null_mut(),
-                &mut error,
-            )
-        };
-        NonNull::new(reply)
-            .map(Variant)
-            .ok_or_else(|| format!("{method} failed: {}", take_error(error)))
-    }
-}
-
-impl Drop for Backend {
-    fn drop(&mut self) {
-        // SAFETY: This is the owned reference returned when connecting.
-        unsafe { g_object_unref(self.proxy.as_ptr()) };
-    }
-}
-
-fn decode_monitors(reply: &Variant) -> Result<Vec<Monitor>, String> {
-    reply.expect_type("(asa(y)asa(y))")?;
-    let devices = reply.child(0);
-    let supported = reply.child(1);
-    let names = reply.child(2);
-    let digital = reply.child(3);
-    let count = devices.len();
-    if supported.len() != count || names.len() != count || digital.len() != count {
-        return Err("The D-Bus service returned inconsistent monitor lists".into());
-    }
     let mut monitors = Vec::new();
-    for index in 0..count {
-        // The complete reply signature above guarantees the byte child type.
-        if unsafe { g_variant_get_byte(supported.child(index).child(0).0.as_ptr()) } != 0 {
+    let mut denied = 0;
+    for (_, path) in devices {
+        let file = match OpenOptions::new().read(true).write(true).open(&path) {
+            Ok(file) => file,
+            Err(error) => {
+                if error.kind() == io::ErrorKind::PermissionDenied {
+                    denied += 1;
+                }
+                continue;
+            }
+        };
+        let mut transport = Device::new(file);
+        if let Ok(info) = read_edid(&mut transport) {
             monitors.push(Monitor {
-                device: devices.child(index).string_value(),
-                name: names.child(index).string_value(),
+                device: format!("dev:{}", path.display()),
+                name: edid_name(&info).unwrap_or_else(|| info.pnp_id().to_owned()),
             });
         }
+    }
+    if denied != 0 {
+        let message = format!("Permission denied for {denied} I2C device(s). {PERMISSION_HELP}");
+        if monitors.is_empty() {
+            return Err(message);
+        }
+        eprintln!("{message}");
     }
     Ok(monitors)
 }
 
-fn decode_open(reply: &Variant) -> Result<(String, String), String> {
-    reply.expect_type("(ss)")?;
-    let mut pnp_id = reply.child(0).string_value();
-    let mut capabilities = reply.child(1).string_value();
-    // Match the existing C client's compatibility handling for older services
-    // which returned these two strings in the opposite order.
-    if pnp_id.starts_with('(') && is_valid_pnp_id(&capabilities) {
-        std::mem::swap(&mut pnp_id, &mut capabilities);
+pub fn open(device: &str) -> Result<OpenedMonitor, String> {
+    require_linux()?;
+    let path = device
+        .strip_prefix("dev:/dev/")
+        .filter(|name| device_number(name).is_some())
+        .ok_or_else(|| "Expected a device such as dev:/dev/i2c-4".to_string())?;
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(format!("/dev/{path}"))
+        .map_err(|error| format!("Cannot open {device}: {error}. {PERMISSION_HELP}"))?;
+    let mut transport = Device::new(file);
+    let info = read_edid(&mut transport)
+        .map_err(|error| format!("Cannot read monitor identification from {device}: {error}"))?;
+    // Some monitors provide readable controls despite a broken caps exchange.
+    let capabilities = read_capabilities(&mut transport).unwrap_or_else(|error| {
+        eprintln!(
+            "Cannot read capabilities from {device}: {error}; trying known control addresses."
+        );
+        String::new()
+    });
+    let name = edid_name(&info).or_else(|| capability_model(&capabilities));
+    Ok(OpenedMonitor {
+        pnp_id: info.pnp_id().to_owned(),
+        capabilities,
+        name,
+        transport,
+    })
+}
+
+fn require_linux() -> Result<(), String> {
+    if cfg!(target_os = "linux") {
+        Ok(())
+    } else {
+        Err("Direct monitor scanning currently requires Linux I2C devices.".into())
     }
-    if !is_valid_pnp_id(&pnp_id) {
-        return Err(format!(
-            "The D-Bus service returned an invalid monitor Plug and Play ID: {pnp_id:?}"
-        ));
+}
+
+fn device_number(name: &str) -> Option<u32> {
+    let number = name.strip_prefix("i2c-")?;
+    if number.is_empty() || !number.bytes().all(|byte| byte.is_ascii_digit()) {
+        return None;
     }
-    Ok((pnp_id, capabilities))
+    number.parse().ok()
+}
+
+fn edid_name(info: &Edid) -> Option<String> {
+    let name = info.info().monitor_name.trim();
+    (!name.is_empty()).then(|| name.to_owned())
+}
+
+trait Transport {
+    fn transfer(&mut self, address: u16, read: bool, bytes: &mut [u8]) -> io::Result<()>;
+}
+
+struct Device {
+    file: File,
+    last_write: Option<Instant>,
+}
+
+impl Device {
+    fn new(file: File) -> Self {
+        Self {
+            file,
+            last_write: None,
+        }
+    }
+}
+
+impl Transport for Device {
+    fn transfer(&mut self, address: u16, read: bool, bytes: &mut [u8]) -> io::Result<()> {
+        if let Some(last_write) = self.last_write {
+            std::thread::sleep(DELAY.saturating_sub(last_write.elapsed()));
+        }
+        let result = transfer(&self.file, address, read, bytes);
+        if !read {
+            self.last_write = Some(Instant::now());
+        }
+        result
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn transfer(file: &File, address: u16, read: bool, bytes: &mut [u8]) -> io::Result<()> {
+    use libc::{c_uchar, c_uint, c_ushort};
+    use std::os::fd::AsRawFd;
+
+    // Linux uapi/linux/i2c.h and i2c-dev.h. C layout includes pointer padding
+    // on 64-bit targets; no host byte order assumptions enter the wire data.
+    #[repr(C)]
+    struct I2cMessage {
+        address: c_ushort,
+        flags: c_ushort,
+        length: c_ushort,
+        buffer: *mut c_uchar,
+    }
+    #[repr(C)]
+    struct I2cTransfer {
+        messages: *mut I2cMessage,
+        count: c_uint,
+    }
+    let mut message = I2cMessage {
+        address,
+        flags: u16::from(read), // I2C_M_RD == 1
+        length: bytes
+            .len()
+            .try_into()
+            .map_err(|_| io::Error::new(io::ErrorKind::InvalidInput, "I2C message is too long"))?,
+        buffer: bytes.as_mut_ptr(),
+    };
+    let mut request = I2cTransfer {
+        messages: &mut message,
+        count: 1,
+    };
+    // SAFETY: The request, message and mutable byte buffer remain alive and
+    // exclusively borrowed until this synchronous I2C_RDWR ioctl completes.
+    let result = unsafe { libc::ioctl(file.as_raw_fd(), 0x0707, &mut request) };
+    match result {
+        1 => Ok(()), // The kernel returns message count, not byte count.
+        -1 => Err(io::Error::last_os_error()),
+        _ => Err(io::Error::new(
+            io::ErrorKind::UnexpectedEof,
+            "Incomplete I2C transfer",
+        )),
+    }
+}
+
+#[cfg(not(target_os = "linux"))]
+fn transfer(_: &File, _: u16, _: bool, _: &mut [u8]) -> io::Result<()> {
+    Err(io::Error::new(
+        io::ErrorKind::Unsupported,
+        "Linux I2C is required",
+    ))
+}
+
+fn retry<T>(mut operation: impl FnMut() -> Result<T, String>) -> Result<T, String> {
+    let mut last_error = String::new();
+    for _ in 0..3 {
+        match operation() {
+            Ok(value) => return Ok(value),
+            Err(error) => last_error = error,
+        }
+    }
+    Err(last_error)
+}
+
+fn read_edid(transport: &mut impl Transport) -> Result<Edid, String> {
+    retry(|| {
+        transport
+            .transfer(EDID_ADDRESS, false, &mut [0])
+            .map_err(|error| error.to_string())?;
+        let mut bytes = [0; edid::EDID_BLOCK_LEN];
+        transport
+            .transfer(EDID_ADDRESS, true, &mut bytes)
+            .map_err(|error| error.to_string())?;
+        let info = edid::parse(&bytes).map_err(|error| error.to_string())?;
+        if !edid::is_valid_pnp_id(info.pnp_id()) {
+            return Err("EDID contains an invalid monitor Plug and Play ID".into());
+        }
+        Ok(info)
+    })
+}
+
+fn exchange(
+    transport: &mut impl Transport,
+    payload: &[u8],
+    reply_size: usize,
+) -> Result<Vec<u8>, String> {
+    let mut request = protocol::build_frame(DDC_ADDRESS as u8, payload)
+        .map_err(|error| format!("Invalid DDC request: {error:?}"))?
+        .as_bytes()
+        .to_vec();
+    transport
+        .transfer(DDC_ADDRESS, false, &mut request)
+        .map_err(|error| error.to_string())?;
+    let mut response = vec![0; reply_size + protocol::FRAME_OVERHEAD];
+    transport
+        .transfer(DDC_ADDRESS, true, &mut response)
+        .map_err(|error| error.to_string())?;
+    let frame = protocol::parse_frame(DDC_ADDRESS as u8, &response, reply_size)
+        .map_err(|error| format!("Invalid DDC reply: {error:?}"))?;
+    Ok(frame.payload.to_vec())
+}
+
+fn read_control(transport: &mut impl Transport, code: u8) -> Result<Option<Reading>, String> {
+    retry(|| {
+        let reply = exchange(transport, &[0x01, code], 8)?;
+        let reply = protocol::parse_vcp_reply(&reply, code)
+            .map_err(|error| format!("Invalid control reply: {error:?}"))?;
+        Ok(reply.supported.then_some(Reading {
+            current: reply.value,
+            maximum: reply.maximum,
+        }))
+    })
+}
+
+fn read_capabilities(transport: &mut impl Transport) -> Result<String, String> {
+    let mut bytes = Vec::new();
+    loop {
+        let offset = bytes.len() as u16;
+        let fragment = retry(|| {
+            let [high, low] = offset.to_be_bytes();
+            let reply = exchange(transport, &[0xf3, high, low], 64)?;
+            protocol::parse_caps_reply(&reply, offset)
+                .map(<[u8]>::to_vec)
+                .map_err(|error| format!("Invalid capabilities fragment: {error:?}"))
+        })?;
+        if fragment.is_empty() {
+            return String::from_utf8(bytes)
+                .map_err(|error| format!("Capabilities are not UTF-8 text: {error}"));
+        }
+        if bytes.len() + fragment.len() > usize::from(u16::MAX) {
+            return Err("Capabilities exceed the 65535-byte DDC limit".into());
+        }
+        bytes.extend_from_slice(&fragment);
+    }
 }
 
 fn capability_model(capabilities: &str) -> Option<String> {
@@ -197,216 +327,189 @@ fn capability_model(capabilities: &str) -> Option<String> {
     None
 }
 
-fn decode_edid_name(reply: &Variant) -> Result<Option<String>, String> {
-    reply.expect_type("(ay)")?;
-    let bytes = reply.child(0);
-    // The checked reply type guarantees an array of bytes. Reading individual
-    // values also avoids host-endian or alignment assumptions.
-    let bytes: Vec<u8> = (0..bytes.len())
-        .map(|index| unsafe { g_variant_get_byte(bytes.child(index).0.as_ptr()) })
-        .collect();
-    let edid = ddccontrol_edid::parse(&bytes).map_err(|error| error.to_string())?;
-    let name = edid.info().monitor_name.trim();
-    Ok((!name.is_empty()).then(|| name.to_owned()))
-}
-
-fn decode_reading(reply: &Variant) -> Result<Option<Reading>, String> {
-    reply.expect_type("(iqq)")?;
-    // SAFETY: The checked tuple signature guarantees all three scalar types.
-    let result = unsafe { g_variant_get_int32(reply.child(0).0.as_ptr()) };
-    if result < 0 {
-        return Err(format!(
-            "the monitor did not return a reading (error {result})"
-        ));
-    }
-    if result == 0 {
-        return Ok(None);
-    }
-    Ok(Some(Reading {
-        current: unsafe { g_variant_get_uint16(reply.child(1).0.as_ptr()) },
-        maximum: unsafe { g_variant_get_uint16(reply.child(2).0.as_ptr()) },
-    }))
-}
-
-/// An owned, non-floating GVariant reference.
-struct Variant(NonNull<c_void>);
-
-impl Variant {
-    fn string(value: &str) -> Result<Self, String> {
-        let value = CString::new(value).map_err(|_| "A device name contains a NUL byte")?;
-        // SAFETY: GLib copies the NUL-terminated UTF-8 string.
-        Ok(unsafe { Self::sink(g_variant_new_string(value.as_ptr())) })
-    }
-
-    fn uint32(value: u32) -> Self {
-        // SAFETY: This GLib scalar constructor has no preconditions.
-        unsafe { Self::sink(g_variant_new_uint32(value)) }
-    }
-
-    fn tuple(children: &[Self]) -> Self {
-        let pointers: Vec<_> = children.iter().map(|child| child.0.as_ptr()).collect();
-        // SAFETY: All child variants remain alive throughout construction. GLib
-        // retains its own references because these children are non-floating.
-        unsafe { Self::sink(g_variant_new_tuple(pointers.as_ptr(), pointers.len())) }
-    }
-
-    unsafe fn sink(pointer: *mut c_void) -> Self {
-        // GLib allocation routines abort on OOM, so constructors cannot return
-        // null for the valid arguments supplied by this module.
-        Self(NonNull::new(g_variant_ref_sink(pointer)).expect("GLib returned a null variant"))
-    }
-
-    fn expect_type(&self, expected: &str) -> Result<(), String> {
-        // SAFETY: The variant is alive; GLib returns its owned type string.
-        let actual = unsafe { CStr::from_ptr(g_variant_get_type_string(self.0.as_ptr())) };
-        if actual.to_bytes() == expected.as_bytes() {
-            Ok(())
-        } else {
-            Err(format!(
-                "Unexpected D-Bus reply type: expected {expected}, got {}",
-                actual.to_string_lossy()
-            ))
-        }
-    }
-
-    fn len(&self) -> usize {
-        // SAFETY: Call sites only use len on containers after checking type.
-        unsafe { g_variant_n_children(self.0.as_ptr()) }
-    }
-
-    fn child(&self, index: usize) -> Self {
-        assert!(index < self.len());
-        // SAFETY: The index is valid, and GLib returns a new owned reference.
-        Self(
-            NonNull::new(unsafe { g_variant_get_child_value(self.0.as_ptr(), index) })
-                .expect("GLib returned a null variant child"),
-        )
-    }
-
-    fn string_value(&self) -> String {
-        // SAFETY: Call sites have checked the parent tuple's exact signature,
-        // including this child's string type. The copied string outlives GLib.
-        unsafe {
-            CStr::from_ptr(g_variant_get_string(self.0.as_ptr(), ptr::null_mut()))
-                .to_string_lossy()
-                .into_owned()
-        }
-    }
-}
-
-impl Drop for Variant {
-    fn drop(&mut self) {
-        // SAFETY: This wrapper owns exactly one GLib variant reference.
-        unsafe { g_variant_unref(self.0.as_ptr()) };
-    }
-}
-
-#[repr(C)]
-struct GError {
-    domain: c_uint,
-    code: c_int,
-    message: *mut c_char,
-}
-
-fn take_error(error: *mut GError) -> String {
-    if error.is_null() {
-        return "unknown D-Bus error".into();
-    }
-    // SAFETY: GIO transfers this GError to the caller after a failed call.
-    // Its message is NUL-terminated, copied before freeing with GLib.
-    unsafe {
-        let message = CStr::from_ptr((*error).message)
-            .to_string_lossy()
-            .into_owned();
-        g_error_free(error);
-        message
-    }
-}
-
-#[link(name = "gio-2.0")]
-extern "C" {
-    fn g_dbus_proxy_new_for_bus_sync(
-        bus_type: c_int,
-        flags: c_int,
-        info: *mut c_void,
-        name: *const c_char,
-        object_path: *const c_char,
-        interface_name: *const c_char,
-        cancellable: *mut c_void,
-        error: *mut *mut GError,
-    ) -> *mut c_void;
-    fn g_dbus_proxy_call_sync(
-        proxy: *mut c_void,
-        method_name: *const c_char,
-        parameters: *mut c_void,
-        flags: c_int,
-        timeout_msec: c_int,
-        cancellable: *mut c_void,
-        error: *mut *mut GError,
-    ) -> *mut c_void;
-}
-
-#[link(name = "gobject-2.0")]
-extern "C" {
-    fn g_object_unref(object: *mut c_void);
-}
-
-#[link(name = "glib-2.0")]
-extern "C" {
-    fn g_error_free(error: *mut GError);
-    fn g_variant_unref(value: *mut c_void);
-    fn g_variant_ref_sink(value: *mut c_void) -> *mut c_void;
-    fn g_variant_new_tuple(children: *const *mut c_void, n_children: usize) -> *mut c_void;
-    fn g_variant_new_string(string: *const c_char) -> *mut c_void;
-    fn g_variant_new_uint32(value: u32) -> *mut c_void;
-    fn g_variant_get_type_string(value: *mut c_void) -> *const c_char;
-    fn g_variant_n_children(value: *mut c_void) -> usize;
-    fn g_variant_get_child_value(value: *mut c_void, index: usize) -> *mut c_void;
-    fn g_variant_get_string(value: *mut c_void, length: *mut usize) -> *const c_char;
-    fn g_variant_get_byte(value: *mut c_void) -> c_uchar;
-    fn g_variant_get_int32(value: *mut c_void) -> i32;
-    fn g_variant_get_uint16(value: *mut c_void) -> c_ushort;
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::VecDeque;
 
-    #[test]
-    fn open_reply_accepts_current_and_legacy_field_order() {
-        for fields in [["DEL1234", "(vcp(10 12))"], ["(vcp(10 12))", "DEL1234"]] {
-            let reply = Variant::tuple(&[
-                Variant::string(fields[0]).unwrap(),
-                Variant::string(fields[1]).unwrap(),
-            ]);
-            assert_eq!(
-                decode_open(&reply).unwrap(),
-                ("DEL1234".into(), "(vcp(10 12))".into())
-            );
+    #[derive(Default)]
+    struct MockTransport {
+        replies: VecDeque<io::Result<Vec<u8>>>,
+        writes: Vec<(u16, Vec<u8>)>,
+    }
+
+    impl Transport for MockTransport {
+        fn transfer(&mut self, address: u16, read: bool, bytes: &mut [u8]) -> io::Result<()> {
+            if read {
+                let reply = self.replies.pop_front().expect("unexpected read")?;
+                assert!(reply.len() <= bytes.len());
+                bytes[..reply.len()].copy_from_slice(&reply);
+            } else {
+                // An independent allowlist checks every request, including retries.
+                match address {
+                    EDID_ADDRESS => assert_eq!(bytes, [0]),
+                    DDC_ADDRESS => assert!(
+                        matches!(bytes[2], 0x01 | 0xf3),
+                        "not a read request: {bytes:?}"
+                    ),
+                    _ => panic!("unexpected address {address}"),
+                }
+                self.writes.push((address, bytes.to_vec()));
+            }
+            Ok(())
         }
     }
 
+    fn reply(payload: &[u8]) -> Vec<u8> {
+        let mut frame = vec![0x6e, 0x80 | payload.len() as u8];
+        frame.extend_from_slice(payload);
+        frame.push(frame.iter().fold(0x50, |checksum, byte| checksum ^ byte));
+        frame
+    }
+
+    fn caps_reply(offset: u16, bytes: &[u8]) -> Vec<u8> {
+        let [high, low] = offset.to_be_bytes();
+        let mut payload = vec![0xe3, high, low];
+        payload.extend_from_slice(bytes);
+        reply(&payload)
+    }
+
     #[test]
-    fn invalid_pnp_id_cannot_become_an_output_filename() {
-        let reply = Variant::tuple(&[
-            Variant::string("../../x").unwrap(),
-            Variant::string("").unwrap(),
+    fn edid_retries_bad_data_and_retains_name_and_pnp_id() {
+        let mut bytes = [0; 128];
+        bytes[..8].copy_from_slice(&[0, 255, 255, 255, 255, 255, 255, 0]);
+        bytes[8..12].copy_from_slice(&[0x10, 0xac, 0x34, 0x12]);
+        bytes[0x39] = 0xfc;
+        bytes[0x3b..0x48].copy_from_slice(b"Test display\n");
+        let mut transport = MockTransport::default();
+        transport
+            .replies
+            .extend([Ok(vec![0; 128]), Ok(bytes.to_vec())]);
+        let info = read_edid(&mut transport).unwrap();
+        assert_eq!(info.pnp_id(), "DEL1234");
+        assert_eq!(edid_name(&info).as_deref(), Some("Test display"));
+        assert_eq!(transport.writes.len(), 2);
+    }
+
+    #[test]
+    fn invalid_edid_manufacturer_cannot_become_an_output_filename() {
+        let mut bytes = vec![0; 128];
+        bytes[..8].copy_from_slice(&[0, 255, 255, 255, 255, 255, 255, 0]);
+        let mut transport = MockTransport::default();
+        for _ in 0..3 {
+            transport.replies.push_back(Ok(bytes.clone()));
+        }
+        assert!(read_edid(&mut transport)
+            .unwrap_err()
+            .contains("invalid monitor Plug and Play ID"));
+        assert_eq!(transport.writes.len(), 3);
+    }
+
+    #[test]
+    fn control_retries_transport_and_checksum_errors_and_decodes_big_endian_values() {
+        let valid = reply(&[0x02, 0, 0x10, 0, 0x12, 0x34, 0x01, 0x23]);
+        let mut corrupt = valid.clone();
+        corrupt[3] ^= 1;
+        let mut transport = MockTransport::default();
+        transport.replies.extend([
+            Err(io::Error::from(io::ErrorKind::Interrupted)),
+            Ok(corrupt),
+            Ok(valid),
         ]);
-        assert!(decode_open(&reply).unwrap_err().contains("invalid monitor"));
+        assert_eq!(
+            read_control(&mut transport, 0x10).unwrap(),
+            Some(Reading {
+                current: 0x123,
+                maximum: 0x1234
+            })
+        );
+        assert_eq!(transport.writes.len(), 3);
+        assert!(transport
+            .writes
+            .iter()
+            .all(|(_, bytes)| bytes[2..4] == [0x01, 0x10]));
     }
 
     #[test]
-    fn wrong_reply_types_are_rejected_before_accessing_fields() {
-        let reply = Variant::tuple(&[Variant::uint32(1)]);
-        assert!(decode_monitors(&reply).is_err());
-        assert!(decode_open(&reply).is_err());
-        assert!(decode_reading(&reply).is_err());
-        assert!(decode_edid_name(&reply).is_err());
+    fn unsupported_controls_are_not_retried_and_wrong_control_replies_are_rejected() {
+        let mut transport = MockTransport::default();
+        transport
+            .replies
+            .push_back(Ok(reply(&[0x02, 1, 0x10, 0, 0, 0, 0, 0])));
+        assert_eq!(read_control(&mut transport, 0x10).unwrap(), None);
+        assert_eq!(transport.writes.len(), 1);
+        for _ in 0..3 {
+            transport
+                .replies
+                .push_back(Ok(reply(&[0x02, 0, 0x12, 0, 0, 100, 0, 50])));
+        }
+        assert!(read_control(&mut transport, 0x10)
+            .unwrap_err()
+            .contains("UnexpectedControl"));
+        assert_eq!(transport.writes.len(), 4);
     }
 
     #[test]
-    fn device_names_cannot_contain_embedded_nuls() {
-        assert!(Variant::string("dev:/dev/i2c-1\0unexpected").is_err());
+    fn capabilities_validate_offsets_retry_fragments_and_require_termination() {
+        let mut transport = MockTransport::default();
+        transport.replies.extend([
+            Ok(caps_reply(0, b"(vcp(")),
+            Ok(caps_reply(0, b"")), // A stale terminal reply cannot end the exchange.
+            Ok(caps_reply(5, b"10))")),
+            Ok(caps_reply(9, b"")),
+        ]);
+        assert_eq!(read_capabilities(&mut transport).unwrap(), "(vcp(10))");
+        let requests = transport
+            .writes
+            .iter()
+            .map(|(_, bytes)| &bytes[2..5])
+            .collect::<Vec<_>>();
+        assert_eq!(
+            requests,
+            [
+                &[0xf3, 0, 0][..],
+                &[0xf3, 0, 5],
+                &[0xf3, 0, 5],
+                &[0xf3, 0, 9]
+            ]
+        );
+        assert!(transport.replies.is_empty());
+    }
+
+    #[test]
+    fn capabilities_never_wrap_the_sixteen_bit_offset() {
+        let mut transport = MockTransport::default();
+        let mut offset = 0usize;
+        while offset < usize::from(u16::MAX) {
+            let length = 61.min(usize::from(u16::MAX) - offset);
+            transport
+                .replies
+                .push_back(Ok(caps_reply(offset as u16, &vec![b' '; length])));
+            offset += length;
+        }
+        transport
+            .replies
+            .push_back(Ok(caps_reply(u16::MAX, b"overflow")));
+        assert!(read_capabilities(&mut transport)
+            .unwrap_err()
+            .contains("65535"));
+        assert_eq!(&transport.writes.last().unwrap().1[2..5], &[0xf3, 255, 255]);
+        assert!(transport.replies.is_empty());
+    }
+
+    #[test]
+    fn only_numeric_linux_i2c_device_names_are_accepted() {
+        assert_eq!(device_number("i2c-12"), Some(12));
+        for name in [
+            "i2c-",
+            "i2c-+1",
+            "i2c--1",
+            "i2c-1/../mem",
+            "mem",
+            "i2c-99999999999999",
+        ] {
+            assert_eq!(device_number(name), None);
+        }
     }
 
     #[test]

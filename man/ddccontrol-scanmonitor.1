@@ -18,9 +18,13 @@ DDC/CI monitor. With no device argument, it selects the only detected monitor
 automatically or asks which monitor to scan when several are available.
 For unattended use with several monitors, specify a device explicitly.
 .PP
-The scanner uses the installed DDCcontrol system D-Bus service and does not need
-to run as root. It reads EDID, capabilities and supported controls without changing
-control values. The service performs its normal monitor initialization.
+The scanner always accesses
+.B /dev/i2c-*
+directly, with no environment variable needed. Read and write permission on the
+device is required; use
+.B sudo ddccontrol-scanmonitor
+if necessary. It reads EDID, capabilities and supported controls without changing
+control values.
 .PP
 The generated XML enables known controls whose values could be read.
 Uncertain controls are left commented out for manual testing.
@@ -50,7 +54,9 @@ By default, use the database location configured at build time, usually
 .I /usr/share/ddccontrol-db
 or
 .IR /usr/local/share/ddccontrol-db .
-This option does not change which database the running service loads.
+Use the same database with the preview application's
+.B \-b
+option.
 .TP
 .BR \-h ", " \-\-help
 Show usage information.

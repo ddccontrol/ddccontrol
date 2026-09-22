@@ -3,13 +3,7 @@
 use std::process::Command;
 
 fn command() -> Command {
-    let mut command = Command::new(env!("CARGO_BIN_EXE_ddccontrol-scanmonitor"));
-    // Tests must never contact a real system daemon or a monitor.
-    command.env(
-        "DBUS_SYSTEM_BUS_ADDRESS",
-        "unix:path=/nonexistent/ddccontrol-test-bus",
-    );
-    command
+    Command::new(env!("CARGO_BIN_EXE_ddccontrol-scanmonitor"))
 }
 
 #[test]
@@ -36,11 +30,20 @@ fn invalid_arguments_fail_before_connecting() {
 }
 
 #[test]
-fn unavailable_bus_returns_actionable_error() {
-    let output = command().arg("--list").output().unwrap();
+fn missing_device_returns_actionable_error_without_a_daemon() {
+    // An explicit nonexistent device prevents tests from probing real monitors.
+    let device = "dev:/dev/i2c-4294967295";
+    assert!(!std::path::Path::new("/dev/i2c-4294967295").exists());
+    let output = command()
+        .args([
+            "--db-path",
+            concat!(env!("CARGO_MANIFEST_DIR"), "/fixtures"),
+        ])
+        .arg(device)
+        .env("DBUS_SYSTEM_BUS_ADDRESS", "unix:path=/nonexistent/test-bus")
+        .output()
+        .unwrap();
     assert!(!output.status.success());
-    assert!(String::from_utf8(output.stderr)
-        .unwrap()
-        .contains("ddccontrol"));
+    assert!(String::from_utf8(output.stderr).unwrap().contains(device));
     assert!(output.stdout.is_empty());
 }

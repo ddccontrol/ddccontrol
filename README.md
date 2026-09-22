@@ -88,10 +88,6 @@ compatibility behavior, and test commands.
 
 ### Rust development checks
 
-The `ddccontrol-scanmonitor` crate links against GLib/GIO, also used by the
-existing D-Bus service. Install its development package (`libglib2.0-dev` on
-Debian/Ubuntu) before running standalone Cargo builds or workspace tests.
-
 Run these checks before submitting Rust changes (CI uses stable for formatting
 and Clippy):
 
@@ -113,13 +109,14 @@ For a monitor that is missing from the database, run:
 ddccontrol-scanmonitor
 ```
 
-The scanner selects the only connected DDC/CI monitor automatically, or asks you
-to select one when several are connected. It uses the installed DDCcontrol D-Bus
-service, so scanning does not require `sudo`. It reads the monitor's EDID,
-capabilities and supported controls, then writes a database XML file named after
-the monitor's PnP ID, for example `DEL1234.xml`, in the current directory.
-Existing files are never overwritten. The scanner does not change control values;
-the service uses its normal monitor initialization.
+The scanner selects the only detected monitor automatically, or asks you
+to select one when several are connected. It always accesses `/dev/i2c-*`
+directly, with no environment variable needed. You need read and write permission
+on these devices; if necessary, run `sudo ddccontrol-scanmonitor`.
+It reads the monitor's EDID, capabilities and supported controls, then writes a
+database XML file named after the monitor's PnP ID, for example `DEL1234.xml`, in
+the current directory. Existing files are never overwritten. The scanner does
+not change control values.
 
 The generated XML enables known controls whose values could be read and leaves
 uncertain controls commented out, with notes to help you test them. It uses the
@@ -164,7 +161,8 @@ sudo systemctl restart ddccontrol.service
 Source installations commonly use `/usr/local/share/ddccontrol-db` instead.
 Use `--db-path /path/to/ddccontrol-db` to generate XML against a different
 database, such as a checkout of `ddccontrol-db`. This option selects the control
-definitions for generation; the service continues to use its installed database.
+definitions for generation. Use the same database with the preview application's
+`-b` option.
 
 Submit the tested XML file in a pull request to
 [ddccontrol-db](https://github.com/ddccontrol/ddccontrol-db), following the
