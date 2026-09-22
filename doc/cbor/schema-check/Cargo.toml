@@ -1,0 +1,11 @@
+[package]
+name = "ddccontrol-cbor-schema-check"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Optional developer-only validator, independent of the production decoder.
+[workspace]
+
+[dependencies]
+cddl-cat = "=0.7.1"
