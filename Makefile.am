@@ -60,7 +60,19 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-scanmonitor/tests/cli.rs \
 	crates/ddccontrol-scanmonitor/tests/dbus.rs \
 	crates/ddccontrol-scanmonitor/tests/dbus_service.py \
-	crates/ddccontrol-scanmonitor/fixtures/options.xml
+	crates/ddccontrol-scanmonitor/fixtures/options.xml \
+	crates/ddccontrol-db/fixtures/cbor/README.md \
+	crates/ddccontrol-db/fixtures/cbor/compat.cbor \
+	crates/ddccontrol-db/fixtures/cbor/compat.json \
+	crates/ddccontrol-db/fixtures/cbor/compat.snapshot \
+	crates/ddccontrol-db/fixtures/cbor/reference-v1.cbor \
+	crates/ddccontrol-db/fixtures/cbor/reference-v1.json \
+	crates/ddccontrol-db/fixtures/cbor/reference-v1.tree \
+	crates/ddccontrol-db/fixtures/cbor/newer-v1.cbor \
+	crates/ddccontrol-db/fixtures/cbor/newer-v1.json \
+	crates/ddccontrol-db/fixtures/cbor/newer-v1.tree \
+	crates/ddccontrol-db/fixtures/cbor/descriptions-v1.cbor \
+	crates/ddccontrol-db/fixtures/cbor/descriptions-v1.json
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
