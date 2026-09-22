@@ -1,0 +1,130 @@
+; ddccontrol-db candidate v1. See format.md for deterministic encoding,
+; contextual XML semantics, URI/ID grammar, limits, reference checks and
+; conditional extension requirements that CDDL alone cannot enforce.
+database = {
+  0: h'4444434442',                       ; DDCDB
+  1: 1,                                   ; container version
+  2: nonempty-text,                       ; database revision
+  3: 3,                                   ; legacy XML semantic contract
+  4: "ddccontrol-db",                     ; gettext domain
+  5: node,
+  6: { * profile-id => node },
+  ? 7: [* extension],
+  8: source-manifest,
+  9: bstr .size 32,                       ; SHA-256(deterministic field 8)
+  * field-from-10 => data
+}
+source-manifest = { * bounded-text => bstr .size 32 }
+; Separate ddccontrol-db.snapshot file: map authorizes equivalent legacy XML;
+; false (f4) permanently prohibits XML fallback when CBOR is absent.
+xml-fallback-authorization = source-manifest / false
+profile-id = tstr .size (1..255)          ; nonempty ASCII [A-Za-z0-9_-]+
+bounded-text = tstr .size (0..1048576)    ; byte length in UTF-8
+bounded-bytes = bstr .size (0..16777216)
+nonempty-text = tstr .size (1..1048576)
+
+node = {
+  0: uint,                                ; explicit kind register; see format.md
+  1: attributes,
+  2: [* node],                            ; document order
+  ? 3: [* extension],
+  * field-from-4 => data
+}
+attributes = {
+  ? 0: bounded-text,                      ; name
+  ? 1: bounded-text,                      ; id
+  ? 2: bounded-text,                      ; type
+  ? 3: bounded-text,                      ; refresh
+  ? 4: bounded-text,                      ; pattern
+  ? 5: bounded-text,                      ; init
+  ? 6: 0..255,                            ; VCP address
+  ? 7: -2147483648..2147483647,           ; delay, milliseconds
+  ? 8: 0..65535,                          ; encoded VCP value
+  ? 9: profile-id,                        ; include target
+  ? 10: bounded-text,                     ; add CAPS
+  ? 11: bounded-text,                     ; remove CAPS
+  ? 12: int,                              ; dbversion; executable options require 3
+  ? 13: bounded-text,                     ; source date, not container version
+  ? 14: bounded-text,                     ; deprecated monitor caps attribute
+  ? 15: bounded-text,                     ; deprecated monitor include attribute
+  * field-from-16 => (int / bounded-text)
+}
+
+extension = {
+  0: identity,
+  1: bool,                                ; required, never defaulted
+  2: data,
+  * field-from-3 => data
+}
+identity = nonempty-text                   ; nonempty globally unique absolute URI
+
+; Restricted recursive CBOR data. Encoding-profile limits remain mandatory.
+data = int / bounded-bytes / bounded-text / bool / null / [* data] / { * data-key => data }
+
+; Payload for https://ddccontrol.sourceforge.net/cbor/ext/source-metadata/1
+; The envelope must have required=false. No payload here is executable.
+source-metadata = {
+  0: { * bounded-text => bounded-text },  ; ignored attributes, exact source names
+  ? 1: bounded-text,                      ; original tag (required for node kind255)
+  ? 2: bounded-text,                      ; non-whitespace element text
+  ? 3: bounded-text,                      ; non-whitespace tail text
+  * field-from-4 => data
+}
+
+; Payload for https://ddccontrol.sourceforge.net/cbor/ext/function-description/1
+; The envelope must have required=true if behavior, interpretation or selection
+; depends on this descriptor. No operation below is implicitly executable.
+function-description = {
+  ? 0: 1..6,                              ; continuous/discrete/command/bitfield/table/block
+  ? 1: 0..3,                              ; unknown/read/write/read-write access
+  ? 2: [* operation],
+  ? 3: identity,                          ; vendor or standard namespace
+  ? 4: 0..255,                            ; VCP selector, not an enum of known codes
+  ? 5: identity,                          ; unit; absent means unspecified
+  ? 6: quantity,                          ; minimum
+  ? 7: quantity,                          ; maximum
+  ? 8: quantity,                          ; step
+  ? 9: quantity,                          ; default, distinct from a current value
+  ? 10: [* choice],
+  ? 11: [* bitfield],
+  ? 12: [* protocol-version],
+  ? 13: bounded-text,                     ; author-declared raw capabilities
+  ? 14: [* (0..255)],                     ; author-declared protocol command codes
+  ? 15: [* condition],
+  ? 16: [* opaque-descriptor],
+  ? 17: bounded-text,                     ; gettext msgid in root domain
+  ? 18: [* extension],                    ; namespaced quirks
+  ? 19: [* condition],                    ; profile/firmware/connection matchers
+  * field-from-20 => data
+}
+operation = {
+  0: uint,                                ; explicit registry, currently 1..6
+  ? 1: 0..255,                            ; VCP selector where operation uses one
+  ? 2: data,                              ; declarative parameters, not a program
+  ? 3: identity,                          ; immutable encoding contract
+  ? 4: [* condition],
+  * field-from-5 => data
+}
+quantity = { 0: 1, 1: datum } / { 0: 2 }
+; 1=declared by database author; 2=must discover from hardware at runtime.
+; No observed user-monitor values are admitted to this distributed database.
+datum = int / bounded-text / bounded-bytes / { 0: int, 1: 1..18446744073709551615 }
+; Datum map is exact rational numerator/positive denominator; no floats.
+choice = { 0: datum, ? 1: bounded-text }
+bitfield = { 0: uint, 1: 1..64, ? 2: [* choice], ? 3: bounded-text }
+; Bitfield fields: bit offset, width, encoded choices, optional msgid.
+protocol-version = { 0: identity, 1: bounded-text }
+; Version bounded-text is interpreted only by its named protocol, never global ordering.
+condition = { 0: identity, 1: data }
+; The named contract determines interpretation; no expression language exists.
+opaque-descriptor = { 0: identity, 1: identity, 2: bounded-bytes }
+; Vendor/standard namespace, encoding identity, author-declared descriptor bytes.
+
+; Named key types keep the schema usable in constrained CDDL tools.
+data-key = uint / bounded-text
+field-from-3 = 3..18446744073709551615
+field-from-4 = 4..18446744073709551615
+field-from-5 = 5..18446744073709551615
+field-from-10 = 10..18446744073709551615
+field-from-16 = 16..18446744073709551615
+field-from-20 = 20..18446744073709551615
