@@ -2,6 +2,7 @@ SUBDIRS = data src po man $(DOC)
 DIST_SUBDIRS = data src po man doc
 
 EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.in \
+	rust-porting.txt \
 	Cargo.toml \
 	Cargo.lock \
 	crates/ddccontrol-caps/Cargo.toml \

@@ -2,6 +2,7 @@
 name = "ddccontrol-db"
 version = "0.1.0"
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Rust monitor database XML parser and C ABI bridge for ddccontrol"

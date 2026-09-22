@@ -2,6 +2,7 @@
 name = "ddccontrol-profile"
 version = "0.1.0"
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Parser and serializer for ddccontrol user profiles"

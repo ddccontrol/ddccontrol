@@ -40,13 +40,13 @@ jobs:
           ref: ${{ inputs.packaging-ref }}
           path: packaging
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.source-artifact }}
           path: ${{ runner.temp }}/sources
       - name: Enable target architecture emulation
         if: matrix.target.qemu != ''
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: ${{ matrix.target.qemu }}
       - name: Build Debian packages
@@ -65,7 +65,7 @@ jobs:
             bash /automation/scripts/release/build-debian.sh \
               "/sources/ddccontrol-$RELEASE_VERSION.tar.bz2" \
               /automation/packaging "$RELEASE_VERSION" /output
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-debian-${{ matrix.target.arch }}
           path: ${{ runner.temp }}/packages/
