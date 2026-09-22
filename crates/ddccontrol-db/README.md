@@ -1,7 +1,23 @@
 # ddccontrol-db
 
-`ddccontrol-db` parses the ddccontrol XML monitor database and exports the C ABI
-used by `libddccontrol`.
+`ddccontrol-db` loads the ddccontrol CBOR or XML monitor database and exports the
+C ABI used by `libddccontrol`. The [candidate-v1 contract](../../doc/cbor/format.md)
+and [validation report](../../doc/cbor/validation.md) describe the wire format,
+extension requirements, measured costs and remaining standards evidence gaps.
+
+Initialization prefers `ddccontrol-db.cbor` in the selected data directory.
+Missing CBOR selects an immutable XML snapshot; present invalid or unsupported
+CBOR fails initialization with a diagnostic. It never silently falls back to
+XML or mixes revisions. An installed `ddccontrol-db.snapshot` verifies the XML
+snapshot or explicitly prohibits XML fallback for necessary CBOR semantics.
+Explicit test directories use only their own files. Required unknown profile
+semantics also prevent manufacturer/VESA fallback in the C monitor-open path.
+
+One shared, immutable session holds the decoded database. Concurrent calls
+retain it with `Arc`; `ddcci_release_db` releases the global reference. Each
+returned monitor tree owns its data through the existing C allocator, so it
+survives session release. A new initialization starts a fresh session. Loading
+and the compatibility tests send no display commands.
 
 The `options` module also exposes a normal Rust API, used by both the C database
 bridge and `ddccontrol-scanmonitor`. `options::load` reads `options.xml` using the

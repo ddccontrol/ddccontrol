@@ -120,7 +120,7 @@ typedef struct monitor_db MonitorDB;
 typedef char ddccontrol_abi_monitor_db_name_must_be_first[
 	offsetof(struct monitor_db, name) == 0 ? 1 : -1];
 
-/* Load monitor profile data from the XML database.
+/* Load monitor profile data from the current immutable CBOR or XML session.
  * pnpname must be a NUL-terminated string; caps and its C-allocated entries
  * must be valid and exclusively writable during the call.
  * The returned tree is allocated by the library with the C allocator and must
@@ -131,7 +131,9 @@ struct monitor_db* ddcci_create_db(const char* pnpname, struct caps* caps, int f
  * ddcci_create_db(), exactly once. NULL is accepted. */
 void ddcci_free_db(struct monitor_db* mon_db);
 
-/* Initialize monitor database subsystem. usedatadir is NULL for the default
+/* Initialize an immutable database snapshot, preferring ddccontrol-db.cbor
+ * in the selected directory. Missing CBOR uses XML; invalid present CBOR fails.
+ * usedatadir is NULL for the default
  * directory or a NUL-terminated path, copied during the call. Returns 1 on
  * success, 0 on failure (including a caught Rust panic). */
 int ddcci_init_db(char* usedatadir);

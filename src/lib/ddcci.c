@@ -43,6 +43,7 @@
 #include "ddcci_protocol.h"
 #include "internal.h"
 #include "rust_ffi.h"
+#include "monitor_db_internal.h"
 
 #include "conf.h"
 
@@ -639,6 +640,11 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		return -1;
 	}
 	
+	if (!mon->db && ddcci_db_requirements_failed()) {
+		mon->fallback = -1; /* Required semantics prohibit generic fallback. */
+		return -1;
+	}
+
 	if (!mon->db) {
 		/* Fallback on manufacturer generic profile */
 		char buffer[8]; /* 3 chars (pnpid) + 3 chars (suffix) + 1 null terminator + 1 for safety */
@@ -659,6 +665,11 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 			break;
 		}
 		
+		if (!mon->db && ddcci_db_requirements_failed()) {
+			mon->fallback = -1;
+			return -1;
+		}
+
 		if (!mon->db) {
 			/* Fallback on VESA generic profile */
 			mon->db = ddcci_create_db("VESA", &mon->caps, 1);
@@ -666,6 +677,11 @@ static int ddcci_open_with_addr(struct monitor* mon, const char* filename, int a
 		}
 	}
 	
+	if (!mon->db && ddcci_db_requirements_failed()) {
+		mon->fallback = -1;
+		return -1;
+	}
+
 	if ((mon->db) && (mon->db->init == samsung)) {
 		if (ddcci_writectrl(mon, DDCCI_CTRL, DDCCI_CTRL_ENABLE, 0) < 0) {
 			return -1;
