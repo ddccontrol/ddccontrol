@@ -1,2 +1,4 @@
 # Unified diffs prefix unchanged lines (including blanks and tabs) with a space.
 scripts/release/*.patch whitespace=-blank-at-eol,-space-before-tab
+*.cbor binary
+*.snapshot binary

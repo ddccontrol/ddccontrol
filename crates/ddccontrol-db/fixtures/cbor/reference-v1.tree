@@ -1,0 +1,6 @@
+monitor Écran fixture init=1
+group Fixture
+subgroup Colours pattern=brightnesscontrast
+control input Input source address=96 delay=-1 type=2 refresh=0
+value wide Wide value16=65443
+control brightness Brightness address=16 delay=0 type=0 refresh=0

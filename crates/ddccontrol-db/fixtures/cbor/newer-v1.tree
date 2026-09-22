@@ -1,0 +1,6 @@
+monitor Future fixture monitor init=1
+group Fixture
+subgroup Colours pattern=brightnesscontrast
+control vendor_future Future vendor control address=254 delay=-1 type=2 refresh=0
+value future Future choice value16=65535
+control brightness Brightness address=16 delay=0 type=0 refresh=0
