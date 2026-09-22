@@ -6,6 +6,14 @@ on:
       tag:
         required: true
         type: string
+      build-run-id:
+        description: Successful Release Please validation run; zero rebuilds an existing release for recovery
+        type: number
+        default: 0
+      build-commit:
+        description: Tested release PR head, whose tree must match the release commit
+        type: string
+        default: ""
     secrets:
       DDCCONTROL_PACKAGE_SIGNING_KEY:
         required: true
@@ -13,14 +21,6 @@ on:
         required: false
       FEDORA_DDCCONTROL_READ_TOKEN:
         required: false
-  release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: Published stable release tag to build, or republish if already built
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -37,11 +37,11 @@ env:
 
 jobs:
   resolve:
-    if: github.event_name != 'release' || !github.event.release.prerelease
     runs-on: ubuntu-24.04
     outputs:
       tag: ${{ steps.release.outputs.tag }}
       debian_ref: ${{ env.DEBIAN_PACKAGING_REF }}
+      fedora_ref: ${{ env.FEDORA_PACKAGING_REF }}
       version: ${{ steps.release.outputs.version }}
       commit: ${{ steps.release.outputs.commit }}
       has_bundle: ${{ steps.release.outputs.has_bundle }}
@@ -50,7 +50,9 @@ jobs:
         id: release
         uses: actions/github-script@v8
         env:
-          RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          BUILD_COMMIT: ${{ inputs.build-commit }}
+          BUILD_RUN_ID: ${{ inputs.build-run-id }}
         with:
           script: |
             const tag = process.env.RELEASE_TAG;
@@ -60,6 +62,11 @@ jobs:
             const {data: release} = await github.rest.repos.getReleaseByTag({...context.repo, tag});
             if (release.draft || release.prerelease) throw new Error('Release must be published and stable');
             const {data: commit} = await github.rest.repos.getCommit({...context.repo, ref: tag});
+            if (Number(process.env.BUILD_RUN_ID) > 0) {
+              if (!/^[a-f0-9]{40}$/.test(process.env.BUILD_COMMIT)) throw new Error('Expected the validated source commit');
+              const {data: built} = await github.rest.repos.getCommit({...context.repo, ref: process.env.BUILD_COMMIT});
+              if (built.commit.tree.sha !== commit.commit.tree.sha) throw new Error('Release differs from the validated packages');
+            }
             const assets = await github.paginate(github.rest.repos.listReleaseAssets, {
               ...context.repo, release_id: release.id, per_page: 100,
             });
@@ -74,11 +81,15 @@ jobs:
             core.setOutput('has_bundle', assets.some(a => a.name === `ddccontrol-${version}-packages.tar.gz`));
 
   source:
+    outputs:
+      debian_ref: ${{ steps.provenance.outputs.debian_ref }}
+      fedora_ref: ${{ steps.provenance.outputs.fedora_ref }}
     needs: resolve
     if: needs.resolve.outputs.has_bundle != 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+      actions: read
     env:
       RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
       RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
@@ -88,7 +99,24 @@ jobs:
         with:
           path: automation
           persist-credentials: false
+      - name: Download the approved source distributions
+        if: inputs.build-run-id != 0
+        uses: actions/download-artifact@v8
+        with:
+          name: release-sources
+          path: ${{ runner.temp }}/source-artifacts/
+          run-id: ${{ inputs.build-run-id }}
+          github-token: ${{ github.token }}
+      - name: Verify approved source provenance
+        if: inputs.build-run-id != 0
+        env:
+          BUILD_COMMIT: ${{ inputs.build-commit }}
+        run: |
+          jq -e --arg commit "$BUILD_COMMIT" --arg version "$RELEASE_VERSION" \
+            '.commit == $commit and .version == $version and
+             (.debian | test("^[a-f0-9]{40}$")) and (.fedora | test("^[a-f0-9]{40}$"))' "$RUNNER_TEMP/source-artifacts/validation.json"
       - name: Reuse published source distributions
+        if: inputs.build-run-id == 0
         id: sources
         uses: actions/github-script@v8
         with:
@@ -103,7 +131,7 @@ jobs:
             });
             core.setOutput('complete', complete);
       - name: Check out release source
-        if: steps.sources.outputs.complete != 'true'
+        if: inputs.build-run-id == 0 && steps.sources.outputs.complete != 'true'
         uses: actions/checkout@v6
         with:
           ref: ${{ needs.resolve.outputs.commit }}
@@ -111,7 +139,7 @@ jobs:
           persist-credentials: false
 
       - name: Install build dependencies
-        if: steps.sources.outputs.complete != 'true'
+        if: inputs.build-run-id == 0 && steps.sources.outputs.complete != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
@@ -120,7 +148,7 @@ jobs:
             tidy docbook-xml docbook-xsl xml-core
 
       - name: Build and check source distributions
-        if: steps.sources.outputs.complete != 'true'
+        if: inputs.build-run-id == 0 && steps.sources.outputs.complete != 'true'
         working-directory: source
         run: |
           set -euo pipefail
@@ -145,8 +173,20 @@ jobs:
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
 
+      - name: Record the packaging revisions used by this build
+        id: provenance
+        env:
+          BUILD_RUN_ID: ${{ inputs.build-run-id }}
+        run: |
+          if [[ "$BUILD_RUN_ID" != 0 ]]; then
+            jq -r '"debian_ref=\(.debian)\nfedora_ref=\(.fedora)"' \
+              "$RUNNER_TEMP/source-artifacts/validation.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "debian_ref=$DEBIAN_PACKAGING_REF" >> "$GITHUB_OUTPUT"
+            echo "fedora_ref=$FEDORA_PACKAGING_REF" >> "$GITHUB_OUTPUT"
+          fi
       - name: Upload missing source distributions
-        if: steps.sources.outputs.complete != 'true'
+        if: inputs.build-run-id != 0 || steps.sources.outputs.complete != 'true'
         uses: actions/github-script@v8
         with:
           script: |
@@ -158,6 +198,7 @@ jobs:
               names: [`${base}.tar.bz2`, `${base}-vendor.tar.gz`],
             });
       - uses: actions/upload-artifact@v7
+        if: inputs.build-run-id == 0
         with:
           name: release-sources
           path: ${{ runner.temp }}/source-artifacts/
@@ -165,6 +206,7 @@ jobs:
 
   debian:
     needs: [resolve, source]
+    if: inputs.build-run-id == 0
     uses: ./.github/workflows/build-debian-packages.yml
     with:
       version: ${{ needs.resolve.outputs.version }}
@@ -172,60 +214,25 @@ jobs:
 
   rpm:
     needs: [resolve, source]
-    runs-on: ${{ matrix.target.runner }}
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          - {arch: x86_64, platform: linux/amd64, runner: ubuntu-24.04}
-          - {arch: aarch64, platform: linux/arm64, runner: ubuntu-24.04-arm}
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - uses: actions/checkout@v6
-        with:
-          repository: ddccontrol/fedora-ddccontrol
-          ref: ${{ env.FEDORA_PACKAGING_REF }}
-          path: packaging
-          token: ${{ secrets.FEDORA_DDCCONTROL_READ_TOKEN || github.token }}
-          persist-credentials: false
-      - uses: actions/download-artifact@v8
-        with:
-          name: release-sources
-          path: ${{ runner.temp }}/sources
-      - name: Build RPM packages
-        env:
-          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
-          TARGET_PLATFORM: ${{ matrix.target.platform }}
-        run: |
-          set -euo pipefail
-          echo "Build host: $(uname -m); Fedora target: $TARGET_PLATFORM"
-          mkdir -p "$RUNNER_TEMP/packages"
-          docker run --rm --platform "$TARGET_PLATFORM" \
-            -v "$GITHUB_WORKSPACE:/automation:ro" \
-            -v "$RUNNER_TEMP/sources:/sources:ro" \
-            -v "$RUNNER_TEMP/packages:/output" \
-            fedora:44 \
-            bash /automation/scripts/release/build-rpm.sh \
-              "/sources/ddccontrol-$RELEASE_VERSION-vendor.tar.gz" \
-              /automation/packaging "$RELEASE_VERSION" /output
-      - uses: actions/upload-artifact@v7
-        with:
-          name: packages-fedora-${{ matrix.target.arch }}
-          path: ${{ runner.temp }}/packages/
-          if-no-files-found: error
+    if: inputs.build-run-id == 0
+    uses: ./.github/workflows/build-rpm-packages.yml
+    with:
+      version: ${{ needs.resolve.outputs.version }}
+      packaging-ref: ${{ needs.resolve.outputs.fedora_ref }}
+    secrets:
+      FEDORA_DDCCONTROL_READ_TOKEN: ${{ secrets.FEDORA_DDCCONTROL_READ_TOKEN }}
 
   publish:
     needs: [resolve, source, debian, rpm]
     if: >-
       !cancelled() && needs.resolve.result == 'success' &&
       (needs.resolve.outputs.has_bundle == 'true' ||
-       (needs.source.result == 'success' && needs.debian.result == 'success' && needs.rpm.result == 'success'))
+       (needs.source.result == 'success' &&
+        (inputs.build-run-id != 0 || (needs.debian.result == 'success' && needs.rpm.result == 'success'))))
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+      actions: read
       pages: write
       id-token: write
     environment:
@@ -243,6 +250,8 @@ jobs:
         if: needs.resolve.outputs.has_bundle != 'true'
         with:
           pattern: packages-*
+          run-id: ${{ inputs.build-run-id || github.run_id }}
+          github-token: ${{ github.token }}
           path: ${{ runner.temp }}/new-packages
           merge-multiple: true
       - name: Sign packages and save provenance
@@ -253,6 +262,9 @@ jobs:
           PACKAGE_SIGNING_FINGERPRINT: ${{ vars.DDCCONTROL_PACKAGE_SIGNING_FINGERPRINT }}
           RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
           RELEASE_COMMIT: ${{ needs.resolve.outputs.commit }}
+          BUILD_COMMIT: ${{ inputs.build-commit || needs.resolve.outputs.commit }}
+          DEBIAN_PACKAGING_REF: ${{ needs.source.outputs.debian_ref }}
+          FEDORA_PACKAGING_REF: ${{ needs.source.outputs.fedora_ref }}
         run: |
           set -euo pipefail
           source scripts/release/sign-packages.sh
@@ -260,10 +272,10 @@ jobs:
             sign_rpm "$package"
           done < <(find "$RUNNER_TEMP/new-packages" -name '*.rpm' -print0)
           mkdir -p "$RUNNER_TEMP/new-packages/provenance"
-          jq -n --arg upstream "$RELEASE_COMMIT" \
+          jq -n --arg upstream "$RELEASE_COMMIT" --arg source "$BUILD_COMMIT" \
             --arg debian "$DEBIAN_PACKAGING_REF" --arg fedora "$FEDORA_PACKAGING_REF" \
             --arg signer "$PACKAGE_SIGNING_FINGERPRINT" \
-            '{upstream: $upstream, debian: $debian, fedora: $fedora, signer: $signer}' \
+            '{upstream: $upstream, source: $source, debian: $debian, fedora: $fedora, signer: $signer}' \
             > "$RUNNER_TEMP/new-packages/provenance/$RELEASE_VERSION.json"
           tar -C "$RUNNER_TEMP/new-packages" -czf "$RUNNER_TEMP/ddccontrol-$RELEASE_VERSION-packages.tar.gz" \
             debian rpm srpm provenance

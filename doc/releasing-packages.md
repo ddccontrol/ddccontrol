@@ -1,13 +1,37 @@
 # Release package repositories
 
-The `Release packages` workflow builds Debian and Fedora packages from a
-published stable DDCcontrol release and deploys signed repositories to
-<https://ddccontrol.github.io/ddccontrol/>.
+`Release Please` is the only workflow that starts real Debian and Fedora
+package builds. Ordinary PRs run the normal C/Rust CI and lightweight repository
+tests; they do not run the package architecture matrices.
 
-Release Please calls this workflow directly after creating a release. This is
-necessary because releases created using `GITHUB_TOKEN` do not trigger another
-`release` workflow. Manually published stable releases also trigger it. Drafts
-and prereleases are excluded; tags must be `X.Y.Z` or `vX.Y.Z`, starting at 3.3.0.
+Release Please first creates or updates its release PR without publishing a
+release. It then checks the source distributions and builds all six Debian and
+both Fedora targets from that PR's exact head commit. It also checks the monitor
+database and signed repository generation. The `Release Please package build`
+check on the release PR reports their combined result. A failed or cancelled
+package build fails the Release Please workflow and prevents publication.
+
+This validation is called directly after updating the release PR, because PRs
+created with `GITHUB_TOKEN` do not trigger `pull_request` workflows. Human updates
+to the same trusted release PR also start validation. Normal PRs, forks and
+unlabelled branches cannot start this privileged validation.
+
+Before merging the release PR, wait for its package check and the associated
+Release Please run to finish successfully. After merge, the publication gate
+requires that current successful check, its completed workflow run, every
+unexpired package artifact, and identical source trees for the tested PR and
+merged release commit. Missing or stale results fail closed: no tag or GitHub
+release is created. The `always-update` Release Please setting refreshes the release PR even when
+only hidden changelog entries change. Keep it up to date with `master` before
+merging.
+
+Only then does Release Please create the release. The `Release packages`
+reusable workflow downloads the approved build's source and package artifacts,
+signs the packages and deploys the signed repositories to
+<https://ddccontrol.github.io/ddccontrol/>. It does not rebuild the packages after
+merge. Signing and Pages deployment failures still fail the publishing run and
+can be retried separately. Stable tags must be `X.Y.Z` or `vX.Y.Z`, starting at
+3.3.0. There is no separate automatic `release: published` package build.
 
 ## Maintainer setup
 
@@ -71,8 +95,9 @@ The workflow pins packaging revisions from
 [debian-ddccontrol](https://github.com/ddccontrol/debian-ddccontrol) and
 [fedora-ddccontrol](https://github.com/ddccontrol/fedora-ddccontrol) in
 `DEBIAN_PACKAGING_REF` and `FEDORA_PACKAGING_REF`. Review updates to these pins
-together with the package builds. Source code comes from the resolved release
-commit, rather than the packaging repositories' upstream snapshots.
+together with the package builds. Source code comes from the tested release PR head. Publication verifies its
+Git tree against the resolved release commit, and records both commit IDs in
+the package provenance. Recovery builds use the resolved release commit.
 
 The Debian recipe copies the external `debian/` directory and applies the
 reviewed `scripts/release/debian.patch`. It adds Debian-packaged Rust build
@@ -111,13 +136,21 @@ from releases if those versions should remain installable. The accumulated site
 must stay within [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
 
 To recover a failed publication or publish an existing release, run **Actions →
-Release packages → Run workflow**, selecting `master` and entering the release
+Release Please → Run workflow**, selecting `master` and entering the existing release
 tag. If its signed package bundle already exists, the workflow reuses it and
 rebuilds Pages without replacing package files. A failure before the bundle was
 saved rebuilds the packages. Rebuilding an older release cannot remove newer
 versions because the repository is assembled from all bundles.
 
-Existing source archives are downloaded and reused byte for byte, with size and
+Leave the tag input empty to prepare or validate the pending release PR. If a
+release PR was merged before validation completed, wait for the validation run
+to finish and run Release Please again with an empty tag input. A source-tree
+mismatch requires a corrected release PR and a new successful build. If an
+artifact expires before merge, rerun validation on the open release PR.
+The manual tag input only accepts an already published release, so it cannot
+bypass the gate to create a new release.
+
+During recovery, existing source archives are downloaded and reused byte for byte, with size and
 available SHA-256 digests checked before building packages. The source build is
 skipped when both archives are already present. Missing archives and package
 bundles are uploaded directly as release assets; publication does not edit
@@ -163,9 +196,9 @@ repositories. The Fedora configuration enables both `gpgcheck=1` and
 
 ## Validation
 
-`Package repository checks` builds the PR's source and Debian packages on all
-six target architectures using the same reusable build workflow as releases.
-It also runs an integration test with a disposable,
+`Package repository checks` runs release-gate regression tests, script checks,
+bundle extraction tests and a small repository integration test. It creates
+synthetic test packages with a disposable,
 passphrase-protected signing key. It checks separate architecture indexes,
 retained older versions, installation with DNF, and APT download verification
 including rejection of a modified package. Bundle tests reject traversal,
@@ -174,7 +207,7 @@ environment with the required tools installed:
 
 ```sh
 shellcheck scripts/release/*.sh
-node --test scripts/release/test-release-assets.cjs
+node --test scripts/release/test-*.cjs
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-bundles.py
 sudo scripts/release/test-repositories.sh
 ```
