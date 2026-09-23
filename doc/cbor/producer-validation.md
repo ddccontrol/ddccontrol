@@ -50,5 +50,4 @@ The shared CDDL was independently parsed and used to validate the initial
 complete CBOR file and frozen examples with `cddl-cat` 0.7.1 in the companion repository.
 The `function-description` entry also validates the standalone frozen descriptor
 payload. Remaining source-standard and legacy-encoding gaps are explicit in
-[coverage](coverage.md), [sources](sources.md), and
-[the producer boundary](../cbor-distribution.md#source-encoding-boundary).
+[coverage](coverage.md#inventory-and-evidence) and [sources](sources.md).

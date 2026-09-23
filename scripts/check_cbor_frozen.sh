@@ -6,8 +6,10 @@ fixtures="$root/crates/ddccontrol-db/fixtures/cbor"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 (cd "$frozen" && sha256sum --check SHA256SUMS)
-cargo build --manifest-path "$frozen/Cargo.toml" --release --locked --features gettext
 target=${CARGO_TARGET_DIR:-$frozen/target}
+# Pin the build output to the path linked below, including when Cargo has a
+# different build.target-dir configured. Never link a stale default archive.
+cargo build --manifest-path "$frozen/Cargo.toml" --release --locked --features gettext --target-dir "$target"
 "${CC:-cc}" -Wall -Wextra -Werror "$frozen/driver.c" \
     "$target/release/libddccontrol_db_frozen_v1.a" -ldl -lpthread -lm -o "$work/reader"
 export LC_ALL=C LANGUAGE=C

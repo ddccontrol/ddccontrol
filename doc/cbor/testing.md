@@ -3,12 +3,20 @@
 Tests construct profiles from synthetic CAPS. They do not open monitor devices
 or perform monitor operations.
 
+Run these commands from the application repository root. Resolve the producer
+checkout to an absolute path before passing it to Cargo: test executables run
+from their crate directory, not the directory in which Cargo was invoked.
+Use a producer checkout containing `scripts/cbor-db.py` and generated
+`db/options.xml`; adjust the checkout path below if it is elsewhere.
+
 Run the Rust reader suite and the optional full-source differential check:
 
 ```sh
-cargo test -p ddccontrol-db
-DDCCONTROL_DB_TEST_DATADIR=../ddccontrol-db/db \
-  cargo test -p ddccontrol-db whole_database_xml_cbor_semantics_match_when_configured -- --nocapture
+cbor_source=$(cd ../ddccontrol-db && pwd)
+cargo test -p ddccontrol-db --locked
+DDCCONTROL_DB_TEST_DATADIR="$cbor_source/db" \
+DDCCONTROL_DB_CONVERTER="$cbor_source/scripts/cbor-db.py" \
+  cargo test -p ddccontrol-db whole_database_xml_cbor_semantics_match_when_configured --locked -- --nocapture
 ./scripts/check_cbor_frozen.sh
 ```
 
@@ -17,24 +25,31 @@ producer, then compares complete trees, final CAPS and rejection status in
 strict and tolerant modes with three CAPS inputs. It accepts
 `DDCCONTROL_DB_CONVERTER` if the producer is elsewhere. The frozen-reader check
 verifies stored source hashes and tests newer files without changing that
-reader's decoder or resolver.
+reader's decoder or resolver. It explicitly uses `CARGO_TARGET_DIR` when set,
+otherwise its own `tests/frozen-v1/target/`, for both building and linking.
 
 ## Production gettext path
 
 Rust unit tests deliberately use untranslated labels, so they do not establish
-production gettext behavior. Build the separate frozen library with gettext
-and link its hardware-free C driver:
+production gettext behavior. Build the current production library with gettext
+and link the hardware-free C driver against that library. The driver source is
+shared with the historical compatibility probe; the library under test here is
+the current reader.
 
 ```sh
-frozen=crates/ddccontrol-db/tests/frozen-v1
-cargo build --manifest-path "$frozen/Cargo.toml" --release --locked --features gettext
-cc -Wall -Wextra -Werror "$frozen/driver.c" \
-  "$frozen/target/release/libddccontrol_db_frozen_v1.a" \
-  -ldl -lpthread -lm -o /tmp/ddccontrol-frozen-gettext-reader
-./scripts/check_cbor_gettext.sh /tmp/ddccontrol-frozen-gettext-reader ../ddccontrol-db en_US.UTF-8
+cbor_source=$(cd ../ddccontrol-db && pwd)
+cbor_target=${CARGO_TARGET_DIR:-target}
+cargo build -p ddccontrol-db --release --locked --features gettext --target-dir "$cbor_target"
+cc -Wall -Wextra -Werror crates/ddccontrol-db/tests/frozen-v1/driver.c \
+  "$cbor_target/release/libddccontrol_db.a" \
+  -ldl -lpthread -lm -o "$cbor_target/ddccontrol-production-gettext-reader"
+./scripts/check_cbor_gettext.sh "$cbor_target/ddccontrol-production-gettext-reader" "$cbor_source" en_US.UTF-8
 ```
 
-If `CARGO_TARGET_DIR` is set, use its `release` directory for the archive path.
+These commands use `CARGO_TARGET_DIR` when set, otherwise the local `target/`
+directory. The separate `check_cbor_frozen.sh` test continues to build and link
+the unchanged historical library; its success cannot establish current
+production gettext behavior.
 The database checkout must already contain generated `db/options.xml` and
 `db/ddccontrol-db.cbor`; its existing `po/fr.po` remains the translation source.
 The script accepts either the checkout root or its `db` directory. It needs
