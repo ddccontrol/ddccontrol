@@ -12,6 +12,8 @@ XML or mixes revisions. An installed `ddccontrol-db.snapshot` verifies the XML
 snapshot or explicitly prohibits XML fallback for necessary CBOR semantics.
 Explicit test directories use only their own files. Required unknown profile
 semantics also prevent manufacturer/VESA fallback in the C monitor-open path.
+This protection includes required controls and included profiles when another
+loading error occurs before their requirements can be checked or isolated.
 
 One shared, immutable session holds the decoded database. Concurrent calls
 retain it with `Arc`; `ddcci_release_db` releases the global reference. Each

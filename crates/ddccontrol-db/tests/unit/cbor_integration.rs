@@ -367,6 +367,71 @@ fn wire_required_include_or_caps_effect_rejects_the_profile() {
 }
 
 #[test]
+fn ordinary_profile_errors_cannot_bypass_required_semantics() {
+    for scope in ["operation", "include", "control", "shared-control"] {
+        for required in [false, true] {
+            for error_first in [false, true] {
+                let temporary = modified_wire_fixture(|root| {
+                    use ciborium::value::Value;
+                    let profile = wire_profile(root, "compat-monitor");
+                    if error_first {
+                        // Fail before visiting the required feature.
+                        *wire_field(wire_field(profile, 1), 5) = Value::Text("invalid-init".into());
+                    } else {
+                        // A second controls block fails after the first block
+                        // has already isolated any required control semantics.
+                        wire_field(profile, 2)
+                            .as_array_mut()
+                            .unwrap()
+                            .push(Value::Map(vec![
+                                (Value::Integer(0.into()), Value::Integer(8.into())),
+                                (Value::Integer(1.into()), Value::Map(vec![])),
+                                (Value::Integer(2.into()), Value::Array(vec![])),
+                            ]));
+                    }
+                    let target = match scope {
+                        "operation" => &mut wire_field(wire_profile(root, "compat-monitor"), 2)
+                            .as_array_mut()
+                            .unwrap()[0],
+                        "include" => wire_profile(root, "compat-common"),
+                        "control" => {
+                            let controls = &mut wire_field(wire_profile(root, "compat-monitor"), 2)
+                                .as_array_mut()
+                                .unwrap()[3];
+                            &mut wire_field(controls, 2).as_array_mut().unwrap()[0]
+                        }
+                        "shared-control" => {
+                            let group =
+                                &mut wire_field(wire_field(root, 5), 2).as_array_mut().unwrap()[0];
+                            let subgroup = &mut wire_field(group, 2).as_array_mut().unwrap()[0];
+                            &mut wire_field(subgroup, 2).as_array_mut().unwrap()[0]
+                        }
+                        _ => unreachable!(),
+                    };
+                    attach_test_requirement(target, 3, required);
+                });
+                let _context = DbTestContext::init(&temporary.0);
+                for tolerant in [false, true] {
+                    let mut caps = OwnedCaps::with_all_vcp_codes();
+                    let original = unsafe { crate::caps_from_c(&mut caps.0) };
+                    assert!(OwnedMonitor::create("compat-monitor", &mut caps, tolerant).is_none());
+                    assert_eq!(
+                        ddcci_db_requirements_failed(),
+                        c_int::from(required),
+                        "scope: {scope}, required: {required}, error_first: {error_first}"
+                    );
+                    assert_eq!(unsafe { crate::caps_from_c(&mut caps.0) }, original);
+                    // A following ordinary missing-profile call must reset the
+                    // thread-local result, so normal generic fallback works.
+                    assert!(OwnedMonitor::create("missing", &mut caps, tolerant).is_none());
+                    assert_eq!(ddcci_db_requirements_failed(), 0);
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn unknown_required_control_id_cannot_be_reintroduced_by_generic_include() {
     let temporary = modified_wire_fixture(|root| {
         use ciborium::value::Value;

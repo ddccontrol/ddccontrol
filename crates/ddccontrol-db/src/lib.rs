@@ -471,7 +471,7 @@ mod monitor_db {
     use libc::{c_char, c_int, c_uchar, c_ushort, c_void};
     use roxmltree::Document;
     use std::cell::Cell;
-    use std::collections::BTreeMap;
+    use std::collections::{BTreeMap, BTreeSet};
     use std::ffi::{CStr, CString};
     use std::fs;
     use std::panic::{catch_unwind, AssertUnwindSafe};
@@ -884,6 +884,12 @@ mod monitor_db {
                 return ptr::null_mut();
             }
         };
+        // Determine fallback safety before interpretation: an ordinary error
+        // can occur before a required operation is visited, or after a required
+        // control was isolated. Neither error may revive it via a generic tree.
+        REQUIREMENTS_FAILED.with(|failed| {
+            failed.set(profile_has_requirements(&context, &pnpname));
+        });
         let faulttolerance = faulttolerance != 0
             && !context
                 .monitor_file
@@ -914,7 +920,7 @@ mod monitor_db {
         );
 
         if let Err(err) = result {
-            REQUIREMENTS_FAILED.with(|failed| failed.set(err.required_feature));
+            REQUIREMENTS_FAILED.with(|failed| failed.set(failed.get() || err.required_feature));
             if !err.missing_profile || !faulttolerance {
                 eprintln!("{}", err.message);
             }
@@ -935,6 +941,7 @@ mod monitor_db {
         match alloc_monitor(&build) {
             Some(monitor) => {
                 staged_caps.publish(caps);
+                REQUIREMENTS_FAILED.with(|failed| failed.set(false));
                 monitor
             }
             None => ptr::null_mut(),
@@ -1123,6 +1130,49 @@ mod monitor_db {
 
     fn has_required(node: &Node) -> bool {
         node.required || node.children.iter().any(has_required)
+    }
+
+    fn profile_has_requirements(context: &DbContext, pnpname: &str) -> bool {
+        let shared: BTreeSet<_> = context
+            .options
+            .controls()
+            .filter(|control| control.unavailable)
+            .map(|control| control.id.as_str())
+            .collect();
+        let mut pending = vec![(pnpname, true)];
+        let mut visited = BTreeSet::new();
+        while let Some((id, top_level)) = pending.pop() {
+            // The explicit override and an include of the same ID refer to
+            // different roots. Visit each installed profile at most once.
+            if !visited.insert((id, top_level)) {
+                continue;
+            }
+            let root = context
+                .monitor_file
+                .as_ref()
+                .filter(|file| top_level && file.pnpid == id)
+                .map(|file| &file.root)
+                .or_else(|| context.profiles.get(id).and_then(|root| root.as_ref().ok()));
+            let Some(root) = root else { continue };
+            if has_required(root) {
+                return true;
+            }
+            for child in &root.children {
+                if child.tag == "include" {
+                    if let Some(id) = child.attr("file") {
+                        pending.push((id, false));
+                    }
+                } else if child.tag == "controls"
+                    && child.children.iter().any(|control| {
+                        control.tag == "control"
+                            && control.attr("id").is_some_and(|id| shared.contains(id))
+                    })
+                {
+                    return true;
+                }
+            }
+        }
+        false
     }
 
     fn load_options_node(root: &Node) -> Result<OptionsDb, String> {
