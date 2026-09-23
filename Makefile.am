@@ -60,6 +60,7 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	crates/ddccontrol-scanmonitor/tests/cli.rs \
 	crates/ddccontrol-scanmonitor/fixtures/options.xml \
 	crates/ddccontrol-db/src/cbor.rs \
+	crates/ddccontrol-db/tests/unit/cbor_integration.rs \
 	crates/ddccontrol-db/fixtures/cbor/README.md \
 	crates/ddccontrol-db/fixtures/cbor/compat.cbor \
 	crates/ddccontrol-db/fixtures/cbor/compat.json \
