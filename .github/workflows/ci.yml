@@ -44,6 +44,10 @@ jobs:
       - name: Build release static library
         run: cargo +${{ matrix.toolchain }} build --release -p ddccontrol-db --all-features --locked
 
+      - name: Check frozen CBOR consumer compatibility
+        if: matrix.toolchain == 'stable'
+        run: ./scripts/check_cbor_frozen.sh
+
       - name: Check build cleanliness
         run: ./scripts/check_git_clean_after_build.sh
 

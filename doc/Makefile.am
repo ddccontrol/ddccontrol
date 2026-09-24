@@ -4,16 +4,11 @@ TIDY_FLAGS = -q -raw -im --output-xhtml yes --doctype transitional --drop-empty-
 .NOTPARALLEL:
 
 EXTRA_DIST = main.xml gpl.xml install.xml about.xml report.xml supportedgc.xml thanks.xml techdocs.xml usage.xml style.xsl style-fo.xsl releasing-packages.md
-EXTRA_DIST += cbor/format.md \
- cbor/format.cddl \
- cbor/coverage.md \
- cbor/sources.md \
- cbor/decisions.md \
- cbor/schema-check/Cargo.toml \
- cbor/schema-check/Cargo.lock \
- cbor/schema-check/src/main.rs \
- cbor/schema-check/README.md \
- cbor/schema-check/.gitignore
+EXTRA_DIST += cbor/format.md cbor/format.cddl cbor/coverage.md cbor/sources.md \
+ cbor/decisions.md cbor/architecture-validation.md cbor/validation.md cbor/testing.md \
+ cbor/producer-validation.md \
+ cbor/schema-check/Cargo.toml cbor/schema-check/Cargo.lock \
+ cbor/schema-check/src/main.rs cbor/schema-check/README.md cbor/schema-check/.gitignore
 
 if BUILD_DOC
 html_DATA = html/*
