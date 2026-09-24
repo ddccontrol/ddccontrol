@@ -3,6 +3,35 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.4.0](https://github.com/ddccontrol/ddccontrol/compare/3.3.0...3.4.0) (2026-09-24)
+
+
+### Features
+
+* add scan monitors CLI and preview local XML definitions ([#329](https://github.com/ddccontrol/ddccontrol/issues/329)) ([e22b769](https://github.com/ddccontrol/ddccontrol/commit/e22b76908c343be42a22dadf677b494ddf0f7697))
+* **db:** load pinned CBOR and XML database sessions ([#335](https://github.com/ddccontrol/ddccontrol/issues/335)) ([ebfc1fd](https://github.com/ddccontrol/ddccontrol/commit/ebfc1fd6fca32944f7266b987b1fa3891d077a7e))
+* **db:** validate and decode the candidate CBOR wire format ([#334](https://github.com/ddccontrol/ddccontrol/issues/334)) ([cd29d7d](https://github.com/ddccontrol/ddccontrol/commit/cd29d7dd9bbc2f7900a292063b4e36bbda9a6da1))
+* port cached monitor-list XML to Rust ([#325](https://github.com/ddccontrol/ddccontrol/issues/325)) ([23b0f83](https://github.com/ddccontrol/ddccontrol/commit/23b0f83a79ba8ff02e571c1423b4b4669e8d2500))
+
+
+### Bug Fixes
+
+* **ci:** upload release assets without editing release metadata ([#327](https://github.com/ddccontrol/ddccontrol/issues/327)) ([ff14dd3](https://github.com/ddccontrol/ddccontrol/commit/ff14dd31198931aa63ba35564b98edeeff95cd80))
+* harden CAPS collection and Rust database FFI ([#321](https://github.com/ddccontrol/ddccontrol/issues/321)) ([bec744f](https://github.com/ddccontrol/ddccontrol/commit/bec744f9795e82caf3a4e0d84b0be0f72f7d109a))
+* isolate and validate DDC/CI protocol frames ([#326](https://github.com/ddccontrol/ddccontrol/issues/326)) ([fcd7c56](https://github.com/ddccontrol/ddccontrol/commit/fcd7c56ff1cba765f2ecca56741b88586ec8dcec))
+* **scanmonitor:** remove D-Bus dependency ([#331](https://github.com/ddccontrol/ddccontrol/issues/331)) ([f8e9af1](https://github.com/ddccontrol/ddccontrol/commit/f8e9af18c4643e164a43062091e3ee1574b83f0c))
+
+
+### Documentation
+
+* **db:** define the candidate CBOR format contract ([#332](https://github.com/ddccontrol/ddccontrol/issues/332)) ([47bd201](https://github.com/ddccontrol/ddccontrol/commit/47bd201647190632cde68350478d8abb3d35fa42))
+
+
+### Tests
+
+* **db:** add immutable CBOR compatibility vectors ([#333](https://github.com/ddccontrol/ddccontrol/issues/333)) ([2797e3a](https://github.com/ddccontrol/ddccontrol/commit/2797e3a2979918f66ef878e3e339a17913c2ffdd))
+* **db:** verify newer databases with a frozen candidate reader ([#336](https://github.com/ddccontrol/ddccontrol/issues/336)) ([3392f07](https://github.com/ddccontrol/ddccontrol/commit/3392f0739b749f64d8a241fbcf91d01a0d4a3279))
+
 ## [3.3.0](https://github.com/ddccontrol/ddccontrol/compare/3.2.0...3.3.0) (2026-07-31)
 
 
