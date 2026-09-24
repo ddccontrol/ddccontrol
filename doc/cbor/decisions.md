@@ -12,6 +12,7 @@
 | SHA-256 of a separately defined source manifest. | The snapshot has no circular hash. Exact source bytes, including ignored text, determine identity. It is reproducibility/consistency metadata, not a signature. |
 | Separate container, legacy semantics, database revision and protocol versions. | XML dbversion does not become the wire version, and MCCS versions are not assumed to form a universal monotonic feature level. |
 | Necessary semantics use immutable extension identities. | Old readers can retain new descriptions and use unaffected profiles while rejecting unknown behavior at its smallest independent scope. |
+| One envelope per identity in each extension array. | Readers can reject duplicates without knowing an extension's semantics. Repeated declarations belong inside that extension's payload. |
 | Declarative future operation descriptions only. | Representation does not imply hardware support. There is no script engine or promise to execute arbitrary future functions. |
 | Reject present invalid/incompatible CBOR instead of automatically retrying XML. | This avoids semantic bypass and revision mixing without guessing whether the XML reader would understand a requirement. Missing CBOR still supports old XML-only packages. |
 | A manifest sidecar authorizes XML fallback; the permanent false guard prohibits it. | Future required semantics cannot be bypassed merely by removing CBOR. New dual packages must retain the sidecar; pre-v1 XML executables still require a safe legacy view. |

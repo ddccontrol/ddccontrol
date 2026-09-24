@@ -256,10 +256,12 @@ Every extension is a map with required fields:
 
 Fields 3 upwards are unassigned optional descriptive data. The same identity
 MUST always mean the same contract. A change of meaning requires a new identity,
-not a changed payload interpreted under the old identity. Duplicate extension
-identities at a scope are forbidden unless that identity explicitly specifies
-repeatable composition; the two identities below do not. Extensions are data,
-not a script engine, code-loading mechanism or general executable bytecode.
+not a changed payload interpreted under the old identity. Each extension array
+MUST contain at most one envelope per identity, including unknown optional
+identities. The same identity MAY occur at separate scopes. An extension needing
+repeated declarations MUST represent them inside its single payload according
+to that identity's contract. Extensions are data, not a script engine,
+code-loading mechanism or general executable bytecode.
 
 The envelopes at root, profile and control levels declare the features used
 there and which are necessary. A reader's supported set consists of identities
