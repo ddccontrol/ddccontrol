@@ -15,13 +15,14 @@ gettext = []
 
 [dependencies]
 ddccontrol-xml = { path = "../ddccontrol-xml" }
-ciborium = "0.2.2"
-sha2 = "0.10"
+ddccontrol-db-format = { path = "../ddccontrol-db-format" }
 ddccontrol-caps = { path = "../ddccontrol-caps" }
 ddccontrol-edid = { path = "../ddccontrol-edid" }
 ddccontrol-monitorlist = { path = "../ddccontrol-monitorlist" }
 ddccontrol-profile = { path = "../ddccontrol-profile" }
 ddccontrol-protocol = { path = "../ddccontrol-protocol" }
-encoding_rs = "0.8"
 libc = "0.2"
 roxmltree = "0.20"
+
+[dev-dependencies]
+ciborium = "0.2.2"

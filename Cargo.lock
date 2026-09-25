@@ -79,13 +79,31 @@ version = "0.1.0"
 dependencies = [
  "ciborium",
  "ddccontrol-caps",
+ "ddccontrol-db-format",
  "ddccontrol-edid",
  "ddccontrol-monitorlist",
  "ddccontrol-profile",
  "ddccontrol-protocol",
  "ddccontrol-xml",
- "encoding_rs",
  "libc",
+ "roxmltree",
+]
+
+[[package]]
+name = "ddccontrol-db-format"
+version = "0.1.0"
+dependencies = [
+ "ciborium",
+ "encoding_rs",
+ "sha2",
+]
+
+[[package]]
+name = "ddccontrol-dbgen"
+version = "0.1.0"
+dependencies = [
+ "ddccontrol-db-format",
+ "ddccontrol-xml",
  "roxmltree",
  "sha2",
 ]

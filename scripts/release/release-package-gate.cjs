@@ -4,6 +4,7 @@ const checkName = 'Release Please package build';
 const workflow = '.github/workflows/release-please.yml';
 const artifactNames = [
   'release-sources',
+  ...require('./dbgen-assets.cjs').artifactNames,
   ...['amd64', 'arm64', 'armhf', 'ppc64el', 'riscv64', 's390x'].map(a => `packages-debian-${a}`),
   ...['x86_64', 'aarch64'].map(a => `packages-fedora-${a}`),
 ];

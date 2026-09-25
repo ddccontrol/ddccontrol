@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<monitor name="Generic fixture" init="standard">
+  <controls><control id="brightness" address="0x10" delay="0" min="0" max="100"/></controls>
+</monitor>

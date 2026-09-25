@@ -162,7 +162,7 @@ test('merging untested code after the package build prevents release', async () 
   await assert.rejects(plan(f), /differs from the tested PR/);
 });
 
-test('every source, Debian and Fedora artifact is required and must not have expired', async t => {
+test('every source, producer, Debian and Fedora artifact is required and must not have expired', async t => {
   for (const name of artifactNames) {
     await t.test(name, async () => {
       const f = mergedFixture();
@@ -172,6 +172,12 @@ test('every source, Debian and Fedora artifact is required and must not have exp
       await assert.rejects(plan(f), /missing artifact/);
     });
   }
+});
+
+test('a package-only validation run cannot authorize a release with standalone producers', async () => {
+  const f = mergedFixture();
+  f.data.artifacts = f.data.artifacts.filter(a => !a.name.startsWith('dbgen-'));
+  await assert.rejects(plan(f), /missing artifact: dbgen-/);
 });
 
 test('unstable versions never start a release build', async () => {

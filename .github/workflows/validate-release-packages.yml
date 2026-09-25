@@ -17,6 +17,12 @@ permissions:
   contents: read
 
 jobs:
+  dbgen:
+    uses: ./.github/workflows/build-dbgen.yml
+    with:
+      source-ref: ${{ inputs.source-ref }}
+      version: ${{ inputs.version }}
+
   source:
     runs-on: ubuntu-24.04
     env:

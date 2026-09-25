@@ -2,11 +2,13 @@
 
 `Release Please` is the only workflow that starts real Debian and Fedora
 package builds. Ordinary PRs run the normal C/Rust CI and lightweight repository
-tests; they do not run the package architecture matrices.
+tests, including native builds of the standalone Rust database producer; they
+do not run the package architecture matrices.
 
 Release Please first creates or updates its release PR without publishing a
 release. It then checks the source distributions and builds all six Debian and
-both Fedora targets from that PR's exact head commit. It also checks the monitor
+both Fedora targets from that PR's exact head commit, along with the two static
+database producer binaries. It also checks the monitor
 database and signed repository generation. The `Release Please package build`
 check on the release PR reports their combined result. A failed or cancelled
 package build fails the Release Please workflow and prevents publication.
@@ -19,14 +21,14 @@ unlabelled branches cannot start this privileged validation.
 Before merging the release PR, wait for its package check and the associated
 Release Please run to finish successfully. After merge, the publication gate
 requires that current successful check, its completed workflow run, every
-unexpired package artifact, and identical source trees for the tested PR and
+unexpired package and producer artifact, and identical source trees for the tested PR and
 merged release commit. Missing or stale results fail closed: no tag or GitHub
 release is created. The `always-update` Release Please setting refreshes the release PR even when
 only hidden changelog entries change. Keep it up to date with `master` before
 merging.
 
 Only then does Release Please create the release. The `Release packages`
-reusable workflow downloads the approved build's source and package artifacts,
+reusable workflow downloads the approved build's source, producer and package artifacts,
 signs the packages and deploys the signed repositories to
 <https://ddccontrol.github.io/ddccontrol/>. It does not rebuild the packages after
 merge. Signing and Pages deployment failures still fail the publishing run and
@@ -116,6 +118,50 @@ binary packages. These are upstream release builds, not uploads to the official
 Debian or Fedora archives.
 
 ## Publication and recovery
+
+### Standalone database producer
+
+Each release containing `ddccontrol-dbgen` also publishes these archives and an
+individual `.sha256` file for each:
+
+- `ddccontrol-dbgen-X.Y.Z-x86_64-unknown-linux-musl.tar.gz`
+- `ddccontrol-dbgen-X.Y.Z-aarch64-unknown-linux-musl.tar.gz`
+
+Archives contain the executable, `COPYING`, and `provenance.json` with the source
+commit, application release version, target and compiler version. The CLI's
+`--version` reports its own crate version; the archive version identifies the
+DDCcontrol release. Consumers should pin a release and verify the checksum,
+instead of downloading a mutable "latest" version. This is a build-time tool;
+database users receive the generated database and do not need this executable.
+
+The reusable `Build standalone database producer` workflow uses Rust 1.85.0,
+`Cargo.lock`, native Ubuntu amd64/arm64 runners and `musl-gcc`. It explicitly
+requests a static C runtime and checks the resulting ELF for both an interpreter
+and shared-library dependencies, as recommended by the
+[Rust linkage documentation](https://doc.rust-lang.org/reference/linkage.html#static-and-dynamic-c-runtimes).
+No GUI or installed monitor database is needed. Native and distribution builds
+on other supported architectures remain available through the source code.
+
+Before archiving, each binary runs the producer tests, reproduces the frozen
+CBOR database and snapshot byte for byte, validates and rewrites the database,
+and rejects invalid input. The archive is then extracted and the executable
+checked again. Ordinary PR CI and release validation use the same build script.
+For a native amd64 development machine with `musl-tools`, `binutils`, `jq` and
+Rust 1.85.0 installed, the equivalent check is:
+
+```sh
+rustup target add --toolchain 1.85.0 x86_64-unknown-linux-musl
+scripts/release/build-dbgen.sh x86_64-unknown-linux-musl X.Y.Z /tmp/dbgen-release
+```
+
+Use the version from `configure.ac`. On arm64, use `aarch64-unknown-linux-musl`.
+Publication reuses the approved artifacts without rebuilding them. Recovery
+reuses published archives and checksums, checks their consistency, and only
+uploads missing files. If an archive is present but its checksum was not
+uploaded, the checksum is computed from the published archive's actual bytes.
+Release tags predating the producer continue to recover without producer assets.
+
+### Package repositories
 
 Build jobs do not receive signing secrets. Once all builds succeed, the signing
 job signs binary and source RPMs and saves a
