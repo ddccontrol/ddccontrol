@@ -11,10 +11,13 @@ Executed with all 470 profiles from the database source at `6aac4a9`:
 
 * Rust conversion is byte-identical to the previous producer's complete CBOR
   and snapshot: 313,219 bytes, with the hashes recorded below.
-* Twenty-two producer integration tests and seven shared decoder tests pass. They
+* Twenty-three producer integration tests and seven shared decoder tests pass. They
   cover the former Python regression cases, fixed RFC vectors, frozen bytes
   and typed JSON, all source attributes/order, ignored XML branches, encoding,
   numeric limits, required extensions, include graphs and CLI failure cleanup.
+  A rewrite regression fails on the earlier implementation and now verifies
+  that missing/malformed input preserves existing CBOR and snapshot files,
+  while failed XML conversion still removes stale package artifacts.
 * Workspace tests pass on Rust 1.77 and 1.98.1, with the full source configured.
   The runtime compares 470 profiles × three CAPS inputs × two loading modes
   (2,820 scenarios), including complete trees, CAPS and rejection status.

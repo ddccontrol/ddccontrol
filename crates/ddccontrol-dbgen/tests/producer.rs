@@ -709,6 +709,33 @@ fn missing_references_cycles_depth_and_expansion_are_rejected() {
 }
 
 #[test]
+fn rewrite_input_errors_preserve_existing_destinations() {
+    let temp = Temp::new();
+    let invalid = temp.0.join("invalid.cbor");
+    fs::write(&invalid, b"\xff").unwrap();
+    let missing = temp.0.join("missing.cbor");
+    let output = temp.0.join("existing.cbor");
+    let snapshot = temp.0.join("existing.snapshot");
+
+    for input in [&invalid, &missing] {
+        for with_snapshot in [false, true] {
+            fs::write(&output, BASE).unwrap();
+            // A preexisting fallback prohibition must survive a failed rewrite.
+            fs::write(&snapshot, b"\xf4").unwrap();
+            let mut command = Command::new(BIN);
+            command.arg("rewrite").arg(input).arg(&output);
+            if with_snapshot {
+                command.arg("--snapshot").arg(&snapshot);
+            }
+            let result = command.output().unwrap();
+            assert!(!result.status.success());
+            assert_eq!(fs::read(&output).unwrap(), BASE);
+            assert_eq!(fs::read(&snapshot).unwrap(), b"\xf4");
+        }
+    }
+}
+
+#[test]
 fn failed_generation_removes_stale_artifacts_and_path_aliases_are_safe() {
     let temp = Temp::new();
     let source = temp.source();
