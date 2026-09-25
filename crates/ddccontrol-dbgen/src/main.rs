@@ -157,7 +157,9 @@ fn run() -> Result<(), String> {
         }
         Ok(())
     })();
-    if result.is_err() {
+    // Conversion must invalidate stale package artifacts. A failed rewrite
+    // must not delete preexisting destinations when its input cannot be read.
+    if command == "convert" && result.is_err() {
         for path in [output.as_ref(), snapshot.as_ref()].into_iter().flatten() {
             let _ = fs::remove_file(path);
         }

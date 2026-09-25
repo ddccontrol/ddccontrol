@@ -22,7 +22,8 @@ rename. A failed conversion removes old output and snapshot artifacts so a
 package build cannot silently reuse stale CBOR. Output, snapshot and input XML
 paths must be distinct. `rewrite` requires a distinct output and retains all
 unknown fields and extensions, including required semantics unsupported by the
-runtime. It emits the permanent `false` fallback guard when necessary. The
+runtime. Input read or validation errors leave existing rewrite destinations
+unchanged. It emits the permanent `false` fallback guard when necessary. The
 snapshot sidecar and CBOR must be staged and installed together by the packager.
 
 The wire decoder, deterministic encoder, field/element registers, contextual
