@@ -71,3 +71,27 @@ After rebasing onto `e22b769` (scanmonitor and local XML preview), the same
 s390x/QEMU setup executed all **60 database tests**, including all 470 profiles
 and the new local XML override / CBOR include / required-extension test.
 All passed in **55.44 seconds**. The corpus and frozen decoder were unchanged.
+
+## Shared Rust producer validation, 2026-09-25
+
+The refactored reader executed 56 tests under s390x/QEMU in 55.29 seconds,
+including all 2,820 XML/CBOR comparisons. Seven decoder tests moved unchanged
+to the shared format crate and also passed. Sixteen producer tests, including
+the complete source attribute/order audit and fixed integer/endian vectors,
+passed under emulation in 5.44 seconds. Five integration tests which directly
+spawn the CLI were excluded from that s390x test executable because this setup
+uses an explicit QEMU runner rather than a system binfmt handler; the complete
+21-test producer suite ran natively on x86_64.
+
+The s390x producer executable was separately invoked through QEMU to convert
+all 470 XML profiles. Both its 313,219-byte CBOR and snapshot file compare
+byte-for-byte with the native Rust output and original independent producer.
+`file` identifies the executable as `ELF 64-bit MSB pie executable, IBM S/390`.
+The compiler, QEMU and cross compiler versions are the same as above; tools
+were extracted under `/tmp/ddccontrol-rust-s390x/sysroot`. The previously
+installed s390x Rust standard library component was reused.
+
+The native static release artifact was built and executed on x86_64 with
+Rust 1.85.0 and musl. The PR workflow also executes that artifact check on a
+native arm64 runner. No local ppc64el/riscv64 execution or new performance
+measurement is claimed by these checks.

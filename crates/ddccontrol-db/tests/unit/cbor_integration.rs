@@ -183,22 +183,19 @@ fn whole_database_xml_cbor_semantics_match_when_configured() {
     profiles.sort();
     let converter = env::var_os("DDCCONTROL_DB_CONVERTER")
         .map(PathBuf::from)
-        .unwrap_or_else(|| {
-            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-                .join("../../../ddccontrol-db/scripts/cbor-db.py")
-        });
-    assert!(
-        converter.is_file(),
-        "set DDCCONTROL_DB_CONVERTER to the reference generator"
-    );
+        .unwrap_or_else(|| PathBuf::from("ddccontrol-dbgen"));
     let converted = TemporaryCborDatabase::new();
-    let output = std::process::Command::new("python3")
-        .arg(converter)
+    let output = std::process::Command::new(&converter)
         .arg("convert")
         .arg(&datadir)
         .arg(converted.0.join("ddccontrol-db.cbor"))
         .output()
-        .unwrap();
+        .unwrap_or_else(|error| {
+            panic!(
+                "cannot run {}: {error}; build ddccontrol-dbgen and set DDCCONTROL_DB_CONVERTER to its executable",
+                converter.display()
+            )
+        });
     assert!(
         output.status.success(),
         "{}",

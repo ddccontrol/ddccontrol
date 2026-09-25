@@ -14,8 +14,12 @@ independent wire format. `newer-v1.cbor` adds NEW0001, VCP254/value65535 and unk
 optional information. `descriptions-v1.cbor` represents every declared future
 function category and requires an unknown matcher for TST0001, keeping VESA
 usable. Corresponding tagged JSON files document their exact decoded contents.
-The producer repository preserves the XML fixture sources and generation
-provenance. `.tree` files are hand-reviewed expected C ABI output.
+The original producer repository preserves the generation provenance. The
+source XML fixtures are also preserved under `crates/ddccontrol-dbgen/fixtures/`
+so the Rust producer can prove byte identity without a Python dependency.
+These tests use the binary and JSON files here directly; they do not create
+a second set of expected wire bytes. `.tree` files are hand-reviewed expected
+C ABI output.
 
 `tests/frozen-v1` consumes these fixtures with frozen decoder and interpreter
 source. Changes to current production code must not regenerate these files.

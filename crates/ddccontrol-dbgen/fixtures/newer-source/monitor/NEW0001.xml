@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<monitor name="Future fixture monitor" init="standard">
+  <caps add="(vcp(FE))"/>
+  <controls><control id="vendor_future" address="0xFE"><value id="future" value="65535"/></control></controls>
+  <include file="VESA"/>
+</monitor>

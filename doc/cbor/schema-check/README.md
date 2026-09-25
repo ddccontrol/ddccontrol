@@ -2,7 +2,7 @@
 
 This optional developer tool uses unmodified `cddl-cat` 0.7.1 to parse the
 actual CDDL and validate CBOR. It is separate from the production reader and
-Python reference validator, and is not a runtime or Debian package dependency.
+shared Rust reader/producer validator, and is not a runtime or Debian package dependency.
 It does not replace deterministic-wire, manifest, reference or semantic tests.
 
 Run from the ddccontrol repository root:
