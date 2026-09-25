@@ -45,7 +45,12 @@ jobs:
       version: ${{ steps.release.outputs.version }}
       commit: ${{ steps.release.outputs.commit }}
       has_bundle: ${{ steps.release.outputs.has_bundle }}
+      has_dbgen: ${{ steps.release.outputs.has_dbgen }}
+      has_dbgen_assets: ${{ steps.release.outputs.has_dbgen_assets }}
     steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Resolve a published stable release
         id: release
         uses: actions/github-script@v8
@@ -79,6 +84,62 @@ jobs:
             core.setOutput('version', version);
             core.setOutput('commit', commit.sha);
             core.setOutput('has_bundle', assets.some(a => a.name === `ddccontrol-${version}-packages.tar.gz`));
+            // Recovery must continue to work for tags predating the producer.
+            let hasDbgen = true;
+            try {
+              await github.rest.repos.getContent({
+                ...context.repo, ref: commit.sha, path: 'crates/ddccontrol-dbgen/Cargo.toml',
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              hasDbgen = false;
+            }
+            const {assetNames} = require('./scripts/release/dbgen-assets.cjs');
+            core.setOutput('has_dbgen', hasDbgen);
+            core.setOutput('has_dbgen_assets', assetNames(version).every(name => assets.some(a => a.name === name)));
+
+  dbgen:
+    needs: resolve
+    if: needs.resolve.outputs.has_dbgen == 'true' && needs.resolve.outputs.has_dbgen_assets != 'true' && inputs.build-run-id == 0
+    uses: ./.github/workflows/build-dbgen.yml
+    with:
+      source-ref: ${{ needs.resolve.outputs.commit }}
+      version: ${{ needs.resolve.outputs.version }}
+
+  publish-dbgen:
+    needs: [resolve, dbgen]
+    if: >-
+      !cancelled() && needs.resolve.result == 'success' && needs.resolve.outputs.has_dbgen == 'true' &&
+      (needs.resolve.outputs.has_dbgen_assets == 'true' || inputs.build-run-id != 0 || needs.dbgen.result == 'success')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Download the tested producer archives
+        if: needs.resolve.outputs.has_dbgen_assets != 'true'
+        uses: actions/download-artifact@v8
+        with:
+          pattern: dbgen-*
+          path: ${{ runner.temp }}/dbgen-artifacts
+          run-id: ${{ inputs.build-run-id || github.run_id }}
+          github-token: ${{ github.token }}
+          merge-multiple: true
+      - name: Publish missing producer archives and checksums
+        uses: actions/github-script@v8
+        env:
+          RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+        with:
+          script: |
+            const {syncDbgenAssets} = require('./scripts/release/dbgen-assets.cjs');
+            await syncDbgenAssets({
+              github, context, tag: process.env.RELEASE_TAG, version: process.env.RELEASE_VERSION,
+              directory: `${process.env.RUNNER_TEMP}/dbgen-artifacts`,
+            });
 
   source:
     outputs:

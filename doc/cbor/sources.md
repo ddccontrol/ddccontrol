@@ -67,7 +67,9 @@ provides explicit CBOR headers and container lengths. The selected reader uses
 ciborium 0.2.2 after an application preflight: a generic decoder alone does not
 enforce this contract's shortest encodings, lexical key ordering, duplicate
 rejection, forbidden types or limits. Do not deserialize into an ordinary map
-before rejecting duplicates. The producer has an independent Python codec.
+before rejecting duplicates. The Rust producer and reader share the strict
+format library and XML decoder. Fixed RFC vectors, immutable fixtures and the
+independent CDDL checker provide checks outside that shared implementation.
 
 [Debian sid lists minicbor 2.3.0-1](https://packages.debian.org/sid/rust/librust-minicbor-dev)
 on the required architectures, but that does not establish availability of

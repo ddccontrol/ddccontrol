@@ -2,6 +2,8 @@
 members = [
     "crates/ddccontrol-caps",
     "crates/ddccontrol-db",
+    "crates/ddccontrol-db-format",
+    "crates/ddccontrol-dbgen",
     "crates/ddccontrol-edid",
     "crates/ddccontrol-monitorlist",
     "crates/ddccontrol-profile",

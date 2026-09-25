@@ -29,6 +29,11 @@ hints do not change the addresses or values loaded from monitor definitions.
 The crate produces both an `rlib` for Rust callers and the existing C static
 library; the C ABI and allocation rules are unchanged.
 
+The wire codec, field registry, snapshot hashing and XML byte decoding live in
+`ddccontrol-db-format`, shared with the standalone [`ddccontrol-dbgen`](../ddccontrol-dbgen/README.md)
+producer. Profile interpretation and the C ABI remain here. The producer does
+not link the C library, GUI or hardware code.
+
 CAPS string parsing lives in the sibling `ddccontrol-caps` crate. EDID parsing
 lives in `ddccontrol-edid`; this crate includes both parsers in the existing
 Rust static library and exposes their C ABI entry points.
@@ -92,3 +97,9 @@ order. Set `DDCCONTROL_DB_TEST_ALL=1` to load every monitor profile, or set
 `DDCCONTROL_DB_TEST_PROFILES` to a comma-separated profile list to select
 specific profiles. These two variables are mutually exclusive. The all-profiles
 mode fails on the first profile that cannot be parsed or loaded.
+
+The separate XML/CBOR differential test always covers all source profiles,
+three CAPS inputs and both strict and tolerant loading. Build `ddccontrol-dbgen`
+and select its executable with `DDCCONTROL_DB_CONVERTER` (or put it on `PATH`).
+See [reproduction commands](../../doc/cbor/testing.md) for absolute paths and
+the independent fixture, frozen-reader and production gettext checks.

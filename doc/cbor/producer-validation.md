@@ -1,4 +1,48 @@
-# Producer validation, 2026-09-22
+# Producer validation
+
+## Rust producer, 2026-09-25
+
+The standalone `ddccontrol-dbgen` and runtime now share `ddccontrol-db-format`.
+This removes the maintained Python producer without changing the wire contract
+or regenerating frozen expectations. The previous results below remain a
+historical record of the independently implemented producer.
+
+Executed with all 470 profiles from the database source at `6aac4a9`:
+
+* Rust conversion is byte-identical to the previous producer's complete CBOR
+  and snapshot: 313,219 bytes, with the hashes recorded below.
+* Twenty-three producer integration tests and seven shared decoder tests pass. They
+  cover the former Python regression cases, fixed RFC vectors, frozen bytes
+  and typed JSON, all source attributes/order, ignored XML branches, encoding,
+  numeric limits, required extensions, include graphs and CLI failure cleanup.
+  A rewrite regression fails on the earlier implementation and now verifies
+  that missing/malformed input preserves existing CBOR and snapshot files,
+  while failed XML conversion still removes stale package artifacts.
+* Workspace tests pass on Rust 1.77 and 1.98.1, with the full source configured.
+  The runtime compares 470 profiles × three CAPS inputs × two loading modes
+  (2,820 scenarios), including complete trees, CAPS and rejection status.
+* The full C/GTK/Rust build, `make check`, `make distcheck`, formatting and
+  clippy with warnings denied pass. The archive check also runs producer tests
+  with read-only source fixtures. Release automation passes 58 Node tests,
+  ShellCheck and Actionlint.
+* The checksummed original v1 reader remains unchanged and passes its probes.
+  The independent cddl-cat 0.7.1 checker accepts the full generated database
+  and base/newer/description fixtures. The production gettext C probe returns
+  identical French trees from XML and CBOR after session release.
+* A native x86_64 musl build with Rust 1.85.0 executes successfully before and
+  after release archive extraction. ELF inspection finds no interpreter or
+  shared-library dependencies. Archive tests check frozen CBOR/snapshot bytes,
+  validation, dump, rewrite and malformed input rejection.
+* Actual s390x/QEMU execution passes the reader/shared decoder tests and 17
+  producer tests; the s390x executable converts all 470 profiles to the same
+  CBOR and snapshot bytes. See [architecture validation](architecture-validation.md).
+
+The new CI jobs repeat native static executable checks on amd64 and arm64.
+Release publication is configured for future releases; none was created here.
+These results establish the tested compatibility cases, not universal future
+operation support. Existing standards evidence gaps remain in [sources.md](sources.md).
+
+## Historical producer, 2026-09-22
 
 Source baseline: `ddccontrol-db` commit `c4f616e`, `VERSION=20260922`.
 Host: Linux x86_64, Python 3.14.4. This is an unpublished candidate review;

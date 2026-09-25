@@ -19,6 +19,11 @@ RUST_DB_LIB = $(top_builddir)/target/release/libddccontrol_db.a
 RUST_DB_DEPS = \
 	$(top_srcdir)/Cargo.toml \
 	$(top_srcdir)/Cargo.lock \
+	$(top_srcdir)/crates/ddccontrol-db-format/Cargo.toml \
+	$(top_srcdir)/crates/ddccontrol-db-format/src/lib.rs \
+	$(top_srcdir)/crates/ddccontrol-db-format/src/writing.rs \
+	$(top_srcdir)/crates/ddccontrol-db-format/src/descriptors.rs \
+	$(top_srcdir)/crates/ddccontrol-db-format/src/xml.rs \
 	$(top_srcdir)/crates/ddccontrol-caps/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-caps/src/lib.rs \
 	$(top_srcdir)/crates/ddccontrol-caps/fixtures/basic_lcd.caps \

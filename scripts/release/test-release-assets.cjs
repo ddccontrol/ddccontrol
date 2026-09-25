@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
 const syncAssets = require('./release-assets.cjs');
+const {assetNames, syncDbgenAssets} = require('./dbgen-assets.cjs');
 
 const source = 'ddccontrol-3.3.0.tar.bz2';
 const vendor = 'ddccontrol-3.3.0-vendor.tar.gz';
@@ -137,4 +138,32 @@ test('propagate asset upload failures without attempting broader permissions or 
     throw Object.assign(new Error('Resource not accessible by integration'), {status: 403});
   };
   await assert.rejects(syncAssets({...options, names: [bundle]}), {status: 403});
+});
+
+test('producer publication hashes the original binary archive and uploads only missing assets', async t => {
+  const names = assetNames('3.3.0');
+  const options = await fixture(t, {[names[0]]: original});
+  for (const name of names) await fs.writeFile(path.join(options.directory, name), 'rebuilt');
+  assert.equal(await syncDbgenAssets({...options, version: '3.3.0'}), true);
+  assert.deepEqual(options.uploads, names.slice(1));
+  const expected = `${createHash('sha256').update(original).digest('hex')}  ${names[0]}\n`;
+  assert.equal(await fs.readFile(path.join(options.directory, names[1]), 'utf8'), expected);
+  await syncDbgenAssets({...options, version: '3.3.0'});
+  assert.deepEqual(options.uploads, names.slice(1), 'Retries reuse all published assets');
+});
+
+test('producer recovery rejects an existing checksum that disagrees before any upload', async t => {
+  const names = assetNames('3.3.0');
+  const options = await fixture(t, {[names[0]]: original, [names[1]]: Buffer.from('wrong checksum')});
+  for (const name of names.slice(2)) await fs.writeFile(path.join(options.directory, name), original);
+  await assert.rejects(syncDbgenAssets({...options, version: '3.3.0'}), /checksum does not match/);
+  assert.deepEqual(options.uploads, []);
+});
+
+test('producer publication requires both architecture archives before uploading anything', async t => {
+  const names = assetNames('3.3.0');
+  const options = await fixture(t);
+  await fs.writeFile(path.join(options.directory, names[0]), original);
+  await assert.rejects(syncDbgenAssets({...options, version: '3.3.0'}), {code: 'ENOENT'});
+  assert.deepEqual(options.uploads, []);
 });

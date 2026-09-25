@@ -37,10 +37,11 @@ tails occur in `AOC3279.xml`, `BNQ8301.xml` (literal `-->`) and `DEL40F3.xml`
 One document declares UTF-8 explicitly; the remaining documents use the
 implicit UTF-8 default. Foreign encodings and declaration-after-comment forms
 are covered by synthetic compatibility input, not claimed present in this
-source snapshot. The converter currently supports UTF-8, BOM-marked UTF-16,
-Windows-1252 and WHATWG-compatible ISO-8859-1/ASCII aliases. It explicitly
-rejects other encoding labels accepted by the broader encoding_rs reader;
-this is a converter coverage gap until equivalent decoding has been tested.
+source snapshot. The Rust producer and reader share the encoding_rs XML decoder,
+including UTF-8, BOM-marked UTF-16, legacy encoding labels and normalization of
+comments/whitespace before a declaration. Their encoding behavior is checked
+with synthetic fixtures; accepting a label does not establish full equivalence
+with every historical libxml2 parser behavior.
 
 ## Existing behavior matrix
 
@@ -136,5 +137,6 @@ Maintained XML sources total 1,099,739 bytes; generated manifest inputs total
 1,099,802 bytes. Every final profile was converted and checked by the producer.
 The 313,219-byte CBOR has source snapshot
 `dbb9f1542128e579f61dc8147c03c2f72eb5220d0c31e7961c001516942656b9`.
-See [producer validation](producer-validation.md) for exact executed checks;
-this source update does not change the shared format contract.
+See the [producer validation record](producer-validation.md)
+for exact executed checks; this source update does not change the shared format
+contract.

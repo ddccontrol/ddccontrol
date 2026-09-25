@@ -5,6 +5,28 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 	rust-porting.txt \
 	Cargo.toml \
 	Cargo.lock \
+	crates/ddccontrol-db-format/Cargo.toml \
+	crates/ddccontrol-db-format/README.md \
+	crates/ddccontrol-db-format/src/lib.rs \
+	crates/ddccontrol-db-format/src/writing.rs \
+	crates/ddccontrol-db-format/src/descriptors.rs \
+	crates/ddccontrol-db-format/src/xml.rs \
+	crates/ddccontrol-dbgen/Cargo.toml \
+	crates/ddccontrol-dbgen/README.md \
+	crates/ddccontrol-dbgen/src/lib.rs \
+	crates/ddccontrol-dbgen/src/main.rs \
+	crates/ddccontrol-dbgen/tests/producer.rs \
+	crates/ddccontrol-dbgen/fixtures/base-v1.snapshot \
+	crates/ddccontrol-dbgen/fixtures/newer-v1.snapshot \
+	crates/ddccontrol-dbgen/fixtures/source/options.xml \
+	crates/ddccontrol-dbgen/fixtures/source/monitor/TST0001.xml \
+	crates/ddccontrol-dbgen/fixtures/source/monitor/VESA.xml \
+	crates/ddccontrol-dbgen/fixtures/newer-source/options.xml \
+	crates/ddccontrol-dbgen/fixtures/newer-source/monitor/NEW0001.xml \
+	crates/ddccontrol-dbgen/fixtures/newer-source/monitor/TST0001.xml \
+	crates/ddccontrol-dbgen/fixtures/newer-source/monitor/VESA.xml \
+	scripts/release/build-dbgen.sh \
+	scripts/release/check-dbgen.sh \
 	crates/ddccontrol-caps/Cargo.toml \
 	crates/ddccontrol-caps/README.md \
 	crates/ddccontrol-caps/fixtures/basic_lcd.caps \

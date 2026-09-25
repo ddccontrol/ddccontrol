@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<options date="fixture-2" dbversion="3">
+  <group name="Fixture"><subgroup name="Colours" pattern="brightnesscontrast">
+    <control id="brightness" name="Brightness" type="value" address="0x10"/>
+    <control id="input" name="Input source" type="list"><value id="wide" name="Wide"/></control>
+    <control id="vendor_future" name="Future vendor control" type="list"><value id="future" name="Future choice"/></control>
+  </subgroup></group>
+</options>
