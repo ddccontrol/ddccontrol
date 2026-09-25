@@ -1,5 +1,5 @@
 use ddccontrol_db_format::{self as format, encode, field, map, text};
-use ddccontrol_dbgen::{convert, diagnostic, read_bounded, source_paths, summary};
+use ddccontrol_dbgen::{convert, diagnostic, is_xml_path, read_bounded, source_paths, summary};
 use std::{
     env,
     ffi::OsString,
@@ -119,7 +119,7 @@ fn run() -> Result<(), String> {
             for destination in [Some(output), snapshot.as_ref()].into_iter().flatten() {
                 let canonical = resolved(destination);
                 let inside_source = canonical.as_ref().is_some_and(|p| {
-                    p.extension().is_some_and(|e| e == "xml")
+                    is_xml_path(p)
                         && [&input, &input.join("monitor")]
                             .into_iter()
                             .any(|directory| {

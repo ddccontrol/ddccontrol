@@ -11,7 +11,7 @@ Executed with all 470 profiles from the database source at `6aac4a9`:
 
 * Rust conversion is byte-identical to the previous producer's complete CBOR
   and snapshot: 313,219 bytes, with the hashes recorded below.
-* Twenty-one producer integration tests and seven shared decoder tests pass. They
+* Twenty-two producer integration tests and seven shared decoder tests pass. They
   cover the former Python regression cases, fixed RFC vectors, frozen bytes
   and typed JSON, all source attributes/order, ignored XML branches, encoding,
   numeric limits, required extensions, include graphs and CLI failure cleanup.
@@ -30,7 +30,7 @@ Executed with all 470 profiles from the database source at `6aac4a9`:
   after release archive extraction. ELF inspection finds no interpreter or
   shared-library dependencies. Archive tests check frozen CBOR/snapshot bytes,
   validation, dump, rewrite and malformed input rejection.
-* Actual s390x/QEMU execution passes the reader/shared decoder tests and 16
+* Actual s390x/QEMU execution passes the reader/shared decoder tests and 17
   producer tests; the s390x executable converts all 470 profiles to the same
   CBOR and snapshot bytes. See [architecture validation](architecture-validation.md).
 
