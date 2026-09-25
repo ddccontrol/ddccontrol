@@ -146,6 +146,13 @@ pub fn read_bounded(path: &Path) -> Result<Vec<u8>, String> {
     Ok(bytes)
 }
 
+/// Match the maintained XML filename pattern, including the invalid empty-ID
+/// filename `.xml`; discovery must report it instead of silently dropping it.
+pub fn is_xml_path(path: &Path) -> bool {
+    path.file_name()
+        .is_some_and(|name| name.as_encoded_bytes().ends_with(b".xml"))
+}
+
 /// Enumerate source paths without following file contents. Errors remain entries
 /// so callers protecting output paths can still identify the other source files;
 /// conversion must reject every discovery error before reading any snapshot.
@@ -155,7 +162,7 @@ pub fn source_paths(directory: &Path) -> Vec<Result<PathBuf, String>> {
         Ok(entries) => {
             for entry in entries {
                 match entry {
-                    Ok(entry) if entry.path().extension().is_some_and(|ext| ext == "xml") => {
+                    Ok(entry) if is_xml_path(&entry.path()) => {
                         paths.push(Ok(entry.path()));
                     }
                     Ok(_) => {}
@@ -182,8 +189,9 @@ fn sources(directory: &Path) -> Result<BTreeMap<String, Vec<u8>>, String> {
         let relative = relative.to_str().ok_or("source filename is not UTF-8")?;
         if relative != "options.xml" {
             let id = path
-                .file_stem()
+                .file_name()
                 .and_then(|id| id.to_str())
+                .and_then(|name| name.strip_suffix(".xml"))
                 .ok_or("source filename is not UTF-8")?;
             if !format::profile_id(id) {
                 return Err(format!("unsafe profile identifier: {id}"));

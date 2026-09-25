@@ -76,12 +76,12 @@ All passed in **55.44 seconds**. The corpus and frozen decoder were unchanged.
 
 The refactored reader executed 56 tests under s390x/QEMU in 55.29 seconds,
 including all 2,820 XML/CBOR comparisons. Seven decoder tests moved unchanged
-to the shared format crate and also passed. Sixteen producer tests, including
+to the shared format crate and also passed. Seventeen producer tests, including
 the complete source attribute/order audit and fixed integer/endian vectors,
-passed under emulation in 5.44 seconds. Five integration tests which directly
+passed under emulation in 5.23 seconds. Five integration tests which directly
 spawn the CLI were excluded from that s390x test executable because this setup
 uses an explicit QEMU runner rather than a system binfmt handler; the complete
-21-test producer suite ran natively on x86_64.
+22-test producer suite ran natively on x86_64.
 
 The s390x producer executable was separately invoked through QEMU to convert
 all 470 XML profiles. Both its 313,219-byte CBOR and snapshot file compare

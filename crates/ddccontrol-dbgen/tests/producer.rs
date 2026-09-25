@@ -649,6 +649,30 @@ fn source_snapshot_and_manifest_failures() {
 }
 
 #[test]
+fn invalid_xml_profile_filenames_cannot_disappear_from_the_snapshot() {
+    let temp = Temp::new();
+    let source = temp.source();
+    let invalid = source.join("monitor/.xml");
+    fs::write(&invalid, "<monitor/>").unwrap();
+    assert!(convert(&source, None)
+        .unwrap_err()
+        .contains("unsafe profile identifier"));
+    fs::remove_file(&invalid).unwrap();
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::ffi::OsStringExt;
+        let invalid = source
+            .join("monitor")
+            .join(std::ffi::OsString::from_vec(b"bad\xff.xml".to_vec()));
+        fs::write(invalid, "<monitor/>").unwrap();
+        assert!(convert(&source, None)
+            .unwrap_err()
+            .contains("source filename is not UTF-8"));
+    }
+}
+
+#[test]
 fn missing_references_cycles_depth_and_expansion_are_rejected() {
     let temp = Temp::new();
     let source = temp.source();
@@ -726,16 +750,18 @@ fn failed_generation_removes_stale_artifacts_and_path_aliases_are_safe() {
     assert!(!result.status.success());
     assert!(String::from_utf8_lossy(&result.stderr).contains("distinct"));
     assert!(!output.exists());
-    let new_xml = source.join("monitor/FUTURE.xml");
-    let result = Command::new(BIN)
-        .arg("convert")
-        .arg(&source)
-        .arg(&new_xml)
-        .output()
-        .unwrap();
-    assert!(!result.status.success());
-    assert!(!new_xml.exists());
-    assert!(String::from_utf8_lossy(&result.stderr).contains("source XML"));
+    for filename in ["FUTURE.xml", ".xml"] {
+        let new_xml = source.join("monitor").join(filename);
+        let result = Command::new(BIN)
+            .arg("convert")
+            .arg(&source)
+            .arg(&new_xml)
+            .output()
+            .unwrap();
+        assert!(!result.status.success());
+        assert!(!new_xml.exists());
+        assert!(String::from_utf8_lossy(&result.stderr).contains("source XML"));
+    }
 }
 
 #[test]
