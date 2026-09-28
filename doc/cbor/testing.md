@@ -3,21 +3,26 @@
 Tests construct profiles from synthetic CAPS. They do not open monitor devices
 or perform monitor operations.
 
-Run these commands from the application repository root. Build the standalone
-Rust producer from this checkout and use absolute paths: test executables run
-from their crate directory, not the directory in which Cargo was invoked.
-The database checkout must contain generated `db/options.xml`; run
-`make -C ../ddccontrol-db db/options.xml` first if needed.
+Run these commands from the application repository root. Resolve the database
+checkout and converter to absolute paths before passing them to Cargo: test
+executables run from their crate directory, not the directory in which Cargo
+was invoked.
+Generate the database checkout's `db/options.xml` before testing. The full-source
+check also requires the standalone `ddccontrol-dbgen` Rust executable. Build it
+in a separate application checkout using the revision and toolchain recorded
+in the database's `.ci/ddccontrol-dbgen.rev` and `.ci/ddccontrol-dbgen.toolchain`,
+as described in the database's `doc/cbor/producer.md`. Adjust the paths below
+to the database checkout and built executable.
 
 Run the Rust reader suite and the optional full-source differential check:
 
 ```sh
 cbor_source=$(cd ../ddccontrol-db && pwd)
-cbor_target=$(realpath -m "${CARGO_TARGET_DIR:-target}")
-cargo build -p ddccontrol-dbgen --locked --target-dir "$cbor_target"
+cbor_converter=/absolute/path/to/ddccontrol-dbgen
+make -C "$cbor_source" db/options.xml
 cargo test -p ddccontrol-db --locked
 DDCCONTROL_DB_TEST_DATADIR="$cbor_source/db" \
-DDCCONTROL_DB_CONVERTER="$cbor_target/debug/ddccontrol-dbgen" \
+DDCCONTROL_DB_CONVERTER="$cbor_converter" \
   cargo test -p ddccontrol-db whole_database_xml_cbor_semantics_match_when_configured --locked -- --nocapture
 ./scripts/check_cbor_frozen.sh
 ```
