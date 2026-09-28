@@ -50,6 +50,8 @@ attributes = {
   * field-from-16 => (int / bounded-text)
 }
 
+; Each extension array has unique identities, including unknown optional ones.
+; Enforce this semantic constraint separately; repeated data belong in a payload.
 extension = {
   0: identity,
   1: bool,                                ; required, never defaulted
