@@ -11,6 +11,12 @@ Always run "./scripts/format_code.sh" after the build to format the code, before
 
 Always use Conventional Commits for commit messages.
 
+## Release Please pull requests
+
+- Release Please pull requests and their branches must be maintained exclusively by Release Please automation.
+- AI agents must never make changes directly to a Release Please pull request or its branch, including to fix failing CI or package builds. Do not push commits, cherry-pick, rebase, or otherwise edit these pull requests or branches manually.
+- All fixes and other changes must go through a separate branch and a separate pull request targeting `master`. After that pull request is merged, let Release Please update its release pull request automatically.
+
 ## Debian architecture compatibility
 
 When changing the build system, Debian packaging, or Rust/C FFI code, preserve support for Debian release architectures including `ppc64el`, `riscv64`, and `s390x`.
