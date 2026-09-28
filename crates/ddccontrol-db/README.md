@@ -92,14 +92,16 @@ first generate its `db/options.xml` from `db/options.xml.in` with
 directory that contains `options.xml` and `monitor/` before running
 `cargo test`.
 
-By default the real database test loads the first 25 monitor profiles in sorted
+By default the XML smoke test loads the first 25 monitor profiles in sorted
 order. Set `DDCCONTROL_DB_TEST_ALL=1` to load every monitor profile, or set
 `DDCCONTROL_DB_TEST_PROFILES` to a comma-separated profile list to select
 specific profiles. These two variables are mutually exclusive. The all-profiles
 mode fails on the first profile that cannot be parsed or loaded.
 
-The separate XML/CBOR differential test always covers all source profiles,
-three CAPS inputs and both strict and tolerant loading. Build `ddccontrol-dbgen`
-and select its executable with `DDCCONTROL_DB_CONVERTER` (or put it on `PATH`).
+Setting `DDCCONTROL_DB_TEST_DATADIR` also enables the separate XML/CBOR
+differential test, which always covers all source profiles, three CAPS inputs
+and both strict and tolerant loading. Build `ddccontrol-dbgen` using the
+revision and Rust toolchain pinned by the database checkout, then select its
+executable with `DDCCONTROL_DB_CONVERTER` (or put it on `PATH`).
 See [reproduction commands](../../doc/cbor/testing.md) for absolute paths and
 the independent fixture, frozen-reader and production gettext checks.

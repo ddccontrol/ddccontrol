@@ -102,15 +102,36 @@ jobs:
       - name: Generate monitor database options
         run: make -C ddccontrol-db-checkout db/options.xml
 
+      - name: Read the monitor database generator pins
+        id: generator
+        run: ./ddccontrol-db-checkout/scripts/dbgen-source-pin.sh >> "$GITHUB_OUTPUT"
+
+      - name: Check out the pinned Rust generator
+        uses: actions/checkout@v6
+        with:
+          repository: ddccontrol/ddccontrol
+          ref: ${{ steps.generator.outputs.revision }}
+          path: ddccontrol-dbgen-checkout
+          persist-credentials: false
+
+      - name: Build the monitor database generator
+        working-directory: ddccontrol-dbgen-checkout
+        env:
+          GENERATOR_REVISION: ${{ steps.generator.outputs.revision }}
+          RUST_TOOLCHAIN: ${{ steps.generator.outputs.toolchain }}
+          CARGO_TARGET_DIR: ${{ github.workspace }}/ddccontrol-dbgen-checkout/target
+        run: |
+          test "$(git rev-parse HEAD)" = "$GENERATOR_REVISION"
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+          cargo +"$RUST_TOOLCHAIN" build --locked --release -p ddccontrol-dbgen
+
       - name: Test all monitor profiles
         env:
           DDCCONTROL_DB_TEST_DATADIR: ${{ github.workspace }}/ddccontrol-db-checkout/db
           DDCCONTROL_DB_TEST_ALL: "1"
-          DDCCONTROL_DB_CONVERTER: ${{ runner.temp }}/dbgen-test/debug/ddccontrol-dbgen
+          DDCCONTROL_DB_CONVERTER: ${{ github.workspace }}/ddccontrol-dbgen-checkout/target/release/ddccontrol-dbgen
           CARGO_TARGET_DIR: ${{ runner.temp }}/dbgen-test
-        run: |
-          cargo build --locked -p ddccontrol-dbgen
-          cargo test --workspace --locked
+        run: cargo test --workspace --locked
 
   release-package-check:
     needs: [plan, packages, repositories, full-database-check]
