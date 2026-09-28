@@ -10,6 +10,9 @@ permissions:
   packages: read
 
 jobs:
+  dbgen:
+    uses: ./.github/workflows/build-dbgen.yml
+
   rust:
     name: rust (${{ matrix.toolchain }})
     runs-on: ubuntu-24.04

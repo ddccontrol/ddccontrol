@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monitor name="Écran fixture" init="standard">
+  <caps add="(vcp(10 60(FFA3)))" remove="(vcp(12))"/>
+  <controls><control id="input" address="0x60" type="list"><value id="wide" value="0xFFA3"/></control></controls>
+  <include file="VESA"/>
+  <!-- <controls><control id="brightness" address="0x99"/></controls> -->
+</monitor>

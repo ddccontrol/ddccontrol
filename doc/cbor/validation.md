@@ -1,5 +1,10 @@
 # Candidate validation record
 
+The following measurements and original implementation results are historical.
+The shared Rust producer introduced on 2026-09-25 is covered separately in
+[producer validation](producer-validation.md#rust-producer-2026-09-25); the
+performance measurements below were not repeated for that refactoring.
+
 Executed on 2026-09-22. Final application baseline: `23b0f83`; database XML baseline:
 `c4f616e` (`VERSION=20260922`). Initial audits also covered `a38bcb8`/`c0b1a51`. The database contains 470 profiles plus common options; all were
 converted, including the three profiles without inherited initialization.

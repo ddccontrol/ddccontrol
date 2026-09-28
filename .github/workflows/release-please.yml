@@ -106,7 +106,11 @@ jobs:
         env:
           DDCCONTROL_DB_TEST_DATADIR: ${{ github.workspace }}/ddccontrol-db-checkout/db
           DDCCONTROL_DB_TEST_ALL: "1"
-        run: cargo test --workspace
+          DDCCONTROL_DB_CONVERTER: ${{ runner.temp }}/dbgen-test/debug/ddccontrol-dbgen
+          CARGO_TARGET_DIR: ${{ runner.temp }}/dbgen-test
+        run: |
+          cargo build --locked -p ddccontrol-dbgen
+          cargo test --workspace --locked
 
   release-package-check:
     needs: [plan, packages, repositories, full-database-check]
