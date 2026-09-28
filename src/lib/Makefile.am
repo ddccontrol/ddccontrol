@@ -51,6 +51,8 @@ RUST_DB_DEPS = \
 	$(top_srcdir)/crates/ddccontrol-xml/Cargo.toml \
 	$(top_srcdir)/crates/ddccontrol-xml/src/lib.rs
 
+# Cargo may reuse an artifact older than Make's prerequisites.
+# Mark it current so a subsequent sudo make install does not rerun Cargo.
 $(RUST_DB_LIB): $(RUST_DB_DEPS)
 	@$(CARGO) --version >/dev/null 2>&1 || { \
 		echo "error: cargo was found by configure but could not run."; \
@@ -58,6 +60,7 @@ $(RUST_DB_LIB): $(RUST_DB_DEPS)
 		exit 1; \
 	}
 	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
+	touch "$(RUST_DB_LIB)"
 
 libddccontrol_la_SOURCES = ddcci.c ddcci.h ddcci_protocol.h monitor_db.h rust_ffi.h \
    i2c-dev.h conf.c conf.h internal.h \

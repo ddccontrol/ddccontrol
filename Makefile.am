@@ -123,8 +123,11 @@ RUST_SCANMONITOR_DEPS = \
 
 all-local: $(RUST_SCANMONITOR)
 
+# Cargo may reuse an artifact older than Make's prerequisites.
+# Mark it current so a subsequent sudo make install does not rerun Cargo.
 $(RUST_SCANMONITOR): $(RUST_SCANMONITOR_DEPS)
 	cd "$(top_srcdir)" && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR="$(abs_top_builddir)/target" $(CARGO) build --release --locked -p ddccontrol-scanmonitor
+	touch "$(RUST_SCANMONITOR)"
 
 install-exec-local: $(RUST_SCANMONITOR)
 	$(MKDIR_P) "$(DESTDIR)$(bindir)"
