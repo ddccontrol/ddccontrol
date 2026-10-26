@@ -15,7 +15,7 @@ EXTRA_DIST = $(modules_DATA)
 
 lib_LTLIBRARIES = libddccontrol.la
 
-RUST_DB_LIB = $(top_builddir)/target/release/libddccontrol_db.a
+RUST_DB_LIB = $(top_builddir)/target/$(RUST_TARGET_SUBDIR)release/libddccontrol_db.a
 RUST_DB_DEPS = \
 	$(top_srcdir)/Cargo.toml \
 	$(top_srcdir)/Cargo.lock \
@@ -59,7 +59,7 @@ $(RUST_DB_LIB): $(RUST_DB_DEPS)
 		echo "If this is rustup's cargo shim, run 'rustup default stable' or set CARGO to a working cargo binary and rerun configure."; \
 		exit 1; \
 	}
-	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
+	cd $(top_srcdir) && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR=$(abs_top_builddir)/target $(CARGO) build --release $(CARGO_TARGET_ARGS) -p ddccontrol-db $(RUST_GETTEXT_FEATURE)
 	touch "$(RUST_DB_LIB)"
 
 libddccontrol_la_SOURCES = ddcci.c ddcci.h ddcci_protocol.h monitor_db.h rust_ffi.h \

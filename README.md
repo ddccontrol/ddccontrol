@@ -80,6 +80,15 @@ make
 sudo make install
 ```
 
+To cross-compile, also pass the Rust target triple as `RUST_TARGET`, and tell
+Cargo which linker to use for that target, for example:
+
+```shell
+export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+./configure --host=aarch64-linux-gnu RUST_TARGET=aarch64-unknown-linux-gnu
+make
+```
+
 Monitor database is required for proper functionality. See for [ddccontrol-db installation](https://github.com/ddccontrol/ddccontrol-db#installation).
 
 The DDC/CI protocol can be tested and fuzzed without a monitor. See

@@ -112,7 +112,7 @@ EXTRA_DIST = config.rpath intltool-extract.in intltool-merge.in intltool-update.
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 DISTCHECK_CONFIGURE_FLAGS = --enable-doc --with-systemdsystemunitdir='$${prefix}/lib/systemd/system'
 
-RUST_SCANMONITOR = $(top_builddir)/target/release/ddccontrol-scanmonitor
+RUST_SCANMONITOR = $(top_builddir)/target/$(RUST_TARGET_SUBDIR)release/ddccontrol-scanmonitor
 # Include transitive Rust sources so edits to shared crates rebuild the scanner.
 RUST_SCANMONITOR_DEPS = \
 	$(top_builddir)/config.status \
@@ -126,7 +126,7 @@ all-local: $(RUST_SCANMONITOR)
 # Cargo may reuse an artifact older than Make's prerequisites.
 # Mark it current so a subsequent sudo make install does not rerun Cargo.
 $(RUST_SCANMONITOR): $(RUST_SCANMONITOR_DEPS)
-	cd "$(top_srcdir)" && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR="$(abs_top_builddir)/target" $(CARGO) build --release --locked -p ddccontrol-scanmonitor
+	cd "$(top_srcdir)" && DDCONTROL_DATADIR="$(datadir)/ddccontrol-db" CARGO_TARGET_DIR="$(abs_top_builddir)/target" $(CARGO) build --release --locked $(CARGO_TARGET_ARGS) -p ddccontrol-scanmonitor
 	touch "$(RUST_SCANMONITOR)"
 
 install-exec-local: $(RUST_SCANMONITOR)
