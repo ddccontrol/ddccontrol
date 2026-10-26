@@ -11,12 +11,15 @@ case "$(uname -m):$target" in
     *) echo "Use a native runner for $target" >&2; exit 1 ;;
 esac
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected a stable version' >&2; exit 1; }
-source_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+source_root=${DDCCONTROL_SOURCE_ROOT:-$(dirname "${BASH_SOURCE[0]}")/../..}
+source_root=$(cd "$source_root" && pwd)
 cd "$source_root"
 source_version=$(sed -n 's/^AC_INIT(\[DDC\/CI control tool\],\[\([^]]*\)\].*/\1/p' configure.ac)
 [[ "$version" == "$source_version" ]] || { echo 'Release version differs from source' >&2; exit 1; }
 export CARGO_TARGET_DIR="$output/target"
-export CARGO_ENCODED_RUSTFLAGS=$'-Ctarget-feature=+crt-static\x1f-Clinker=musl-gcc\x1f'"--remap-path-prefix=$source_root=."
+# Let Rust select its bundled musl startup objects and the native linker.
+# musl-gcc can turn x86_64 static PIE into a binary that crashes at startup.
+export CARGO_ENCODED_RUSTFLAGS=$'-Ctarget-feature=+crt-static\x1f-Clink-self-contained=yes\x1f'"--remap-path-prefix=$source_root=."
 cargo +"$toolchain" test --locked --release --target "$target" -p ddccontrol-dbgen
 cargo +"$toolchain" build --locked --release --target "$target" -p ddccontrol-dbgen
 stage=$(mktemp -d)

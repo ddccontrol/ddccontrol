@@ -165,8 +165,11 @@ instead of downloading a mutable "latest" version. This is a build-time tool;
 database users receive the generated database and do not need this executable.
 
 The reusable `Build standalone database producer` workflow uses Rust 1.85.0,
-`Cargo.lock`, native Ubuntu amd64/arm64 runners and `musl-gcc`. It explicitly
-requests a static C runtime and checks the resulting ELF for both an interpreter
+`Cargo.lock` and native amd64/arm64 runners with a Debian bookworm build image.
+It uses the native C linker and Rust's bundled musl startup objects and C runtime,
+without overriding the linker with `musl-gcc`. That wrapper can break x86_64
+static PIE startup. The image builds and executes a musl test harness before
+publishing. The release build explicitly requests a static C runtime and checks the resulting ELF for both an interpreter
 and shared-library dependencies, as recommended by the
 [Rust linkage documentation](https://doc.rust-lang.org/reference/linkage.html#static-and-dynamic-c-runtimes).
 No GUI or installed monitor database is needed. Native and distribution builds
@@ -176,7 +179,7 @@ Before archiving, each binary runs the producer tests, reproduces the frozen
 CBOR database and snapshot byte for byte, validates and rewrites the database,
 and rejects invalid input. The archive is then extracted and the executable
 checked again. Ordinary PR CI and release validation use the same build script.
-For a native amd64 development machine with `musl-tools`, `binutils`, `jq` and
+For a native amd64 development machine with a C linker (`cc`), `binutils`, `jq` and
 Rust 1.85.0 installed, the equivalent check is:
 
 ```sh
@@ -185,6 +188,8 @@ scripts/release/build-dbgen.sh x86_64-unknown-linux-musl X.Y.Z /tmp/dbgen-releas
 ```
 
 Use the version from `configure.ac`. On arm64, use `aarch64-unknown-linux-musl`.
+Recovery uses the current build script against the selected release source via
+`DDCCONTROL_SOURCE_ROOT`, so older tags also receive linker compatibility fixes.
 Publication reuses the approved artifacts without rebuilding them. Recovery
 reuses published archives and checksums, checks their consistency, and only
 uploads missing files. If an archive is present but its checksum was not

@@ -48,7 +48,8 @@ jobs:
         run: |
           ../automation/scripts/release/run-build-image.sh dbgen "${{ matrix.platform }}" bash -se <<'BUILD'
           version=${RELEASE_VERSION:-$(sed -n 's/^AC_INIT(\[DDC\/CI control tool\],\[\([^]]*\)\].*/\1/p' configure.ac)}
-          ./scripts/release/build-dbgen.sh "${{ matrix.target }}" "$version" "$RUNNER_TEMP/dbgen"
+          DDCCONTROL_SOURCE_ROOT="$PWD" ../automation/scripts/release/build-dbgen.sh \
+            "${{ matrix.target }}" "$version" "$RUNNER_TEMP/dbgen"
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
