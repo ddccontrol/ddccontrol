@@ -22,7 +22,7 @@ ddccontrol-monitorlist = { path = "../ddccontrol-monitorlist" }
 ddccontrol-profile = { path = "../ddccontrol-profile" }
 ddccontrol-protocol = { path = "../ddccontrol-protocol" }
 libc = "0.2"
-roxmltree = ">=0.20, <0.22"
+roxmltree = ">=0.20"
 
 [dev-dependencies]
 ciborium = "0.2.2"

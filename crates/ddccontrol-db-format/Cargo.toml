@@ -9,5 +9,5 @@ description = "Portable CBOR database contract shared by ddccontrol readers and 
 
 [dependencies]
 ciborium = "0.2.2"
-sha2 = ">=0.10, <0.12"
+sha2 = ">=0.10"
 encoding_rs = "0.8"

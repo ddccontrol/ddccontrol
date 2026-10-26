@@ -83,7 +83,7 @@ The transitive codec packages were checked separately:
 and [ciborium-io 0.2.2-1](https://packages.debian.org/uk/trixie/rust/librust-ciborium-io-dev)
 also list all five architectures. For hashing,
 [trixie packages sha2 0.10.8-1](https://packages.debian.org/stable/rust/librust-sha2-dev).
-The crate constraint `sha2 = ">=0.10, <0.12"` admits that version.
+The crate constraint `sha2 = ">=0.10"` admits that version.
 The checked-in lockfile retains the 0.10 series for Rust 1.77; distributions
 using Rust 1.85 or newer can also resolve against sha2 0.11. A Debian build must
 resolve against Debian's packaged crates; a newer upstream Cargo.lock entry
