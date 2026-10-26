@@ -61,11 +61,12 @@ jobs:
           set -euo pipefail
           echo "Build host: $(uname -m); Debian target: $TARGET_PLATFORM"
           mkdir -p "$RUNNER_TEMP/packages"
+          image=$(./scripts/release/build-image.sh ensure debian "$TARGET_PLATFORM" "$GITHUB_WORKSPACE/packaging")
           docker run --rm --platform "$TARGET_PLATFORM" \
             -v "$GITHUB_WORKSPACE:/automation:ro" \
             -v "$RUNNER_TEMP/sources:/sources:ro" \
             -v "$RUNNER_TEMP/packages:/output" \
-            debian:trixie \
+            "$image" \
             bash /automation/scripts/release/build-debian.sh \
               "/sources/ddccontrol-$RELEASE_VERSION.tar.bz2" \
               /automation/packaging "$RELEASE_VERSION" /output

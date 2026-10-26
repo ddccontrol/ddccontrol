@@ -8,7 +8,6 @@ version=$3
 output=$(realpath -m "$4")
 [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 
-dnf install -y rpm-build dnf5-plugins
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 mkdir -p "$work"/{SOURCES,SPECS}
@@ -20,7 +19,7 @@ sed -i -E \
     -e '/^%\{_bindir\}\/ddccontrol$/a %{_bindir}/ddccontrol-scanmonitor' \
     -e '/^%\{_mandir\}\/man1\/ddccontrol\.1\*$/a %{_mandir}/man1/ddccontrol-scanmonitor.1*' \
     "$work/SPECS/ddccontrol.spec"
-dnf builddep -y "$work/SPECS/ddccontrol.spec"
+# rpmbuild checks BuildRequires against the preinstalled image packages.
 rpmbuild -ba --define "_topdir $work" "$work/SPECS/ddccontrol.spec"
 
 arch=$(rpm --eval '%{_arch}')

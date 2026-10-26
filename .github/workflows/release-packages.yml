@@ -202,19 +202,11 @@ jobs:
           path: source
           persist-credentials: false
 
-      - name: Install build dependencies
-        if: inputs.build-run-id == 0 && steps.sources.outputs.complete != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            astyle autoconf build-essential cargo-1.77 clang dh-autoreconf intltool \
-            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc-1.77 xsltproc \
-            tidy docbook-xml docbook-xsl xml-core
-
       - name: Build and check source distributions
         if: inputs.build-run-id == 0 && steps.sources.outputs.complete != 'true'
         working-directory: source
         run: |
+          ../automation/scripts/release/run-build-image.sh source linux/amd64 bash -se <<'BUILD'
           set -euo pipefail
           ./autogen.sh
           ./configure
@@ -236,6 +228,7 @@ jobs:
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
+          BUILD
 
       - name: Record the packaging revisions used by this build
         id: provenance
@@ -306,10 +299,6 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Install repository tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends apt-utils createrepo-c rpm gnupg
       - uses: actions/download-artifact@v8
         if: needs.resolve.outputs.has_bundle != 'true'
         with:
@@ -330,6 +319,7 @@ jobs:
           DEBIAN_PACKAGING_REF: ${{ needs.source.outputs.debian_ref }}
           FEDORA_PACKAGING_REF: ${{ needs.source.outputs.fedora_ref }}
         run: |
+          ./scripts/release/run-build-image.sh repositories linux/amd64 bash -se <<'BUILD'
           set -euo pipefail
           source scripts/release/sign-packages.sh
           while IFS= read -r -d '' package; do
@@ -343,6 +333,8 @@ jobs:
             > "$RUNNER_TEMP/new-packages/provenance/$RELEASE_VERSION.json"
           tar -C "$RUNNER_TEMP/new-packages" -czf "$RUNNER_TEMP/ddccontrol-$RELEASE_VERSION-packages.tar.gz" \
             debian rpm srpm provenance
+          BUILD
+
       - name: Preserve the signed package bundle on the release
         if: needs.resolve.outputs.has_bundle != 'true'
         uses: actions/github-script@v8
@@ -375,9 +367,12 @@ jobs:
           PACKAGE_SIGNING_FINGERPRINT: ${{ vars.DDCCONTROL_PACKAGE_SIGNING_FINGERPRINT }}
           PAGES_URL: ${{ steps.pages.outputs.base_url }}
         run: |
+          ./scripts/release/run-build-image.sh repositories linux/amd64 bash -se <<'BUILD'
           set -euo pipefail
           python3 scripts/release/extract-bundles.py "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP"/bundles/*.tar.gz
           scripts/release/create-repositories.sh "$RUNNER_TEMP/all-packages" "$RUNNER_TEMP/site" "$PAGES_URL"
+          BUILD
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ runner.temp }}/site

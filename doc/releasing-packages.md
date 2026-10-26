@@ -93,6 +93,36 @@ Native amd64 and arm64 runners build the corresponding packages. Other Debian
 targets use QEMU and an explicit matching container platform. The matrix does
 not change the package definitions' `Architecture: any` support.
 
+### Prebuilt build environments
+
+The `Release build images` workflow installs OS packages and Rust targets ahead
+of release validation. It publishes source, Debian, Fedora, standalone producer,
+and repository-tool images as `release-*` tags in the existing public
+`ghcr.io/ddccontrol/ddccontrol-ci` package. It runs when image recipes or packaging
+pins change, weekly for OS security updates, and on manual dispatch. The Debian
+matrix covers all six package architectures; Fedora and producer builds use
+native amd64 and arm64 runners. PRs check the public native recipes without
+publishing images or accessing the private Fedora checkout.
+
+Consumers calculate the same tag from the Dockerfile, image helper, relevant
+support files, and patched Debian control file or pinned Fedora spec. They pull
+that image instead of running APT/DNF during each package build. Debian checks
+Build-Depends with `dpkg-checkbuilddeps`; RPM still checks BuildRequires. If a
+matching image has not been published yet, or GHCR is unavailable, the consumer
+builds the exact recipe locally. The weekly publisher refreshes existing recipe
+tags; these identify the dependency recipe, not an immutable OS snapshot.
+
+The Fedora spec is mounted only during its dependency-installation build step,
+so it and checkout credentials are not included in published image layers.
+No signing keys are used to build images. Publishing and repository integration
+tests use the repository-tool image, with signing secrets passed only to the
+existing signing steps at runtime.
+
+For the initial rollout, merge the image changes and wait for `Release build
+images` to finish before starting a new Release Please validation. Existing
+workflow runs retain their original definitions. After rollout, `workflow_dispatch` can also refresh images manually. The registry package must
+remain publicly readable for fork PRs and unauthenticated image pulls.
+
 The workflow pins packaging revisions from
 [debian-ddccontrol](https://github.com/ddccontrol/debian-ddccontrol) and
 [fedora-ddccontrol](https://github.com/ddccontrol/fedora-ddccontrol) in

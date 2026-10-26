@@ -19,6 +19,9 @@ RUN apt-get update \
         libpci-dev \
         libxml2-dev \
         pkg-config \
+        bzip2 \
+        jq \
+        python3-yaml \
         rustc-1.77 \
         xsltproc \
         tidy \

@@ -9,11 +9,6 @@ output=$(realpath -m "$4")
 [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
-export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get install -y --no-install-recommends \
-    build-essential ca-certificates devscripts equivs patch python3
-
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 tar -xf "$archive" -C "$work"
@@ -28,8 +23,8 @@ export DEBFULLNAME='DDCcontrol release automation'
 export DEBEMAIL='ddccontrol@users.noreply.github.com'
 dch --newversion "$version-1~trixie1" --distribution trixie \
     --force-distribution 'Build the upstream release for the DDCcontrol repository.'
-mk-build-deps --install --remove \
-    --tool 'apt-get -y --no-install-recommends' debian/control
+# The matching prebuilt image already contains the patched Build-Depends.
+dpkg-checkbuilddeps
 
 # The upstream lockfile selects crates.io versions. Resolve the same declared
 # dependency ranges against Debian's registry, without network access or vendoring.
