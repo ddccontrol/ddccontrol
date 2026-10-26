@@ -13,4 +13,4 @@ crate-type = ["rlib"]
 [dependencies]
 ddccontrol-xml = { path = "../ddccontrol-xml" }
 encoding_rs = "0.8"
-roxmltree = "0.20"
+roxmltree = ">=0.20, <0.22"
