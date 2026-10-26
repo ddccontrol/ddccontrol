@@ -54,6 +54,28 @@ jobs:
       - name: Check build cleanliness
         run: ./scripts/check_git_clean_after_build.sh
 
+  rust-distro-deps:
+    name: rust (newer distro dependencies)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+
+      # Keep the committed lockfile compatible with Rust 1.77 while checking
+      # the newer dependency series used by distributions such as Fedora.
+      - name: Select newer dependency versions
+        run: |
+          cargo +stable update -p roxmltree --precise 0.21.1
+          cargo +stable update -p sha2 --precise 0.11.0
+
+      - name: Test Rust without gettext
+        run: cargo +stable test --workspace --no-default-features --locked
+
+      - name: Test Rust with all features
+        run: cargo +stable test --workspace --all-features --locked
+
   build:
     name: build (${{ matrix.target.arch }}, ${{ matrix.compiler }})
     runs-on: ${{ matrix.target.runner }}
