@@ -3,6 +3,31 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.4.1](https://github.com/ddccontrol/ddccontrol/compare/3.4.0...3.4.1) (2026-10-26)
+
+
+### Bug Fixes
+
+* **build:** avoid rerunning Cargo during installation ([#343](https://github.com/ddccontrol/ddccontrol/issues/343)) ([b38fc4e](https://github.com/ddccontrol/ddccontrol/commit/b38fc4e7ae042bfb4b7b5a003ab5618cf0c4f42f))
+* **build:** relax Rust dependencies for distro packaging ([#347](https://github.com/ddccontrol/ddccontrol/issues/347)) ([5e64e06](https://github.com/ddccontrol/ddccontrol/commit/5e64e06b9ca029a29c077aa8d8ddd4cc5cf90582))
+* **ci:** validate releases with the pinned database generator ([#342](https://github.com/ddccontrol/ddccontrol/issues/342)) ([fd97c26](https://github.com/ddccontrol/ddccontrol/commit/fd97c26711972fccd2611e339aa5a459ecdd09ec))
+
+
+### Documentation
+
+* keep Release Please pull requests automated ([#339](https://github.com/ddccontrol/ddccontrol/issues/339)) ([22b3050](https://github.com/ddccontrol/ddccontrol/commit/22b305018343a9733b1b70f2cfbd22033567a858))
+
+
+### Performance Improvements
+
+* **ci:** prebuild release package environments ([#349](https://github.com/ddccontrol/ddccontrol/issues/349)) ([e91a536](https://github.com/ddccontrol/ddccontrol/commit/e91a536a9f4ebf9f57eba651b82fe638728093ba))
+
+
+### Build System
+
+* allow cross-compiling the Rust components ([#345](https://github.com/ddccontrol/ddccontrol/issues/345)) ([ab8d220](https://github.com/ddccontrol/ddccontrol/commit/ab8d220cd4cd0f7b61bbcf3076491dd38adcd63a))
+* relax Cargo dependencies for distro packaging ([#348](https://github.com/ddccontrol/ddccontrol/issues/348)) ([53b3312](https://github.com/ddccontrol/ddccontrol/commit/53b33128185cb336b2a423180bad33a040d5a553)), closes [#344](https://github.com/ddccontrol/ddccontrol/issues/344)
+
 ## [3.4.0](https://github.com/ddccontrol/ddccontrol/compare/3.3.0...3.4.0) (2026-09-28)
 
 
