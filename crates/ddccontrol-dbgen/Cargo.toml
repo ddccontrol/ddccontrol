@@ -10,5 +10,5 @@ description = "Deterministic offline XML to CBOR producer for ddccontrol-db"
 [dependencies]
 ddccontrol-db-format = { path = "../ddccontrol-db-format" }
 ddccontrol-xml = { path = "../ddccontrol-xml" }
-roxmltree = "0.20"
-sha2 = "0.10"
+roxmltree = ">=0.20"
+sha2 = ">=0.10"
