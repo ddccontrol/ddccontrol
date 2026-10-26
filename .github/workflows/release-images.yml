@@ -1,0 +1,116 @@
+name: Release build images
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "29 2 * * 0"
+  pull_request:
+    paths:
+      - '.github/build-images/**'
+      - '.github/ci/**'
+      - '.github/workflows/release-images.yml'
+      - '.github/workflows/release-packages.yml'
+      - 'scripts/release/build-image.sh'
+      - 'scripts/release/debian.patch'
+  push:
+    branches: [master]
+    paths:
+      - '.github/build-images/**'
+      - '.github/ci/**'
+      - '.github/workflows/release-images.yml'
+      - '.github/workflows/release-packages.yml'
+      - 'scripts/release/build-image.sh'
+      - 'scripts/release/debian.patch'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # PRs exercise the public native recipes; packaging matrices run on master.
+    if: github.event_name != 'pull_request'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {kind: source, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: source, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {kind: dbgen, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: dbgen, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {kind: repositories, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: debian, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: debian, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {kind: debian, platform: linux/arm/v7, runner: ubuntu-24.04-arm, qemu: arm}
+          - {kind: debian, platform: linux/ppc64le, runner: ubuntu-24.04, qemu: ppc64le}
+          - {kind: debian, platform: linux/riscv64, runner: ubuntu-24.04, qemu: riscv64}
+          - {kind: debian, platform: linux/s390x, runner: ubuntu-24.04, qemu: s390x}
+          - {kind: fedora, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: fedora, platform: linux/arm64, runner: ubuntu-24.04-arm}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Read packaging pins
+        id: pins
+        run: |
+          sed -n 's/^  DEBIAN_PACKAGING_REF: /debian=/p; s/^  FEDORA_PACKAGING_REF: /fedora=/p' \
+            .github/workflows/release-packages.yml >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v6
+        if: matrix.kind == 'debian'
+        with:
+          repository: ddccontrol/debian-ddccontrol
+          ref: ${{ steps.pins.outputs.debian }}
+          path: packaging
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        if: matrix.kind == 'fedora'
+        with:
+          repository: ddccontrol/fedora-ddccontrol
+          ref: ${{ steps.pins.outputs.fedora }}
+          path: packaging
+          token: ${{ secrets.FEDORA_DDCCONTROL_READ_TOKEN || github.token }}
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@v4
+        if: matrix.qemu != ''
+        with:
+          platforms: ${{ matrix.qemu }}
+      - name: Set up Buildx
+        run: |
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+      - name: Log in to GHCR
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Build and publish the target image
+        env:
+          IMAGE_KIND: ${{ matrix.kind }}
+          TARGET_PLATFORM: ${{ matrix.platform }}
+        run: ./scripts/release/build-image.sh publish "$IMAGE_KIND" "$TARGET_PLATFORM" "$GITHUB_WORKSPACE/packaging"
+
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {kind: source, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: source, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {kind: dbgen, platform: linux/amd64, runner: ubuntu-24.04}
+          - {kind: dbgen, platform: linux/arm64, runner: ubuntu-24.04-arm}
+          - {kind: repositories, platform: linux/amd64, runner: ubuntu-24.04}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Build the native image without publishing
+        env:
+          IMAGE_KIND: ${{ matrix.kind }}
+          TARGET_PLATFORM: ${{ matrix.platform }}
+        run: ./scripts/release/build-image.sh ensure "$IMAGE_KIND" "$TARGET_PLATFORM"

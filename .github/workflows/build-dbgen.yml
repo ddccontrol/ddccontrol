@@ -23,29 +23,38 @@ jobs:
         include:
           - target: x86_64-unknown-linux-musl
             runner: ubuntu-24.04
+            platform: linux/amd64
           - target: aarch64-unknown-linux-musl
             runner: ubuntu-24.04-arm
+            platform: linux/arm64
     env:
       DBGEN_RUST_TOOLCHAIN: "1.85.0"
     steps:
-      - uses: actions/checkout@v6
+      - name: Check out build automation
+        uses: actions/checkout@v6
+        with:
+          path: automation
+          persist-credentials: false
+      - name: Check out producer source
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.source-ref || github.sha }}
+          path: source
           persist-credentials: false
-      - name: Install native static build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends musl-tools binutils astyle jq
-          rustup toolchain install "$DBGEN_RUST_TOOLCHAIN" --profile minimal --target "${{ matrix.target }}"
       - name: Build and exercise standalone producer
+        working-directory: source
         env:
           RELEASE_VERSION: ${{ inputs.version }}
         run: |
+          ../automation/scripts/release/run-build-image.sh dbgen "${{ matrix.platform }}" bash -se <<'BUILD'
           version=${RELEASE_VERSION:-$(sed -n 's/^AC_INIT(\[DDC\/CI control tool\],\[\([^]]*\)\].*/\1/p' configure.ac)}
-          ./scripts/release/build-dbgen.sh "${{ matrix.target }}" "$version" "$RUNNER_TEMP/dbgen"
+          DDCCONTROL_SOURCE_ROOT="$PWD" ../automation/scripts/release/build-dbgen.sh \
+            "${{ matrix.target }}" "$version" "$RUNNER_TEMP/dbgen"
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
+          BUILD
+
       - uses: actions/upload-artifact@v7
         with:
           name: dbgen-${{ matrix.target }}

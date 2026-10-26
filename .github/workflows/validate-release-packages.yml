@@ -38,19 +38,13 @@ jobs:
         with:
           ref: ${{ inputs.source-ref }}
           persist-credentials: false
-      - name: Install source distribution tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            astyle autoconf build-essential cargo-1.77 clang dh-autoreconf intltool \
-            libgtk-3-dev libpci-dev libxml2-dev pkg-config rustc-1.77 xsltproc \
-            tidy docbook-xml docbook-xsl xml-core python3-yaml
       - name: Build and check release candidate distributions
         id: source
         env:
           EXPECTED_VERSION: ${{ inputs.version }}
           SOURCE_COMMIT: ${{ inputs.source-ref }}
         run: |
+          ./scripts/release/run-build-image.sh source linux/amd64 bash -se <<'BUILD'
           set -euo pipefail
           ./autogen.sh
           ./configure
@@ -77,6 +71,8 @@ jobs:
           ./scripts/format_code.sh
           find . -name '*.orig' -delete
           ./scripts/check_git_clean_after_build.sh
+          BUILD
+
       - uses: actions/upload-artifact@v7
         with:
           name: release-sources

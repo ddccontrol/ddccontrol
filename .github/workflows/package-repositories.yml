@@ -13,6 +13,8 @@ on:
       - '.github/workflows/package-repositories.yml'
       - '.github/workflows/build-dbgen.yml'
       - 'scripts/release/**'
+      - '.github/build-images/**'
+      - '.github/ci/**'
   push:
     branches: [master]
     paths:
@@ -21,6 +23,8 @@ on:
       - '.github/workflows/package-repositories.yml'
       - '.github/workflows/build-dbgen.yml'
       - 'scripts/release/**'
+      - '.github/build-images/**'
+      - '.github/ci/**'
 
 permissions:
   contents: read
@@ -33,15 +37,16 @@ jobs:
         with:
           ref: ${{ inputs.source-ref || github.sha }}
           persist-credentials: false
-      - name: Install repository tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            apt-utils dpkg-dev rpm createrepo-c gnupg dnf shellcheck
       - name: Check scripts and bundle extraction
         run: |
-          shellcheck scripts/release/*.sh
+          ./scripts/release/run-build-image.sh repositories linux/amd64 shellcheck scripts/release/*.sh
           node --test scripts/release/test-*.cjs
           PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-bundles.py
+          PYTHONDONTWRITEBYTECODE=1 python3 scripts/release/test-build-images.py
       - name: Test signed repositories with APT and DNF
-        run: sudo scripts/release/test-repositories.sh
+        run: |
+          image=$(./scripts/release/build-image.sh ensure repositories linux/amd64)
+          echo "Build host: $(uname -m); container target: linux/amd64"
+          docker run --rm --platform linux/amd64 \
+            -v "$GITHUB_WORKSPACE:/src:ro" -w /src \
+            "$image" bash scripts/release/test-repositories.sh
