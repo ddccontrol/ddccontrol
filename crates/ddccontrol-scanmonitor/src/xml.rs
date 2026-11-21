@@ -14,6 +14,8 @@ pub struct Scan {
     pub pnp_id: String,
     pub name: String,
     pub caps: Caps,
+    pub raw_caps: Option<Vec<u8>>,
+    pub caps_error: Option<String>,
     pub readings: BTreeMap<u8, Reading>,
 }
 
@@ -62,7 +64,8 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
              Active controls have readable, unambiguous database mappings.\n\
              Review and test them on the monitor before submitting this file.\n\
              To enable a candidate, verify its meaning and values, then remove\n\
-             its surrounding XML comment. Keep only one control per address.\n\
+             its surrounding XML comment and add its address to caps add.\n\
+             Keep only one control per address.\n\
              Change init to samsung only if the monitor requires Samsung initialization.",
             scan.pnp_id, scan.pnp_id
         ),
@@ -77,12 +80,33 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
         })
     )
     .unwrap();
-    if !codes.is_empty() {
-        // Keep readable controls available even if firmware omits them from caps.
-        // Retaining the advertised codes also makes commented candidates editable.
-        let caps = normalized_caps(scan, &codes);
-        writeln!(xml, "\t<caps add=\"{}\"/>", attribute(&caps)).unwrap();
+    if let Some(raw) = &scan.raw_caps {
+        // Hex is reversible for arbitrary bytes, XML characters, comment delimiters,
+        // newlines and non-UTF-8 data, without relying on XML normalization.
+        comment(
+            &mut xml,
+            "\t",
+            &format!(
+                "Raw capabilities bytes (hex): {}",
+                raw.iter().map(|b| format!("{b:02X}")).collect::<String>()
+            ),
+        );
     }
+    if let Some(error) = &scan.caps_error {
+        comment(&mut xml, "\t", &format!("Capabilities {error}"));
+    }
+    // Start from an empty capability set even when the live monitor advertises
+    // additional addresses. Only locally enabled controls are added back.
+    let all: BTreeSet<u8> = (u8::MIN..=u8::MAX).collect();
+    writeln!(
+        xml,
+        "\t<caps remove=\"{}\"/>",
+        attribute(&normalized_caps(scan, &all, false))
+    )
+    .unwrap();
+    let mut active = BTreeSet::new();
+    let mut controls = String::new();
+    std::mem::swap(&mut xml, &mut controls);
     xml.push_str("\t<controls>\n");
     for code in codes {
         let reading = scan.readings.get(&code);
@@ -95,7 +119,6 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
                 reading.current, reading.maximum
             )
             .unwrap(),
-            None if code >= 0xe0 => observation.push_str(": advertised; vendor address not probed"),
             None => observation.push_str(": advertised, but no successful read"),
         }
         if let Some(values) = advertised {
@@ -138,6 +161,7 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
                 reasons.push("the reported range does not establish an adjustable scalar");
             }
             if candidate.control_type == ControlType::List {
+                reasons.push("enum meanings require verification on this monitor");
                 if values.is_empty() {
                     reasons.push("no confirmed enum mappings; add verified value IDs and numbers");
                 } else if ambiguous_values(&values) {
@@ -146,6 +170,7 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
             }
             let control = control_xml(candidate, code, &values);
             if reasons.is_empty() {
+                active.insert(code);
                 comment(&mut xml, "\t\t", &candidate.name);
                 xml.push_str(&control);
             } else {
@@ -166,7 +191,18 @@ pub fn generate(scan: &Scan, options: &Options<'_>) -> String {
             }
         }
     }
-    xml.push_str("\t</controls>\n</monitor>\n");
+    xml.push_str("\t</controls>\n");
+    std::mem::swap(&mut xml, &mut controls);
+    if !active.is_empty() {
+        writeln!(
+            xml,
+            "\t<caps add=\"{}\"/>",
+            attribute(&normalized_caps(scan, &active, true))
+        )
+        .unwrap();
+    }
+    xml.push_str(&controls);
+    xml.push_str("\t<include file=\"VESA\"/>\n</monitor>\n");
     xml
 }
 
@@ -259,9 +295,13 @@ fn control_xml(control: &OptionControl, code: u8, values: &[(&str, u16)]) -> Str
     xml
 }
 
-fn normalized_caps(scan: &Scan, codes: &BTreeSet<u8>) -> String {
+fn normalized_caps(scan: &Scan, codes: &BTreeSet<u8>, add: bool) -> String {
     let mut output = String::from("(");
-    match scan.caps.monitor_type() {
+    match if add {
+        scan.caps.monitor_type()
+    } else {
+        MonitorType::Unknown
+    } {
         MonitorType::Lcd => output.push_str("type(lcd)"),
         MonitorType::Crt => output.push_str("type(crt)"),
         MonitorType::Unknown => {}
@@ -272,7 +312,10 @@ fn normalized_caps(scan: &Scan, codes: &BTreeSet<u8>) -> String {
             output.push(' ');
         }
         write!(output, "{code:02X}").unwrap();
-        if let Some(values) = scan.caps.vcp(*code).and_then(|entry| entry.values()) {
+        if let Some(values) = add
+            .then(|| scan.caps.vcp(*code).and_then(|entry| entry.values()))
+            .flatten()
+        {
             output.push('(');
             for (index, value) in values.iter().enumerate() {
                 if index > 0 {
@@ -348,6 +391,8 @@ mod tests {
             pnp_id: "ABC1234".to_string(),
             name: "Example monitor".to_string(),
             caps: Caps::parse(caps).unwrap(),
+            raw_caps: Some(caps.as_bytes().to_vec()),
+            caps_error: None,
             readings: codes
                 .iter()
                 .map(|code| {
@@ -378,6 +423,56 @@ mod tests {
     }
 
     #[test]
+    fn raw_bytes_and_failed_caps_are_preserved_safely() {
+        let mut scan = scan("(vcp(10 FF(01 02)))", &[0x10, 0xe2]);
+        let raw = b"--><&\r\n\0\xff".to_vec();
+        scan.raw_caps = Some(raw.clone());
+        scan.caps_error = Some("parse failed: bad -- text".into());
+        let xml = generate(&scan, OPTIONS).unwrap();
+        let doc = Document::parse(&xml).unwrap();
+        let raw_comment = doc
+            .descendants()
+            .find(|n| n.is_comment() && n.text().unwrap().contains("Raw capabilities bytes (hex):"))
+            .unwrap()
+            .text()
+            .unwrap();
+        let hex = raw_comment.split("hex): ").nth(1).unwrap().trim();
+        let decoded: Vec<u8> = hex
+            .as_bytes()
+            .chunks_exact(2)
+            .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
+            .collect();
+        assert_eq!(decoded, raw);
+        assert!(xml.contains("VCP 0xE2: current=50, maximum=100"));
+        assert!(xml.contains(
+            "VCP 0xFF: advertised, but no successful read; advertised values: 0x01 0x02"
+        ));
+        assert!(xml.contains("parse failed"));
+        let remove = doc
+            .descendants()
+            .find(|n| n.has_tag_name("caps") && n.attribute("remove").is_some())
+            .unwrap();
+        assert_eq!(
+            Caps::parse(remove.attribute("remove").unwrap())
+                .unwrap()
+                .vcp_codes()
+                .count(),
+            256
+        );
+        let add = doc
+            .descendants()
+            .find(|n| n.has_tag_name("caps") && n.attribute("add").is_some())
+            .unwrap();
+        assert_eq!(
+            Caps::parse(add.attribute("add").unwrap())
+                .unwrap()
+                .vcp_codes()
+                .collect::<Vec<_>>(),
+            [0x10]
+        );
+    }
+
+    #[test]
     fn only_readable_unambiguous_controls_are_enabled() {
         let scan = scan(
             "(type(lcd)vcp(04 10 12 14(05) 1c e1 ff))",
@@ -394,7 +489,7 @@ mod tests {
         assert!(xml.contains("manufacturer-specific address"));
         assert!(xml.contains("commands require manual verification"));
         assert!(xml.contains("Unknown control: options.xml has no address mapping"));
-        assert!(!xml.contains("<include"));
+        assert!(xml.contains("<include file=\"VESA\"/>"));
     }
 
     #[test]
@@ -402,7 +497,15 @@ mod tests {
         let scan = scan("(vcp(60(11 0f 99)))", &[0x60]);
         let xml = generate(&scan, OPTIONS).unwrap();
         let document = Document::parse(&xml).unwrap();
-        let values: Vec<_> = document
+        let candidate = document
+            .descendants()
+            .find(|node| {
+                node.is_comment() && node.text().unwrap().contains("<control id=\"input\"")
+            })
+            .unwrap();
+        let candidate_doc = format!("<root>{}</root>", candidate.text().unwrap());
+        let candidate_doc = Document::parse(&candidate_doc).unwrap();
+        let values: Vec<_> = candidate_doc
             .descendants()
             .filter(|node| node.has_tag_name("value"))
             .map(|node| {
@@ -413,6 +516,7 @@ mod tests {
             })
             .collect();
         assert_eq!(values, vec![("hdmi", "0x11"), ("dp", "0x0F")]);
+        assert!(active_controls(&xml).is_empty());
         assert!(xml.contains("without a database mapping: 0x99"));
         assert!(!xml.contains("id=\"dvi\""));
     }
@@ -472,7 +576,7 @@ mod tests {
         let document = Document::parse(&xml).unwrap();
         let caps = document
             .descendants()
-            .find(|node| node.has_tag_name("caps"))
+            .find(|node| node.has_tag_name("caps") && node.attribute("add").is_some())
             .unwrap();
         let caps = Caps::parse(caps.attribute("add").unwrap()).unwrap();
         assert_eq!(caps.vcp_codes().collect::<Vec<_>>(), [0x10, 0x12]);

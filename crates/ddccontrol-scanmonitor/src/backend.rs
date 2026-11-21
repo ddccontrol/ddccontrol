@@ -24,7 +24,7 @@ pub struct Monitor {
 
 pub struct OpenedMonitor {
     pub pnp_id: String,
-    pub capabilities: String,
+    pub capabilities: Result<Vec<u8>, String>,
     pub name: Option<String>,
     transport: Device,
 }
@@ -106,14 +106,18 @@ pub fn open(device: &str) -> Result<OpenedMonitor, String> {
     let mut transport = Device::new(file);
     let info = read_edid(&mut transport)
         .map_err(|error| format!("Cannot read monitor identification from {device}: {error}"))?;
-    // Some monitors provide readable controls despite a broken caps exchange.
-    let capabilities = read_capabilities(&mut transport).unwrap_or_else(|error| {
-        eprintln!(
-            "Cannot read capabilities from {device}: {error}; trying known control addresses."
-        );
-        String::new()
+    // Preserve the complete byte sequence, including non-UTF-8 data.
+    let capabilities = read_capabilities(&mut transport);
+    if let Err(error) = &capabilities {
+        eprintln!("Cannot read capabilities from {device}: {error}; scanning all addresses.");
+    }
+    let name = edid_name(&info).or_else(|| {
+        capabilities
+            .as_ref()
+            .ok()
+            .and_then(|bytes| std::str::from_utf8(bytes).ok())
+            .and_then(capability_model)
     });
-    let name = edid_name(&info).or_else(|| capability_model(&capabilities));
     Ok(OpenedMonitor {
         pnp_id: info.pnp_id().to_owned(),
         capabilities,
@@ -288,7 +292,7 @@ fn read_control(transport: &mut impl Transport, code: u8) -> Result<Option<Readi
     })
 }
 
-fn read_capabilities(transport: &mut impl Transport) -> Result<String, String> {
+fn read_capabilities(transport: &mut impl Transport) -> Result<Vec<u8>, String> {
     let mut bytes = Vec::new();
     loop {
         let offset = bytes.len() as u16;
@@ -300,8 +304,7 @@ fn read_capabilities(transport: &mut impl Transport) -> Result<String, String> {
                 .map_err(|error| format!("Invalid capabilities fragment: {error:?}"))
         })?;
         if fragment.is_empty() {
-            return String::from_utf8(bytes)
-                .map_err(|error| format!("Capabilities are not UTF-8 text: {error}"));
+            return Ok(bytes);
         }
         if bytes.len() + fragment.len() > usize::from(u16::MAX) {
             return Err("Capabilities exceed the 65535-byte DDC limit".into());
@@ -458,7 +461,7 @@ mod tests {
             Ok(caps_reply(5, b"10))")),
             Ok(caps_reply(9, b"")),
         ]);
-        assert_eq!(read_capabilities(&mut transport).unwrap(), "(vcp(10))");
+        assert_eq!(read_capabilities(&mut transport).unwrap(), b"(vcp(10))");
         let requests = transport
             .writes
             .iter()
