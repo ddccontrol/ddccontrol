@@ -775,6 +775,28 @@ fn required_control_feature_is_isolated_and_cannot_be_revived_by_include() {
 }
 
 #[test]
+fn filtered_local_controls_take_precedence_over_generic_include() {
+    let _context = DbTestContext::init(&fixture_datadir());
+    let all = (0u8..=255).map(|code| format!("{code:02X}")).collect::<Vec<_>>().join(" ");
+    let profile = format!(r#"<monitor name="Scanned" init="standard">
+        <caps remove="(vcp({all}))"/><caps add="(vcp(10 60))"/>
+        <controls><control id="brightness" address="0x10" delay="42"/>
+        <control id="input" address="0x60"><value id="hdmi1" value="0x42"/></control>
+        <!-- <control id="factory_reset" address="0x04"/> --></controls>
+        <include file="compat-common"/></monitor>"#);
+    {
+        let mut context = db_context();
+        Arc::make_mut(context.as_mut().unwrap()).profiles.insert("compat-monitor".into(), Ok(parse_xml(&profile).unwrap()));
+    }
+    let mut caps = OwnedCaps::with_all_vcp_codes();
+    let snapshot = OwnedMonitor::create("compat-monitor", &mut caps, false).unwrap().snapshot();
+    assert!(snapshot.contains("address=0x10 delay=42"));
+    assert!(snapshot.contains("value16=0x0042"));
+    assert!(!snapshot.contains("displayport"));
+    assert!(!snapshot.contains("factory_reset"));
+}
+
+#[test]
 fn failed_profile_does_not_publish_partial_caps_or_monitor_tree() {
     let _context = DbTestContext::init(&fixture_datadir());
     {

@@ -23,15 +23,20 @@ The scanner always accesses
 directly, with no environment variable needed. Read and write permission on the
 device is required; use
 .B sudo ddccontrol-scanmonitor
-if necessary. It reads EDID, capabilities and supported controls without changing
-control values.
+if necessary. It reads EDID and capabilities and probes all 256 VCP addresses
+(0x00 through 0xFF) without changing control values. Individual reads may fail
+without stopping the scan, which can take several minutes.
 .PP
 The generated XML enables known controls whose values could be read.
 Uncertain controls are left commented out for manual testing.
 Control and value definitions come from the database's
 .BR options.xml .
-Some monitor quirks, special initialization and unadvertised controls still need
-manual edits.
+Raw capabilities bytes are recorded as hexadecimal in a comment. List values and
+commands require verification. Local definitions precede the VESA include; the
+profile filters capabilities to enabled local addresses. This assumes the installed
+VESA profile does not add capabilities. To enable a candidate, uncomment it and
+add its address to the caps add attribute. Monitor quirks and special
+initialization may still need manual edits.
 .PP
 By default the output is named after the monitor's PnP ID, for example
 .BR DEL1234.xml ,

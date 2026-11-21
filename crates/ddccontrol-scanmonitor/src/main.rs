@@ -3,7 +3,7 @@
 mod backend;
 mod xml;
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::env;
 use std::ffi::OsString;
 use std::fs::{self, OpenOptions};
@@ -30,7 +30,8 @@ Options:
 
 Requires read/write access to the I2C devices and ddccontrol-db.
 Always accesses monitors directly; no daemon or D-Bus connection is used.
-Reads capabilities and control values; does not set control values.
+Reads capabilities and all 256 VCP addresses; does not set control values.
+Some reads can fail and scanning can take several minutes.
 Review the XML comments, test your controls, then submit the XML to
 https://github.com/ddccontrol/ddccontrol-db.
 ";
@@ -187,6 +188,26 @@ fn write_new(path: &Path, contents: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn parse_capabilities(raw: &Result<Vec<u8>, String>) -> (Caps, Option<String>) {
+    let parsed = raw
+        .as_ref()
+        .map_err(|e| format!("read failed: {e}"))
+        .and_then(|bytes| std::str::from_utf8(bytes).map_err(|e| format!("not UTF-8: {e}")))
+        .and_then(|text| Caps::parse(text).map_err(|e| format!("parse failed: {e}")));
+    match parsed {
+        Ok(caps) => (caps, None),
+        Err(error) => (Caps::default(), Some(error)),
+    }
+}
+
+fn scan_addresses(
+    mut read: impl FnMut(u8) -> Result<Option<backend::Reading>, String>,
+) -> BTreeMap<u8, backend::Reading> {
+    (u8::MIN..=u8::MAX)
+        .filter_map(|code| read(code).ok().flatten().map(|reading| (code, reading)))
+        .collect()
+}
+
 fn run(args: Args) -> Result<(), String> {
     if args.help {
         print!("{HELP}");
@@ -222,37 +243,22 @@ fn run(args: Args) -> Result<(), String> {
             output.display()
         ));
     }
-    let caps = match Caps::parse(&opened.capabilities) {
-        Ok(caps) => caps,
-        Err(error) => {
-            eprintln!("Could not parse capabilities ({error}); trying known control addresses.");
-            Caps::default()
-        }
-    };
-    let codes: BTreeSet<u8> = caps
-        .vcp_codes()
-        .chain(options.keys().copied())
-        .filter(|code| *code < 0xe0)
-        .collect();
-    let mut readings = BTreeMap::new();
-    eprintln!(
-        "Reading {} control addresses. This can take a few minutes...",
-        codes.len()
-    );
-    for (index, code) in codes.iter().copied().enumerate() {
-        eprint!(
-            "\rReading control {}/{} (0x{code:02x})...",
-            index + 1,
-            codes.len()
-        );
-        match opened.read(code) {
-            Ok(Some(reading)) => {
-                readings.insert(code, reading);
-            }
-            Ok(None) => {}
-            Err(error) => eprintln!("\nControl 0x{code:02x}: {error}"),
-        }
+    let (caps, caps_error) = parse_capabilities(&opened.capabilities);
+    if let Some(error) = &caps_error {
+        eprintln!("Capabilities: {error}; scanning all addresses.");
     }
+    eprintln!("Reading all 256 VCP addresses (0x00-0xFF). This can take several minutes; individual reads may fail...");
+    let readings = scan_addresses(|code| {
+        eprint!(
+            "\rReading control {} / 256 (0x{code:02x})...",
+            usize::from(code) + 1
+        );
+        let result = opened.read(code);
+        if let Err(error) = &result {
+            eprintln!("\nControl 0x{code:02x}: {error}");
+        }
+        result
+    });
     eprintln!();
     if readings.is_empty() {
         return Err(
@@ -266,6 +272,8 @@ fn run(args: Args) -> Result<(), String> {
             .name
             .unwrap_or_else(|| "Unknown monitor (edit this name)".into()),
         caps,
+        raw_caps: opened.capabilities.ok(),
+        caps_error,
         readings,
     };
     let document = xml::generate(&scan, &options);
@@ -313,6 +321,45 @@ mod tests {
 
     fn args(values: &[&str]) -> Result<Args, String> {
         parse_args(values.iter().map(OsString::from))
+    }
+
+    #[test]
+    fn scans_every_address_and_continues_after_failures() {
+        let mut seen = Vec::new();
+        let result = scan_addresses(|code| {
+            seen.push(code);
+            match code {
+                0 => Err("failed".into()),
+                255 => Ok(Some(backend::Reading {
+                    current: 7,
+                    maximum: 9,
+                })),
+                _ => Ok(None),
+            }
+        });
+        assert_eq!(seen, (0..=255).collect::<Vec<u8>>());
+        assert_eq!(result[&255].current, 7);
+    }
+
+    #[test]
+    fn caps_failures_do_not_prevent_scanning() {
+        for raw in [
+            Err("transport failed".into()),
+            Ok(b"(vcp(zz))".to_vec()),
+            Ok(vec![255]),
+        ] {
+            let (caps, error) = parse_capabilities(&raw);
+            assert!(error.is_some());
+            assert_eq!(caps.vcp_codes().count(), 0);
+            assert_eq!(
+                scan_addresses(|code| Ok((code == 0x10).then_some(backend::Reading {
+                    current: 1,
+                    maximum: 100
+                })))
+                .len(),
+                1
+            );
+        }
     }
 
     #[test]

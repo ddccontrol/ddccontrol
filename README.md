@@ -125,7 +125,9 @@ The scanner selects the only detected monitor automatically, or asks you
 to select one when several are connected. It always accesses `/dev/i2c-*`
 directly, with no environment variable needed. You need read and write permission
 on these devices; if necessary, run `sudo ddccontrol-scanmonitor`.
-It reads the monitor's EDID, capabilities and supported controls, then writes a
+It reads the monitor's EDID and capabilities, then probes every VCP address
+from 0x00 through 0xFF. This can take several minutes; individual reads may fail
+without stopping the scan. It writes a
 database XML file named after the monitor's PnP ID, for example `DEL1234.xml`, in
 the current directory. Existing files are never overwritten. The scanner does
 not change control values.
@@ -133,8 +135,14 @@ not change control values.
 The generated XML enables known controls whose values could be read and leaves
 uncertain controls commented out, with notes to help you test them. It uses the
 installed database's `options.xml` to identify controls and allowed values.
-Monitor-specific quirks, including special initialization or controls missing
-from the capabilities string, may still need manual edits.
+Raw capabilities bytes are preserved as hexadecimal in an XML comment, alongside
+advertised and readable observations. Lists and commands remain candidates until
+their meanings are verified on the monitor. The profile includes VESA after local
+controls and filters live capabilities to locally enabled addresses, preventing
+generic controls from activating merely because the monitor advertised them.
+The installed VESA profile must not add capabilities of its own. To enable a
+candidate, verify it, uncomment it and add its address to the caps add attribute.
+Monitor-specific quirks and special initialization may still need manual edits.
 
 For a specific monitor or another output location:
 
